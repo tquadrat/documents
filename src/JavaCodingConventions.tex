@@ -1,5 +1,7 @@
 \documentclass[12pt,a4paper,titlepage,parskip=half]{scrbook}
+\usepackage{scrhack}
 \usepackage[utf8]{inputenc}
+\usepackage{tocbasic}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -9,10 +11,11 @@
 \usepackage{textcomp}
 \usepackage{framed}
 \usepackage[table,gray]{xcolor}
+%\usepackage{luximono}
 \usepackage{listings}
 
 \lstset{language=Java}
-\lstset{backgroundcolor=\color[gray]{.4},frame=single, framerule=0.2pt}
+\lstset{backgroundcolor=\color[gray]{.9},frame=single, framerule=0.2pt}
 
 \author{Thomas Thrien}
 \title{Extended Coding Conventions for Java}
@@ -22,5 +25,56 @@
 \begin{document}
 \tableofcontents
 
+\chapter{Introduction}
+\begin{quotation}
+“Everybody can write code that can be read by a computer,
+but only good developers will write code that can be read by humans.”\\
+Martin G. Fowler, “Refactoring: Improving the Design of Existing Code”
+\end{quotation}
+
+From a magazine dealing with software development tools, I found the following statement:
+
+\begin{quotation}
+“If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.”
+\end{quotation}
+
+Coding Conventions are primarily rules that should help making code better to maintain. Usually, this starts with making it more readable. Obviously, “readability” is a relative term, depending from one's habit. So some people are more familiar with the Kernighan-Ritchie (K\&R) style
+
+\begin{lstlisting}
+public void method (){
+    if (flag) {
+        /* do something */
+    }
+}
+\end{lstlisting}
+
+as it is also shown in the “Code Conventions for the JavaTM Programming Language” \[SUN_CODE_CONVENTIONS\], other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style1):
+
+\begin{lstlisting}
+public void method()
+{
+    if( flag )
+    {
+        /* do something */
+    }
+}
+\end{lstlisting}
+
+Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste.
+
+Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
+
+But there are more practical reasons to enforce these rules on the source: they make it easier
+    • to understand the code
+    • to navigate inside the code
+    • to detect bugs
+    • to fix these bugs
+    • and to amend and enhance the code.
+
+It can make it also easier to use automated tools on the source code.
+
+All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90 \% – and nearly no source is maintained by its original author or even a single programmer for its whole life.
+
+The base of the coding conventions presented in this document are the “Code Conventions for the JavaTM Programming Language” \[SUN_CODE_CONVENTIONS\] we have already mentioned above, but with some changes and enhancements that seemed necessary to us.
 
 \end{document}

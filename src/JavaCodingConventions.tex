@@ -1,4 +1,6 @@
+\RequirePackage{lmodern}
 \documentclass[12pt,a4paper,titlepage,parskip=half]{scrbook}
+\usepackage[T1]{fontenc}
 \usepackage{scrhack}
 \usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
@@ -11,11 +13,20 @@
 \usepackage{textcomp}
 \usepackage{framed}
 \usepackage[table,gray]{xcolor}
-%\usepackage{luximono}
 \usepackage{listings}
+\usepackage{varioref}
+%\usepackage[babel]{csquotes}
+\usepackage[style=numeric]{biblatex}
+\addbibresource{JavaCodingConventions.bib}
 
-\lstset{language=Java}
-\lstset{backgroundcolor=\color[gray]{.9},frame=single, framerule=0.2pt}
+\lstset{
+language=Java,
+backgroundcolor=\color[gray]{.9},
+frame=single,
+framerule=0.2pt,
+basicstyle=\ttfamily,
+keywordstyle=\color[gray]{.2}
+}
 
 \author{Thomas Thrien}
 \title{Extended Coding Conventions for Java}
@@ -26,10 +37,11 @@
 \tableofcontents
 
 \chapter{Introduction}
+
 \begin{quotation}
 “Everybody can write code that can be read by a computer,
-but only good developers will write code that can be read by humans.”\\
-Martin G. Fowler, “Refactoring: Improving the Design of Existing Code”
+but only good developers will write code that can be read by humans.”
+\autocite{Fowler:Refactoring}
 \end{quotation}
 
 From a magazine dealing with software development tools, I found the following statement:
@@ -48,7 +60,7 @@ public void method (){
 }
 \end{lstlisting}
 
-as it is also shown in the “Code Conventions for the JavaTM Programming Language” \[SUN_CODE_CONVENTIONS\], other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style1):
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter~\ref{sec:OtherProgrammingLanguages} on this topic.}):
 
 \begin{lstlisting}
 public void method()
@@ -64,17 +76,92 @@ Both styles will work, but they look different. So as a lot of other rules from 
 
 Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
-But there are more practical reasons to enforce these rules on the source: they make it easier
-    • to understand the code
-    • to navigate inside the code
-    • to detect bugs
-    • to fix these bugs
-    • and to amend and enhance the code.
+But there are more practical reasons to enforce these rules on the source: they make it easier …
+\begin{list}{•}{}
+\item … to understand the code
+\item … to navigate inside the code
+\item … to detect bugs
+\item … to fix these bugs
+\item … and to amend and enhance the code.
+\end{list}
 
 It can make it also easier to use automated tools on the source code.
 
-All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90 \% – and nearly no source is maintained by its original author or even a single programmer for its whole life.
+All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90\% – and nearly no source is maintained by its original author or even a single programmer for its whole lifetime.
 
-The base of the coding conventions presented in this document are the “Code Conventions for the JavaTM Programming Language” \[SUN_CODE_CONVENTIONS\] we have already mentioned above, but with some changes and enhancements that seemed necessary to us.
+The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary to us.
 
+\section{About this Document}
+The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next we cover the naming of the program elements before we discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding rules.
+
+The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules or recommendations are first used in the samples \textit{after} being introduced.
+
+For source code samples that obey all rules and follow all recommendations, refer to chapter~\vref{sec:Examples}.
+
+All rules and recommendations assume that at least Java~17 is used to write the code. We used that version also for the samples.
+
+\section{History and Implementation}
+I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
+
+Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20 twenty years now, another code is live since 12 years now.
+
+I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter~\ref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
+
+\section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
+Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in TeX/LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
+
+Obviously there are some common rules that are valid for every language, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language A just and only it is done that way in language B. On the other side, it should always be proved, if something that worked fine for one language would not be a great idea to be applied to code in another language. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
+
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter~\ref{sec:TheBasicRule} below will be applicable to each!
+
+A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
+
+In \vref{sec:FormattingSQLInsideJava} we have added some rules on how to format SQL statements when added as literals into a Java program.
+
+\section{Code Generators}
+Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}}
+
+Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this means all public and protected elements, and in some cases all package-local elements, too.
+
+Since Java~6 there is an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{GENERATED_ANNOTATION} for the details.\footnote{In case still Java~5 is used as the source code version, it should be considered to create an own \lstinline|@Generated| annotation along the lines given by the existing one.}
+
+\section{Programming for Sustaining}
+And what to do with “legacy” code that has to be fixed?
+
+Most probably that code will not follow this coding conventions (if any at all …), and it is rarely a good idea to reformat or rewrite it completely just to align it with the conventions. Instead a fix should be limited to the area that is broken.
+
+But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the standards defined here. So if a method has to be reimplemented completely, format it as described here and add the JavaDoc comments. Or if a new field has to be added to a class, add the \lstinline|m_| prefix to its name (see chapter~\ref{sec:Fields}).
+
+Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
+
+\section{The Basic Rule}\label{sec:TheBasicRule}
+One rule should be followed before any other rule or recommendation given in this document:
+
+Always do it right in the first place!
+
+Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written. As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
+
+\textit{And this is exactly what we want to avoid!} 
+
+This means there is never ever any excuse for omitting comments, using 'temporary' names or doing other 'funny' things.
+
+So again:
+
+Always do it right in the first place!
+
+\chapter{Formatting of the Source Code}
+
+\chapter{Naming Conventions}
+
+\section{Fields}\label{sec:Fields}
+
+\chapter{Coding Rules}\label{sec:CodingRules}
+
+\chapter{Appendices}
+
+\section{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+
+\section{Examples}\label{sec:Examples}
+
+\printbibliography
 \end{document}

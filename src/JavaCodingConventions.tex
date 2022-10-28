@@ -1,5 +1,5 @@
 \RequirePackage{lmodern}
-\documentclass[12pt,a4paper,titlepage,parskip=half]{scrbook}
+\documentclass[12pt,a4paper,titlepage,parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
 \usepackage[T1]{fontenc}
 \usepackage{scrhack}
 \usepackage[utf8]{inputenc}
@@ -15,6 +15,7 @@
 \usepackage[table,gray]{xcolor}
 \usepackage{listings}
 \usepackage{varioref}
+\usepackage[iso,english]{isodate}
 %\usepackage[babel]{csquotes}
 \usepackage[style=numeric]{biblatex}
 \addbibresource{JavaCodingConventions.bib}
@@ -24,16 +25,21 @@ language=Java,
 backgroundcolor=\color[gray]{.9},
 frame=single,
 framerule=0.2pt,
-basicstyle=\ttfamily,
+basicstyle=\ttfamily\footnotesize,
+xleftmargin=.2cm,
+xrightmargin=.2cm,
 keywordstyle=\color[gray]{.2}
 }
-
-\author{Thomas Thrien}
-\title{Extended Coding Conventions for Java}
 
 \colorlet{shadecolor}{gray!10}
 
 \begin{document}
+\isodate
+\titlehead{Logo}
+\author{Thomas Thrien\\(thomas.thrien@tquadrat.org)}
+\title{Extended Coding Conventions for Java}
+\date{}
+\maketitle
 \tableofcontents
 
 \chapter{Introduction}
@@ -77,28 +83,28 @@ Both styles will work, but they look different. So as a lot of other rules from 
 Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
 But there are more practical reasons to enforce these rules on the source: they make it easier …
-\begin{list}{•}{}
+\begin{itemize}
 \item … to understand the code
 \item … to navigate inside the code
 \item … to detect bugs
 \item … to fix these bugs
 \item … and to amend and enhance the code.
-\end{list}
+\end{itemize}
 
 It can make it also easier to use automated tools on the source code.
 
 All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90\% – and nearly no source is maintained by its original author or even a single programmer for its whole lifetime.
 
-The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary to us.
+The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary or at least useful to me.
 
 \section{About this Document}
-The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next we cover the naming of the program elements before we discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding rules.
+The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next it covers the naming of the program elements before I discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding rules.
 
 The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules or recommendations are first used in the samples \textit{after} being introduced.
 
 For source code samples that obey all rules and follow all recommendations, refer to chapter~\vref{sec:Examples}.
 
-All rules and recommendations assume that at least Java~17 is used to write the code. We used that version also for the samples.
+All rules and recommendations assume that at least Java~17 is used to write the code. I used that version also for the samples.
 
 \section{History and Implementation}
 I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
@@ -134,30 +140,194 @@ But if possible, the fix should incorporate the standards defined by this docume
 
 Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
 
+\section{Tool Support}
+Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\ref{sec:FormattinOfTheSourceCode} that deals with the formatting of the source code.
+
+The chapter \ref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
+
 \section{The Basic Rule}\label{sec:TheBasicRule}
 One rule should be followed before any other rule or recommendation given in this document:
 
-Always do it right in the first place!
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
 
-Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written. As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
+Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then the want to fix the bug, not adding missing comments …} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
 
 \textit{And this is exactly what we want to avoid!} 
 
-This means there is never ever any excuse for omitting comments, using 'temporary' names or doing other 'funny' things.
+This means there is never ever any excuse for omitting comments, using 'temporary' names or doing other 'funny' things. And we all know about the quick and dirty PoC that made it into a product without significant changes …
 
 So again:
 
-Always do it right in the first place!
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
 
-\chapter{Formatting of the Source Code}
+\chapter{Formatting of the Source Code}\label{sec:FormattinOfTheSourceCode}
+This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter~\vref{sec:WritingProperComments}.
+
+I start the chapter with a description of the general structure of a source file, then I give some general conventions before I cover the formatting of single elements of the code.
+
+\section{Java Source File Structure}
+A file with Java source code consists of sections that should be separated by blank lines and a comment identifying each section.
+
+Files longer than 2000 lines are cumbersome and should be avoided.\footnote{There are some well known scenarios where it is difficult to adhere with this limit. The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding rules proposed in this document require a least 5 lines for each attribute, 6 lines for each getter method and 11 lines for each setter method, always including all comments and blank lines. This is about 22 lines for each attribute. Nearly one hundred attributes seems to be a lot, but we have seen more than one real life application where database tables had more than that number of columns. We do not think that this is always a good design, but if our new Java class has to reflect the legacy data model, it has to have that number of attributes.}
+
+Each Java source file contains a single public class or interface. When private top-level classes and interfaces are associated with a public class, they can be put into the same source file as the public class, although it is not recommended.\footnote{Usually, it should be considered to have these classes or interfaces as \textit{inner} classes/interfaces} In such a case, the public class should be the first class or interface in the file.
+
+The sections of a Java source file have the following ordering:
+
+\begin{enumerate}
+\item{Beginning comments}
+\item{Package and import statements}
+\item{Class and interface declarations}
+\item{Closing comment}
+\end{enumerate}
+
+\subsection{Beginning Comments}
+All source files have begin with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a public class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
+\begin{lstlisting}
+/*
+ * ==================================================================
+ * Copyright (c) <Year> <Copyright Notice>
+ * ==================================================================
+ *
+ * <License Notice>
+ */
+\end{lstlisting}
+ 
+<Year>, <Copyright Notice> and <License Notice> has to be replaced by the appropriate texts.\footnote{And instead of the \lstinline|(c)| you should consider to use the special character \copyright; that tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
+
+The lines with the equals signs (“===”) will end at column 80; refer to chapter~\vref{sec:LineLength}.
+
+No other information should be added to this comment block.
+
+\subsection{Package and Import Statements}
+
+The first non-comment line of a Java source file is the \lstinline|package| statement\footnote{Production code will never use the default package, so there will be always a \lstinline|package| statement in every source file.}.
+
+After that, usually several \lstinline|import| statements will follow. For example:
+
+\begin{lstlisting}
+package java.awt;
+
+import static java.lang.String.format;
+import static java.lang.System.out;
+
+import java.awt.peer.CanvasPeer;
+import java.io.InputStream;
+\end{lstlisting}
+
+Static imports has to be placed before imports for classes. Inside these blocks, the imports should be ordered alphabetically. Wildcard imports like
+
+\begin{lstlisting}
+import static java.lang.String.*;
+
+import java.util.*;
+\end{lstlisting}
+
+are not allowed.
+
+For the names of packages, see chapter~\vref{sec:Packages}.
+
+Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
+
+At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
+
+\subsection{Class and Interface Declarations}
+At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. We have
+
+\begin{itemize}
+\item{classes (keyword \lstinline|class|)}
+\item{interfaces (keyword \lstinline|interface|)}
+\item{enums (keyword \lstinline|enum|)}
+\item{records (keyword \lstinline|record|)}
+\item{annotations (keyword \lstinline|@interface|)}
+\end{itemize}
+
+Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Inside each section, the elements are ordered alphabetically.
+
+\begin{tabular}{|c|c|}
+\hline 
+\rule[-1ex]{0pt}{2.5ex} Part & Description \\ 
+\hline 
+\rule[-1ex]{0pt}{2.5ex} Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+\hline 
+\end{tabular} 
+
+Data Members (optional)
+This section is separated into two parts: the first will take all constants defined by this class (meaning public static final data members), while the second takes all attributes (or fields).
+Static Initialisations (optional)
+Put the
+
+\begin{lstlisting}
+static
+{...}
+\end{lstlisting}
+
+blocks here. This is also the right place for the serialVersionUID of a seria­lisable class.
+Constructors (optional)
+All the constructors goes in this section. It is optional in case the class will have only an empty public default constructor. Usually this will not be coded.
+Methods
+All methods are in this section.
+Table 2: Parts of a Class Declaration
+Section
+Description
+Data Members (optional)
+Interfaces may only define constants.
+Methods
+All methods are in this section. Interfaces that only define constants are not al­lo­wed.
+Table 3: Parts of an Interface Declaration
+Although interfaces may define inner classes, this is not recommended.
+An enum is a special case of a class. Usually it only contains the enum values, but it can have more components.
+Section
+Description
+Enum Values
+The enum values.
+Inner Classes (possible)
+Given the enum class needs to define inner classes or interfaces, the same rules as for regular classes are valid.
+Data Members (optional)
+This section is separated into two parts: the first will take all constants defined by this enum class (meaning public static final data members, but not the enum values), while the second takes all attributes (or fields).
+Usually, an enum will not define additional constants, but it is possible to do so.
+Static Initialisations (optional)
+Same as for regular classes, with the difference that enums usually do not define a serialVersionUID.
+Constructors (optional)
+All the constructors goes in this section. It is optional in case the class will have only an empty private default constructor.1 Usually this will not be coded.
+Methods (optional)
+All methods are in this section.
+
+
+\section{Indentation}
+
+\subsection{Line Length}\label{sec:LineLength}
 
 \chapter{Naming Conventions}
 
+\section{Modules}
+
+\section{Packages}\label{sec:Packages}
+
 \section{Fields}\label{sec:Fields}
+
+\chapter{Writing proper Comment}\label{sec:WritingProperComments}
 
 \chapter{Coding Rules}\label{sec:CodingRules}
 
 \chapter{Appendices}
+
+\section{IDE Configuration}\label{sec:IDEConfiguration}
+This chapter provides samples of configuration files for some IDEs.
+
+\subsection{Eclipse}\label{sec:EclipseConfiguration}
+tbd
+
+\subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJConfiguration}
+tbd
 
 \section{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
 

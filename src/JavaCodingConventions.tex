@@ -12,8 +12,13 @@
 \usepackage{ragged2e}
 \usepackage{textcomp}
 \usepackage{framed}
+\usepackage{ltxtable}
+\usepackage{filecontents}
+\usepackage{tabularx}
+\usepackage{longtable}
 \usepackage[table,gray]{xcolor}
 \usepackage{listings}
+\usepackage[inline]{enumitem}
 \usepackage{varioref}
 \usepackage[iso,english]{isodate}
 %\usepackage[babel]{csquotes}
@@ -83,7 +88,7 @@ Both styles will work, but they look different. So as a lot of other rules from 
 Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
 But there are more practical reasons to enforce these rules on the source: they make it easier …
-\begin{itemize}
+\begin{itemize}[nosep]
 \item … to understand the code
 \item … to navigate inside the code
 \item … to detect bugs
@@ -182,7 +187,7 @@ Each Java source file contains a single public class or interface. When private 
 
 The sections of a Java source file have the following ordering:
 
-\begin{enumerate}
+\begin{enumerate}[nosep]
 \item{Beginning comments}
 \item{Package and import statements}
 \item{Class and interface declarations}
@@ -242,7 +247,7 @@ At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does s
 \subsection{Class and Interface Declarations}
 At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. We have
 
-\begin{itemize}
+\begin{itemize}[nosep]
 \item{classes (keyword \lstinline|class|)}
 \item{interfaces (keyword \lstinline|interface|)}
 \item{enums (keyword \lstinline|enum|)}
@@ -250,32 +255,69 @@ At least since Java~5, there are not only classes and interfaces that are declar
 \item{annotations (keyword \lstinline|@interface|)}
 \end{itemize}
 
-Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Inside each section, the elements are ordered alphabetically.
+Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Inside each part, the elements are ordered alphabetically.
 
-\begin{tabular}{|c|c|}
-\hline 
-\rule[-1ex]{0pt}{2.5ex} Part & Description \\ 
-\hline 
-\rule[-1ex]{0pt}{2.5ex} Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
-\hline 
-\end{tabular} 
+\begin{filecontents}{ClassParts.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Parts of a class declaration} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endfirsthead
+  \caption{Parts of a class declaration (continued} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endhead
+  Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+  \hline 
+  Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
+  \hline 
+  Attributes (optional) & Here goes the attributes for the class; technically, this part is in fact optional for a class, but usually a class without any attributes does not make much sense. Attributes are \lstinline|private| (under some exceptional circumstances, they can be \lstinline|protected|) and usually, they are not \lstinline|static|. \\ 
+  \hline 
+  Static Initialisations (optional) & If a class declares \lstinline|static| fields that are not mere constants or their initialisation is more complex than just assigning a compile time constant, these fields go into this part.
+  
+  The fields should be initialised in a \lstinline|static {...}| block.
+  
+  This is also the right place for the serialVersionUID of a seria­lisable class. \\ 
+  \hline 
+  Constructors (optional) & All the constructors for the class go into this part. It is optional in case the class will have only an empty \lstinline|public| default constructor, but usually this will be coded, too. \\ 
+  \hline 
+  Methods (optional) & All methods of the class are in this part. Again, this part is technically optional, but classes without methods are barely useful.  \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{ClassParts.tbl}
 
-Data Members (optional)
-This section is separated into two parts: the first will take all constants defined by this class (meaning public static final data members), while the second takes all attributes (or fields).
-Static Initialisations (optional)
-Put the
+\begin{filecontents}{InterfaceParts.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Parts of an interface declaration} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endfirsthead
+  \caption{Parts of an interface declaration (continued} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endhead
+  Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+  \hline 
+  Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
+  \hline 
+  Attributes (optional) & Here goes the attributes for the class; technically, this part is in fact optional for a class, but usually a class without any attributes does not make much sense. Attributes are \lstinline|private| (under some exceptional circumstances, they can be \lstinline|protected|) and usually, they are not \lstinline|static|. \\ 
+  \hline 
+  Static Initialisations (optional) & If a class declares \lstinline|static| fields that are not mere constants or their initialisation is more complex than just assigning a compile time constant, these fields go into this part.
+  
+  The fields should be initialised in a \lstinline|static {...}| block.
+  
+  This is also the right place for the serialVersionUID of a seria­lisable class. \\ 
+  \hline 
+  Constructors (optional) & All the constructors for the class go into this part. It is optional in case the class will have only an empty \lstinline|public| default constructor, but usually this will be coded, too. \\ 
+  \hline 
+  Methods (optional) & All methods of the class are in this part. Again, this part is technically optional, but classes without methods are barely useful.  \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{InterfaceParts.tbl}
 
-\begin{lstlisting}
-static
-{...}
-\end{lstlisting}
 
-blocks here. This is also the right place for the serialVersionUID of a seria­lisable class.
-Constructors (optional)
-All the constructors goes in this section. It is optional in case the class will have only an empty public default constructor. Usually this will not be coded.
-Methods
-All methods are in this section.
-Table 2: Parts of a Class Declaration
 Section
 Description
 Data Members (optional)
@@ -314,7 +356,7 @@ All methods are in this section.
 
 \section{Fields}\label{sec:Fields}
 
-\chapter{Writing proper Comment}\label{sec:WritingProperComments}
+\chapter{Writing proper Comments}\label{sec:WritingProperComments}
 
 \chapter{Coding Rules}\label{sec:CodingRules}
 

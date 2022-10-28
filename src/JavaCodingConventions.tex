@@ -83,7 +83,7 @@ public void method()
 }
 \end{lstlisting}
 
-Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste.
+Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste (but refer to chapter \vref{sec:IndentationStyle}).
 
 Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
@@ -194,7 +194,7 @@ The sections of a Java source file have the following ordering:
 \item{Closing comment}
 \end{enumerate}
 
-\subsection{Beginning Comments}
+\subsection{Beginning Comments}\label{sec:BeginningComments}
 All source files have begin with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a public class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
 \begin{lstlisting}
 /*
@@ -244,7 +244,7 @@ Eclipse users can use the function \verb#Source|Organize Imports# from the menu,
 
 At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
 
-\subsection{Class and Interface Declarations}
+\subsection{Class and Interface Declarations}\label{sec:ClassAndInterfaceDeclarations}
 At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. We have
 
 \begin{itemize}[nosep]
@@ -255,8 +255,41 @@ At least since Java~5, there are not only classes and interfaces that are declar
 \item{annotations (keyword \lstinline|@interface|)}
 \end{itemize}
 
-Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Inside each part, the elements are ordered alphabetically.
+Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Each part has a header comment, and inside each part, the elements are ordered alphabetically.
 
+\subsubsection{Class}
+A skeleton for a Java \lstinline|class| may look like this:
+\begin{lstlisting}
+public class MyClass 
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+        
+        /*-----------*\
+    ====** Constants **==============================================
+        \*-----------*/
+        
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+        
+        /*------------------------*\
+    ====** Static Initialisations **=================================
+        \*------------------------*/
+        
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+        
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+                
+}
+//  class MyClass
+\end{lstlisting}
+ 
 \begin{filecontents}{ClassParts.tbl}
   \begin{longtable}{|l|X|}
   \caption{Parts of a class declaration} \\
@@ -267,11 +300,11 @@ Each of these allows different parts in their declaration; the following tables 
   \hline 
   Part & Description \\ 
   \hline\endhead
-  Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+  Inner Classes (optional) & Given the class defines inner classes or interfaces, either \lstinline|private| or \lstinline|public|, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
   \hline 
   Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
   \hline 
-  Attributes (optional) & Here goes the attributes for the class; technically, this part is in fact optional for a class, but usually a class without any attributes does not make much sense. Attributes are \lstinline|private| (under some exceptional circumstances, they can be \lstinline|protected|) and usually, they are not \lstinline|static|. \\ 
+  Attributes (optional) & Here go the attributes for the class; technically, this part is in fact optional for a class, but usually a class without any attributes does not make much sense. Attributes are \lstinline|private| (under some exceptional circumstances, they can be \lstinline|protected|) and usually, they are not \lstinline|static|. \\ 
   \hline 
   Static Initialisations (optional) & If a class declares \lstinline|static| fields that are not mere constants or their initialisation is more complex than just assigning a compile time constant, these fields go into this part.
   
@@ -287,6 +320,27 @@ Each of these allows different parts in their declaration; the following tables 
 \end{filecontents}
 \LTXtable{\linewidth}{ClassParts.tbl}
 
+\subsubsection{Interface}
+A skeleton for an \lstinline|interface| may look like this:
+\begin{lstlisting}
+public interface MyInterface 
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+        
+        /*-----------*\
+    ====** Constants **==============================================
+        \*-----------*/
+        
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+                
+}
+//  interface MyInterface
+\end{lstlisting}
+ 
 \begin{filecontents}{InterfaceParts.tbl}
   \begin{longtable}{|l|X|}
   \caption{Parts of an interface declaration} \\
@@ -297,56 +351,403 @@ Each of these allows different parts in their declaration; the following tables 
   \hline 
   Part & Description \\ 
   \hline\endhead
-  Inner Classes (optional) & Given the class defines inner classes or interfaces, either private or public, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+  Inner Classes (optional) & Defining inner classes for an interface is discouraged, although there are some valid use cases for this. If the interface defines inner classes or interfaces, they have to be \lstinline|public| – classes have to be \lstinline|static|, too, and they will be the first part. Internally, they will follow the same rules as for top-level classes. \\ 
   \hline 
-  Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
+  Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time. \\ 
   \hline 
-  Attributes (optional) & Here goes the attributes for the class; technically, this part is in fact optional for a class, but usually a class without any attributes does not make much sense. Attributes are \lstinline|private| (under some exceptional circumstances, they can be \lstinline|protected|) and usually, they are not \lstinline|static|. \\ 
-  \hline 
-  Static Initialisations (optional) & If a class declares \lstinline|static| fields that are not mere constants or their initialisation is more complex than just assigning a compile time constant, these fields go into this part.
-  
-  The fields should be initialised in a \lstinline|static {...}| block.
-  
-  This is also the right place for the serialVersionUID of a seria­lisable class. \\ 
-  \hline 
-  Constructors (optional) & All the constructors for the class go into this part. It is optional in case the class will have only an empty \lstinline|public| default constructor, but usually this will be coded, too. \\ 
-  \hline 
-  Methods (optional) & All methods of the class are in this part. Again, this part is technically optional, but classes without methods are barely useful.  \\ 
+  Methods (optional) & All methods of the interface are in this part. Again, this part is technically optional, it can be omitted for so-called \textit{marker interfaces}.  \\ 
   \hline 
  \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{InterfaceParts.tbl}
 
+\subsubsection{enum}
+An \lstinline|enum| is a special case of a Java \lstinline|class|. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| may look like this:
+\begin{lstlisting}
+public enum MyEnum 
+{
+        /*------------------*\
+    ====** Enum Definitions **=======================================
+        \*------------------*/
+        
+        /*-----------*\
+    ====** Constants **==============================================
+        \*-----------*/
+        
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+        
+        /*------------------------*\
+    ====** Static Initialisations **=================================
+        \*------------------------*/
+        
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+        
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+                
+}
+//  enum MyEnum
+\end{lstlisting}
+ 
+\begin{filecontents}{EnumParts.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Parts of an enum declaration} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endfirsthead
+  \caption{Parts of an enum declaration (continued} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endhead
+  Enum Definitions & This part is mandatory. Each \lstinline|enum| is an instance of the enum class. \\ 
+  \hline 
+  Constants (optional) & This part takes all additional constants defined by this enum (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
+  \hline 
+  Attributes (optional) & Here goes the attributes for the enum, if any. Each attribute has to be \lstinline|private final| and will be initialised by the constructor. \\ 
+  \hline 
+  Static Initialisations (optional) & If an enum declares \lstinline|static final| fields with an initialisation that is more complex than just assigning a compile time constant, these fields go into this part.
+  
+  The fields should be initialised in a \lstinline|static {...}| block. \\
+  \hline 
+  Constructors (optional) & All the constructors for the enum (rarely there is more than one) go into this part, if any. A constructor has to \lstinline|private|. \\ 
+  \hline 
+  Methods (optional) & All methods of the class are in this part.  \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{EnumParts.tbl}
 
-Section
-Description
-Data Members (optional)
-Interfaces may only define constants.
-Methods
-All methods are in this section. Interfaces that only define constants are not al­lo­wed.
-Table 3: Parts of an Interface Declaration
-Although interfaces may define inner classes, this is not recommended.
-An enum is a special case of a class. Usually it only contains the enum values, but it can have more components.
-Section
-Description
-Enum Values
-The enum values.
-Inner Classes (possible)
-Given the enum class needs to define inner classes or interfaces, the same rules as for regular classes are valid.
-Data Members (optional)
-This section is separated into two parts: the first will take all constants defined by this enum class (meaning public static final data members, but not the enum values), while the second takes all attributes (or fields).
-Usually, an enum will not define additional constants, but it is possible to do so.
-Static Initialisations (optional)
-Same as for regular classes, with the difference that enums usually do not define a serialVersionUID.
-Constructors (optional)
-All the constructors goes in this section. It is optional in case the class will have only an empty private default constructor.1 Usually this will not be coded.
-Methods (optional)
-All methods are in this section.
+\subsubsection{Record}
+Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD}
 
+A skeleton for a Java \lstinline|record| may look like this, with all parts being optional:
+\begin{lstlisting}
+public record MyClass( ... ) 
+{
+        /*-----------*\
+    ====** Constants **==============================================
+        \*-----------*/
+        
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+        
+        /*------------------------*\
+    ====** Static Initialisations **=================================
+        \*------------------------*/
+        
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+        
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+                
+}
+//  record MyRecord
+\end{lstlisting}
+ 
+\begin{filecontents}{RecordParts.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Parts of a record declaration} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endfirsthead
+  \caption{Parts of a record declaration (continued} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endhead
+  Constants (optional) & This part takes all constants defined by this record (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
+  \hline 
+  Attributes (optional) & Here go the attributes for the class; this part is optional, because usually, all attributes are defined as arguments to the \lstinline|record| definition. \\ 
+  \hline 
+  Static Initialisations (optional) & If a record declares \lstinline|static| fields that are not mere constants or their initialisation is more complex than just assigning a compile time constant, these fields go into this part.
+  
+  The fields should be initialised in a \lstinline|static {...}| block. \\ 
+  \hline 
+  Constructors (optional) & If the record needs additional constructors, these go into this part. It is optional, because in most cases no additional constructor is need. \\ 
+  \hline 
+  Methods (optional) & All additional methods of the record are in this part. \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{RecordParts.tbl}
+
+\subsubsection{Annotation}
+Annotations had been introduced with Java~5. 
+A skeleton for an \lstinline|annotation| may look like this:
+\begin{lstlisting}
+public @interface MyAnnotation 
+{
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+                
+}
+//  @interface MyAnnotation
+\end{lstlisting}
+ 
+\begin{filecontents}{AnnotationParts.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Parts of an annotation declaration} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endfirsthead
+  \caption{Parts of an annotation declaration (continued} \\
+  \hline 
+  Part & Description \\ 
+  \hline\endhead
+  Attributes (optional) & Here go the attributes for the annotation, if any. \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{AnnotationParts.tbl}
+
+\subsection{Closing Comment}
+A closing comment like
+\begin{lstlisting}
+/*
+ *  End of File
+ */
+\end{lstlisting}
+at the end of the source file is helpful to detect whether a source file was corrupted: if missing, there is a good chance that the file is incomplete.
+
+I confess that this kind of error has got very unlikely with modern hard-drives, but it can still happen when sending around sources over the net.
 
 \section{Indentation}
+Indentation, together with empty lines, is the most important tool to structure any source code.
+
+\subsection{Indentation Style}\label{sec:IndentationStyle}
+I prefer the so-called GNU or BSD style and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block. It demands to have the opening and closing curly braces on a line of their own, like this:
+
+\begin{lstlisting}
+public class MyClass
+{
+    public void method()
+    {
+        if( flag )
+        {
+            /* do something */
+        }
+        
+        for( final var i = 0; i < max; ++i )
+        {
+            /* do something else */
+        } 
+    }
+}
+\end{lstlisting}
+
+\subsection{Indentation Size}
+Four (4) spaces should be used as the unit of indentation. Tabs are not allowed.\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun Coding Convention do not explicitly specify whether to use blanks or tabs.} Usually this can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
 \subsection{Line Length}\label{sec:LineLength}
+Some sources (including the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}) recommend to avoid lines longer than 80 characters, because they were not handled well by many terminals and tools.
+
+This had been true at the time those documents were written, but today's  graphical screens are much wider (sometimes even 200 characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.
+
+\textbf{Note:} Sample code for use in documentation should have a limited line length – generally not more than 70 characters.
+
+Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extented to that column. This is pertaining to the beginning comments (chapter \vref{sec:BeginningComments}), the structuring comments (chapter \vref{sec:StructuringComments}) and most single-line comments (chapter \ref{sec:SingleLineComments}).
+
+\subsubsection{Wrapping Lines}\label{sec:WrappingLines}
+When an expression does not fit on a single line, break it according to these general principles:
+\begin{itemize}[nosep]
+\item{Break after a comma.}
+\item{Break before an operator.}
+\item{Prefer higher-level breaks to lower-level breaks.}
+\item{Align the new line with the beginning of the expression at the same level on the previous line.}
+\item{If the above rules lead to confusing code or to code that's squished up against the right margin, just indent 8 (eight) spaces instead.}
+\end{itemize}
+
+Here are some examples of breaking method calls:
+\begin{lstlisting}[numbers=left]
+// USUAL
+someMethod( longExpression1, longExpression2, longExpression3,
+    longExpression4, longExpression5 );
+        
+// SINGLE LINE FOR EACH ARGUMENT
+someMethod
+( 
+    longExpression1,
+    longExpression2,
+    longExpression3,
+    longExpression4, // some comment
+    longExpression5
+);
+
+// LONG EXPRESSIONS
+var = someMethod1( longExpression1,
+        someMethod2( longExpression2,
+                longExpression3 ) );
+\end{lstlisting}
+
+Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument.
+
+Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
+\begin{lstlisting}[numbers=left]
+longName1 = longName2 * (longName3 + longName4 - longName5)
+           + 4 * longname6; // PREFER
+longName1 = longName2 * (longName3 + longName4
+                       - longName5) + 4 * longname6; // AVOID!!!!!
+\end{lstlisting}
+
+Then we have three examples of indenting method declarations. The first is the conventional case. The second would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final one uses a single line for each argument.
+
+A throws clause will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
+\begin{lstlisting}[numbers=left]
+// CONVENTIONAL INDENTATION
+public void someMethod( int anArg, Object anotherArg,
+            String yetAnotherArg, Object andStillAnother )
+{
+    // Code
+}
+
+public void otherMethod( int anArg, Object anotherArg,
+            String yetAnotherArg, Object andStillAnother )
+    throws IllegalArgumentException, IOException
+{
+    // Code
+}
+
+// INDENT 8 SPACES TO AVOID VERY DEEP INDENTS
+private static synchronized void horkingLongMethodName( int anArg,
+        Object anotherArg, String yetAnotherArg,
+        Object andStillAnother )
+{
+    // Code
+}
+
+private static synchronized void horkingLongMethodThrows( int anArg,
+        Object anotherArg, String yetAnotherArg,
+        Object andStillAnother ) throws IllegalArgumentException
+{
+    // Code
+}
+
+// SINGLE LINE FOR EACH ARGUMENT
+private static synchronized anotherHorkingLongMethodLine
+(
+    int anArg,
+    Object anotherArg,
+    String yetAnotherArg,
+    Object andStillAnother
+)
+{
+    // Code
+}
+
+private static synchronized anotherHorkingLongMethodLineThrows
+(
+    int anArg,
+    Object anotherArg,
+    String yetAnotherArg,
+    Object andStillAnother
+) throws IllegalArgumentException, IOException
+{
+    // Code
+}
+\end{lstlisting}
+
+Here are three acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \vref{sec:TheTernaryOperator}.}:
+\begin{lstlisting}[numbers=left]
+alpha = (aLongBooleanExpression) ? beta : gamma;
+alpha = (aLongBooleanExpression) ? beta
+                                 : gamma;
+alpha = (aLongBooleanExpression)
+        ? beta
+        : gamma;
+\end{lstlisting}
+
+\section{Declarations}
+This chapter deals with the formatting of declarations. See also chapter \vref{sec:WrappingLines} for informations on how to wrap long declarations.
+
+\subsection{Multiple Declarations per Line}
+It is strongly encouraged to have only one declaration per line, as it is also comforting to add comments to the declaration. In other words, 
+\begin{lstlisting}
+int level; // indentation level
+int size;  // size of table
+\end{lstlisting}
+
+is preferred over
+
+\begin{lstlisting}
+int level, size; // AVOID!!!
+\end{lstlisting}
+
+Do not put different types on the same line, despite the compiler does not complain about it. Example:
+\begin{lstlisting}
+int foo, fooarray []; // WRONG!!!!
+\end{lstlisting}
+
+\subsection{Array Declarations}
+The brackets for an array declaration always have to be put to the type, not to the name. So it should read
+\begin{lstlisting}
+int [] foo;
+String [] bar;
+java.awt.Button [] buttons;
+\end{lstlisting}
+and not
+\begin{lstlisting}
+int foo []; // AVOID!!!
+String bar []; // AVOID!!!
+java.awt.Button buttons []; // AVOID!!!
+\end{lstlisting}
+This is the same way as an array would be declared as the return value for a method:
+\begin{lstlisting}
+public final static String [] getTexts()
+{
+    return m_Texts;
+}
+\end{lstlisting}
+
+\subsection{Placement of Declarations}
+You should put declarations where there are needed; usually this means that it should be waited with the declaration of variables until their first use.\footnote{In this aspect, my point of view is completely contradicting to that of the authors of \autocite{SUN_CODE_CONVENTIONS}.}
+
+This is true even for variables inside a loop:
+\begin{lstlisting}
+for( var i = 0; i < limit; ++i )
+{
+    final var a = getValue( i );
+    // more code
+}
+\end{lstlisting}
+
+Only the repeated initialisation of a variable inside a loop should be avoided, when possible:
+\begin{lstlisting}[numbers=left]
+// AVOID!
+for( var i = 0; i < limit; ++i )
+{
+    final var a = new VeryComplexType();
+    // more code
+}
+\end{lstlisting}
+In this case, line~4 should be moved before the loop header (line~2).
+
+Absolutely avoid local declarations that hide declarations at higher levels. For example, do not declare a variable with the same name as a field:
+\begin{lstlisting}
+public class MyClass
+{
+    int count;
+
+    public void method()
+    {
+        if( condition )
+        {
+            int count = 0; // AVOID!
+            // more code
+        }
+        // more code
+    }
+}
+\end{lstlisting}
+There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \vref{sec:Fields}) would make such a situation unlikely.
 
 \chapter{Naming Conventions}
 
@@ -358,7 +759,45 @@ All methods are in this section.
 
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 
+\section{Implementation Comment Formats}
+
+\subsection{Structuring Comments}\label{sec:StructuringComments}
+These are the easiest comments: they are used to separate the sections or parts of a class (as defined in chapter \vref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
+\begin{lstlisting}
+    /*------------------*\
+====** Enum Declaration **===========================================
+    \*------------------*/
+    /*---------------*\
+====** Inner Classes **==============================================
+    \*---------------*/
+    /*-----------*\
+====** Constants **==================================================
+    \*-----------*/
+    /*------------*\
+====** Attributes **=================================================
+    \*------------*/
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+    /*--------------*\
+====** Constructors **===============================================
+    \*--------------*/
+    /*---------*\
+====** Methods **====================================================
+    \*---------*/
+\end{lstlisting}
+
+with the lines ending at column 80 (the samples here are too short).
+
+If a class or interface does not have a particular section or part, the assigned structuring comment must be omitted.
+
+I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert.}. Refer to chapter \vref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
+
+\subsection{Single-Line Comments}\label{sec:SingleLineComments}
+
 \chapter{Coding Rules}\label{sec:CodingRules}
+
+\section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
 
 \chapter{Appendices}
 
@@ -367,6 +806,116 @@ This chapter provides samples of configuration files for some IDEs.
 
 \subsection{Eclipse}\label{sec:EclipseConfiguration}
 tbd
+\subsubsection{Snippets}
+This chapter provides the XML code for Eclipse snippets.
+
+\paragraph{Structuring Comments}\label{sec:SnippetStructuringComments}
+The snippets for the structuring comments as defined in chapter \vref{sec:StructuringComments}.
+\begin{lstlisting}[language=xml,basicstyle=\ttfamily\tiny]
+<?xml version="1.0"
+      encoding="UTF-16" 
+      standalone="no"?>
+<snippets>
+    <category filters="*"
+              id="category_1145179107125"
+              initial_state="0"
+              label="Structuring Comments"
+              largeicon=""
+              smallicon="">
+        <description><![CDATA[Structuring Comments as defined by the Code Conventions]]></description>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145232938375"
+              label="Enum Declaration"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the enum definition part]]></description>
+            <content><![CDATA[        /*------------------*\
+    ====** Enum Definitions **=================================================
+        \*------------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145179869843"
+              label="Inner Classes"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the inner classes part]]></description>
+            <content><![CDATA[        /*---------------*\
+    ====** Inner Classes **====================================================
+        \*---------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1251889697104"
+              label="Constants"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The part comment for constants.]]></description>
+            <content><![CDATA[      /*-----------*\
+    ====** Constants **========================================================
+        \*-----------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1251888677777"
+              label="Attributes"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The part comment for attributes.]]></description>
+            <content><![CDATA[      /*------------*\
+    ====** Attributes **=======================================================
+        \*------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145179436656"
+              label="Static Initialisations"
+              largeicon="" smallicon="">
+            <description><![CDATA[The header comment for the static initialisations part]]></description>
+            <content><![CDATA[        /*------------------------*\
+    ====** Static Initialisations **===========================================
+        \*------------------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145180117906"
+              label="Constructors"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the constructors part]]></description>
+            <content><![CDATA[    	/*--------------*\
+    ====** Constructors **=====================================================
+        \*--------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145180168796"
+              label="Methods"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the methods part]]></description>
+            <content><![CDATA[    	/*---------*\
+    ====** Methods **==========================================================
+        \*---------*/
+]]></content>
+        </item>
+    </category>
+</snippets>
+\end{lstlisting}
 
 \subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJConfiguration}
 tbd

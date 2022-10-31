@@ -423,7 +423,7 @@ public enum MyEnum
 \LTXtable{\linewidth}{EnumParts.tbl}
 
 \subsubsection{Record}
-Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for "plain data carriers," classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD}
+Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD}
 
 A skeleton for a Java \lstinline|record| may look like this, with all parts being optional:
 \begin{lstlisting}
@@ -749,6 +749,536 @@ public class MyClass
 \end{lstlisting}
 There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \vref{sec:Fields}) would make such a situation unlikely.
 
+\subsection{Class and Interface Declarations}
+When coding Java classes and interfaces, the following formatting rules has to be followed:
+\begin{itemize}
+\item{No space between a method or constructor name and the parenthesis “(” starting its formal parameters list.}
+\item{If using generics, no space between the name of the class or interface and the opening “<”.}
+\item{An open curly brace “{” appears at a line by itself with the same indentation as the declaration statement.}
+\item{A closing curly brace “}” starts a new line, indented to match its corresponding opening statement; in case of a method or constructor declaration, it is followed by a comment with the name of the method. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.}
+\item{Inner classes, constants, attributes, constructors, methods, they all are separated by a blank line (see chapter \ref{sec:BlankLines}.}
+\item{Short methods may be written in one single line. In this case, “one single line” means exactly that: \textit{one single} line! Any line break requires the full form as for the sample “composeCorrectKey()” below (line 28).}
+\end{itemize}
+An example:
+\begin{lstlisting}[numbers=left]
+class Sample extends Object implements Comparable<Sample>
+{
+    int ivar1;
+    
+    int ivar2;
+    
+    Sample( int i, int j ) 
+    {
+        ivar1 = i;
+        ivar2 = j;
+        // More code goes here
+    } //  Sample()
+    
+    void method()
+    {
+        // Do something here!
+    } //  method()
+    
+    // SHORT METHOD
+    int getIVar1() { return ivar1; }
+    
+    // AVOID!!! Not a short method!
+    String composeWrongKey( String component1, String component2,
+                            String component3 ) { return component1
+        + component2 + component3; }
+        
+    // Correct
+    String composeCorrectKey( String component1, String component2,
+                              String component3 )
+    {
+        return component1 + component2 + component3;
+    }   //  composeCorrectKey()
+}
+// class Sample
+\end{lstlisting}
+
+The comments at the end of the methods make it easier to navigate inside long source files, especially when scrolling upwards.
+
+\section{White Space}
+This chapter deals with the white space other than the indentation blanks.
+
+\subsection{Blank Lines}\label{sec:BlankLines}
+Blank lines improve readability by setting off sections of code that are logically related.
+If not separated by an explicit comment, two blank lines should always be used in the following circumstances:
+\begin{itemize}
+\item{Between sections of a source file\footnote{Although this would hurt the rules for commenting as set in chapter \ref{sec:StructuringComments}}}
+\item{Between class and interface definitions}
+\end{itemize}
+
+One blank line should always be used in the following circumstances:
+\begin{itemize}
+\item{Between methods}
+\item{Before a block or single-line comment}
+\item{Between logical sections inside a method to improve readability}
+\item{To group some code lines logically}
+\end{itemize}
+More than one blank line should be avoided, except for the case mentioned above.
+
+\subsection{Parenthesis}\label{sec:Parenthesis}
+We distinguish between arithmetical parenthesis and parameter parenthesis; the first is used in expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
+
+\paragraph{Arithmetical Parenthesis}–
+An opening arithmetical parenthesis is always preceded by a blank or another opening parenthesis and never followed by a blank, a closing one is never preceded by a blank, but always followed either by another closing parenthesis, a blank, or a newline (or a semicolon, in case the statement ends).
+
+\paragraph{Parameter Parenthesis}\label{sec:ParameterParenthesis}–
+An opening parameter parenthesis is never preceded by a blank and ever followed by one, while a closing one is always preceded by one. The only exception is for empty arguments lists where the opening parenthesis is immediately followed by the closing parenthesis.
+
+Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like functions (see also chapter \ref{sec:BlankLines}).\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside there 'argument list'.}
+
+This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
+
+\begin{lstlisting}[numbers=left]
+int v = (a + b) * 5;
+double d = sin( (a + b) / c );
+System.out.println( "Finished!" );
+set( get() );
+System.out.println( sin( ((a + b) * (c + 4) + c)) / d ) );
+if( a < b ) c = (d + e) / sin( f );
+while( ((line = reader.readLine()) != null) && (++i < capacity) )
+    processLine( line );
+\end{lstlisting}
+
+\subsection{Blank Spaces}\label{sec:BlankSpaces}
+Additionally, blank spaces should be used in the following circumstances:
+\begin{itemize}
+\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \ref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
+
+Examples:
+\begin{lstlisting}[numbers=left]
+while( true )
+{
+    // Some code
+}
+
+for( int i = 0; i < 10; ++i ) { /* Some Code */ }
+
+try
+{
+    // Some code
+}
+catch( Exception e )
+{
+    e.printStackTrace();
+}
+
+if( list.isEmpty() ) { /* Some Code */ }
+\end{lstlisting}}
+\item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
+
+Examples:
+\begin{lstlisting}[numbers=left]
+Map<String,String> map = new HashMap<String,String>();
+Map<String,String> map = new HashMap<>(); // using the diamond operator
+map.put( key, value );
+\end{lstlisting}}
+\item{All binary operators except “.” has to be separated from their operands by spaces. Blank spaces should never separate unary operators such as unary minus, increment (“++”), and decrement (“--”) from their operands.
+
+Example:
+\begin{lstlisting}[numbers=left]
+a += c + d;
+a = (a + b) / (c * d);
+
+while( d-- > s++ )
+{
+    ++n;
+}
+
+printSize( "size is " + foo + "\n" );
+\end{lstlisting}}
+\item{The expressions in a for statement has to be separated by blank spaces after the semicolon.
+
+Example:
+\begin{lstlisting}
+for( expr1; expr2; expr3 )
+{
+    // Some code
+}
+\end{lstlisting}
+
+For an extended for loop, blank spaces has to be placed around the colon, too:
+\begin{lstlisting}[numbers=left]
+for( String s : stringArray ) System.out.println( s );
+\end{lstlisting}}
+\item{For ternary statements, the question mark (“?”) and the colon (“:”) has to be surrounded by blank spaces:
+
+Example:
+\begin{lstlisting}
+int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
+\end{lstlisting}
+
+In this sample, some parentheses would be helpful, too.}
+\item{Casts should be followed by a blank space. 
+
+Examples:
+\begin{lstlisting}
+method( (byte) aNum, (Object) x);
+method( (int) (cp + 5), ((int) (i + 3)) + 1 );
+\end{lstlisting}}
+\end{itemize}
+
+\section{Statements}
+Now we will have a look on how to format statements.
+
+\subsection{Simple Statements}
+Each line should contain at most one statement. Or, the other way round, each (simple) statement has to be written to its own line.
+
+Example:
+\begin{lstlisting}
+// CORRECT
+++argv;
+--argc;
+
+// AVOID!!!
+--argv; --argc;
+\end{lstlisting}
+
+\subsection{Compound Statements}\label{sec:CompoundStatements}
+Compound statements are statements that contain lists of statements enclosed in curly braces “{ statements }”. See the following sections for examples.
+
+Here some general rules first:
+\begin{itemize}
+\item{The enclosed statements should be indented one more level than the compound statement.}
+\item{The opening brace should be at a line of itself, indented to the same level as the compound statement.
+Accordingly, the closing brace should begin a line and be indented to the beginning of the compound statement. The exception are short methods where all is one line (refer to chapter \vref{sec:ClassAndInterfaceDeclarations})}.
+\item{Braces are used around all statements (meaning even if there is just one) when they are part of a control structure, such as a \lstinline|if-else| or \lstinline|for| statement. This makes it easier to add statements without accidentally introducing bugs due to forgetting to add braces.
+
+The only exception from this rule is when a single statement is written on the same line as the compound statement itself.
+
+Examples:
+
+\begin{lstlisting}[numbers=left]
+// Ok
+if( a < b ) c = d;
+
+// AVOID!!!
+if( a < b ) c = d; else e = f;
+if( a < b )
+    c = d;
+if( a < b )
+    c = d;
+else
+    e = f;
+
+// RECOMMENDED
+if( a < b )
+{
+    c = d;
+}
+else
+{
+    e = f;
+}
+
+// Ok
+for( String s : strings ) ++i;
+
+// AVOID!!!!
+for( String s : strings )
+    ++i;
+
+// RECOMMENDED
+for( String s : strings )
+{
+    ++i;
+}
+
+// DISCOURAGED
+for( String s : strings ) if( a < b ) c = d;
+\end{lstlisting}
+
+See also the chapters \ref{sec:IfStatements}, \ref{sec:SwitchStatement}, and \ref{sec:WhileStatements}.}
+
+\item{Long compound statements (long code blocks) should get an end comment. See chapters \ref{sec:LabelsAndBreakStatements}, \ref{sec:TrailingOrEndOfLineComments}, and \ref{sec:CommentsWhen}.} 
+\end{itemize}
+
+\subsection{“Chaining”}
+The interface for some classes allow to chain methods. If it is especially designed to allow this, it is referred to as the “Builder pattern”. Examples for this are \lstinline|java.lang.StringBuffer|, \lstinline|java.lang.StringBuilder|, and since Java~5, also \lstinline|java.io.Writer| and the classes derived from that class.
+
+“Chaining” would allow to write
+
+\begin{lstlisting}
+writer.append( "Caption\t: " ).append( value );
+\end{lstlisting}
+
+instead of
+
+\begin{lstlisting}
+writer.append( "Caption\t: " );
+writer.append( value );
+\end{lstlisting}
+
+The formatting rules are as follows:
+\begin{itemize}
+\item{If the “chain” does not fit completely into a single line, each method call has to be written into a single line of its own (as in line 4 below}
+\item{The dot has to be written in front of the method's name}
+\item{The methods will be indented regularly}
+\end{itemize}
+
+Some samples:
+\begin{lstlisting}[numbers=left]
+// Acceptable
+writer.append( "Caption\t: " ).append( value );
+
+// RECOMMENDED
+writer.append( "Caption\t: " )
+    .append( value );
+    
+// WRONG: The dot is trailing!
+writer.append( "Caption\t: " ).
+    append( value );
+\end{lstlisting}
+
+Java~8 introduced Streams and those will be formatted in the same way.
+
+Example:
+\begin{lstlisting}[numbers=left]
+final var names = customers.stream()
+    .filter( c -> c.getCountry().equals( GERMANY )
+    .filter( c -> c.getTurnover() > limit )
+    .map( Customer::getName )
+    .sorted()
+    .toArray( String []::new );
+\end{lstlisting}
+
+\subsection{return Statements}
+A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \vref{sec:ReturningValues}!
+Example:
+\begin{lstlisting}[numbers=left]
+// Usually obsolete
+return;
+
+// NOT RECOMMENDED
+return myDisk.size();
+
+// MAY BE OK
+return (m_Size > 0 ? m_Size : m_DefaultSize); 
+
+// AVOID!!!
+return( retValue );
+
+// RECOMMENDED; usually the only valid form 
+return retValue; 
+\end{lstlisting}
+
+\subsection{if, if-else, if else-if else Statements}\label{sec:IfStatements}
+The chapters \ref{sec:Parenthesis}, \ref{sec:BlankSpaces}, and \ref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
+
+The base forms for this class of statements are the following ones:
+\begin{lstlisting}[numbers=left]
+if( <condition> )
+{
+    <statements>;
+}
+
+if( <condition>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+\end{lstlisting}
+
+In case there are more conditions to check, but a switch statement cannot be used due to the data types involved or the logic for the conditions, use the form in line 15.
+
+The only occasion where an if statement does not need the curly braces (“{}”) is when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
+
+\begin{lstlisting}
+if( <condition> ) <singleStatement>;
+\end{lstlisting}
+
+In any other case the curly brace are mandatory, to avoid the following error-prone forms:
+
+\begin{lstlisting}[numbers=left]
+// AVOID! MISSING CURLY BRACES {}!
+if( <condition> )
+    <statement>;
+
+// AVOID!!! EVEN WORSE THAN ABOVE!!    
+if( <condition> )
+    <statement>;
+else
+    <statement>;
+\end{lstlisting}
+
+Please refer also to chapter \vref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
+
+
+%---------------------------------------- Proceed from here!!!!
+
+
+
+\subsection{switch Statements}\label{sec:SwitchStatements}
+A switch statement should have the following form:
+switch( <condition> )
+{
+    case ABC:
+        <statements>;
+        // Falls through!
+
+    case DEF:
+        <statements>;
+        break;
+
+    case GHI: <singleStatement>; break;
+
+    case JKL:
+    {
+        <statements>;
+        break;
+    }
+
+    default:
+       <statements>;
+       break;
+}
+Every time a case falls through (does not include a break statement), add a comment where the break statement would normally be. This is shown in the preceding code example with the “// Falls through!” comment. Another comment assigned to the switch statement then should describe the expected sequence of cases.
+Every switch statement should include a default case, even when using an enum type as selector and handling all known values in the cases; in such a case, the default can throw an exception about an unknown value. The break in the default case is redundant, but it prevents a fall-through error if later another case is added – although it should be assured that the default case is always the last case in the switch statement.
+The use of braces in the cases is optional, but sometimes useful as it allows to declare additional local variables for a given branch.
+2.5.7. for Statements
+A for statement should have one of the following forms:
+// Classic for loop:
+for( <initialization>; <condition>; <update> )
+{
+    <statements>;
+}
+for( <initialization>; <condition>; <update> ) <singleStatement>;
+// Enhanced for loop:
+for( <declaration> : <iterable> )
+{
+    <statements>;
+}
+for( <declaration> : <iterable> ) <singleStatement>;
+This means that braces has to be used in any case when more than one statement has to be executed in the loop. In addition, this single statement has to be written completely into the same line as the for. Examples:
+for( int i = 0; i < max; ++i ) sum += i; // OK
+for( String s : texts ) System.out.println( s ); // OK
+// DISCOURAGED
+for( int i = 0; i < max; ++i ) if( v [i] > 0 ) sum += v [i]; // ??
+// DISCOURAGED
+for( String s : texts ) if( !s.empty() ) out.println( s ); // ??
+for( int i = 0; i < max; ++i ) if( v [i] > 0 ) // AVOID!!!
+{
+    sum += v [i];
+}
+else
+{
+    sum -= v [i];
+}
+for( String s : texts ) if( !s.empty() ) // AVOID!!!
+{
+    System.out.print( “Value: “ );
+    System.out.println( s );
+}
+The versions above marked with the double question marks are correct according to this rule, but as said in comment above them, their use is discouraged and therefore should be avoided, too.
+An empty for statement (one in which all the work is done in the initialization, condition, and update clauses) should have the following form:1
+for( <initialization>; <condition>; <update> );
+When using the comma operator in the initialization or update clause of a for statement, avoid the complexity of using more than three variables. If needed, use separate statements before the for loop (for the initialization clause) or at the end of the loop (for the update clause). 
+
+\subsection{while Statements}\label{sec:WhileStatements}
+A while statement should have one of the following form:
+while( <condition> )
+{
+    <statements>;
+}
+while( <condition> ) <singleStatement>
+Again, braces can only be omitted in case there is only a single statement, written on the same line than the while statement that has to be executed in the loop.
+An empty while statement should have the following form: 
+while( <condition> );
+2.5.9. do-while Statements
+A do-while statement should have the following form:
+do
+{
+    <statements>;
+}
+while( <condition> );
+2.5.10. try-catch Statements
+A try-catch statement should have the following format:
+try
+{
+    <statements>;
+}
+catch( <ExceptionClass> e )
+{
+    <statements>;
+}
+A try-catch statement may also be followed by finally, which executes regardless of whether or not the try block has completed successfully.
+try
+{
+    <statements>;
+}
+catch( <ExceptionClass> e )
+{
+    <statements>;
+}
+finally
+{
+    <statements>;
+}
+In case a finally block is present, the catch block is optional, meaning that no exception is caught:
+try
+{
+    <statements>;
+}
+finally
+{
+    <statements>;
+}
+Note: An empty catch block is unacceptable under all circumstances! Refer to chapter “5.6.2 General Exception Handling” on page 76 how to handle exceptions. See also chapter “4.2.3 Single-Line Comments” on page 61 about empty blocks and comments.
+An empty finally block is completely obsolete and should be removed.
+
+\subsection{Labels and break Statements}\label{sec:LabelsAndBreakStatements}
+Using the break statement outside the context of a switch statement is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.
+We recommend to use always a meaningful label together with break. This would make it more obvious what is intended with the break, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter “4.2.4 Trailing or End-Of-Line Comments” and “4.4 Comments when?”.
+Some samples:
+// BAD!!!
+for( int line = 0; line < maxLines; ++line )
+{
+    for( int column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break; // What??
+        …
+    }
+
+    processLine( field [line] );
+}
+// RECOMMENDED
+LineLoop: for( int line = 0; line < maxLines; ++line )
+{
+    ColumnLoop: for( int column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break ColumnLoop;
+        …
+    } //  ColumnLoop:
+    processLine( field [line] );
+} // LineLoop:
+// RECOMMENDED
+DirectionSwitch: switch( direction )
+{
+    case LEFT: goLeft(); break DirectionSwitch;
+    case RIGHT: goRight(); break DirectionSwitch;
+    default:
+        throw new IllegalArgumentException( direction.toString() );
+} //  DirectionSwitch:
+
 \chapter{Naming Conventions}
 
 \section{Modules}
@@ -795,7 +1325,13 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 
 \subsection{Single-Line Comments}\label{sec:SingleLineComments}
 
+\subsection{Trailing or End-Of-Line Comments}\label{sec:TrailingOrEndOfLineComments}
+
+\section{Comments when?}\label{sec:CommentsWhen}
+
 \chapter{Coding Rules}\label{sec:CodingRules}
+
+\section{Returning Values}\label{sec:ReturningValues}
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
 

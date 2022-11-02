@@ -30,10 +30,33 @@ language=Java,
 backgroundcolor=\color[gray]{.9},
 frame=single,
 framerule=0.2pt,
-basicstyle=\ttfamily\footnotesize,
+basicstyle=\ttfamily\footnotesize\bfseries,
+commentstyle=\color[gray]{.2}\bfseries,
+keywordstyle=\color[gray]{.2},
 xleftmargin=.2cm,
 xrightmargin=.2cm,
-keywordstyle=\color[gray]{.2}
+breaklines=true,
+breakatwhitespace=true,
+inputencoding=utf8,
+extendedchars=true,
+literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {ã}{{\~a}}1 {ẽ}{{\~e}}1 {ĩ}{{\~i}}1 {õ}{{\~o}}1 {ũ}{{\~u}}1
+  {Ã}{{\~A}}1 {Ẽ}{{\~E}}1 {Ĩ}{{\~I}}1 {Õ}{{\~O}}1 {Ũ}{{\~U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
+  {©}{{\copyright}}1
+  {…}{{\dots}}1
 }
 
 \colorlet{shadecolor}{gray!10}
@@ -66,7 +89,7 @@ Coding Conventions are primarily rules that should help making code better to ma
 \begin{lstlisting}
 public void method (){
     if (flag) {
-        /* do something */
+        …
     }
 }
 \end{lstlisting}
@@ -78,7 +101,7 @@ public void method()
 {
     if( flag )
     {
-        /* do something */
+    	…
     }
 }
 \end{lstlisting}
@@ -121,7 +144,7 @@ I wrote some libraries that supports some of the rules and recommendations, in p
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
 Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in TeX/LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
-Obviously there are some common rules that are valid for every language, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language A just and only it is done that way in language B. On the other side, it should always be proved, if something that worked fine for one language would not be a great idea to be applied to code in another language. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
+Obviously there are some common rules that are valid for every language, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved, if something that worked fine for one language would not be a great idea to be applied to code in another language. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
 
 But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter~\ref{sec:TheBasicRule} below will be applicable to each!
 
@@ -196,17 +219,17 @@ The sections of a Java source file have the following ordering:
 
 \subsection{Beginning Comments}\label{sec:BeginningComments}
 All source files have begin with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a public class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left]
 /*
  * ==================================================================
- * Copyright (c) <Year> <Copyright Notice>
+ * Copyright © <Year> <Copyright Notice>
  * ==================================================================
  *
  * <License Notice>
  */
 \end{lstlisting}
  
-<Year>, <Copyright Notice> and <License Notice> has to be replaced by the appropriate texts.\footnote{And instead of the \lstinline|(c)| you should consider to use the special character \copyright; that tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
+<Year>, <Copyright Notice> and <License Notice> has to be replaced by the appropriate texts.\footnote{The special character \copyright is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
 
 The lines with the equals signs (“===”) will end at column 80; refer to chapter~\vref{sec:LineLength}.
 
@@ -223,17 +246,21 @@ package java.awt;
 
 import static java.lang.String.format;
 import static java.lang.System.out;
+…
 
 import java.awt.peer.CanvasPeer;
 import java.io.InputStream;
+…
 \end{lstlisting}
 
 Static imports has to be placed before imports for classes. Inside these blocks, the imports should be ordered alphabetically. Wildcard imports like
 
 \begin{lstlisting}
 import static java.lang.String.*;
+…
 
 import java.util.*;
+…
 \end{lstlisting}
 
 are not allowed.
@@ -265,27 +292,32 @@ public class MyClass
         /*---------------*\
     ====** Inner Classes **==========================================
         \*---------------*/
+    …    
         
         /*-----------*\
     ====** Constants **==============================================
         \*-----------*/
+    …
         
         /*------------*\
     ====** Attributes **=============================================
         \*------------*/
-        
+    …
+            
         /*------------------------*\
     ====** Static Initialisations **=================================
         \*------------------------*/
+    …
         
         /*--------------*\
     ====** Constructors **===========================================
         \*--------------*/
+    …
         
         /*---------*\
     ====** Methods **================================================
         \*---------*/
-                
+    …            
 }
 //  class MyClass
 \end{lstlisting}
@@ -328,14 +360,17 @@ public interface MyInterface
         /*---------------*\
     ====** Inner Classes **==========================================
         \*---------------*/
+    …
         
         /*-----------*\
     ====** Constants **==============================================
         \*-----------*/
+    …
         
         /*---------*\
     ====** Methods **================================================
         \*---------*/
+    …
                 
 }
 //  interface MyInterface
@@ -369,26 +404,32 @@ public enum MyEnum
         /*------------------*\
     ====** Enum Definitions **=======================================
         \*------------------*/
+    …
         
         /*-----------*\
     ====** Constants **==============================================
         \*-----------*/
+    …
         
         /*------------*\
     ====** Attributes **=============================================
         \*------------*/
+    …
         
         /*------------------------*\
     ====** Static Initialisations **=================================
         \*------------------------*/
+    …
         
         /*--------------*\
     ====** Constructors **===========================================
         \*--------------*/
+    …
         
         /*---------*\
     ====** Methods **================================================
         \*---------*/
+    …
                 
 }
 //  enum MyEnum
@@ -432,22 +473,27 @@ public record MyClass( ... )
         /*-----------*\
     ====** Constants **==============================================
         \*-----------*/
+    …
         
         /*------------*\
     ====** Attributes **=============================================
         \*------------*/
+    …
         
         /*------------------------*\
     ====** Static Initialisations **=================================
         \*------------------------*/
+    …
         
         /*--------------*\
     ====** Constructors **===========================================
         \*--------------*/
+    …
         
         /*---------*\
     ====** Methods **================================================
         \*---------*/
+    …
                 
 }
 //  record MyRecord
@@ -488,6 +534,7 @@ public @interface MyAnnotation
         /*------------*\
     ====** Attributes **=============================================
         \*------------*/
+    …
                 
 }
 //  @interface MyAnnotation
@@ -540,8 +587,8 @@ public class MyClass
         {
             /* do something else */
         } 
-    }
-}
+    }   //  method()
+}   //  class MyClass
 \end{lstlisting}
 
 \subsection{Indentation Size}
@@ -592,10 +639,13 @@ Using a single line for each argument makes especially sense in cases where one 
 
 Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
 \begin{lstlisting}[numbers=left]
+// PREFER
 longName1 = longName2 * (longName3 + longName4 - longName5)
-           + 4 * longname6; // PREFER
+           + 4 * longname6;
+           
+// AVOID!!!           
 longName1 = longName2 * (longName3 + longName4
-                       - longName5) + 4 * longname6; // AVOID!!!!!
+                       - longName5) + 4 * longname6;
 \end{lstlisting}
 
 Then we have three examples of indenting method declarations. The first is the conventional case. The second would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final one uses a single line for each argument.
@@ -604,16 +654,16 @@ A throws clause will be either appended on the same line as the closing parenthe
 \begin{lstlisting}[numbers=left]
 // CONVENTIONAL INDENTATION
 public void someMethod( int anArg, Object anotherArg,
-            String yetAnotherArg, Object andStillAnother )
+    String yetAnotherArg, Object andStillAnother )
 {
-    // Code
+    …
 }
 
 public void otherMethod( int anArg, Object anotherArg,
-            String yetAnotherArg, Object andStillAnother )
+    	String yetAnotherArg, Object andStillAnother )
     throws IllegalArgumentException, IOException
 {
-    // Code
+    …
 }
 
 // INDENT 8 SPACES TO AVOID VERY DEEP INDENTS
@@ -621,14 +671,14 @@ private static synchronized void horkingLongMethodName( int anArg,
         Object anotherArg, String yetAnotherArg,
         Object andStillAnother )
 {
-    // Code
+    …
 }
 
 private static synchronized void horkingLongMethodThrows( int anArg,
         Object anotherArg, String yetAnotherArg,
         Object andStillAnother ) throws IllegalArgumentException
 {
-    // Code
+    …
 }
 
 // SINGLE LINE FOR EACH ARGUMENT
@@ -640,7 +690,7 @@ private static synchronized anotherHorkingLongMethodLine
     Object andStillAnother
 )
 {
-    // Code
+    …
 }
 
 private static synchronized anotherHorkingLongMethodLineThrows
@@ -651,7 +701,7 @@ private static synchronized anotherHorkingLongMethodLineThrows
     Object andStillAnother
 ) throws IllegalArgumentException, IOException
 {
-    // Code
+    …
 }
 \end{lstlisting}
 
@@ -678,12 +728,14 @@ int size;  // size of table
 is preferred over
 
 \begin{lstlisting}
-int level, size; // AVOID!!!
+// AVOID!!!
+int level, size;
 \end{lstlisting}
 
 Do not put different types on the same line, despite the compiler does not complain about it. Example:
 \begin{lstlisting}
-int foo, fooarray []; // WRONG!!!!
+// WRONG!!!!
+int foo, fooarray [];
 \end{lstlisting}
 
 \subsection{Array Declarations}
@@ -695,16 +747,19 @@ java.awt.Button [] buttons;
 \end{lstlisting}
 and not
 \begin{lstlisting}
-int foo []; // AVOID!!!
-String bar []; // AVOID!!!
-java.awt.Button buttons []; // AVOID!!!
+// AVOID!!!
+int foo [];
+// AVOID!!!
+String bar [];
+// AVOID!!!
+java.awt.Button buttons [];
 \end{lstlisting}
 This is the same way as an array would be declared as the return value for a method:
 \begin{lstlisting}
 public final static String [] getTexts()
 {
     return m_Texts;
-}
+}	//	getTexts()
 \end{lstlisting}
 
 \subsection{Placement of Declarations}
@@ -715,7 +770,7 @@ This is true even for variables inside a loop:
 for( var i = 0; i < limit; ++i )
 {
     final var a = getValue( i );
-    // more code
+    …
 }
 \end{lstlisting}
 
@@ -725,7 +780,7 @@ Only the repeated initialisation of a variable inside a loop should be avoided, 
 for( var i = 0; i < limit; ++i )
 {
     final var a = new VeryComplexType();
-    // more code
+    …
 }
 \end{lstlisting}
 In this case, line~4 should be moved before the loop header (line~2).
@@ -745,7 +800,7 @@ public class MyClass
         }
         // more code
     }
-}
+}   //  class MyClass
 \end{lstlisting}
 There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \vref{sec:Fields}) would make such a situation unlikely.
 
@@ -771,13 +826,13 @@ class Sample extends Object implements Comparable<Sample>
     {
         ivar1 = i;
         ivar2 = j;
-        // More code goes here
-    } //  Sample()
+        …
+    }  //  Sample()
     
     void method()
     {
-        // Do something here!
-    } //  method()
+        …
+    }  //  method()
     
     // SHORT METHOD
     int getIVar1() { return ivar1; }
@@ -794,7 +849,7 @@ class Sample extends Object implements Comparable<Sample>
         return component1 + component2 + component3;
     }   //  composeCorrectKey()
 }
-// class Sample
+//  class Sample
 \end{lstlisting}
 
 The comments at the end of the methods make it easier to navigate inside long source files, especially when scrolling upwards.
@@ -852,21 +907,21 @@ Examples:
 \begin{lstlisting}[numbers=left]
 while( true )
 {
-    // Some code
+    …
 }
 
-for( int i = 0; i < 10; ++i ) { /* Some Code */ }
+for( int i = 0; i < 10; ++i ) { … }
 
 try
 {
-    // Some code
+    …
 }
 catch( Exception e )
 {
     e.printStackTrace();
 }
 
-if( list.isEmpty() ) { /* Some Code */ }
+if( list.isEmpty() ) { … }
 \end{lstlisting}}
 \item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
 
@@ -890,13 +945,13 @@ while( d-- > s++ )
 
 printSize( "size is " + foo + "\n" );
 \end{lstlisting}}
-\item{The expressions in a for statement has to be separated by blank spaces after the semicolon.
+\item{The expressions in a \lstinline|for| statement has to be separated by blank spaces after the semicolon.
 
 Example:
 \begin{lstlisting}
 for( expr1; expr2; expr3 )
 {
-    // Some code
+    …
 }
 \end{lstlisting}
 
@@ -987,7 +1042,7 @@ for( String s : strings )
     ++i;
 }
 
-// DISCOURAGED
+// DISCOURAGED!!!
 for( String s : strings ) if( a < b ) c = d;
 \end{lstlisting}
 
@@ -1065,7 +1120,7 @@ return( retValue );
 return retValue; 
 \end{lstlisting}
 
-\subsection{if, if-else, if else-if else Statements}\label{sec:IfStatements}
+\subsection{if, if-else, if-else-if-else Statements}\label{sec:IfStatements}
 The chapters \ref{sec:Parenthesis}, \ref{sec:BlankSpaces}, and \ref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
 
 The base forms for this class of statements are the following ones:
@@ -1123,11 +1178,113 @@ else
 Please refer also to chapter \vref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
 
 
-%---------------------------------------- Proceed from here!!!!
-
-
-
 \subsection{switch Statements}\label{sec:SwitchStatements}
+Beginning with the first preview in Java~12, an alternative syntax for \lstinline|switch| was introduced, so that we have now two (in fact, three) different forms of that construct.
+
+\subsubsection{The traditional Form of switch}
+Originally, a \lstinline|switch| statement in Java looked like this:
+\begin{lstlisting}[numbers=left]
+switch( <selector> )
+{
+    case <switchlabel1>:
+        <statements>;
+        // Falls through!
+
+    case <switchlabel2>:
+        <statements>;
+        break;
+
+    case <switchlabel3>: <singleStatement>; break;
+
+    case <switchlabel4>:
+    {
+        <statements>;
+        break;
+    }
+
+    case <switchlabel5>: // Also a fall-through
+    case <switchlabel6>:
+    {
+        <statements>;
+        break;
+    }
+
+    default:
+       <statements>;
+       break;
+}
+\end{lstlisting}
+
+If a \lstinline|case| falls through, as in line~4, a comment “\lstinline|// Falls through!|” as in the sample is mandatory! In fact, this construct should be avoided when possible, because it also forces a special sequence of the \lstinline|case| clauses – requiring an additional comment to the \lstinline|switch| itself.
+
+Different to that, no comment is required in the case shown in the lines~19 and 20: here we have two case that triggers the \textit{exactly the same} action.
+
+For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to use always a label with \lstinline|break|; see \ref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
+\begin{lstlisting}
+final Color color;
+ColorSelector: switch( colorIndex )
+{
+    case 1: color = RED; break ColorSelector;
+    case 2: color = BLUE; break ColorSelector;
+    case 3: color = YELLOW; break ColorSelector;
+    case 4: color = GREEN; break ColorSelector;
+    default: color = NONE; break ColorSelector;
+}   //  ColorSelector:
+\end{lstlisting}
+
+The break in the default case is redundant, but it prevents a fall-through error if later another case is added – although it should be assured that the default case is always the last case in the switch statement.
+
+\subsubsection{The new Form of switch}
+The alternative syntax for \lstinline|switch| comes in two flavours and looks like this:
+
+\begin{lstlisting}[numbers=left]
+// switch statement
+switch( <selector> )
+{
+    case <switchlabel1> -> <singleStatement>;
+
+    case <switchlabel2>, <switchlabel3> -> <singleStatement>;
+
+    case <switchlabel4> ->
+    {
+        <statements>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+
+// switch statement
+var result = switch( <selector> )
+{
+    case <switchlabel1> -> <expression>;
+
+    case <switchlabel2>, <switchlabel3> -> <expression>;
+
+    case <switchlabel4> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Of course the \lstinline|default| in line~18 can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~40 can have a complex expression like the \lstinline|case| in line~28.
+
+%-------------------------------------------- Proceed from here!
+
 A switch statement should have the following form:
 switch( <condition> )
 {
@@ -1154,6 +1311,9 @@ switch( <condition> )
 Every time a case falls through (does not include a break statement), add a comment where the break statement would normally be. This is shown in the preceding code example with the “// Falls through!” comment. Another comment assigned to the switch statement then should describe the expected sequence of cases.
 Every switch statement should include a default case, even when using an enum type as selector and handling all known values in the cases; in such a case, the default can throw an exception about an unknown value. The break in the default case is redundant, but it prevents a fall-through error if later another case is added – although it should be assured that the default case is always the last case in the switch statement.
 The use of braces in the cases is optional, but sometimes useful as it allows to declare additional local variables for a given branch.
+
+\subsubsection{General Rules for switch}
+
 2.5.7. for Statements
 A for statement should have one of the following forms:
 // Classic for loop:

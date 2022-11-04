@@ -21,18 +21,22 @@
 \usepackage[inline]{enumitem}
 \usepackage{varioref}
 \usepackage[iso,english]{isodate}
+\usepackage{makecell}
 %\usepackage[babel]{csquotes}
 \usepackage[style=numeric,urldate=iso8601]{biblatex}
 \addbibresource{JavaCodingConventions.bib}
 
 \lstset{
 language=Java,
+morekeywords={yield,var},
 backgroundcolor=\color[gray]{.9},
 frame=single,
 framerule=0.2pt,
 basicstyle=\ttfamily\footnotesize\bfseries,
 commentstyle=\color[gray]{.2}\bfseries,
 keywordstyle=\color[gray]{.2},
+identifierstyle=,
+stringstyle=\itshape,
 xleftmargin=.2cm,
 xrightmargin=.2cm,
 breaklines=true,
@@ -56,7 +60,7 @@ literate=
   {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
   {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
   {©}{{\copyright}}1
-  {…}{{\dots}}1
+  {…}{{\dots }}2
 }
 
 \colorlet{shadecolor}{gray!10}
@@ -66,7 +70,8 @@ literate=
 \titlehead{Logo}
 \author{Thomas Thrien\\(thomas.thrien@tquadrat.org)}
 \title{Extended Coding Conventions for Java}
-\date{}
+\subtitle{Coding and Formatting Rules, Recommendations and Best Practices}
+\date{\today}
 \maketitle
 \tableofcontents
 
@@ -219,7 +224,7 @@ The sections of a Java source file have the following ordering:
 
 \subsection{Beginning Comments}\label{sec:BeginningComments}
 All source files have begin with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a public class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}[numbers=left,caption={Beginning Comment}]
 /*
  * ==================================================================
  * Copyright © <Year> <Copyright Notice>
@@ -286,7 +291,7 @@ Each of these allows different parts in their declaration; the following tables 
 
 \subsubsection{Class}
 A skeleton for a Java \lstinline|class| may look like this:
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left,caption={Class Skeleton}]
 public class MyClass 
 {
         /*---------------*\
@@ -354,7 +359,7 @@ public class MyClass
 
 \subsubsection{Interface}
 A skeleton for an \lstinline|interface| may look like this:
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left,caption={Interface Skeleton}]
 public interface MyInterface 
 {
         /*---------------*\
@@ -398,7 +403,7 @@ public interface MyInterface
 
 \subsubsection{enum}
 An \lstinline|enum| is a special case of a Java \lstinline|class|. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| may look like this:
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left,caption={enum Skeleton}]
 public enum MyEnum 
 {
         /*------------------*\
@@ -467,8 +472,8 @@ public enum MyEnum
 Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD}
 
 A skeleton for a Java \lstinline|record| may look like this, with all parts being optional:
-\begin{lstlisting}
-public record MyClass( ... ) 
+\begin{lstlisting}[numbers=left,caption={Record Skeleton}]
+public record MyRecord( ... ) 
 {
         /*-----------*\
     ====** Constants **==============================================
@@ -528,7 +533,7 @@ public record MyClass( ... )
 \subsubsection{Annotation}
 Annotations had been introduced with Java~5. 
 A skeleton for an \lstinline|annotation| may look like this:
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left,caption={Annotation Skeleton}]
 public @interface MyAnnotation 
 {
         /*------------*\
@@ -592,7 +597,7 @@ public class MyClass
 \end{lstlisting}
 
 \subsection{Indentation Size}
-Four (4) spaces should be used as the unit of indentation. Tabs are not allowed.\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun Coding Convention do not explicitly specify whether to use blanks or tabs.} Usually this can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
+Four (4) spaces should be used as the unit of indentation. Tabs are \textit{not} allowed.\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun Coding Convention do not explicitly specify whether to use blanks or tabs.} Usually this can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
 \subsection{Line Length}\label{sec:LineLength}
 Some sources (including the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}) recommend to avoid lines longer than 80 characters, because they were not handled well by many terminals and tools.
@@ -601,7 +606,7 @@ This had been true at the time those documents were written, but today's  graphi
 
 \textbf{Note:} Sample code for use in documentation should have a limited line length – generally not more than 70 characters.
 
-Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extented to that column. This is pertaining to the beginning comments (chapter \vref{sec:BeginningComments}), the structuring comments (chapter \vref{sec:StructuringComments}) and most single-line comments (chapter \ref{sec:SingleLineComments}).
+Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \vref{sec:BeginningComments}), the structuring comments (chapter \vref{sec:StructuringComments}) and most single-line comments (chapter \ref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
 When an expression does not fit on a single line, break it according to these general principles:
@@ -1542,19 +1547,19 @@ An \textit{empty} \lstinline|catch| block is unacceptable under all circumstance
 
 An empty \lstinline|finally| block is completely obsolete and must be removed.
 
-
-\chapter{-------------------------------------------- Proceed from here!}
-
-
-
 \subsection{Labels and break Statements}\label{sec:LabelsAndBreakStatements}
-Using the break statement outside the context of a switch statement is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.
-We recommend to use always a meaningful label together with break. This would make it more obvious what is intended with the break, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter “4.2.4 Trailing or End-Of-Line Comments” and “4.4 Comments when?”.
+In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, but they can be placed anywhere in a code block.
+
+The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \ref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
+
+I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter \ref{sec:TrailingOrEndOfLineComments} and chapter \ref{sec:CommentsWhen}.
+
 Some samples:
+\begin{lstlisting}[numbers=left]
 // BAD!!!
-for( int line = 0; line < maxLines; ++line )
+for( var line = 0; line < maxLines; ++line )
 {
-    for( int column = 0; column < maxColumns; ++column )
+    for( var column = 0; column < maxColumns; ++column )
     {
         if( !isValid( field [line] [column] ) break; // What??
         …
@@ -1562,16 +1567,26 @@ for( int line = 0; line < maxLines; ++line )
 
     processLine( field [line] );
 }
+
 // RECOMMENDED
-LineLoop: for( int line = 0; line < maxLines; ++line )
+LineLoop: for( var line = 0; line < maxLines; ++line )
 {
-    ColumnLoop: for( int column = 0; column < maxColumns; ++column )
+    ColumnLoop: for( var column = 0; column < maxColumns; ++column )
     {
         if( !isValid( field [line] [column] ) break ColumnLoop;
         …
     } //  ColumnLoop:
     processLine( field [line] );
 } // LineLoop:
+
+// RECOMMENDED
+FilterLoop: while( input.hasNext() )
+{
+    final var value = input.next();
+    if( !value.isValid() ) continue FilterLoop; // Skip invalid
+    …
+} // FilterLoop:
+
 // RECOMMENDED
 DirectionSwitch: switch( direction )
 {
@@ -1580,8 +1595,33 @@ DirectionSwitch: switch( direction )
     default:
         throw new IllegalArgumentException( direction.toString() );
 } //  DirectionSwitch:
+\end{lstlisting}
+
+The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 39. The colon at the end of the label name is mandatory for this kind of comment.
 
 \chapter{Naming Conventions}
+Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
+
+The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
+
+Additionally, names provide an implicit contract between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will read something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it writes.
+
+But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \vref{sec:TheNamingDictionary} in the appendices for those lists.
+
+Some more general rules:
+\begin{itemize}
+\item{The identifier names has to be taken from English language, and with correct spelling.2 Consult a dictionary if in doubt of spelling and/or meaning.}
+\item{Avoid special characters; the only exception are underscores for constants (see chapter 3.10 on page 42) and for the “m\_” prefix for fields (see chapter 3.9 on page 42).}
+\item{Avoid abbreviations and acronyms if those are not very well known. The length of a name has very little to no influence on the size and speed of the compiled code.3}
+\item{Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the product code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used.}
+\end{itemize}
+Java programs does not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
+
+\chapter{-------------------------------------------- Proceed from here!}
+
+
+
+
 
 \section{Modules}
 
@@ -1781,7 +1821,7 @@ catch( final IOException e )
 
 \subsubsection{Lifecycle}
 In C++, it is a very common pattern to “wrap” the lifecycle of a resource into the lifecycle of an object:
-\begin{lstlisting}[language=c++]
+\begin{lstlisting}[language=C++]
 class Resource
 {
     //---* Attributes *----------------------------------------------
@@ -1896,6 +1936,191 @@ This ensures that the string in \lstinline|builder| always terminates with a clo
 
 \chapter{Appendices}
 
+\section{The Naming Dictionary}\label{sec:TheNameDirectory}
+The names of program elements provide an implicit contract between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
+
+\subsection{Verbs}
+This chapter provides a list of verbs to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be use as standalone names, too. The form that used more often is mentioned first.
+
+\renewcommand{\cellalign}{tl}
+\begin{filecontents}{Verbs.tbl}
+  \begin{longtable}{|l|X|}
+  \caption{Verbs} \\
+  \hline 
+  Verb & Contract \\ 
+  \hline\endfirsthead
+  \caption{Verbs (continued} \\
+  \hline 
+  Verb & Contract \\ 
+  \hline\endhead
+  \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & Add the argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later. Usually, an add-method would not return something. \\ 
+  \hline 
+  \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & Appends the argument to an extensible data structure, usually by interpreting the argument. Usually, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually it returns the owning object itself (\lstinline|this|). A sample for this is \lstinline|StringBuffer.append()|. \\ 
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{Verbs.tbl}
+
+\chapter{-------------------------------------------- Proceed from here!}
+
+
+
+
+
+
+
+call()
+This is the main method of a thread that returns a result (an implementation of the Callable interface) and should usually only used in this or a similar context. For details on this, refer to \autocite{CONCURRENT_PACKAGE}.
+check()
+check( arg )
+check...()
+Usually this is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in “CheckBox”). We do not recommend the latter usage (use mark instead), and because of the chance to misinterpret the verb at all, we do not recommend to use it.
+If used, it may not modify the object and it should return a boolean.
+clear()
+Empties or resets an object.
+close()
+close...()
+Closes the connection to an external resource, like a file or a device.
+compose...( arg )
+compose...()
+Composes a new object or data structure from the (optional) arguments and the internal state of the object, without modifying the object itself. Each call with identical arguments will return the same value.
+connect()
+connect( arg )
+connect...()
+connect...( arg )
+Creates a connection to an external resource, usually a device or something remote.
+create...()
+create...( arg )
+Create something without modifying the object.
+delete()
+delete( arg )
+Deletes something related to the object, usually external. This may or may not change the state of the object itself. A sample is File.delete().
+execute()
+execute( arg )
+Does something; this is a generic method. Treat the arguments as something like the command line arguments.
+exec...()
+exec...( arg )
+Executes an operation that is named by the additional parts of the name; the arguments are the parameters for this operation.
+This is somehow similar to “perform”; nothing is said about the state of the object or the arguments after the method returned.
+generate...()
+generate...( arg )
+generate()
+generate( arg )
+Generates something based on the objects state, with or without changing it. Each call to generate will have a different result (that distinguishes it from “compose”).
+The optional argument may modify the generation process.
+get....()
+Indicates a getter. It should not take any argument, nor is it changing the state of the object.
+The part of the method name after “get” is known as the attribute name; the getter returns the value for that attribute. Refer to “The JavaBeans Technology” [JAVABEANS] for details.
+A special variant is the getInstance() method for a Singleton class: here the method is static, and depending on the type of the singleton, it may be responsible for creating the one and only instance of the class.
+has...()
+This indicates a method that returns a boolean value. If the method takes an argument, this is a key or another kind of reference to an object that can be somehow contained in the object the method is called on, and the method will check if the referenced object exists or not.
+Without an argument, the method will just check if a optional reference to a component is null or not.
+In both cases, the state of the object is not changed.
+initialize()
+initialize( arg )
+Initialises an object; obviously this will modify the state of the object. Can abbreviated to “init”.
+is...()
+This is the prefix for a getter for a boolean value. See above for “get”.
+load()
+load( arg )
+Loads the object or its state from an external source. The source can be give as an argument.
+main()
+main( arg )
+Although it is not a reserved word, it should be treated as one. Therefore a method should never named “main()” if it is not the program entry point.
+By the way, “main” is not a verb at all.
+mark()
+mark( arg )
+mark...( arg )
+Changes the state of the object by setting or toggling a boolean flag; usually does not return any value, but may return the previous value of the flag in case it is toggled.
+open()
+open( arg )
+Opens a connection to an external resource.
+peek()
+Looks into a data structure without modifying the object state. Often used with stack-like or queue-like data structures.
+perform()
+perform( arg )
+perform...()
+perform...( arg )
+Performs an action, either implicit like for an implementation of the Command pattern, or explicit named by the remaining parts of the name.
+The arguments are the parameters of the action, and are changed or not, same as for the object itself.
+pull()
+See “push”.
+push( arg )
+“push” and the reverse operation “pull” are used with stack-like data structures. With “push”, an object is placed on top of the stack, “pull” will remove the object on top of the stack and returns it.
+put( arg )
+Somehow a synonym to “add”.
+read( arg )
+read...( arg )
+Reads something from an external source and returns it. This may or may not change the object's state.
+Usually it takes the external source as a parameter, but it is also possible that this reference is implicit (as for streams).
+remove...( arg )
+remove( arg )
+Removes something from an internal list. The argument is something like a key or another identifier for the object to remove. “remove” is somehow the reverse operation to “add”.
+retrieve...()
+retrieve...( arg )
+“retrieve” is somehow similar to “get”, but it can modify the object's state.
+run()
+This is the name of the main method of a thread, and should be usually used only in this or a similar context.
+save()
+save( arg )
+The is the converse operation to “load”. It may take the destination for the save as a parameter.
+set...( arg )
+Indicates a setter. It takes exactly one argument, the new value for the attribute that is named by the part after the “set”. See above for “get” and refer to “The JavaBeans Technology” [JAVABEANS] for details.
+sort( arg )
+sort()
+sort...()
+sort...( arg )
+Sort the given argument(s) without changing the object.
+The variants without an argument will sort the elements of an internal list.
+The argument could also be the sort direction.
+test...()
+This should not be used for production code as some test frameworks (like JUnit 3) use a naming convention, saying that methods whose name begins with “test” are test methods.
+Usually “validate” is a good synonym for “test”.
+validate()
+validate( arg )
+Tests if the object is valid according some built-in constraints, without modifying the object. Usually a boolean is returned.
+If taking an argument, this argument is validated against constraints defined in the object owning the method. Both, the argument and this, will remain unchanged.
+write( arg )
+write...( arg )
+This is the converse operation to “read”: it writes the given argument to an external resource, usually without changing the object’s state.
+Usually it takes the external resource as a parameter, but it is also possible that this reference is implicit (as for streams).
+t.b.c.
+…
+
+\subsection{Suffixes for Class Names}
+This chapter lists defined suffices for class names and their function.
+Suffix
+Description
+Adapter
+…
+Base
+A base class of an interface implementation, usually abstract.
+ClientAgent
+…
+Command
+An implementation of a command for the Command pattern; use either this or “Operation” as the suffix.
+DAO
+…
+Entity
+…
+Error
+An unchecked exception that is thrown in case of an unrecoverable error. It should not be handled nor handled.
+Exception
+An exception, checked or unchecked.
+Impl
+The (default) implementation for an interface.
+Listener
+An implementation of a listener for the Observer pattern (sometimes also referred to as the “Listener” pattern)
+Operation
+An implementation of a command for the Command pattern; use either this or “Command” as the suffix.
+Service
+…
+Visitor
+An implementation of a visitor for the Visitor pattern
+t.b.c.
+…
+
+
 \section{IDE Configuration}\label{sec:IDEConfiguration}
 This chapter provides samples of configuration files for some IDEs.
 
@@ -1906,7 +2131,7 @@ This chapter provides the XML code for Eclipse snippets.
 
 \paragraph{Structuring Comments}\label{sec:SnippetStructuringComments}
 The snippets for the structuring comments as defined in chapter \vref{sec:StructuringComments}.
-\begin{lstlisting}[language=xml,basicstyle=\ttfamily\tiny]
+\begin{lstlisting}[language=XML,basicstyle=\ttfamily\footnotesize]
 <?xml version="1.0"
       encoding="UTF-16" 
       standalone="no"?>
@@ -2023,7 +2248,7 @@ tbd
 This class is a sample implementation of the idea, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}[numbers=left,caption={AutoLock}]
 package org.tquadrat.util.concurrent;
 
 import static java.util.Objects.requireNonNull;
@@ -2132,7 +2357,7 @@ public class AutoLock implements AutoCloseable
 This implementation is basically a PoC; currently it is not part of any library.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}[numbers=left,caption={PostProcessor}]
 package util;
 
 import static java.util.Objects.requireNonNull;
@@ -2232,7 +2457,7 @@ var result = switch( color )
 Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}[numbers=left,caption={UnsupportedEnumError}]
 package org.tquadrat.foundation.exception;
 
 import static org.apiguardian.api.API.Status.STABLE;
@@ -2247,8 +2472,9 @@ import org.apiguardian.api.API;
 /**
  *  This is a specialized implementation for
  *  {@link Error}
- *  that is to be thrown especially from the {@code default} branch of a
- *  {@code switch} statement that uses an {@code enum} type as selector.
+ *  that is to be thrown especially from the {@code default} branch
+ *  of a {@code switch} statement that uses an {@code enum} type as
+ *  selector.
  *
  *  @author Thomas Thrien - thomas.thrien@tquadrat.org
  */
@@ -2280,7 +2506,7 @@ public final class UnsupportedEnumError extends Error
     /**
      *  Creates a new instance of this class.
      *
-     *  @param <T>  The type of the enum.
+     *  @param  <T> The type of the enum.
      *  @param  value   The unsupported value.
      */
     public <T extends Enum<T>> UnsupportedEnumError( final T value )
@@ -2305,6 +2531,8 @@ public final class UnsupportedEnumError extends Error
  *  End of File
  */
  \end{lstlisting}
+
+\lstlistoflistings
 
 \printbibliography
 \end{document}

@@ -1,0 +1,52 @@
+\begin{longtable}{|l|X|}
+  \caption{Suffixes for Class Names} \\
+  \hline
+  Suffix & Description \\
+  \hline\endfirsthead
+  \caption{Suffixes for Class Names (continued)} \\
+  \hline
+  Suffix & Description \\
+  \hline\endhead
+
+  …Adapter & … \\
+  \hline
+
+  …Base & A base class of an interface implementation, usually abstract. Usually, it is either published as part of the SPI for a module, or it is only visible inside that module. \\
+  \hline
+
+  …Command & An implementation of a command for the Command pattern; user either this or ‘Operation’ as the suffix. \\
+  \hline
+
+  …DAO & … \\
+  \hline
+
+  …Entity & … \\
+  \hline
+
+ …Error & An implementation of \lstinline|java.lang.Error|; basically an unchecked exception that is thrown in case of an unrecoverable error that should never be caught nor handled internally. \\
+  \hline
+
+  …Exception & An implementation of either \lstinline|java.lang.Exception| (for a checked exception) or \lstinline|java.lang.RuntimeException| (for an unchecked exception). \\
+  \hline
+
+  …Handler & … \\
+  \hline
+
+  …Impl & The (default) implementation for an interface or an abstract base class, usually not visible outside of the current module.  \\
+  \hline
+
+  …Listener & An implementation of a listener for the Observer\footnote{sometimes also referred to as the “Listener” pattern} pattern. \\
+  \hline
+
+  …Operation & An implementation of a command for the Command pattern; use either this or ‘Command’ as the suffix. \\
+  \hline
+
+  …Service & … \\
+  \hline
+
+  …Visitor & The implementation of a visitor for the Visitor pattern. \\
+  \hline
+
+  {} & t.b.c. \\
+  \hline
+\end{longtable}

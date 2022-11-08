@@ -87,4 +87,16 @@ public final class MyProgram
     \hline
 
     \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|} & If this is used as the prefix for a method name, that method also loads data from an external source, but it initialised and returns a data structure that is described by the remainder of the name.\newline Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
-    \hline   \end{longtable}
+    \hline
+
+    \makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|} & Although ‘main’ is not a reserved word in the Java language, it should be treated as one. Therefore a method should never be named as \lstinline|main()| unless it is the program entry point. Not to mention that ‘main’ is not even a verb at all.\newline The usual signature for the main method is
+\begin{lstlisting}
+public static void main( String [] args )
+\end{lstlisting}
+but I prefer it as
+\begin{lstlisting}
+public static final void main( final String... args )
+\end{lstlisting}
+Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
+    \hline
+  \end{longtable}

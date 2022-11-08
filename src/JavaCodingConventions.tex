@@ -2,6 +2,8 @@
 \documentclass[12pt,a4paper,titlepage,parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
 \usepackage[T1]{fontenc}
 \usepackage{scrhack}
+\usepackage{graphicx} 
+\usepackage[manualmark]{scrlayer-scrpage}
 \usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
 \usepackage{amsmath}
@@ -25,6 +27,10 @@
 %\usepackage[babel]{csquotes}
 \usepackage[style=numeric,urldate=iso8601]{biblatex}
 \addbibresource{JavaCodingConventions.bib}
+
+\automark[section]{chapter}
+\lehead*[]{\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}~~\headmark}
+\rohead*[\headmark~~\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}]{\headmark~~\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}}
 
 \lstset{
 language=Java,
@@ -67,7 +73,7 @@ literate=
 
 \begin{document}
 \isodate
-\titlehead{Logo}
+\titlehead{\includegraphics[height=4cm]{Logo_gross}}
 \author{Thomas Thrien\\(thomas.thrien@tquadrat.org)}
 \title{Extended Coding Conventions for Java}
 \subtitle{Coding and Formatting Rules, Recommendations and Best Practices}
@@ -1819,7 +1825,7 @@ catch( final IOException e )
 \item{\lstinline|java.jms.Connection|}
 \end{itemize}
 
-\subsubsection{Lifecycle}
+\subsubsection{Lifecycle}\label{sec:Lifecycle}
 In C++, it is a very common pattern to “wrap” the lifecycle of a resource into the lifecycle of an object:
 \begin{lstlisting}[language=C++]
 class Resource
@@ -1943,7 +1949,7 @@ The names of program elements provide an implicit contract between the original 
 This chapter provides a list of verbs to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be use as standalone names, too. The form that used more often is mentioned first.
 
 \renewcommand{\cellalign}{tl}
-\begin{filecontents}{Verbs.tbl}
+\begin{filecontents}{Verbs.tbl.tex}
   \begin{longtable}{|l|X|}
     \caption{Verbs} \\
     \hline 
@@ -2022,11 +2028,16 @@ public final class MyProgram
     \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\ 
     \hline 
 
-    \makecell{\lstinline|is…()|} & This is the prefix for a \textit{getter} that returns a \lstinline|boolean|. Refer to \lstinline|get…|, above.. \\ 
+    \makecell{\lstinline|is…()|} & This is the prefix for a \textit{getter} that returns a \lstinline|boolean|. Refer to \lstinline|get…|, above. \\ 
     \hline 
-  \end{longtable} 
+
+    \makecell{\lstinline|load()| \\ \lstinline|load( <arg> )|} & The method with the name \lstinline|load()| ‘loads’ the data for the owning object from somewhere (usually an external source) and initialises it with this data. The argument is usually the reference to the source.\newline The return type is either \lstinline|void|, or the method returns some kind of status for the load operation.\\ 
+    \hline 
+
+    \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|} & If this is used as the prefix for a method name, that method also loads data from an external source, but it initialised and returns a data structure that is described by the remainder of the name.\newline Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\ 
+    \hline   \end{longtable} 
 \end{filecontents}
-\LTXtable{\linewidth}{Verbs.tbl}
+\LTXtable{\linewidth}{Verbs.tbl.tex}
 
 \chapter{-------------------------------------------- Proceed from here!}
 
@@ -2036,9 +2047,6 @@ public final class MyProgram
 
 
 
-load()
-load( arg )
-Loads the object or its state from an external source. The source can be give as an argument.
 main()
 main( arg )
 Although it is not a reserved word, it should be treated as one. Therefore a method should never named “main()” if it is not the program entry point.
@@ -2101,6 +2109,8 @@ This is the converse operation to “read”: it writes the given argument to an
 Usually it takes the external resource as a parameter, but it is also possible that this reference is implicit (as for streams).
 t.b.c.
 …
+
+\LTXtable{\linewidth}{Verbs.tbl.tex}
 
 \subsection{Suffixes for Class Names}
 This chapter lists defined suffixes for class names and their function.
@@ -2232,7 +2242,7 @@ tbd
 \section{Examples}\label{sec:Examples}
 
 \subsection{AutoLock}\label{sec:AutoLock}
-This class is a sample implementation of the idea, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
+This class is a sample implementation of the idea described in chapter \vref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
 \paragraph{The Code} \
 \begin{lstlisting}[numbers=left,caption={AutoLock}]

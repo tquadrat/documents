@@ -1387,7 +1387,7 @@ for( final var s : texts ) if( !s.empty() )
     System.out.println( s );
 }
 \end{lstlisting}
-The sample in lines~6 and 7 are correct according to this rule, but as said in comment above them, their use is discouraged and therefore should be avoided, too.
+The samples in lines~6 and 7 are correct according to this rule, but as said in the comment above them, their use is discouraged and therefore it should be avoided, too.
 
 An empty \lstinline|for|-loop (one in which all the work is done in the initialization, condition, and update clauses) should have the following form:\footnote{An \textit{enhanced} \lstinline|for|-loop without body does not make that much sense (that mentioned above is a classical \lstinline|for|-loop). It may be possible to write an implementation of \lstinline|java.lang.Iterable| with an iterator that does something as a side effect of \lstinline|hasNext()| or \lstinline|next()|, but this would break the contract of the interface \lstinline|java.lang.Iterator|.}
 
@@ -1615,13 +1615,33 @@ Additionally, names provide an implicit contract between the original author of 
 
 But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \vref{sec:TheNamingDictionary} in the appendices for those lists.
 
-Some more general rules:
+\subsection{Language}
+The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two …) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
+
+\subsection{Uppercase, Lowercase, Camelcase}
+Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
+
+The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29 …}. I prefer a more relaxed approach for that – see chapters \vref{sec:Constants} and \vref{sec:EnumValues}.
+
+Details are again discussed in the chapter about the respective code elements.
+
+\subsection{Length of Names and Abbreviations}
+One aspect of abbreviations has been discussed already above. In general, avoid abbreviations and acronyms if those are not \textit{very well known}.
+
+The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names …
+
+This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
+
+If you think you will be more productive when using short names (because you can type them faster …), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents, …).
+
+But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
+
+\subsection{Some more General Rules}
 \begin{itemize}
-\item{The identifier names has to be taken from English language, and with correct spelling.2 Consult a dictionary if in doubt of spelling and/or meaning.}
-\item{Avoid special characters; the only exception are underscores for constants (see chapter 3.10 on page 42) and for the “m\_” prefix for fields (see chapter 3.9 on page 42).}
-\item{Avoid abbreviations and acronyms if those are not very well known. The length of a name has very little to no influence on the size and speed of the compiled code.3}
+\item{Avoid special characters in identifiers; the only exception are underscores for constants (see chapter \vref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \vref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \vref{sec:Lambdas}).}
 \item{Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the product code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used.}
 \end{itemize}
+
 Java programs does not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
 
 \chapter{-------------------------------------------- Proceed from here!}
@@ -1635,6 +1655,10 @@ Java programs does not exist in a vacuum, they have links to other components (l
 \section{Packages}\label{sec:Packages}
 
 \section{Fields}\label{sec:Fields}
+
+\section{Constants}\label{sec:Constants}
+
+\section{enum Values}\label{sec:EnumValues}
 
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 
@@ -1687,6 +1711,8 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 \section{Returning Values}\label{sec:ReturningValues}
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
+
+\section{Lambdas}\label{sec:Lambdas}
 
 \section{try-with-resources}\label{sec:TryWithResources}
 
@@ -2020,6 +2046,9 @@ public final class MyProgram
     \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix \lstinline|exec| to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\ 
     \hline 
 
+    \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with ‘from’ had been introduced with the \lstinline|java.time| API and Java~8. These are static factory methods that create an instance of the owning class based on the given argument (usually a String). \\ 
+    \hline 
+
     \makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|} & A ‘generate’ method generates something based on the object state, with or without changing it. Each call to generate may have a different result, even for the same arguments – this distinguishes it from ‘compose’.\newline Different from a ‘create’ method, a ‘generate’ method may work on entities outside the program (a file, an image, a report, …); this means it does not have a return value, or the return value is just the status of the generation process. \\ 
     \hline 
 
@@ -2052,7 +2081,26 @@ public static final void main( final String... args )
 Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\ 
     \hline
 
-    \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & . \\ 
+    \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & The prefix ‘make’ is similar to ‘create’,‘compose’, or ‘generate’, but usually a method with a name starting with ‘make’ produces something outside the program – like a file or a database (table). In this regard it is like ’generate’, but the process of ‘making’ is less complex as that of ‘generation’. \\ 
+    \hline
+
+    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\ 
+    \hline
+
+    \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property. \\ 
+    \hline
+    
+    \makecell{\lstinline|of( <arg> )|} & The method name \lstinline|of()| was more or less introduced with Java~9 and the static factory methods for \lstinline|java.util.List|,  \lstinline|java.util.Set| and  \lstinline|java.util.Map|. The methods with the that name creates an instance of owning class containing the given arguments.\newline If there is no argument, an empty instance will be created. \\ 
+    \hline
+    
+    \makecell{\lstinline|open()|} & An ‘open’ method opens a connection to an external resource that is represented by the owning object. Obviously, that object changes its state.\newline Usually, \lstinline|open()| will not return something; or when it returns something, in will be that status of the open operation.\newline It will also not take any arguments as all necessary information are given by the state of the owning object. \\ 
+    \hline
+    
+    \makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|} & A method with a name that is prefixed with ‘open’ will also open a connection to an external resource, but it will return an object representing this connection or the external resource. The required information can either be taken from the owning object or given as the arguments or both.\newline Such a method may or may not change the state of the owning object. And the owning object may or may not provide a corresponding ‘close’ method.\newline A sample could be a method 
+\begin{lstlisting}
+public final File openLogFile( final File logFolder ) {…}
+\end{lstlisting}
+that can be even used with \lstinline|try-with-resources|. \\ 
     \hline
   \end{longtable} 
 \end{filecontents}
@@ -2066,13 +2114,6 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
 
 
 
-mark()
-mark( arg )
-mark...( arg )
-Changes the state of the object by setting or toggling a boolean flag; usually does not return any value, but may return the previous value of the flag in case it is toggled.
-open()
-open( arg )
-Opens a connection to an external resource.
 peek()
 Looks into a data structure without modifying the object state. Often used with stack-like or queue-like data structures.
 perform()

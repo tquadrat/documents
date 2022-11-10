@@ -183,7 +183,7 @@ But if possible, the fix should incorporate the standards defined by this docume
 Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
 
 \section{Tool Support}
-Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\ref{sec:FormattinOfTheSourceCode} that deals with the formatting of the source code.
+Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\ref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
 
 The chapter \ref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
 
@@ -210,7 +210,7 @@ So again:
 \end{huge}
 \end{center}
 
-\chapter{Formatting of the Source Code}\label{sec:FormattinOfTheSourceCode}
+\chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
 This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter~\vref{sec:WritingProperComments}.
 
 I start the chapter with a description of the general structure of a source file, then I give some general conventions before I cover the formatting of single elements of the code.
@@ -341,11 +341,17 @@ public class MyClass
   \caption{Parts of a class declaration} \\
   \hline 
   Part & Description \\ 
-  \hline\endfirsthead
-  \caption{Parts of a class declaration (continued)} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
   Part & Description \\ 
-  \hline\endhead
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
   Inner Classes (optional) & Given the class defines inner classes or interfaces, either \lstinline|private| or \lstinline|public|, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
   \hline 
   Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
@@ -395,11 +401,17 @@ public interface MyInterface
   \caption{Parts of an interface declaration} \\
   \hline 
   Part & Description \\ 
-  \hline\endfirsthead
-  \caption{Parts of an interface declaration (continued)} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
   Part & Description \\ 
-  \hline\endhead
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
   Inner Classes (optional) & Defining inner classes for an interface is discouraged, although there are some valid use cases for this. If the interface defines inner classes or interfaces, they have to be \lstinline|public| – classes have to be \lstinline|static|, too, and they will be the first part. Internally, they will follow the same rules as for top-level classes. \\ 
   \hline 
   Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time. \\ 
@@ -454,11 +466,17 @@ public enum MyEnum
   \caption{Parts of an enum declaration} \\
   \hline 
   Part & Description \\ 
-  \hline\endfirsthead
-  \caption{Parts of an enum declaration (continued)} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
   Part & Description \\ 
-  \hline\endhead
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
   Enum Definitions & This part is mandatory. Each \lstinline|enum| is an instance of the enum class. \\ 
   \hline 
   Constants (optional) & This part takes all additional constants defined by this enum (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
@@ -518,11 +536,17 @@ public record MyRecord( ... )
   \caption{Parts of a record declaration} \\
   \hline 
   Part & Description \\ 
-  \hline\endfirsthead
-  \caption{Parts of a record declaration (continued)} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
   Part & Description \\ 
-  \hline\endhead
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
   Constants (optional) & This part takes all constants defined by this record (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
   \hline 
   Attributes (optional) & Here go the attributes for the class; this part is optional, because usually, all attributes are defined as arguments to the \lstinline|record| definition. \\ 
@@ -559,11 +583,17 @@ public @interface MyAnnotation
   \caption{Parts of an annotation declaration} \\
   \hline 
   Part & Description \\ 
-  \hline\endfirsthead
-  \caption{Parts of an annotation declaration (continued)} \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
   Part & Description \\ 
-  \hline\endhead
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
   Attributes (optional) & Here go the attributes for the annotation, if any. \\ 
   \hline 
  \end{longtable} 
@@ -572,7 +602,7 @@ public @interface MyAnnotation
 
 \subsection{Closing Comment}
 A closing comment like
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left, caption={Closing Comment}]
 /*
  *  End of File
  */
@@ -1608,17 +1638,66 @@ DirectionSwitch: switch( direction )
 
 The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 39. The colon at the end of the label name is mandatory for this kind of comment.
 
+\section{Special Files}
+Beside the files that contain the Java source code (with the extension \verb#.java#), a project can contain several other files.
+
+\subsection{The Module Definition}\label{sec:ModuleDefinition}
+Modules have been introduced to Java with version 9, as a result of the Jigsaw project. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
+
+Basically, a \verb#module-info.java# file will look like this:
+\begin{lstlisting}[numbers=left, caption={module-info.java}]
+/*
+ * ==================================================================
+ * Copyright © <Year> <Copyright Notice>
+ * ==================================================================
+ *
+ * <License Notice>
+ */
+ 
+/**
+ *  <module description>
+ */ 
+module <modulename> 
+{
+    requires <name_of_required_module_1>;
+    requires <name_of_required_module_2>;
+
+    requires transitive <name_of_required_module_3>;
+
+    exports <name_of_exported_package_1>;
+    exports <name_of_exported_package_2> to <name_of_target_module_1>;
+
+    opens <name_of_opened_package_1>;
+    opens <name_of_opened_package_1> to <name_of_target_module_1>, <name_of_target_module_2>;
+
+    uses <name_of_provider_interface>;
+    provides <name_of_provider_interface> with <name_of_provider_implementation>;
+}
+//  module <modulename>
+
+/*
+ *  End of File
+ */
+\end{lstlisting}
+How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \vref{sec:Modules}.
+
 \chapter{Naming Conventions}
 Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
 
-The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
+The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
 
-Additionally, names provide an implicit contract between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will read something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it writes.
+Additionally, names provide an implicit contract between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
 
 But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \vref{sec:TheNamingDictionary} in the appendices for those lists.
 
+The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Speficication \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
+
 \subsection{Language}
 The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two …) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
+
+The reason to use English is that this is the common language for international teams.
+
+But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distungiush just by the language if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|; in writing, this looks good, but in oral communications, misunderstandings are easy. }
 
 \subsection{Uppercase, Lowercase, Camelcase}
 Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
@@ -1638,21 +1717,27 @@ If you think you will be more productive when using short names (because you can
 
 But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
 
-\subsection{Some more General Rules}
-\begin{itemize}
-\item{Avoid special characters in identifiers; the only exception are underscores for constants (see chapter \vref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \vref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \vref{sec:Lambdas}).}
-\item{Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the product code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used.}
-\end{itemize}
+\subsection{Special Characters}
+Avoid special characters and punctuations in identifiers; the only exception are underscores for constants (see chapter \vref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \vref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \vref{sec:Lambdas}). This, too, is a reason for using English for the names and identifiers: usually, you can limit yourself to the ASCII character set.
 
-Java programs does not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
+\subsection{The name “test”}
+Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
+
+\subsection{Names forced by 3\textsuperscript{rd} Party Components}
+Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
+
+\section{Modules}\label{sec:Modules}
+A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \vref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
+
+Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
+
+So the names for modules will follow the same rules as those for packages.
 
 \chapter{-------------------------------------------- Proceed from here!}
 
 
 
 
-
-\section{Modules}
 
 \section{Packages}\label{sec:Packages}
 
@@ -1954,11 +2039,11 @@ The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run| in it
 
 The difference between this approach and simply calling \lstinline|doAfter.run()| in a \lstinline|finally| block is that the \lstinline|close()| method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \ref{sec:ExecutionSequence}).
 
-A real-life example where this is useful could be the following:
+The following code snippet could be a real-life example for where this is useful:
 \begin{lstlisting}[numbers=left]
 final var builder = new StringBuilder();
 
-Runnable addTrailer = () -> builder.append( "}\n" );
+final Runnable addTrailer = () -> builder.append( "}\n" );
 
 …
 
@@ -1969,9 +2054,29 @@ try( final var p = new PostProcessor( addTrailer ) )
 \end{lstlisting}
 This ensures that the string in \lstinline|builder| always terminates with a closing curly brace followed by a linefeed.
 
+Another sample is this code snippet:
+\begin{lstlisting}[numbers=left]
+final List<String> list = new LinkedList();
+
+final Runnable forceSorting = () -> list.sort();
+
+…
+
+try( final var p = new PostProcessor( forceSorting ) )
+{
+    for( final var s : loadStrings() )
+    {
+        list.add( s );
+    }
+}
+\end{lstlisting}
+Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
+
+\section{Finalisation}
+
 \chapter{Appendices}
 
-\section{The Naming Dictionary}\label{sec:TheNameDirectory}
+\section{The Naming Dictionary}\label{sec:TheNamingDictionary}
 The names of program elements provide an implicit contract between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
 
 \subsection{Verbs}
@@ -1983,11 +2088,17 @@ This chapter provides a list of verbs\footnote{Ok, some names or prefixes are no
     \caption{Verbs} \\
     \hline 
     Verb & Contract \\ 
-    \hline\endfirsthead
-    \caption{Verbs (continued)} \\
+    \hline
+    \endfirsthead
+    \multicolumn{2}{c}%
+    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
     \hline 
     Verb & Contract \\ 
-    \hline\endhead
+    \hline
+    \endhead
+    \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+    \endfoot
+    \endlastfoot
 
     \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\ 
     \hline 
@@ -2045,7 +2156,10 @@ public final class MyProgram
     Obviously, the method \lstinline|initialize()| is optional, put if available, only this may take the command line arguments instead of lstinline|execute()|, too.\newline This allows to use an application/program class also in the context of another program/application. \\ 
     \hline
 
-    \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix \lstinline|exec| to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\ 
+    \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix ‘exec’ to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\ 
+    \hline 
+
+    \makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )|} & A ‘find’ method searches something that is expected to be there (different from a ‘search’ method described below). The method returns the result or throws an appropriate exception when it fails, but it would be also possible to return an instance of \lstinline|java.lang.Optional|.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\ 
     \hline 
 
     \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with ‘from’ had been introduced with the \lstinline|java.time| API and Java~8. These are static factory methods that create an instance of the owning class based on the given argument (usually a String). \\ 
@@ -2107,6 +2221,25 @@ that can be even used with \lstinline|try-with-resources|. \\
     
     \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\ 
     \hline
+    
+    \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\ 
+    \hline
+    
+    \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|} & This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\ 
+    \hline
+    
+    \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|} & ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP_PUT_METHOD}. \\ 
+    \hline
+    
+    \makecell{\lstinline|read()|} & The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\ 
+    \hline
+    
+    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\ 
+    \hline
+    
+    \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|} & A ‘search’ method searches something, but it is a valid result that it does not find something. That distinguishes it from a ‘search’ method as described above. The method returns an instance of \lstinline|java.lang.Optional| with the result.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\ 
+    \hline 
+
   \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{Verbs.tbl.tex}
@@ -2119,22 +2252,6 @@ that can be even used with \lstinline|try-with-resources|. \\
 
 
 
-perform()
-perform( arg )
-perform...()
-perform...( arg )
-Performs an action, either implicit like for an implementation of the Command pattern, or explicit named by the remaining parts of the name.
-The arguments are the parameters of the action, and are changed or not, same as for the object itself.
-pull()
-See “push”.
-push( arg )
-“push” and the reverse operation “pull” are used with stack-like data structures. With “push”, an object is placed on top of the stack, “pull” will remove the object on top of the stack and returns it.
-put( arg )
-Somehow a synonym to “add”.
-read( arg )
-read...( arg )
-Reads something from an external source and returns it. This may or may not change the object's state.
-Usually it takes the external source as a parameter, but it is also possible that this reference is implicit (as for streams).
 remove...( arg )
 remove( arg )
 Removes something from an internal list. The argument is something like a key or another identifier for the object to remove. “remove” is somehow the reverse operation to “add”.
@@ -2596,6 +2713,8 @@ public final class UnsupportedEnumError extends Error
  *  End of File
  */
  \end{lstlisting}
+
+\listoftables
 
 \lstlistoflistings
 

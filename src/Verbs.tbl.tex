@@ -6,11 +6,17 @@
     \caption{Verbs} \\
     \hline
     Verb & Contract \\
-    \hline\endfirsthead
-    \caption{Verbs (continued)} \\
+    \hline
+    \endfirsthead
+    \multicolumn{2}{c}%
+    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
     \hline
     Verb & Contract \\
-    \hline\endhead
+    \hline
+    \endhead
+    \multicolumn{2}{r}{\textit{Continued on next page}} \\
+    \endfoot
+    \endlastfoot
 
     \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\
     \hline
@@ -68,7 +74,10 @@ public final class MyProgram
     Obviously, the method \lstinline|initialize()| is optional, put if available, only this may take the command line arguments instead of lstinline|execute()|, too.\newline This allows to use an application/program class also in the context of another program/application. \\
     \hline
 
-    \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix \lstinline|exec| to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\
+    \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix ‘exec’ to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\
+    \hline
+
+    \makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )|} & A ‘find’ method searches something that is expected to be there (different from a ‘search’ method described below). The method returns the result or throws an appropriate exception when it fails, but it would be also possible to return an instance of \lstinline|java.lang.Optional|.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\
     \hline
 
     \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with ‘from’ had been introduced with the \lstinline|java.time| API and Java~8. These are static factory methods that create an instance of the owning class based on the given argument (usually a String). \\
@@ -130,4 +139,23 @@ that can be even used with \lstinline|try-with-resources|. \\
 
     \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
     \hline
+
+    \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\
+    \hline
+
+    \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|} & This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\
+    \hline
+
+    \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|} & ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP_PUT_METHOD}. \\
+    \hline
+
+    \makecell{\lstinline|read()|} & The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\
+    \hline
+
+    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
+    \hline
+
+    \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|} & A ‘search’ method searches something, but it is a valid result that it does not find something. That distinguishes it from a ‘search’ method as described above. The method returns an instance of \lstinline|java.lang.Optional| with the result.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\
+    \hline
+
   \end{longtable}

@@ -1,5 +1,5 @@
 \RequirePackage{lmodern}
-\documentclass[12pt,a4paper,titlepage,parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
+\documentclass[12pt,a4paper,titlepage, parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
 \usepackage[T1]{fontenc}
 \usepackage{scrhack}
 \usepackage{graphicx} 
@@ -145,6 +145,8 @@ The code samples in this document should underline some particular aspect or dem
 For source code samples that obey all rules and follow all recommendations, refer to chapter~\vref{sec:Examples}.
 
 All rules and recommendations assume that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
+
+If you have questions or comments regarding this document, please send me an email to thomas.thrien@tquadrat.org. Or leave it at https://tquadrat.github.io/.
 
 \section{History and Implementation}
 I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
@@ -1973,7 +1975,7 @@ This ensures that the string in \lstinline|builder| always terminates with a clo
 The names of program elements provide an implicit contract between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
 
 \subsection{Verbs}
-This chapter provides a list of verbs to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be use as standalone names, too. The form that used more often is mentioned first.
+This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’ …} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
 
 \renewcommand{\cellalign}{tl}
 \begin{filecontents}{Verbs.tbl.tex}
@@ -1987,7 +1989,7 @@ This chapter provides a list of verbs to be used with method names and a descrip
     Verb & Contract \\ 
     \hline\endhead
 
-    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an \lstinline|add|-method would not return something. \\ 
+    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\ 
     \hline 
 
     \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name ‘append’ for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).\newline A sample for this is \lstinline|java.lang.StringBuffer.append()|. \\ 
@@ -2102,6 +2104,9 @@ public final File openLogFile( final File logFolder ) {…}
 \end{lstlisting}
 that can be even used with \lstinline|try-with-resources|. \\ 
     \hline
+    
+    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\ 
+    \hline
   \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{Verbs.tbl.tex}
@@ -2114,8 +2119,6 @@ that can be even used with \lstinline|try-with-resources|. \\
 
 
 
-peek()
-Looks into a data structure without modifying the object state. Often used with stack-like or queue-like data structures.
 perform()
 perform( arg )
 perform...()
@@ -2293,7 +2296,16 @@ The snippets for the structuring comments as defined in chapter \vref{sec:Struct
 \subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJConfiguration}
 tbd
 
-\section{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+\section{Embedded Code}
+Sometimes, it is necessary to embed code inside the Java source code. Most often, these are SQL statements, but sometimes it could be also fragments of HTML or XML documents.
+
+\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+
+\subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
+You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
+
+\subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
+Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
 
 \section{Examples}\label{sec:Examples}
 

@@ -12,7 +12,7 @@
     Verb & Contract \\
     \hline\endhead
 
-    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an \lstinline|add|-method would not return something. \\
+    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\
     \hline
 
     \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name ‘append’ for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).\newline A sample for this is \lstinline|java.lang.StringBuffer.append()|. \\
@@ -126,5 +126,8 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
 public final File openLogFile( final File logFolder ) {…}
 \end{lstlisting}
 that can be even used with \lstinline|try-with-resources|. \\
+    \hline
+
+    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
     \hline
   \end{longtable}

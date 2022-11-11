@@ -1686,7 +1686,7 @@ Naming conventions make programs more understandable by making them easier to re
 
 The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
 
-Additionally, names provide an implicit contract between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
+Additionally, names provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
 
 But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \vref{sec:TheNamingDictionary} in the appendices for those lists.
 
@@ -2077,7 +2077,7 @@ Here the \lstinline|PostProcessor| forces that the given list is always sorted a
 \chapter{Appendices}
 
 \section{The Naming Dictionary}\label{sec:TheNamingDictionary}
-The names of program elements provide an implicit contract between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
+The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
 
 \subsection{Verbs}
 This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’ …} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
@@ -2168,7 +2168,7 @@ public final class MyProgram
     \makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|} & A ‘generate’ method generates something based on the object state, with or without changing it. Each call to generate may have a different result, even for the same arguments – this distinguishes it from ‘compose’.\newline Different from a ‘create’ method, a ‘generate’ method may work on entities outside the program (a file, an image, a report, …); this means it does not have a return value, or the return value is just the status of the generation process. \\ 
     \hline 
 
-    \makecell{\lstinline|get…()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously. \\ 
+    \makecell{\lstinline|get…()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|, but it should never fail (meaning it should be avoided that a getter throws an exception). \\ 
     \hline 
 
     \makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|} & A method with a name starting with \lstinline|has| checks whether the owning object ‘contains’ something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.\newline Calling the method may not change the state of the owning object. \\ 
@@ -2203,7 +2203,7 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
     \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\ 
     \hline
 
-    \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property. \\ 
+    \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|. \\ 
     \hline
     
     \makecell{\lstinline|of( <arg> )|} & The method name \lstinline|of()| was more or less introduced with Java~9 and the static factory methods for \lstinline|java.util.List|,  \lstinline|java.util.Set| and  \lstinline|java.util.Map|. The methods with the that name creates an instance of owning class containing the given arguments.\newline If there is no argument, an empty instance will be created. \\ 
@@ -2237,7 +2237,22 @@ that can be even used with \lstinline|try-with-resources|. \\
     \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\ 
     \hline
     
+    \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\ 
+    \hline
+    
+    \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|} & A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\ 
+    \hline
+    
+    \makecell{\lstinline|run()|} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|, and it should not be used in different context. \\ 
+    \hline
+    
     \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|} & A ‘search’ method searches something, but it is a valid result that it does not find something. That distinguishes it from a ‘search’ method as described above. The method returns an instance of \lstinline|java.lang.Optional| with the result.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\ 
+    \hline 
+
+    \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|} & A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is that status of the save operation.\newline The method may or may not change the state of the owning object. \\ 
+    \hline 
+
+    \makecell{\lstinline|save…( <arg> )|} & A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\ 
     \hline 
 
   \end{longtable} 
@@ -2252,17 +2267,6 @@ that can be even used with \lstinline|try-with-resources|. \\
 
 
 
-remove...( arg )
-remove( arg )
-Removes something from an internal list. The argument is something like a key or another identifier for the object to remove. “remove” is somehow the reverse operation to “add”.
-retrieve...()
-retrieve...( arg )
-“retrieve” is somehow similar to “get”, but it can modify the object's state.
-run()
-This is the name of the main method of a thread, and should be usually used only in this or a similar context.
-save()
-save( arg )
-The is the converse operation to “load”. It may take the destination for the save as a parameter.
 set...( arg )
 Indicates a setter. It takes exactly one argument, the new value for the attribute that is named by the part after the “set”. See above for “get” and refer to “The JavaBeans Technology” [JAVABEANS] for details.
 sort( arg )
@@ -2642,14 +2646,11 @@ Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 \begin{lstlisting}[numbers=left,caption={UnsupportedEnumError}]
 package org.tquadrat.foundation.exception;
 
-import static org.apiguardian.api.API.Status.STABLE;
 import static org.tquadrat.foundation.lang.Objects.requireNonNullArgument;
 import static org.tquadrat.foundation.lang.Objects.requireNotEmptyArgument;
 import static org.tquadrat.foundation.lang.internal.SharedFormatter.format;
 
 import java.io.Serial;
-
-import org.apiguardian.api.API;
 
 /**
  *  This is a specialized implementation for
@@ -2660,7 +2661,6 @@ import org.apiguardian.api.API;
  *
  *  @author Thomas Thrien - thomas.thrien@tquadrat.org
  */
-@API( status = STABLE, since = "0.0.5" )
 public final class UnsupportedEnumError extends Error
 {
         /*-----------*\

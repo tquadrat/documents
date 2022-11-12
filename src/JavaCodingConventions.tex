@@ -1733,15 +1733,76 @@ Each module has a main package, and this should be also the name of that module.
 
 So the names for modules will follow the same rules as those for packages.
 
+\section{Packages}\label{sec:Packages}
+According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that.}
+
+Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
+
+Subsequent components of the package name vary according to an organization's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Valid samples are:
+\begin{itemize}[nosep]
+\item\verb#org.tquadrat#
+\item\verb#com.ibm#
+\item\verb#com.sun#
+\item\verb#de.jug#
+\item\verb#uk.gov.hmrc#
+\end{itemize}
+
+Of course you should use your domain name! Those from the samples are already used by the respective companies or organisations (or persons).
+
+Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Finally the package name should reflect somehow the function of that package.
+
+\subsection{The Packages “internal” and “spi”}
+The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the non-public package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers.
+
+If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
+
+For the details, refer to chapter \vref{sec:EncapsulationWithModules}.
+
+\section{Classes}\label{sec:Classes}
+In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|). Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
+
+According to the Java syntax specification, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)!\footnote{Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner classes and anynomous classes, as well as for the classes that will be generared for lambdas.}
+
+You should also avoid numerical characters in class names.
+
+\subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
+A ‘real’ class is declared with the keyword \lstinline|class|. 
+
+Some parts of a class name will indicate a special position of that class in the class hierarchy. So the suffix ‘Impl’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|}.
+
+‘Adapter’ as the suffix is similar, but here the methods are usually empty, as it is assumed that only a few of the methods of the interface are really required; various samples for this could be found in the Swing packages.
+
+A suffix ‘Base’ indicates that the class has to be extended; usually that class is \lstinline|abstract|.
+
+Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘Error’ and ‘Exception’ for error and exception classes. Others are ‘Visitor’, and ‘Listener’ for the implementations of the respective patterns, ‘DAO’, or ‘Entity’. A more complete list can be found in chapter \vref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
+
+\subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
+An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
+
+Some coding conventions (particular in the Windows realm) require the prefix ‘I’ for interfaces, but not this one, as it does not make much sense to mark interfaces in such way.
+
+\subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
+An enum is a special class that will be declared with the keyword \lstinline|enum|.
+
+
+
+, but with special functions. So they have to be named as classes.
+Avoid plurals in the class name; so it should read Animal, and not Animals, Type and not Types.
+The enum class as it is defined in Java is an implementation of the Multiton pattern.
+For the naming of the enum values refer to chapter \ref{sec:EnumValues}.
+
+\section{Fields}\label{sec:Fields}
+
 \chapter{-------------------------------------------- Proceed from here!}
 
 
 
 
 
-\section{Packages}\label{sec:Packages}
-
-\section{Fields}\label{sec:Fields}
 
 \section{Constants}\label{sec:Constants}
 
@@ -1798,6 +1859,10 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 \section{Returning Values}\label{sec:ReturningValues}
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
+
+\section{Encapsulation}
+
+\subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
 
 \section{Lambdas}\label{sec:Lambdas}
 
@@ -2083,213 +2148,11 @@ The names of program elements provide an implicit contract (or at least a kind o
 This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’ …} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
 
 \renewcommand{\cellalign}{tl}
-\begin{filecontents}{Verbs.tbl.tex}
-  \begin{longtable}{|l|X|}
-    \caption{Verbs} \\
-    \hline 
-    Verb & Contract \\ 
-    \hline
-    \endfirsthead
-    \multicolumn{2}{c}%
-    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
-    \hline 
-    Verb & Contract \\ 
-    \hline
-    \endhead
-    \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
-    \endfoot
-    \endlastfoot
-
-    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the owning object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\ 
-    \hline 
-
-    \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name ‘append’ for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).\newline A sample for this is \lstinline|java.lang.StringBuffer.append()|. \\ 
-    \hline 
-
-    \makecell{\lstinline|build()|} & The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|call()|} & This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface) and should usually only used in this or a similar context.\newline For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE} and \autocite{ORACLE_DOC_CALLABLE_INTERFACE}. \\ 
-    \hline 
-
-    \makecell{\lstinline|check()| \\ \lstinline|check( <arg> )| \\ \lstinline|check…()|} & Usually ‘to check’ is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in “CheckBox”). I do not recommend the latter usage (use ‘mark’ instead), and because of the chance to generally misinterpret the verb, I do not recommend to use it at all.\newline If used anyway, the respective method may not modify the object and it should return a boolean. \\ 
-    \hline 
-
-   \makecell{\lstinline|clear()|} & A method with this name will empty or reset the owning object. \\ 
-    \hline 
-
-   \makecell{\lstinline|clone()|} & The method \lstinline|clone()| creates an identical copy of the owning object.\newline Refer to \autocite{ORACLE_DOC_OBJECT_CLONE_METHOD} and \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}. \\ 
-    \hline 
-
-    \makecell{\lstinline|close()| \\ \lstinline|close…()|} & This name will be assigned to methods to close a connection to an external resource, like a file or device.\newline Refer to \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE} and \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} for details. \\ 
-    \hline 
-
-    \makecell{\lstinline|compose…( <arg> )| \\ \lstinline|compose…()|} & A ‘compose’ method will compose a new object or data structure from the internal state and the given arguments – if any. It will not modify the owning object itself, and each call with identical arguments (and on an unchanged object) will return the same value. Different from a ‘build’ method, a ‘compose’ method can be called more than once on the same object instance. \\ 
-    \hline 
-
-    \makecell{\lstinline|connect()| \\ \lstinline|connect( <arg> )| \\ \lstinline|connect…()| \\ \lstinline|connect…( <arg> )|} & A method with this name initialises the connection of the owning object to an external resource, like a device or a remote system. \\ 
-    \hline 
-
-    \makecell{\lstinline|copy( <arg> )|} & A ‘copy’ method makes a copy of the given argument and returns it. If this is an identical copy (like through the invocation of \lstinline|clone()| or not depends from the implementation. \\ 
-    \hline 
-
-    \makecell{\lstinline|create…( <arg> )| \\ \lstinline|create…()|} & This name indicates a method that creates something based on the given arguments, but different from the ‘compose’ method, each call can have a different result, even for identical arguments.\newline A ‘create’ method usually returns created entity as the result. \\ 
-    \hline 
-
-    \makecell{\lstinline|delete()| \\ \lstinline|delete( <arg> )|} & A method with the name ‘delete’ deletes something, either identified by the state of the owning object or by the given arguments. A sample would be \lstinline|java.io.File::delete| that removes the file that is associated with the respective instance of \lstinline|java.io.File|. \\ 
-    \hline 
-
-    \makecell{\lstinline|execute()| \\ \lstinline|execute( <arg> )|} & This is the name for a method that does the program's or application's work. Usually the arguments are the command line arguments for the program, although this is not mandatory.\newline This is used in pattern similar this:
-\begin{lstlisting}[xleftmargin=.7cm,numbers=left]
-public final class MyProgram
-{
-    public final void execute( final String [] args ) { … }
-    public final boolean initialize( final String [] args ) { … }
-    public static final void main( final String... args )
-    {
-        final var application = new MyProgram();
-        if( application.initialize( args ) ) application.execute();
-    }   //  main()
-}
-//  class MyProgram
-\end{lstlisting}
-    Obviously, the method \lstinline|initialize()| is optional, put if available, only this may take the command line arguments instead of lstinline|execute()|, too.\newline This allows to use an application/program class also in the context of another program/application. \\ 
-    \hline
-
-    \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix ‘exec’ to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\ 
-    \hline 
-
-    \makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )|} & A ‘find’ method searches something that is expected to be there (different from a ‘search’ method described below). The method returns the result or throws an appropriate exception when it fails, but it would be also possible to return an instance of \lstinline|java.lang.Optional|.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with ‘from’ had been introduced with the \lstinline|java.time| API and Java~8. These are static factory methods that create an instance of the owning class based on the given argument (usually a String). \\ 
-    \hline 
-
-    \makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|} & A ‘generate’ method generates something based on the object state, with or without changing it. Each call to generate may have a different result, even for the same arguments – this distinguishes it from ‘compose’.\newline Different from a ‘create’ method, a ‘generate’ method may work on entities outside the program (a file, an image, a report, …); this means it does not have a return value, or the return value is just the status of the generation process. \\ 
-    \hline 
-
-    \makecell{\lstinline|get…()|} & The prefix ‘get’ indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} would be of interest here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|, but it should never fail (meaning it should be avoided that a getter throws an exception). \\ 
-    \hline 
-
-    \makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|} & A method with a name starting with \lstinline|has| checks whether the owning object ‘contains’ something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.\newline Calling the method may not change the state of the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\ 
-    \hline 
-
-    \makecell{\lstinline|is…()|} & This is the prefix for a \textit{getter} that returns a \lstinline|boolean|. Refer to \lstinline|get…|, above. \\ 
-    \hline 
-
-    \makecell{\lstinline|load()| \\ \lstinline|load( <arg> )|} & The method with the name \lstinline|load()| ‘loads’ the data for the owning object from somewhere (usually an external source) and initialises it with this data. The argument is usually the reference to the source.\newline The return type is either \lstinline|void|, or the method returns some kind of status for the load operation.\\ 
-    \hline 
-
-    \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|} & If this is used as the prefix for a method name, that method also loads data from an external source, but it initialised and returns a data structure that is described by the remainder of the name.\newline Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\ 
-    \hline
-
-    \makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|} & Although ‘main’ is not a reserved word in the Java language, it should be treated as one. Therefore a method should never be named as \lstinline|main()| unless it is the program entry point. Not to mention that ‘main’ is not even a verb at all.\newline The usual signature for the main method is
-\begin{lstlisting}
-public static void main( String [] args )
-\end{lstlisting}
-but I prefer it as
-\begin{lstlisting}
-public static final void main( final String... args )
-\end{lstlisting}
-Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\ 
-    \hline
-
-    \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & The prefix ‘make’ is similar to ‘create’,‘compose’, or ‘generate’, but usually a method with a name starting with ‘make’ produces something outside the program – like a file or a database (table). In this regard it is like ’generate’, but the process of ‘making’ is less complex as that of ‘generation’. \\ 
-    \hline
-
-    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\ 
-    \hline
-
-    \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|. \\ 
-    \hline
-    
-    \makecell{\lstinline|of( <arg> )|} & The method name \lstinline|of()| was more or less introduced with Java~9 and the static factory methods for \lstinline|java.util.List|,  \lstinline|java.util.Set| and  \lstinline|java.util.Map|. The methods with the that name creates an instance of owning class containing the given arguments.\newline If there is no argument, an empty instance will be created. \\ 
-    \hline
-    
-    \makecell{\lstinline|open()|} & An ‘open’ method opens a connection to an external resource that is represented by the owning object. Obviously, that object changes its state.\newline Usually, \lstinline|open()| will not return something; or when it returns something, in will be that status of the open operation.\newline It will also not take any arguments as all necessary information are given by the state of the owning object. \\ 
-    \hline
-    
-    \makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|} & A method with a name that is prefixed with ‘open’ will also open a connection to an external resource, but it will return an object representing this connection or the external resource. The required information can either be taken from the owning object or given as the arguments or both.\newline Such a method may or may not change the state of the owning object. And the owning object may or may not provide a corresponding ‘close’ method.\newline A sample could be a method 
-\begin{lstlisting}
-public final File openLogFile( final File logFolder ) {…}
-\end{lstlisting}
-that can be even used with \lstinline|try-with-resources|. \\ 
-    \hline
-    
-    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\ 
-    \hline
-    
-    \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\ 
-    \hline
-    
-    \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|} & This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\ 
-    \hline
-    
-    \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|} & ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP_PUT_METHOD}. \\ 
-    \hline
-    
-    \makecell{\lstinline|read()|} & The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\ 
-    \hline
-    
-    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\ 
-    \hline
-    
-    \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\ 
-    \hline
-    
-    \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|} & A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\ 
-    \hline
-    
-    \makecell{\lstinline|run()|} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|, and it should not be used in different context. \\ 
-    \hline
-    
-    \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|} & A ‘search’ method searches something, but it is a valid result that it does not find something. That distinguishes it from a ‘search’ method as described above. The method returns an instance of \lstinline|java.lang.Optional| with the result.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|} & A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is that status of the save operation.\newline The method may or may not change the state of the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|save…( <arg> )|} & A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\ 
-    \hline 
-
-    \makecell{\lstinline|set…( <arg> )|} & The prefix ‘set’ indicates a \textit{setter} method (sometimes referred to as a ’bean mutator’, too); it takes exactly one argument that is the new value for the property that is identified by the remainder of the method name. For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3} and have a look to ‘get’ as well. \\ 
-    \hline 
-
-    \makecell{\lstinline|sort( <arg> )| \\ \lstinline|sort()| \\ \lstinline|sort…()| \\ \lstinline|sort…( <arg> )|} & A ‘sort’ method sorts something:  either the data structure (a list or an array) given as the argument (in that case, it does not change the state of the owning object), or, if the owning object is not a sortable data structure itself, an internal list or alike. Additional arguments could be the sort direction as well as the general sorting criteria. \\ 
-    \hline 
-
-  \end{longtable} 
-\end{filecontents}
 \LTXtable{\linewidth}{Verbs.tbl.tex}
 
-\chapter{-------------------------------------------- Proceed from here!}
+That a method name is built using one of the verbs above does not free you from providing a proper JavaDoc comment that describes the purpose of the method in detail, together with the arguments, return values and exceptions.
 
-
-
-
-
-
-
-test...()
-This should not be used for production code as some test frameworks (like JUnit 3) use a naming convention, saying that methods whose name begins with “test” are test methods.
-Usually “validate” is a good synonym for “test”.
-validate()
-validate( arg )
-Tests if the object is valid according some built-in constraints, without modifying the object. Usually a boolean is returned.
-If taking an argument, this argument is validated against constraints defined in the object owning the method. Both, the argument and this, will remain unchanged.
-write( arg )
-write...( arg )
-This is the converse operation to “read”: it writes the given argument to an external resource, usually without changing the object’s state.
-Usually it takes the external resource as a parameter, but it is also possible that this reference is implicit (as for streams).
-t.b.c.
-…
-
-\LTXtable{\linewidth}{Verbs.tbl.tex}
-
-\subsection{Suffixes for Class Names}
+\subsection{Suffixes for Class Names}\label{sec:SuffixesForClassNames}
 This chapter lists defined suffixes for class names and their function.
 
 \renewcommand{\cellalign}{tl}
@@ -2300,6 +2163,7 @@ This chapter provides samples of configuration files for some IDEs.
 
 \subsection{Eclipse}\label{sec:EclipseConfiguration}
 tbd
+
 \subsubsection{Snippets}
 This chapter provides the XML code for Eclipse snippets.
 

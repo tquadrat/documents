@@ -6,6 +6,8 @@
 \usepackage[manualmark]{scrlayer-scrpage}
 \usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
+\usepackage{nameref}
+\usepackage[colorlinks=true]{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -72,6 +74,12 @@ literate=
 
 \colorlet{shadecolor}{gray!10}
 
+%---* New Commands *-----------------------------------------------------------
+\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”}}
+\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”} on page \pageref{#1}}
+\newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
+\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page \pageref{#1}}
+
 \begin{document}
 \isodate
 \titlehead{\includegraphics[height=4cm]{Logo_gross}}
@@ -106,7 +114,7 @@ public void method (){
 }
 \end{lstlisting}
 
-as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter~\ref{sec:OtherProgrammingLanguages} on this topic.}):
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter~\tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
 
 \begin{lstlisting}
 public void method()
@@ -118,7 +126,7 @@ public void method()
 }
 \end{lstlisting}
 
-Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste (but refer to chapter \vref{sec:IndentationStyle}).
+Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste (but refer to chapter \tqfullvref{sec:IndentationStyle}).
 
 Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
@@ -142,7 +150,7 @@ The document itself consists of four major parts: first we want to talk about pr
 
 The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules or recommendations are first used in the samples \textit{after} being introduced.
 
-For source code samples that obey all rules and follow all recommendations, refer to chapter~\vref{sec:Examples}.
+For source code samples that obey all rules and follow all recommendations, refer to chapter~\tqfullvref{sec:Examples}.
 
 All rules and recommendations assume that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
 
@@ -153,18 +161,18 @@ I compiled a first version of this document around the year 2000, based on the w
 
 Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20 twenty years now, another code is live since 12 years now.
 
-I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter~\ref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
+I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter~\tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
 
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
 Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in TeX/LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
 Obviously there are some common rules that are valid for every language, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved, if something that worked fine for one language would not be a great idea to be applied to code in another language. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
 
-But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter~\ref{sec:TheBasicRule} below will be applicable to each!
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter~\tqfullref{sec:TheBasicRule} below will be applicable to each!
 
 A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
 
-In \vref{sec:FormattingSQLInsideJava} we have added some rules on how to format SQL statements when added as literals into a Java program.
+In chapter \tqfullvref{sec:FormattingSQLInsideJava} we have added some rules on how to format SQL statements when added as literals into a Java program.
 
 \section{Code Generators}
 Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}}
@@ -178,14 +186,14 @@ And what to do with “legacy” code that has to be fixed?
 
 Most probably that code will not follow this coding conventions (if any at all …), and it is rarely a good idea to reformat or rewrite it completely just to align it with the conventions. Instead a fix should be limited to the area that is broken.
 
-But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the standards defined here. So if a method has to be reimplemented completely, format it as described here and add the JavaDoc comments. Or if a new field has to be added to a class, add the \lstinline|m_| prefix to its name (see chapter~\ref{sec:Fields}).
+But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the standards defined here. So if a method has to be reimplemented completely, format it as described here and add the JavaDoc comments. Or if a new field has to be added to a class, add the \lstinline|m_| prefix to its name (see chapter~\tqfullref{sec:Fields}).
 
 Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
 
 \section{Tool Support}
-Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\ref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
+Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
 
-The chapter \ref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
+The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
 
 \section{The Basic Rule}\label{sec:TheBasicRule}
 One rule should be followed before any other rule or recommendation given in this document:
@@ -211,7 +219,7 @@ So again:
 \end{center}
 
 \chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
-This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter~\vref{sec:WritingProperComments}.
+This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter~\tqfullvref{sec:WritingProperComments}.
 
 I start the chapter with a description of the general structure of a source file, then I give some general conventions before I cover the formatting of single elements of the code.
 
@@ -245,7 +253,7 @@ All source files have begin with a c-style comment that gives the copyright noti
  
 <Year>, <Copyright Notice> and <License Notice> has to be replaced by the appropriate texts.\footnote{The special character \copyright is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
 
-The lines with the equals signs (“===”) will end at column 80; refer to chapter~\vref{sec:LineLength}.
+The lines with the equals signs (“===”) will end at column 80; refer to chapter~\tqfullvref{sec:LineLength}.
 
 No other information should be added to this comment block.
 
@@ -279,7 +287,7 @@ import java.util.*;
 
 are not allowed.
 
-For the names of packages, see chapter~\vref{sec:Packages}.
+For the names of packages, see chapter~\tqfullvref{sec:Packages}.
 
 Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
 
@@ -299,7 +307,8 @@ At least since Java~5, there are not only classes and interfaces that are declar
 Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Each part has a header comment, and inside each part, the elements are ordered alphabetically.
 
 \subsubsection{Class}
-A skeleton for a Java \lstinline|class| may look like this:
+A skeleton for a Java class may look like this:
+
 \begin{lstlisting}[numbers=left,caption={Class Skeleton}]
 public class MyClass 
 {
@@ -373,7 +382,8 @@ public class MyClass
 \LTXtable{\linewidth}{ClassParts.tbl}
 
 \subsubsection{Interface}
-A skeleton for an \lstinline|interface| may look like this:
+A skeleton for an interface may look like this:
+
 \begin{lstlisting}[numbers=left,caption={Interface Skeleton}]
 public interface MyInterface 
 {
@@ -423,7 +433,8 @@ public interface MyInterface
 \LTXtable{\linewidth}{InterfaceParts.tbl}
 
 \subsubsection{enum}
-An \lstinline|enum| is a special case of a Java \lstinline|class|. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| may look like this:
+An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a enum class may look like this:
+
 \begin{lstlisting}[numbers=left,caption={enum Skeleton}]
 public enum MyEnum 
 {
@@ -496,9 +507,9 @@ public enum MyEnum
 \LTXtable{\linewidth}{EnumParts.tbl}
 
 \subsubsection{Record}
-Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD}
+Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}
 
-A skeleton for a Java \lstinline|record| may look like this, with all parts being optional:
+A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
 public record MyRecord( ... ) 
 {
@@ -564,8 +575,8 @@ public record MyRecord( ... )
 \LTXtable{\linewidth}{RecordParts.tbl}
 
 \subsubsection{Annotation}
-Annotations had been introduced with Java~5. 
-A skeleton for an \lstinline|annotation| may look like this:
+Annotations had been introduced with Java~5.\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces} A skeleton for an annotation interface may look like this:
+
 \begin{lstlisting}[numbers=left,caption={Annotation Skeleton}]
 public @interface MyAnnotation 
 {
@@ -645,7 +656,7 @@ This had been true at the time those documents were written, but today's  graphi
 
 \textbf{Note:} Sample code for use in documentation should have a limited line length – generally not more than 70 characters.
 
-Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \vref{sec:BeginningComments}), the structuring comments (chapter \vref{sec:StructuringComments}) and most single-line comments (chapter \ref{sec:SingleLineComments}).
+Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComments}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
 When an expression does not fit on a single line, break it according to these general principles:
@@ -749,7 +760,7 @@ private static synchronized anotherHorkingLongMethodLineThrows
 }
 \end{lstlisting}
 
-Here are three acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \vref{sec:TheTernaryOperator}.}:
+Here are three acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \tqfullvref{sec:TheTernaryOperator}.}:
 \begin{lstlisting}[numbers=left]
 alpha = (aLongBooleanExpression) ? beta : gamma;
 alpha = (aLongBooleanExpression) ? beta
@@ -760,7 +771,7 @@ alpha = (aLongBooleanExpression)
 \end{lstlisting}
 
 \section{Declarations}
-This chapter deals with the formatting of declarations. See also chapter \vref{sec:WrappingLines} for informations on how to wrap long declarations.
+This chapter deals with the formatting of declarations. See also chapter \tqfullvref{sec:WrappingLines} for informations on how to wrap long declarations.
 
 \subsection{Multiple Declarations per Line}
 It is strongly encouraged to have only one declaration per line, as it is also comforting to add comments to the declaration. In other words, 
@@ -846,7 +857,7 @@ public class MyClass
     }
 }   //  class MyClass
 \end{lstlisting}
-There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \vref{sec:Fields}) would make such a situation unlikely.
+There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \tqfullvref{sec:Fields}) would make such a situation unlikely.
 
 \subsection{Class and Interface Declarations}
 When coding Java classes and interfaces, the following formatting rules has to be followed:
@@ -855,7 +866,7 @@ When coding Java classes and interfaces, the following formatting rules has to b
 \item{If using generics, no space between the name of the class or interface and the opening “<”.}
 \item{An open curly brace “{” appears at a line by itself with the same indentation as the declaration statement.}
 \item{A closing curly brace “}” starts a new line, indented to match its corresponding opening statement; in case of a method or constructor declaration, it is followed by a comment with the name of the method. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.}
-\item{Inner classes, constants, attributes, constructors, methods, they all are separated by a blank line (see chapter \ref{sec:BlankLines}.}
+\item{Inner classes, constants, attributes, constructors, methods, they all are separated by a blank line (see chapter \tqfullref{sec:BlankLines}.}
 \item{Short methods may be written in one single line. In this case, “one single line” means exactly that: \textit{one single} line! Any line break requires the full form as for the sample “composeCorrectKey()” below (line 28).}
 \end{itemize}
 An example:
@@ -905,7 +916,7 @@ This chapter deals with the white space other than the indentation blanks.
 Blank lines improve readability by setting off sections of code that are logically related.
 If not separated by an explicit comment, two blank lines should always be used in the following circumstances:
 \begin{itemize}
-\item{Between sections of a source file\footnote{Although this would hurt the rules for commenting as set in chapter \ref{sec:StructuringComments}}}
+\item{Between sections of a source file\footnote{Although this would hurt the rules for commenting as set in chapter \tqfullref{sec:StructuringComments}}}
 \item{Between class and interface definitions}
 \end{itemize}
 
@@ -927,7 +938,7 @@ An opening arithmetical parenthesis is always preceded by a blank or another ope
 \paragraph{Parameter Parenthesis}\label{sec:ParameterParenthesis}–
 An opening parameter parenthesis is never preceded by a blank and ever followed by one, while a closing one is always preceded by one. The only exception is for empty arguments lists where the opening parenthesis is immediately followed by the closing parenthesis.
 
-Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like functions (see also chapter \ref{sec:BlankLines}).\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside there 'argument list'.}
+Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like functions (see also chapter \tqfullref{sec:BlankLines}).\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside there 'argument list'.}
 
 This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
 
@@ -945,7 +956,7 @@ while( ((line = reader.readLine()) != null) && (++i < capacity) )
 \subsection{Blank Spaces}\label{sec:BlankSpaces}
 Additionally, blank spaces should be used in the following circumstances:
 \begin{itemize}
-\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \ref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
+\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
 
 Examples:
 \begin{lstlisting}[numbers=left]
@@ -1043,7 +1054,7 @@ Here some general rules first:
 \begin{itemize}
 \item{The enclosed statements should be indented one more level than the compound statement.}
 \item{The opening brace should be at a line of itself, indented to the same level as the compound statement.
-Accordingly, the closing brace should begin a line and be indented to the beginning of the compound statement. The exception are short methods where all is one line (refer to chapter \vref{sec:ClassAndInterfaceDeclarations})}.
+Accordingly, the closing brace should begin a line and be indented to the beginning of the compound statement. The exception are short methods where all is one line (refer to chapter \tqfullvref{sec:ClassAndInterfaceDeclarations})}.
 \item{Braces are used around all statements (meaning even if there is just one) when they are part of a control structure, such as a \lstinline|if-else| or \lstinline|for| statement. This makes it easier to add statements without accidentally introducing bugs due to forgetting to add braces.
 
 The only exception from this rule is when a single statement is written on the same line as the compound statement itself.
@@ -1090,9 +1101,9 @@ for( String s : strings )
 for( String s : strings ) if( a < b ) c = d;
 \end{lstlisting}
 
-See also the chapters \ref{sec:IfStatements}, \ref{sec:SwitchStatement}, and \ref{sec:WhileStatements}.}
+See also the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatement}, and \tqfullref{sec:WhileStatements}.}
 
-\item{Long compound statements (long code blocks) should get an end comment. See chapters \ref{sec:LabelsAndBreakStatements}, \ref{sec:TrailingOrEndOfLineComments}, and \ref{sec:CommentsWhen}.} 
+\item{Long compound statements (long code blocks) should get an end comment. See chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}.} 
 \end{itemize}
 
 \subsection{“Chaining”}
@@ -1145,7 +1156,7 @@ final var names = customers.stream()
 \end{lstlisting}
 
 \subsection{return Statements}
-A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \vref{sec:ReturningValues}!
+A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \tqfullvref{sec:ReturningValues}!
 Example:
 \begin{lstlisting}[numbers=left]
 // Usually obsolete
@@ -1165,7 +1176,7 @@ return retValue;
 \end{lstlisting}
 
 \subsection{if, if-else, if-else-if-else Statements}\label{sec:IfStatements}
-The chapters \ref{sec:Parenthesis}, \ref{sec:BlankSpaces}, and \ref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
+The chapters \tqfullref{sec:Parenthesis}, \tqfullref{sec:BlankSpaces}, and \tqfullref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
 
 The base forms for this class of statements are the following ones:
 \begin{lstlisting}[numbers=left]
@@ -1219,7 +1230,7 @@ else
     <statement>;
 \end{lstlisting}
 
-Please refer also to chapter \vref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
+Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
 
 
 \subsection{switch Statements}\label{sec:SwitchStatements}
@@ -1263,7 +1274,7 @@ If a \lstinline|case| falls through, as in line~4, a comment “\lstinline|// Fa
 
 Different to that, no comment is required in the case shown in the lines~19 and 20: here we have two case that triggers the \textit{exactly the same} action.
 
-For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to use always a label with \lstinline|break|; see \ref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
+For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to use always a label with \lstinline|break|; see chapter \tqfullref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
 \begin{lstlisting}
 final Color color;
 ColorSelector: switch( colorIndex )
@@ -1368,7 +1379,7 @@ And an expression can also be always a \lstinline|throw|.
 \subsubsection{General Rules for switch}
 Every \lstinline|switch| statement should include a \lstinline|default| case, even when the cases are exhaustive.
 
-If really all values are covered, the \lstinline|default| should throw an exception about an unknown value.\footnote{Refer to chapter \ref{sec:UnsupportedEnumError} for a sample.}
+If really all values are covered, the \lstinline|default| should throw an exception about an unknown value.\footnote{Refer to chapter \tqfullref{sec:UnsupportedEnumError} for a sample.}
 
 Syntactically, the use of curly braces in the cases is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.
 
@@ -1466,7 +1477,7 @@ while( <condition> );
 \end{lstlisting}
 
 \subsection{try-catch Statements}
-Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \vref{sec:TryWithResources}).
+Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
 
 \subsubsection{The simple Form}
 A simple \lstinline|try-catch| statement has the following format:
@@ -1582,16 +1593,16 @@ finally
 }
 \end{lstlisting}
 
-An \textit{empty} \lstinline|catch| block is unacceptable under all circumstances! Refer to chapter \vref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \vref{sec:SingleLineComments} about empty blocks and comments.
+An \textit{empty} \lstinline|catch| block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqfullvref{sec:SingleLineComments} about empty blocks and comments.
 
 An empty \lstinline|finally| block is completely obsolete and must be removed.
 
 \subsection{Labels and break Statements}\label{sec:LabelsAndBreakStatements}
 In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, but they can be placed anywhere in a code block.
 
-The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \ref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
+The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \tqfullref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
 
-I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter \ref{sec:TrailingOrEndOfLineComments} and chapter \ref{sec:CommentsWhen}.
+I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter \tqfullref{sec:TrailingOrEndOfLineComments} and chapter \tqfullref{sec:CommentsWhen}.
 
 Some samples:
 \begin{lstlisting}[numbers=left]
@@ -1679,7 +1690,7 @@ module <modulename>
  *  End of File
  */
 \end{lstlisting}
-How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \vref{sec:Modules}.
+How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}.
 
 \chapter{Naming Conventions}
 Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
@@ -1688,21 +1699,23 @@ The first rule about the naming of program elements is to use \textit{meaningful
 
 Additionally, names provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
 
-But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \vref{sec:TheNamingDictionary} in the appendices for those lists.
+But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.
 
 The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Speficication \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
+
+But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may look good in some sample code (like in the sample listings in this document), but they are definitely invalid for real code!
 
 \subsection{Language}
 The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two …) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
 
-The reason to use English is that this is the common language for international teams.
+The reason to use English is that this is the common language for most international teams.
 
 But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distungiush just by the language if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|; in writing, this looks good, but in oral communications, misunderstandings are easy. }
 
 \subsection{Uppercase, Lowercase, Camelcase}
 Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
 
-The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29 …}. I prefer a more relaxed approach for that – see chapters \vref{sec:Constants} and \vref{sec:EnumValues}.
+The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29 …}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
 
 Details are again discussed in the chapter about the respective code elements.
 
@@ -1718,7 +1731,7 @@ If you think you will be more productive when using short names (because you can
 But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
 
 \subsection{Special Characters}
-Avoid special characters and punctuations in identifiers; the only exception are underscores for constants (see chapter \vref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \vref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \vref{sec:Lambdas}). This, too, is a reason for using English for the names and identifiers: usually, you can limit yourself to the ASCII character set.
+Avoid special characters and punctuations in identifiers; the only exception are underscores for constants (see chapter \tqfullvref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). This, too, is a reason for using English for the names and identifiers: usually, you can limit yourself to the ASCII character set.
 
 \subsection{The name “test”}
 Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
@@ -1727,7 +1740,7 @@ Avoid “test” as the part of the name of packages, classes, interfaces and me
 Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
 
 \section{Modules}\label{sec:Modules}
-A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \vref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
+A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
 
 Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
 
@@ -1760,7 +1773,7 @@ The modularisation that was introduced with Java~9 allows a much clearer separat
 
 If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
 
-For the details, refer to chapter \vref{sec:EncapsulationWithModules}.
+For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}.
 
 \section{Classes}\label{sec:Classes}
 In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|). Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
@@ -1778,22 +1791,253 @@ Some parts of a class name will indicate a special position of that class in the
 
 A suffix ‘Base’ indicates that the class has to be extended; usually that class is \lstinline|abstract|.
 
-Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘Error’ and ‘Exception’ for error and exception classes. Others are ‘Visitor’, and ‘Listener’ for the implementations of the respective patterns, ‘DAO’, or ‘Entity’. A more complete list can be found in chapter \vref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
+Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘Error’ and ‘Exception’ for error and exception classes. Others are ‘Visitor’, and ‘Listener’ for the implementations of the respective patterns, ‘DAO’, or ‘Entity’. A more complete list can be found in chapter \tqfullvref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
 
 \subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
 An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
 
-Some coding conventions (particular in the Windows realm) require the prefix ‘I’ for interfaces, but not this one, as it does not make much sense to mark interfaces in such way.
+Some coding conventions (particular in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
 
 \subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
 An enum is a special class that will be declared with the keyword \lstinline|enum|.
 
+The name of enum class should be somehow the category of the enumerated entities, but plurals should be avoided; so it should read \lstinline|Type| and not \lstinline|Types|, and \lstinline|DayOfWeek| and not \lstinline|DaysOfWeek|.
 
+Although an enum class can implement an interface, this should not be reflected in the name. This means that \lstinline|TypeImpl| would be an invalid name for an enum class.
 
-, but with special functions. So they have to be named as classes.
-Avoid plurals in the class name; so it should read Animal, and not Animals, Type and not Types.
-The enum class as it is defined in Java is an implementation of the Multiton pattern.
-For the naming of the enum values refer to chapter \ref{sec:EnumValues}.
+For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
+
+\subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
+A record class can implement an interface, like a regular class, so that the suffix ‘Impl’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘Base’ is not permitted, as well as any other suffix indicating a class that should be extended.
+
+Also a record class should not be named ‘Record’.
+
+\subsection{Names for Annotations}\label{sec:NamesForAnnotations}
+Annotations are a special type of an interface, distinguished by the “@” as the first character of their name. The remaining part of the name is determined by the rules for regular interfaces. Samples for valid names are \lstinline|@Text|, \lstinline|@Translation|, \lstinline|@Generated|\footnote{see \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}, or \lstinline|@Deprecated|\footnote{see \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}.
+
+\section{Methods}\label{sec:NamesForMethods}
+Method names have to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized.
+
+The name of a method has to describe what is does; a name like \lstinline|myMethod()| or \lstinline|doSomething()| are discouraged\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as a place holder for a meaningful method name, and definitely \textit{not} as an example for the naming of a method.}.
+
+Chapter \tqref{sec:TheNamingDictionary} beginning on page \pageref{sec:TheNamingDictionary} contains the “Naming Directory” for method names; that is a list of verbs together with their implicit contract. It is highly recommended to refer to this list when searching a name for a new method.
+
+Using digits in method names is acceptable were it makes sense; so using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended. Remember that digits are not allowed as first characters of a method name.
+
+Regarding to “Data Objects” there are two different schools: one supports the JavaBean\footnote{see \autocite{ORACLE_DOC_JAVABEANS}} approach, using explicit getter and setter methods:
+\begin{lstlisting}[numbers=left,caption={JavaBean}]
+class JavaBeanDO
+{
+    private Object m_Attribute;
+
+    public final Object getAttribute() { return m_Attribute; }
+
+    public final void setAttribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }   //  setAttribute()
+}
+//  class JavaBeanDO
+\end{lstlisting}
+
+The other one is in favour of the Property concept, using two methods with the attribute name, but with different signatures as implicit getter and setter methods (here usually named as 'accessor' and 'mutator'):\footnote{I use the term \textit{POJO} (“Plain Old Java Object”) here only to distinguish this approach from a JavaBean; usually, POJOs do not make any assumption about the naming of their methods. This means that a real POJO can have getters and setters, too.}
+
+\begin{lstlisting}[numbers=left,caption={POJO}]
+public class PropertyDO
+{
+    private Object m_Attribute;
+
+    public final Object attribute() { return m_Attribute; }
+
+    public final void attribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }	//	attribute()
+}
+//  class PropertyDO
+\end{lstlisting}
+
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches.
+
+In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
+
+\section{Local Variables}
+The identifier names for local variables are in mixed case, with a lowercase first letter. Internal words start with capital letters. The names should not contain underscore (“\_”) or dollar sign (“\$”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
+
+Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended.
+
+In case the first part of the variable name has to be an acronym, it will be written with all lower case:
+\begin{lstlisting}
+String htmlHeader; // OK
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+String hTMLHeader; // AVOID!
+\end{lstlisting}
+
+Also one-character variable names should be avoided except for temporary “throwaway” variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for| loop:
+\begin{lstlisting}
+for( var i = 0; i < max; ++i )
+{
+    …
+}
+\end{lstlisting}
+
+\lstinline|e| is the common name for the exception in a \lstinline|catch| block:
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final IOException e )
+{
+    //---* Handle the exception *------------------------------------
+    …
+}    
+\end{lstlisting}
+
+For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
+
+Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute:
+\begin{lstlisting}
+// OK
+public final int getValue() { return m_Value; }
+
+// RECOMMENDED
+public final int signum( double d )
+{
+    var retValue = 0;
+    if( d < 0.0 )
+    {
+        retValue = -1
+    }
+    else
+    {
+        retValue = 1;
+    }
+
+    return retValue;
+}   //  signum()
+
+// ACCEPTABLE
+public final int signum( double d )
+{
+    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+}   //  signum()
+
+// AVOID!! Use 'retValue' instead of 'i'!!
+public final int signum( double d )
+{
+    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+    return i;
+}   //  signum()
+\end{lstlisting}
+
+A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
+
+Do not use the names \lstinline|in|, \lstinline|out|, and \lstinline|err|. Although these are not reserved words, they should be treated as such, as it would allow to statically import the default streams from the class \lstinline|java.lang.System|.
+
+Usually you would use the singular form for a variable name, but for collections or arrays, the plural form can be perfectly correct:
+\begin{lstlisting}
+final Collection<Component> values = m_Components.values();
+for( final Component value : values )
+{
+    …
+}    
+\end{lstlisting}
+
+Using the class name (with a lower case first letter, of course) for a variable is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “my” has to be avoided.
+\begin{lstlisting}
+// RECOMMENDED
+public final String retrieveMessage( final String messageKey, 
+    final String... additionalInfo )
+{
+    final MessageProvider messageProvider = getMessageProvider();
+    final String rawMessage = 
+        messageProvider.getMessage( messageKey );
+    final var retValue = String.format( rawMessage, additionalInfo );
+    return retValue;
+}   //  retrieveMessage()
+
+// AVOID!!!! Don't use "my..." prefix!!!
+public final String retrieveMessage( final String string, 
+    final String... strings )
+{
+    final MessageProvider myMessageProvider = getMessageProvider();
+    final String s = myMessageProvider.getMessage( string );
+    final var retValue = String.format( s, strings );
+    return retValue;
+}
+\end{lstlisting}
+
+Sometimes it is also a good idea to use the class name of the type as a suffix or prefix for the name, especially if the current block declares more than one variable of that type. In such a case, the rest of the name could be used to indicate how variables belong together.
+\begin{lstlisting}
+// RECOMMENDED
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent clientAgent = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// AVOID!!!! Don't use "my..." prefix!!! And don't abbreviate!
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent myCA = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// RECOMMENDED
+public final ResultData loadData( Connection connection, … )
+{
+    …
+    final Statement customerStatement = …
+    final Statement orderStatement = …
+
+    …
+
+    final ResultSet customerResultSet = customerStatement.execute();
+    …
+
+    final ResultSet orderResultSet = orderStatement.execute();
+    …
+}   //  loadData()
+\end{lstlisting}
+
+Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way.}
+
+\section{Parameters}
+The names for formal parameters of methods and constructors are different from those for lambdas.
+\subsection{Names for formal Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
+The names for the formal parameters of a method or a constructors follow the same rules as for local variables. Especially they do \textit{not} have any prefix.
+
+The parameters that are used to initialise a field should have the same name as that field, but without the “m\_” prefix:
+\begin{lstlisting}
+public final class MyClass
+{
+    private String m_Name;
+    
+    public MyClass( final String name )
+    {
+        m_Name = name;
+    }   // MyClass()
+    
+    public final void setName( final String name )
+    {
+        m_Name = name;
+    }   //  setName()
+}
+//  class MyClass
+\end{lstlisting}
+
+\subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
 
 \section{Fields}\label{sec:Fields}
 
@@ -1808,12 +2052,14 @@ For the naming of the enum values refer to chapter \ref{sec:EnumValues}.
 
 \section{enum Values}\label{sec:EnumValues}
 
+\section{Type Variables}\label{sec:TypeVariables}
+
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 
 \section{Implementation Comment Formats}
 
 \subsection{Structuring Comments}\label{sec:StructuringComments}
-These are the easiest comments: they are used to separate the sections or parts of a class (as defined in chapter \vref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
+These are the easiest comments: they are used to separate the sections or parts of a class (as defined in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
 \begin{lstlisting}
     /*------------------*\
 ====** Enum Declaration **===========================================
@@ -1842,7 +2088,7 @@ with the lines ending at column 80 (the samples here are too short).
 
 If a class or interface does not have a particular section or part, the assigned structuring comment must be omitted.
 
-I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert.}. Refer to chapter \vref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
+I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert.}. Refer to chapter \tqfullvref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
 
 \subsection{Single-Line Comments}\label{sec:SingleLineComments}
 
@@ -2049,7 +2295,7 @@ A workaround is to use a \lstinline|try-finally| block with the cleanup (usually
 
 Now, with the \lstinline|try-with-resources| feature, we can have “Lifecycle” classes; they are still not that easy to use that with real destructors, but we can come close.
 
-A sample would be the Class \lstinline|AutoLock|; for the full code, see chapter \vref{sec:AutoLock}; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
+A sample would be the Class \lstinline|AutoLock|; for the full code, see chapter \tqfullvref{sec:AutoLock}; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
 In programs that use \lstinline|java.util.concurrent.locks.Lock| or one of its implementations for thread synchronisation, you will find quite often code like this:
 \begin{lstlisting}[numbers=left]
@@ -2098,11 +2344,11 @@ try( final var p = new PostProcessor( doAfter ) )
     …
 }
 \end{lstlisting}
-The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run| in its \lstinline|close()| method when the \lstinline|try| block is left. Chapter \ref{sec:PostProcessor} in the Appendices provides the source for the class.
+The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run| in its \lstinline|close()| method when the \lstinline|try| block is left. Chapter \tqfullref{sec:PostProcessor} in the Appendices provides the source for the class.
 
 ‘Unconditional’ means here that the post-processing will be executed if the block terminates regularly or by a thrown exception. Other conditions can be injected into the \lstinline|Runnable| implementation.
 
-The difference between this approach and simply calling \lstinline|doAfter.run()| in a \lstinline|finally| block is that the \lstinline|close()| method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \ref{sec:ExecutionSequence}).
+The difference between this approach and simply calling \lstinline|doAfter.run()| in a \lstinline|finally| block is that the \lstinline|close()| method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \tqfullref{sec:ExecutionSequence}).
 
 The following code snippet could be a real-life example for where this is useful:
 \begin{lstlisting}[numbers=left]
@@ -2168,7 +2414,7 @@ tbd
 This chapter provides the XML code for Eclipse snippets.
 
 \paragraph{Structuring Comments}\label{sec:SnippetStructuringComments}
-The snippets for the structuring comments as defined in chapter \vref{sec:StructuringComments}.
+The snippets for the structuring comments as defined in chapter \tqfullvref{sec:StructuringComments}.
 \begin{lstlisting}[language=XML,basicstyle=\ttfamily\footnotesize]
 <?xml version="1.0"
       encoding="UTF-16" 
@@ -2292,7 +2538,7 @@ Same as for XML, also only small HTML fragments should be embedded into the Java
 \section{Examples}\label{sec:Examples}
 
 \subsection{AutoLock}\label{sec:AutoLock}
-This class is a sample implementation of the idea described in chapter \vref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
+This class is a sample implementation of the idea described in chapter \tqfullvref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
 \paragraph{The Code} \
 \begin{lstlisting}[numbers=left,caption={AutoLock}]
@@ -2456,7 +2702,7 @@ public class PostProcessor implements AutoCloseable
 \end{lstlisting}
 
 \subsection{UnsupportedEnumError}\label{sec:UnsupportedEnumError}
-This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \vref{sec:SwitchStatements}), in cases where the selector is an enum.
+This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \tqfullvref{sec:SwitchStatements}), in cases where the selector is an enum.
 
 It will be used like this:
 \begin{lstlisting}[numbers=left]

@@ -25,7 +25,7 @@
 \usepackage[iso,english]{isodate}
 \usepackage{makecell}
 %\usepackage[babel]{csquotes}
-\usepackage[style=numeric,urldate=iso8601]{biblatex}
+\usepackage[style=numeric,urldate=iso8601,backend=biber]{biblatex}
 \usepackage{nameref}
 \usepackage[colorlinks=true]{hyperref}
 
@@ -2103,6 +2103,117 @@ Eclipse knows a configuration setting for this prefix (\verb#Window|Preferences|
 For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
 
 \section{Constants}\label{sec:Constants}
+Constants are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores (‘\_’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+
+Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
+
+Some samples for valid constants:
+\begin{lstlisting}
+public static final double PI = 3.1415;
+public static final int ANSWER_TO_ALL_QUESTIONS = 42;
+public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
+public static final String [] EMPTY_STRING_ARRAY = new String [0];
+\end{lstlisting}
+Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
+
+The field \lstinline|PATTERN| below is not a constant in the sense of this definition:
+\begin{lstlisting}[numbers=left]
+public static final Pattern PATTERN = Pattern.compile( ".*" );
+
+// Better:
+public static final Pattern PATTERN;
+
+static
+{
+    try
+    {
+        PATTERN = Pattern.compile( ".*" );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+
+// Even better:
+public static final String PATTERN_SOURCE = ".*";
+…
+private static final Pattern m_Pattern;
+
+static
+{
+    try
+    {
+        m_Pattern = Pattern.compile( PATTERN_SOURCE );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw (ExceptionInInitializerError) new ExceptionInInitializerError( "Compilation of '%s' failed".formatted( PATTERN_SOURCE ).initCause( e );
+    }    
+}
+\end{lstlisting}
+No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialization”.
+
+\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:Fields} for their naming.
+
+Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
+\begin{lstlisting}[numbers=left]
+// AVOID!! Make it private!
+public static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// AVOID!! Make it private!
+public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
+\end{lstlisting}
+
+If you wonder why the lines~5 and 8 belongs to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used anymore.}
+
+Sometimes you may have classes or groups of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved to help with the readability of the code if this is reflected in the names. For the column names of the table \verb#PERSON#, the constants may be defined as shown here:
+\begin{lstlisting}
+public final static String PERSON_COL_FirstName = "first_name";
+public final static String PERSON_COL_LastName = "last_name";
+…
+\end{lstlisting}
+The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”.
+
+\section{enum Values}\label{sec:EnumValues}
+When the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores (“\_”).
+
+Basically, this works fine, but when using \lstinline|static| imports, you may get name clashes for common terms that can be used in different contexts. So it will make sense to add a prefix to the name of an enum, similar to what we did with the categories or groups for regular constants. This may look like this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_LEFT,
+    DIR_RIGHT;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_CENTER,
+    ALIGN_LEFT,
+    ALIGN_RIGHT;
+}   //  enum Alignment
+\end{lstlisting}
+Using the prefix would allow now to use the values with static imports of their classes; otherwise, they have to be used with their class names as prefix.
+
+Alternatively, you can use this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_Left,
+    DIR_Right;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_Center,
+    ALIGN_Left,
+    ALIGN_Right;
+}   //  enum Alignment
+\end{lstlisting}
+Again the camelCased suffix is the “name” itself, while the “proper” typed prefix is just the category. This is recommended if the suffix consists of multiple words that otherwise require additional underscores.
 
 \chapter{-------------------------------------------- Proceed from here!}
 
@@ -2110,8 +2221,6 @@ For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where
 
 
 
-
-\section{enum Values}\label{sec:EnumValues}
 
 \section{Type Variables}\label{sec:TypeVariables}
 

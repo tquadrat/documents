@@ -2215,6 +2215,36 @@ enum Alignment
 \end{lstlisting}
 Again the camelCased suffix is the “name” itself, while the “proper” typed prefix is just the category. This is recommended if the suffix consists of multiple words that otherwise require additional underscores.
 
+\section{Type Arguments}\label{sec:TypeVariables}
+Type arguments belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
+\begin{lstlisting}
+public interface Function<T,R> {…}
+\end{lstlisting}
+\lstinline|T| and \lstinline|R| are the type arguments.
+
+It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
+
+Aside that, no further rules exist. Even more than one character is possible for a name of a type argument: \begin{lstlisting}
+public interface Map<Key,Value> {…}
+\end{lstlisting}
+is absolutely valid, although not common. 
+
+But because the type arguments denotes classes, their names have to start with a capital letter.
+
+\chapter{Writing proper Comments}\label{sec:WritingProperComments}
+Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
+
+In addition, Java also provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{Javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the Javadoc tool.\footnote{Javadoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, Javadoc is the preferred tool.}
+
+So Java source code can generally have two kinds of comments:
+\begin{itemize}[nosep]
+\item{implementation comments}
+\item{documentation comments}
+\end{itemize}
+In Java, the \textit{documentation comments} (also known as “doc comments” or “the Javadoc”) are delimited by “/**…*/” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
+
+Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
+
 \chapter{-------------------------------------------- Proceed from here!}
 
 
@@ -2222,10 +2252,17 @@ Again the camelCased suffix is the “name” itself, while the “proper” typ
 
 
 
-\section{Type Variables}\label{sec:TypeVariables}
-
-\chapter{Writing proper Comments}\label{sec:WritingProperComments}
-
+Comments should be used to give overviews of code and provide additional information that is not readily available in the code itself. Comments should contain only information that is relevant to reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment.
+Discussion of non-trivial or non-obvious design decisions is appropriate, but avoid duplicating information that is present in (and clear from) the code. It is too easy for redundant comments to get out of date. In general, avoid any comments that are likely to get out of date as the code evolves.
+The frequency of comments reflects poor quality of code. Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
+One often heard advise is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But with increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
+Obviously, the advise: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema and equally bad, so writing proper comments remains a complex art, but it follows some rules, and for the rest, we will give some advises.
+In general:
+    • Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.
+    • Comments should never include special characters such as form-feed and backspace. In Javadoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.
+    • While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).
+    • Comments should be in full sentence and using a clear language.
+    • Finally: all comments has to be in English language; they should be grammatically correct and without typos.3
 \section{Implementation Comment Formats}
 
 \subsection{Structuring Comments}\label{sec:StructuringComments}

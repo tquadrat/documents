@@ -1692,6 +1692,41 @@ module <modulename>
 \end{lstlisting}
 How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}.
 
+\subsection{The Package Documentation}\label{sec:PackageDocumentation}
+Different from the module, there is no special source file that defines a package in Java. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|.
+
+Nevertheless there is a need for package-level documentation, and it is even possible to set annotations to packages.
+
+For the documentation of a package, originally used a file named \verb#package.html#, placed into the package folder. Although this still works, you should use the new \verb#package-info.java# file instead; it looks like this:
+
+\begin{lstlisting}[numbers=left, caption={module-info.java}]
+/*
+ * ==================================================================
+ * Copyright © <Year> <Copyright Notice>
+ * ==================================================================
+ *
+ * <License Notice>
+ */
+ 
+/**
+ *  <package description>
+ */
+@<AnAnnotation> 
+package <packagename>;
+
+import <AnAnnotation>
+
+/*
+ *  End of File
+ */
+\end{lstlisting}
+
+The \verb#<package description># is a standard JavaDoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary.
+
+If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
+
+How to define the name of the package (\lstinline|<packagename>|) is covered in chapter \tqfullvref{sec:Packages}.
+
 \chapter{Naming Conventions}
 Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
 
@@ -1747,7 +1782,7 @@ Each module has a main package, and this should be also the name of that module.
 So the names for modules will follow the same rules as those for packages.
 
 \section{Packages}\label{sec:Packages}
-According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that.}
+According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that as well.}
 
 Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
 
@@ -1765,6 +1800,8 @@ Valid samples are:
 Of course you should use your domain name! Those from the samples are already used by the respective companies or organisations (or persons).
 
 Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Next, a package name is also a folder name: the file with the source code for the class \lstinline|com.foo.bar.internal.MyImpl| is located in the folder \verb#com/foo/bar/internal# in the source code directory tree.
 
 Finally the package name should reflect somehow the function of that package.
 
@@ -2245,24 +2282,139 @@ In Java, the \textit{documentation comments} (also known as “doc comments” o
 
 Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
 
+Comments should be used to give overviews of code and provide additional information that is not readily available in the code itself. Comments should contain only information that is relevant to reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class.
+
+Discussion of non-trivial or non-obvious design decisions is appropriate, but avoid duplicating information that is present in (and clear from) the code. It is too easy for redundant comments to get out of date. In general, avoid any comments that are likely to get out of date as the code evolves.
+
+The frequency of comments reflects poor quality of code. Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
+
+One often heard advice is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But clearer to whom?
+
+With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
+
+Obviously, the advice: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema and equally bad, so writing proper comments remains a complex art, but it follows some rules, and for the rest, we will give some advice.
+
+In general:
+\begin{itemize}
+\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
+\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In Javadoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
+\item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).}
+\item{Comments should be in full sentence and using a clear language.}
+\item{Finally: all comments has to be in English language; they should be grammatically correct and without typos.\footnote{… but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.}}
+\end{itemize}
+
+\section{Documentation Comments}\label{sec:DocumentationComments}
+It is a well known fact that most programmers are poor technical writers. That's the reason why programmers rarely write the public documentation for their product.
+
+But that is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write that comments because technical writers usually do not have the time to analyse the code to extract the information from it that is necessary for the documentation.\footnote{In addition, the technical writers usually do not have (write) access to the source code, and me personally, I believe that most technical writers are not good enough programmers to be able to do that code analysis, at least not in a timely manner.}
+
+In general there are (at least) two different target groups for the documentation that is generated from the documentation comments. The first group are the maintenance programmers, the second are programmers writing code interfacing with this one, using the public APIs. This means that each program element that can have a documentation comment must have a documentation comment! No exception! No excuse for missing documentation comments! The programmer must provide a documentation comment wherever it is possible. 
+
+Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \verb#Window|Preferences|Java|Compiler|Javadoc#.
+
+To achieve the same for IntelliJ IDEA, you go to \verb#File|Settings#, and there you select \verb#Editor|Inspections>Java>Javadoc#.
+
+Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “/**…*/”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
+
+\begin{lstlisting}
+/**
+ *  The Example class provides …
+ */
+public class Example
+{
+    /**
+     *  The inner class provides …
+     */
+    private static class InnerClass
+    {
+        …
+    }
+    //  class InnerClass
+     
+    …
+    
+    /**
+     *  This flag …
+     */
+    private boolean m_Flag;
+    …
+
+    /**
+     *  Method that performs some action …
+     *
+     *  @param  arg   The argument.
+     */
+    public final void method( int arg )
+    {
+        …
+    }   //  main()
+}   //  class Example
+\end{lstlisting}
+
+The first line of doc comment (“/**”) for top level classes is not indented; subsequent doc comment lines each have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4 spaces for the first doc comment line and 5 spaces thereafter (this is congruent for inner classes).
+
+If you need to give information about a class, interface, variable, or method that isn't appropriate for the public documentation, use an implementation comment immediately after the declaration. For example, internal details about the implementation of a class should go in such an implementation block comment following the class statement, not in the class documentation comment.
+
+Documentation comments should not be positioned inside a method or constructor definition block, because Java associates documentation comments with the first declaration after the comment.
 \chapter{-------------------------------------------- Proceed from here!}
 
+\subsection{Structure and Contents}
+Although the current version of Javadoc does not produce correct XHTML (not even correct HTML according to any standard), it is recommended to use correct XHTML syntax inside the comments. This means that tags has to be closed properly and that empty tags like BR or IMG has to be used in there short form. It is also recommended not to use P for line breaks and empty lines in the comment.
+The header tags H1 and H2 are used by Javadoc, so for the documentation use only H3 to H6.
+Some samples:
+// NOT RECOMMENDED
+/**
+ *  <h1>Master Class
+ *  <p>Comment in a new line
+ *  …
+// OMMIT THE <H1> AND USE <BR/> INSTEAD OF <P>
+/**
+ *  Master Class.<br/>
+ *  <br/>Comment in a new line
+ *  …
+// NOT RECOMMENDED
+ *  …
+ *  <ul>
+ *  <li>List Entry
+ *  <li>Another List Entry
+ *..</ul>
+ *  See the screenshot below<br>
+ *  <img src="doc-files/screenshot.jpg">
+ *  …
+// CLOSE THE TAGS
+ *  …
+ *  <ul>
+ *  <li>List Entry</li>
+ *  <li>Another List Entry</li>
+ *..</ul>
+ *  See the screenshot below<br/>
+ *  <img src="doc-files/screenshot.jpg"/>
+ *  …
+The first sentence of each JavaDoc comment is taken to be placed on an overview, while sentence is defined as everything until the first full stop (“.”) followed by white space, or the first not-inline HTML tag.1 This means that a comment like this
+// AVOID!!
+/**
+ *  <b>Master class.</b>
+ *  …
+will cause strange output and therefore should be avoided.
+It also means that the first sentence should contain a short, summarizing description of the program element that can stand alone for the full description. The documentation for the JDK [JDK_API] provides thousands of examples how this might read.
+Some more tips:
+    • Each time, a class, method, constant, field is mentioned the first time in a doc comment, its documentation should be linked, using the {@link} or {@linkplain} tags.
+    • The names of classes, methods, constant, fields, parameters etc. should be written in a monotype font. This can be achieved by encapsulating them in <code>…</code> HTML tags or placing them into the {@code} tag; it will be done automatically if the {@link} tag is used.
+    • Each comment, including each text for a @param, @return, and @throws tag, ends with a full stop.
+Some more tips can be found here: “How to Write Doc Comments
+for the Javadoc Tool” [JAVADOC_WRITING].
 
 
 
 
 
-Comments should be used to give overviews of code and provide additional information that is not readily available in the code itself. Comments should contain only information that is relevant to reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment.
-Discussion of non-trivial or non-obvious design decisions is appropriate, but avoid duplicating information that is present in (and clear from) the code. It is too easy for redundant comments to get out of date. In general, avoid any comments that are likely to get out of date as the code evolves.
-The frequency of comments reflects poor quality of code. Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
-One often heard advise is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But with increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
-Obviously, the advise: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema and equally bad, so writing proper comments remains a complex art, but it follows some rules, and for the rest, we will give some advises.
-In general:
-    • Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.
-    • Comments should never include special characters such as form-feed and backspace. In Javadoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.
-    • While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).
-    • Comments should be in full sentence and using a clear language.
-    • Finally: all comments has to be in English language; they should be grammatically correct and without typos.3
+
+
+
+
+
+
+
 \section{Implementation Comment Formats}
 
 \subsection{Structuring Comments}\label{sec:StructuringComments}
@@ -2304,6 +2456,9 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 \section{Comments when?}\label{sec:CommentsWhen}
 
 \chapter{Coding Rules}\label{sec:CodingRules}
+
+\section{The Annotation @API}\label{APIAnnotation}
+
 
 \section{Exceptions}
 

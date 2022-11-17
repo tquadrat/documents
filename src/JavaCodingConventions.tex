@@ -1,14 +1,16 @@
-\RequirePackage{lmodern}
-\documentclass[12pt,a4paper,titlepage, parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
+%\RequirePackage{lmodern}
+\documentclass[11pt,a4paper,titlepage, parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
+%\usepackage{DejaVuSansMono}
+\usepackage{dejavu}
 \usepackage[T1]{fontenc}
 \usepackage{scrhack}
 \usepackage{graphicx} 
 \usepackage[manualmark]{scrlayer-scrpage}
 \usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
 \usepackage{makeidx}
 \usepackage{eurosym}
 \usepackage{ragged2e}
@@ -37,14 +39,15 @@
 
 \lstset{
 language=Java,
-morekeywords={yield,var},
+%morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield},
+morekeywords={var,yield},
 backgroundcolor=\color[gray]{.9},
 frame=single,
 framerule=0.2pt,
-basicstyle=\ttfamily\footnotesize\bfseries,
-commentstyle=\color[gray]{.2}\bfseries,
-keywordstyle=\color[gray]{.2},
-identifierstyle=,
+basicstyle=\ttfamily\footnotesize,
+commentstyle=\color[gray]{.2}\itshape,
+keywordstyle=\color[gray]{.4}\bfseries,
+identifierstyle=\bfseries,
 stringstyle=\itshape,
 xleftmargin=.2cm,
 xrightmargin=.2cm,
@@ -1657,7 +1660,7 @@ Beside the files that contain the Java source code (with the extension \verb#.ja
 Modules have been introduced to Java with version 9, as a result of the Jigsaw project. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
 
 Basically, a \verb#module-info.java# file will look like this:
-\begin{lstlisting}[numbers=left, caption={module-info.java}]
+\begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
 /*
  * ==================================================================
  * Copyright © <Year> <Copyright Notice>

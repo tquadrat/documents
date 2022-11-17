@@ -70,6 +70,7 @@ literate=
   {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
   {©}{{\copyright}}1
   {…}{{\dots }}2
+  {–}{{--}}1
 }
 
 \colorlet{shadecolor}{gray!10}
@@ -2271,14 +2272,14 @@ But because the type arguments denotes classes, their names have to start with a
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
-In addition, Java also provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{Javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the Javadoc tool.\footnote{Javadoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, Javadoc is the preferred tool.}
+In addition, Java also provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}
 
 So Java source code can generally have two kinds of comments:
 \begin{itemize}[nosep]
 \item{implementation comments}
 \item{documentation comments}
 \end{itemize}
-In Java, the \textit{documentation comments} (also known as “doc comments” or “the Javadoc”) are delimited by “/**…*/” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
+In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “/**…*/” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
 
 Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
 
@@ -2297,7 +2298,7 @@ Obviously, the advice: “Even if you don't think, a comment might be necessary,
 In general:
 \begin{itemize}
 \item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
-\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In Javadoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
+\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
 \item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).}
 \item{Comments should be in full sentence and using a clear language.}
 \item{Finally: all comments has to be in English language; they should be grammatically correct and without typos.\footnote{… but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.}}
@@ -2351,60 +2352,149 @@ public class Example
 }   //  class Example
 \end{lstlisting}
 
-The first line of doc comment (“/**”) for top level classes is not indented; subsequent doc comment lines each have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4 spaces for the first doc comment line and 5 spaces thereafter (this is congruent for inner classes).
+The first line of the documentation comments (“/**”) for top level classes is not indented; subsequent lines for the documentation comment have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4 spaces for the first documentation comment line and 5 spaces thereafter (this is congruent for inner classes).
 
 If you need to give information about a class, interface, variable, or method that isn't appropriate for the public documentation, use an implementation comment immediately after the declaration. For example, internal details about the implementation of a class should go in such an implementation block comment following the class statement, not in the class documentation comment.
 
 Documentation comments should not be positioned inside a method or constructor definition block, because Java associates documentation comments with the first declaration after the comment.
-\chapter{-------------------------------------------- Proceed from here!}
 
 \subsection{Structure and Contents}
-Although the current version of Javadoc does not produce correct XHTML (not even correct HTML according to any standard), it is recommended to use correct XHTML syntax inside the comments. This means that tags has to be closed properly and that empty tags like BR or IMG has to be used in there short form. It is also recommended not to use P for line breaks and empty lines in the comment.
-The header tags H1 and H2 are used by Javadoc, so for the documentation use only H3 to H6.
-Some samples:
-// NOT RECOMMENDED
+Latest since the introduction of Java~9, the JavaDoc tool produces (more or less) correct HTML~5 documents from the JavaDoc comments in the source code. Therefore it is strongly recommended to use correct HTML~5 syntax inside the documentation comments itself. This means that tags has to be closed properly, empty tags like \lstinline|<br>| and \lstinline|<img>| are not closed, and so on.
+
+If the comment has more than one single paragraph, use the \lstinline|<p>| tag; do not use the \lstinline|<br>| tag:
+
+\begin{lstlisting}
 /**
- *  <h1>Master Class
- *  <p>Comment in a new line
+ *  Returns the status for this operation.
+ *
  *  …
-// OMMIT THE <H1> AND USE <BR/> INSTEAD OF <P>
+ */
+ 
 /**
- *  Master Class.<br/>
- *  <br/>Comment in a new line
+ *  <p>Returns the status for this operation.</p>
+ *  <p>Possible return values are …</p>
+ *
  *  …
-// NOT RECOMMENDED
- *  …
- *  <ul>
- *  <li>List Entry
- *  <li>Another List Entry
- *..</ul>
- *  See the screenshot below<br>
- *  <img src="doc-files/screenshot.jpg">
- *  …
-// CLOSE THE TAGS
- *  …
- *  <ul>
- *  <li>List Entry</li>
- *  <li>Another List Entry</li>
- *..</ul>
- *  See the screenshot below<br/>
- *  <img src="doc-files/screenshot.jpg"/>
- *  …
-The first sentence of each JavaDoc comment is taken to be placed on an overview, while sentence is defined as everything until the first full stop (“.”) followed by white space, or the first not-inline HTML tag.1 This means that a comment like this
+ */
+\end{lstlisting}
+
+The first sentence of each JavaDoc comment is taken to be placed on an overview. Per default, that sentence is defined as everything from the beginning until the first full stop followed by a blank (“. ”) or other whitespace, or the first not-inline HTML tag.
+
+This means that a comment like this
+
+\begin{lstlisting}
 // AVOID!!
 /**
- *  <b>Master class.</b>
+ *  <b>Returns the status for this operation.</b>
+ *
  *  …
-will cause strange output and therefore should be avoided.
-It also means that the first sentence should contain a short, summarizing description of the program element that can stand alone for the full description. The documentation for the JDK [JDK_API] provides thousands of examples how this might read.
-Some more tips:
-    • Each time, a class, method, constant, field is mentioned the first time in a doc comment, its documentation should be linked, using the {@link} or {@linkplain} tags.
-    • The names of classes, methods, constant, fields, parameters etc. should be written in a monotype font. This can be achieved by encapsulating them in <code>…</code> HTML tags or placing them into the {@code} tag; it will be done automatically if the {@link} tag is used.
-    • Each comment, including each text for a @param, @return, and @throws tag, ends with a full stop.
-Some more tips can be found here: “How to Write Doc Comments
-for the Javadoc Tool” [JAVADOC_WRITING].
+ */
+\end{lstlisting}
+
+may cause some strange output\footnote{Writing the comment like that (with the \lstinline|<b>…</b>| tag) should be avoided anyway.}. Java~10 introduced the JavaDoc tag \lstinline|{@summary}| to address issues like this; it allows the programmer to explicitly specify what portion of the JavaDoc comment appears in the overview rather than relying on JavaDoc's default behaviour to determine the summary portion of the comment. Refer to \autocite{ORACLE_DOC_JAVADOC_TAG,DZONE_JAVADOC_SUMMARY} for the details and additional samples.
+
+The \lstinline|{@summary}| tag has to be used always when a documentation comment has more than one sentence:
+
+\begin{lstlisting}
+// OK – as single sentence
+/**
+ *  Returns the status for this operation.
+ *
+ *  …
+ */
+ 
+// AVOID!! – Two sentences. 
+/**
+ *  <p>Returns the status for this operation. The return value will 
+ *  never be {@code null}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+/**
+ *  <p>Returns the status for this operation.</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+// RECOMMENDED
+/**
+ *  <p>{@summary Returns the status for this operation.} The return 
+ *  value will never be {@code null}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+/**
+ *  <p>{@summary Returns the status for this operation.}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+\end{lstlisting}
+
+The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \lstinline|<h#>|, with \# being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \lstinline|<h1>| and \lstinline|<h2>| are already used by JavaDoc itself; that means that you should only use \lstinline|<h3>| to \lstinline|<h6>| in the documentation comments.\footnote{In the overview comment (refer to chapter \ref{sec:OverviewComment}), you can make use of the all the \lstinline|<h#>| tags to structure that comment.}
+
+When a class, method, constant, field is mentioned the first time in a documentation comment, its documentation should be linked, using the \lstinline|{@link}| or \lstinline|{@linkplain}| tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
+
+Each \lstinline|{@link}| or \lstinline|{@linkplain}| tag has to placed into a line of its own.
+
+Some examples:
+\begin{lstlisting}
+/**
+ *  <p>{@summary Searches the given key in the list and returns the
+ *  associated data.} If the key is
+ *  {@linkplain String#isBlank() blank},
+ *  the method will throw a
+ *  {@link BlankArgumentException},
+ *  while an empty will just not return a result.</p>
+ *
+ *  @param  key The key.
+ *  @returns An instance of
+ *      {@link Optional}
+ *      that holds the search result.
+ *  @throws IllegalArgumentException    The key is somehow invalid.
+ *
+public final Optional<Data> searchData( final String key ) { … }
+\end{lstlisting}
+
+JavaDoc creates links to the documentation of \lstinline|java.lang.IllegalArgumentException|, \lstinline|java.lang.String| and \lstinline|Data| automatically; it also creates a link to \lstinline|java.util.Optional| but it is recommeded to use the pattern shown here, even when this means that the comment holds two links to the \lstinline|Optional| class documentation.
+
+The names of classes, methods, constant, fields, parameters etc. as well as \lstinline|null|, \lstinline|true|, and \lstinline|false| have to be written in a monotype font. This can be achieved by encapsulating them in \lstinline|<code>…</code>| HTML tags or placing them inside the JavaDoc \lstinline|{@code}| tag. The monotype font is used automatically for everything inside a \lstinline|{@link}| tag.
+
+Each comment, including each text for a \lstinline|@param|, \lstinline|@return|, and \lstinline|@throws| tag, ends with a full stop.
+
+The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the JavaDoc tool.
 
 
+\subsubsection{The Overview Comment}\label{sec:OverviewComment}
+
+\chapter{-------------------------------------------- Proceed from here!}
+
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
 
 
 

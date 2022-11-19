@@ -2268,7 +2268,7 @@ public interface Function<T,R> {…}
 
 It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
 
-Aside that, no further rules exist. Even more than one character is possible for a name of a type argument: \begin{lstlisting}
+Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: \begin{lstlisting}
 public interface Map<Key,Value> {…}
 \end{lstlisting}
 is absolutely valid, although not common. 
@@ -2917,7 +2917,126 @@ If a class or interface does not have a particular part, the assigned structurin
 
 I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert.}. Refer to chapter \tqfullvref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
 
+\subsection{Block Comments}\label{sec:BlockComments}
+Block comments are used to provide detailed descriptions of files, methods, data structures and algorithms – meaning that the text of the comment is longer than just one line. Block comments may be used at the beginning of each block after the opening brace. They can also be used in other places, such as within methods. Block comments inside a function or method should be indented to the same level as the code they describe. 
+
+A block comment should be preceded by a blank line to set it apart from the rest of the code. If the block comment does not directly refer to the code line immediately after it, it should be followed by another blank line.
+
+Next, the first line of the comment block has to remain empty, and the closing of the comment block has to be placed on a line of its own.
+
+Some samples:
+\begin{lstlisting}
+{
+    /*
+     * Here is a sample of a block comment. Block comments are used
+     * to provide detailed information about code internals.
+     */
+    Result value = retrieveResult( parameter );
+    …
+
+    /*
+     * Here is another sample of block comment, somewhere in the
+     * middle of a code block. Please note the blank line above!
+     */
+    …
+}
+
+// AVOID!
+/*
+ * This block comment is outside the code block it refers to. Block 
+ * comments should be placed after the opening curly brace of the
+ * block.
+ */
+{
+    Result value = retrieveResult( parameter );
+    …
+ 
+/* The first line of the block comment should be left empty and the
+ * comment should be indented in the same way as the code in the
+ * block.
+ */
+    processResult( value, parameter );
+    /* 
+     * Here the empty line above the comment is missing …
+     * … and the closing tag should be on a line of its own. */
+\end{lstlisting}
+ 
 \subsection{Single-Line Comments}\label{sec:SingleLineComments}
+Short comments can appear on a single line; they will be indented also to the level of the code that follows. Usually it should be written in the form of a headline:
+\begin{lstlisting}
+//---* Handle the condition *----------------------------------------
+\end{lstlisting}
+with the dashes ending on column 80.\footnote{A quick reminder: the sample code in this document uses a line length of 70, so the dashes in the comment line above ends an column 70.}
+
+If a comment cannot be written in a single line, it should have the block comment format (see chapter \tqref{sec:BlockComments}). A single-line comment should be separated from the preceding code by a blank line. Only when the preceding line contains only the opening curly brace as in the \lstinline|if-then-else| sample below (lines~3 and 8). 
+
+Here are some examples of single-line comments in Java code:
+\begin{lstlisting}[numbers=left]
+if( cache.contains( key ) )
+{
+    //---* Take the data from the cache *----------------------------
+    …
+}
+else
+{
+    //---* Load the data from its original source *------------------
+    …
+}
+…
+ResultData resultData = executeService();
+
+//---* Format the output for the UI *--------------------------------
+formatResult( resultData );
+…
+\end{lstlisting}
+
+Another form of the single line comment is the empty block comment:
+\begin{lstlisting}
+public interface Marker
+{ /* No methods */ }
+
+public class Extension extends Base
+{ /* No implementation */ }
+
+private Constructor() { /* Does nothing */ }
+
+public void adapterMethod() { /* Does nothing */ }
+
+public final void method()
+{
+    …
+
+    try
+    {
+        …
+    }
+    catch( final MyException e ) { /* Exception deliberately swallowed /* }
+
+    …
+}   // method()
+\end{lstlisting}
+
+And finally, there are the “class termination comments” that repeats the name of the class after the last curly brace:
+\begin{lstlisting}
+public final class MyClass
+{
+    …
+}
+//  class MyClass
+
+public final interface MyInterface
+{
+    public record InnerRecord( final int number )
+    {
+        …
+    }
+    //  record InnerRecord
+    
+    …
+}
+//  interface MyInterface
+
+\end{lstlisting}
 
 \chapter{-------------------------------------------- Proceed from here!}
 

@@ -26,7 +26,8 @@
 \usepackage{varioref}
 \usepackage[iso,english]{isodate}
 \usepackage{makecell}
-%\usepackage[babel]{csquotes}
+\usepackage[english]{babel}
+\usepackage[babel]{csquotes}
 \usepackage[style=numeric,urldate=iso8601,backend=biber]{biblatex}
 \usepackage{nameref}
 \usepackage[colorlinks=true]{hyperref}
@@ -118,7 +119,7 @@ public void method (){
 }
 \end{lstlisting}
 
-as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter~\tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
 
 \begin{lstlisting}
 public void method()
@@ -154,7 +155,7 @@ The document itself consists of four major parts: first we want to talk about pr
 
 The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules or recommendations are first used in the samples \textit{after} being introduced.
 
-For source code samples that obey all rules and follow all recommendations, refer to chapter~\tqfullvref{sec:Examples}.
+For source code samples that obey all rules and follow all recommendations, refer to chapter \tqfullvref{sec:Examples}.
 
 All rules and recommendations assume that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
 
@@ -163,16 +164,16 @@ If you have questions or comments regarding this document, please send me an ema
 \section{History and Implementation}
 I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
 
-Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20 twenty years now, another code is live since 12 years now.
+Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20~years now, another code is live since 12~years now.
 
-I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter~\tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
+I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter \tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
 
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
 Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in TeX/LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
 Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
 
-But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter~\tqfullref{sec:TheBasicRule} below will be applicable to each!
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!
 
 A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
 
@@ -190,12 +191,12 @@ And what to do with “legacy” code that has to be fixed?
 
 Most probably that code will not follow these coding conventions (if any at all …), and it is rarely a good idea to reformat or rewrite it completely just to align it with the conventions. Instead a fix should be limited to the area that is broken.
 
-But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments, if missing. Or if a new field has to be added to a class, add the “m\_” prefix to its name (see chapter~\tqfullref{sec:Fields}).
+But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments, if missing. Or if a new field has to be added to a class, add the “m\_” prefix to its name (see chapter \tqfullref{sec:Fields}).
 
 Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
 
 \section{Tool Support}
-Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter~\tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
+Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter \tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
 
 The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
 
@@ -223,7 +224,7 @@ So again:
 \end{center}
 
 \chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
-This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter~\tqfullvref{sec:WritingProperComments}.
+This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter \tqfullvref{sec:WritingProperComments}.
 
 I start the chapter with a description of the general structure of a source file, then I give some general conventions before I cover the formatting of single elements of the code.
 
@@ -257,7 +258,7 @@ All source files have to start with a c-style comment that gives the copyright n
  
 \verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts.\footnote{The special character \copyright is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
 
-The lines with the equals signs (“===”) will end at column 80; refer to chapter~\tqfullvref{sec:LineLength}.
+The lines with the equals signs (“===”) will end at column 80; refer to chapter \tqfullvref{sec:LineLength}.
 
 No other information should be added to this comment block.
 
@@ -291,7 +292,7 @@ import java.util.*;
 
 are not allowed.
 
-For the names of packages, see chapter~\tqfullvref{sec:Packages}.
+For the names of packages, see chapter \tqfullvref{sec:Packages}.
 
 Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
 
@@ -1729,7 +1730,7 @@ import <AnAnnotation>
 
 The \verb#<package description># is a standard JavaDoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
 
-If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
+If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
 
 How to define the name of the package (\lstinline|<packagename>|) is covered in chapter \tqfullvref{sec:Packages}.
 
@@ -2587,23 +2588,179 @@ Constants (\lstinline|public static final| fields) that are initialised with a l
 
 The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
 
-\chapter{-------------------------------------------- Proceed from here!}
+\subsubsection{The Method Comment}\label{sec:MethodComment}
+The documentation comment for a method describes its usage and its function within the class, together with its arguments, the return value, and any exception it may throw.
+
+For each method parameter there have to be a \nameref{sec:TagParam} tag that describes it in detail (if not already described in the main text of the method comment; in that case, a short sentence should be sufficient). The description has to cover the function of the parameter, its value range, and whether the parameter can be \lstinline|null|. Usually, \lstinline|null| is an invalid parameter value per default, so it has to be mentioned in the respective comment if it is allowed.
+
+It is not enough to only give the type of the parameter in the comment; in fact, this is obsolete as it can be easily taken from the method's signature.
+
+Usually, the return value (given the method is not of type \lstinline|void|) will be described in the comment for the \nameref{sec:TagReturn} tag; the tag is mandatory, and with some text, even if the return value is described already in the method description itself. The description for the return value should provide the possible values and there meanings, whether \lstinline|null| is a valid return value, and so on. 
+
+In particular, the comment for the \nameref{sec:TagReturn} tag has to describe which return values indicate special or error conditions.
+
+It is obsolete to give the type of the return value here; it can already be seen from the method's declaration.
+
+Next there has to be a \nameref{sec:TagThrows} tag for each checked exception that may be thrown by the method, describing the condition that may trigger that exception. It is also possible to add \nameref{sec:TagThrows} clauses for unchecked exceptions, but not required. Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} for additional details on exception handling.
+
+A method that implements an interface method or that overrides a method from a base class be commented with the \nameref{sec:TagInheritDoc} tag instead of writing a full comment. The tag can be combined with additional text, too.
+
+The documentation comment for a non-\lstinline|final| \lstinline|public| or \lstinline|protected| method has to provide detailed information when and how it has to be overwritten; especially if the overriding method has to call the super implementation and when:\footnote{Usually you should avoid the requirement for calling the super implementation, but that is not always appropriate or possible; refer to chapter \tqref{sec:NonFinalMethods} about some more details.}.
+
+A comment for that case may look like this:\footnote{The tag @note is a custom tag; refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc}}
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note Call this implementation {before|after} your code, to make
+ *      sure that the initialisations provided here are performed.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+For more details on this refer to chapter \tqfullvref{sec:ExtendingClassesOverridingMethods}.
+
+Usually, the documentation comment for a method does not reveal details about the method's implementation, but in case of empty “place holder methods” or mount points, a sentence like below does not harm.
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+If such a method has a dummy or default return value, there has to be an appropriate \nameref{sec:TagReturn} tag, specifying that value:
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ *  @return Always <the default value>.
+ */
+\end{lstlisting}
+ 
+Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected.
+
+\subsubsection{The Constructor Comment}\label{sec:ConstructorComment}
+Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
+
+For an empty default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
+\begin{lstlisting}
+/**
+ *  Creates a new {@code MyClass} instance object.
+ */
+public MyClass() { /* Does nothing */ }
+\end{lstlisting}
+or
+\begin{lstlisting}
+/**
+ *  Default constructor for class {@code MyClass}.
+ */
+private MyClass() { /* Does nothing */ }
+\end{lstlisting}
+with the first alternative being the preferred one; in fact, this comment can be used for every constructor, not only for the default ones.
+
+Of course, these comments do not say very much, but the constructor is also not doing that much, and what it does is very obvious. But if it has side effects, these should be described properly.
+
+A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The \lstinline|Error| class is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+\begin{lstlisting}
+/**
+ *  No instance is allowed for class {@code MyUtilityClass}.
+ */
+private MyUtilityClass() 
+{ 
+    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class); 
+}   // MyUtilityClass()
+\end{lstlisting}
+
+If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
+
+Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
 
 \subsection{The JavaDoc Tags}\label{sec:JavaDocTags}
+The next two chapters describe the tags that should be used in your documentation comments where appropriate.
 
-\paragraph{\lstinline|@author|}\label{sec:TagAuthor} Text 
+\subsubsection{The Standard Doclet Tags}
+Most of the contents of this chapter was taken from the document “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG}. 
 
-\paragraph{\lstinline|@link|}\label{sec:TagLink} Text 
+In the context of the JavaDoc tool, the interpretation of the content of a documentation comment is done by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet|\footnote{Refer to \autocite{ORACLE_DOC_DOCLET_INTERFACE}.} interface that is used to process the comment. Other implementation may accept the same syntax as the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet|\autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}), or they may support an alternate syntax. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
 
-\paragraph{\lstinline|@param|}\label{sec:TagParam} Text 
+\paragraph{\lstinline|@author|}\label{sec:TagAuthor} Usage: \lstinline|@author <name-text>|
 
-\paragraph{\lstinline|@provides|}\label{sec:TagProvides} Text 
+The tag adds an “Author” entry with the specified name text to the generated documents when the \verb#-author# option is used. A documentation comment can contain multiple \lstinline|@author| tags. Use the \nameref{sec:TagExtAuthor} tag instead.
 
-\paragraph{\lstinline|@see|}\label{sec:TagSee} Text 
+\paragraph{\lstinline|@code|}\label{sec:TagCode}  Usage: \lstinline|{@code <text>}|
 
-\paragraph{\lstinline|@serial|}\label{sec:TagSerial} Text 
+This is equivalent to \lstinline|<code>{@literal text}</code>|.
+
+It displays text in the code font without interpreting the text as HTML markup or nested JavaDoc tags. This enables you to use regular angle brackets (< and >) instead of the HTML entities (\&lt; and \&gt;) in documentation comments, such as in parameter types (<Object>), inequalities (3 < 4), or arrows (->).
+
+If you want the same functionality without the code font, then use the \nameref{sec:TagLiteral} tag. 
+
+\paragraph{\lstinline|@deprecated|}  Usage: \lstinline|{@deprecated <text>}|
+
+This tag is used in conjunction with the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotation to indicate that this API should no longer be used (even though it may continue to work).
+
+The first sentence of the text should tell the user when the API was deprecated and what to use as a replacement. Subsequent sentences can also explain why it was deprecated.
+
+A \nameref{sec:TagLink} tag that points to the replacement API should be added where feasible.
+
+\paragraph{\lstinline|@docRoot|}  Usage: \lstinline|{@docRoot}|
+
+Represents the relative path to the generated document's (destination) root directory from any generated page. This tag is useful when you want to include a file, such as a copyright page or company logo, that you want to reference from all generated pages.
+
+\paragraph{\lstinline|@exception|} This is a synonym for \nameref{sec:TagThrows}; it should not be used.
+
+\paragraph{\lstinline|@hidden|}  Usage: \lstinline|@hidden|
+
+Hides a program element from the generated API documentation. This tag may be used when it is not otherwise possible to design the API in a way that such items do not appear at all.
+
+\paragraph{\lstinline|@index|}  Usage: \lstinline|{@index <word> <description>}| or \lstinline|{@index "<phrase>" <description>}|
+
+Declares that a word or phrase, together with an optional short description, should appear in the index files generated by the standard doclet. The index entry will be linked to the word or phrase that will appear at this point in the generated documentation. The description may be used when the word or phrase to be indexed is not clear by itself, such as for an acronym.
+
+\paragraph{\lstinline|@inheritDoc|}\label{sec:TagInheritDoc}  Usage: \lstinline|{@inheritDoc}|
+
+Inherits (copies) the documentation comment from the nearest inheritable class or implementable interface into the current documentation comment at this tag's location. This enables you to write more general comments higher up the inheritance tree and to write around the copied text.
+
+\paragraph{\lstinline|@link|}\label{sec:TagLink}  Usage: \lstinline|{@link <module/package.class#member> <label>}|
+
+Inserts an inline link with a visible text label that points to the documentation for the specified module, package, class, or member name of a referenced class. 
+
+This tag is similar to the \nameref{sec:TagSee} tag. Both tags require the same references and accept the same syntax for \verb|<module/package.class#member>| and the label. The main difference is that the \lstinline|{@link}| tag generates an inline link rather than placing the link in the “See Also” section. The \lstinline|{@link}| tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (“\}”) inside the label, then use the HTML entity notation \verb|&#125;|.
+
+\paragraph{\lstinline|@linkplain|}  Usage: \lstinline|{@linkplain <module/package.class#member> <label>}|
+
+Behaves the same as the \nameref{sec:TagLink} tag, except the link label is displayed in plain text rather than code font. Useful when the label is plain text.
+
+\paragraph{\lstinline|@literal|}\label{sec:TagLiteral}  Usage: \lstinline|{@literal <text>}| 
+
+Same as the \nameref{sec:TagCode} tag, but the text is shown as plain text and not in the code font.
+
+\paragraph{\lstinline|@param|}\label{sec:TagParam}  Usage: \lstinline|@param <parameter-name> <description>|
+
+Adds a parameter with the specified parameter name followed by the specified description to the “Parameters” section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (“<…>”) around such a parameter name to indicate the use of a type parameter.
+
+\paragraph{\lstinline|@provides|}\label{sec:TagProvides}  Usage: \lstinline|@provides <service-type> <description>|
+
+This tag may only appear in the documentation comment inside a \verb#module-info.java# file. It serves to document an implementation of a service that is provided by the module. The description may be used to specify how to obtain an instance of this service provider, and any important characteristics of the provider itself. 
+
+\paragraph{\lstinline|@return|}\label{sec:TagReturn}  Usage: \lstinline|@return <description>|
+
+Adds a “Returns” section with the description text to the documentation comment of a method.
+
+\paragraph{\lstinline|@see|}\label{sec:TagSee}  Adds a “See Also” heading with a link or text entry that points to a reference. The \lstinline|@see| tag has three variations; see \autocite{ORACLE_DOC_JAVADOC_TAG} for the details.
+
+\paragraph{\lstinline|@serial|}\label{sec:TagSerial} Used in the documentation comment for a default serializable field. See “Documenting Serializable Fields and Data for a Class”\autocite{ORACLE_DOC_OBJECT_SERIALIZATION:DocumentingSerializableFieldsData}. 
 
 \paragraph{\lstinline|@since|}\label{sec:TagSince} Text 
+
+\paragraph{\lstinline|@throws|}\label{sec:TagThrows} Text 
 
 \paragraph{\lstinline|@uses|}\label{sec:TagUses} Text
 
@@ -2618,7 +2775,11 @@ The comments for enum values are nothing else than field comments for constants 
 
 \paragraph{\lstinline|@inspired|}\label{sec:TagInspired} Text 
 
+\paragraph{\lstinline|@note|}\label{sec:TagNote} Text 
+
 \paragraph{\lstinline|@UMLGraph.link|}\label{sec:TagUMLGraph} Text 
+
+\chapter{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
 \end{lstlisting}
@@ -2692,12 +2853,16 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 
 \chapter{Coding Rules}\label{sec:CodingRules}
 
-\section{The Annotation @API}\label{APIAnnotation}
+\section{The Annotation @API}\label{sec:APIAnnotation}
 
 
 \section{Exceptions}
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
+
+\section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
+
+\subsection{Non-Final Methods}\label{sec:NonFinalMethods}
 
 \section{Returning Values}\label{sec:ReturningValues}
 
@@ -2710,6 +2875,8 @@ I recommend to create “Building Blocks” with these comments. Eclipse provide
 \subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
 
 \section{Lambdas}\label{sec:Lambdas}
+
+\section{Utility Classes}\label{sec:UtilityClasses}
 
 \section{try-with-resources}\label{sec:TryWithResources}
 
@@ -2983,6 +3150,8 @@ try( final var p = new PostProcessor( forceSorting ) )
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
 \section{Finalisation}
+
+\section{Deprecation of Elements}\label{sec:DeprecationOfElements}
 
 \chapter{Summary}
 Several rules and recommendation in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that.

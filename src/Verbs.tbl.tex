@@ -18,6 +18,9 @@
     \endfoot
     \endlastfoot
 
+    \makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|} & This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by the given argument.\newline Usually, the return value is some kind of handle that has to be released later, by a call to a ‘release’ method. \\
+    \hline
+
     \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\
     \hline
 
@@ -153,6 +156,9 @@ that can be even used with \lstinline|try-with-resources|. \\
     \hline
 
     \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
+    \hline
+
+    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|} & A ‘release’ method provides the converse operation to an ‘acquire’ method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
     \hline
 
     \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\

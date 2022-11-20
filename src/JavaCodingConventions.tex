@@ -169,11 +169,37 @@ Later versions were created for other developer teams, and several software prod
 I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter \tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
 
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
-Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in TeX/LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
+Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
-Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too. A good example for that is the JavaDoc style commenting that was adopted for various other languages, too, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.}
+Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
 
-But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!
+In this sense, I would like to steal the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{The numbering was added by me; I also added the ellipsis.} for this document:
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit.\label{lst:ZoP:ExplicitVsImplicit}
+\item Simple is better than complex.
+\item Complex is better than complicated.
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.
+\item Special cases aren't special enough to break the rules …
+\item … although practicality beats purity.
+\item Errors should never pass silently …
+\item … unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it …
+\item … although that way may not be obvious at first unless you're Dutch.
+\item Now is better than never …\label{lst:ZoP:Now}
+\item … although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
+\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Namespaces are one honking great idea – let's do more of those!\label{lst:ZoP:Namespaces}
+\end{enumerate}
+Only number~\ref{lst:ZoP:Namespaces} does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module” …).
+
+A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL, …) code (more precise, your comments) according to coding conventions similar to those defined here.
+
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow} from the “Zen of Python”!}
 
 A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
 
@@ -194,6 +220,8 @@ Most probably that code will not follow these coding conventions (if any at all 
 But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments, if missing. Or if a new field has to be added to a class, add the “m\_” prefix to its name (see chapter \tqfullref{sec:Fields}).
 
 Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
+
+In this context, see also chapter \tqfullvref{sec:MaintenanceComments}.
 
 \section{Tool Support}
 Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter \tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
@@ -2280,12 +2308,15 @@ Comments are crucial for the understanding of source code, in any programming la
 
 In addition, Java also provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}
 
-So Java source code can generally have two kinds of comments:
+So Java source code can generally have three kinds of comments:
 \begin{itemize}[nosep]
-\item{implementation comments}
 \item{documentation comments}
+\item{implementation comments}
+\item{maintenance comments}
 \end{itemize}
 In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “/**…*/” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
+
+\textit{Maintenance comments} are technically a special form of implementation comments, but as the have a special function, they are covered separately (see chapter \tqfullvref{sec:MaintenanceComments}).
 
 Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
 
@@ -3038,6 +3069,322 @@ public final interface MyInterface
 
 \end{lstlisting}
 
+\subsection{Trailing or End-Of-Line Comments}\label{sec:TrailingOrEndOfLineComments}
+Very short comments can appear on the same line as the code they describe, but should be shifted right far enough to separate them from the statements. If more than one short comment appears in a chunk of code, they should all be indented to the same tab setting.
+
+Here's an example of a trailing comment in Java code:
+\begin{lstlisting}
+if( a == 2 )
+{
+    return TRUE;            /* special case */
+}
+else
+{
+    return isPrime( a );    /* works only for odd a */
+}
+\end{lstlisting}
+
+But it is more common to use “//” instead of “/*…*/” for these trailing comments:
+\begin{lstlisting}
+if( a == 2 )
+{
+    return TRUE;            // special case
+}
+else
+{
+    return isPrime( a );    // works only for odd a
+}
+\end{lstlisting}
+
+You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
+\begin{lstlisting}[numbers=left,caption={Gauss's Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}}]
+/**
+ *  <p>{@summary This method calculates the date of Easter Sunday 
+ *  for the given year.} The year has to be in the range from 1583 
+ *  to 3900 (included).</p>
+ *  <p>The resulting date is for the Gregorian calendar.</p>
+ *  <p>The algorithm itself is not the original one published by Carl
+ *  Friedrich Gauß first in 1800 (corrected version in 1816), but
+ *  that one published by Heiner Lichtenberg in 1997.
+ *
+ *  @thanks Carl Friedrich Gauß
+ *  @thanks Heiner Lichtenberg  
+ *
+ *  @param  year    The year for which the date of Easter Sunday is 
+ *      wanted for.
+ *  @return The date of Easter Sunday in the given year.
+ *  
+ *  @see <a href="https://de.wikipedia.org/wiki/Gau%C3%9Fsche_Osterformel">Gaußsche Osterformel</a>
+ */
+public static final LocalDate calcEasterDate( final Year year )
+{
+    /*
+     * The explanation for the variables was taken from the German
+     * Wikipedia article and translated by me. The original terms
+     * are given in parenthesis.
+     */
+    final int x;  // The year
+    final int k;  // The secular number (die Säkularzahl)   
+    final int m;  // The secular moon shift (die säkulare Mondschaltung)
+    final int s;  // The secular moon shift (die säkulare Sonnenschaltung)
+    final int a;  // The moon parameter (der Mondparameter)
+    final int d;  // The seed for the first full moon in spring (der Keim 
+        // für den ersten Vollmond im Frühling)
+    final int r:  // The calendar adjustment (die kalendarische
+        // Korrekturgröße)
+    final int og; // The Easter limit (die Ostergrenze)
+    final int sz; // The first Sunday in March (der erste Sonntag im März)
+    final int oe; // The distance of Easter Sunday from the Easter limit
+        // – Easter distance in days (die Entfernung des Ostersonntags
+        // von der Ostergrenze – Osterentfernung in Tagen)
+    final int os; // The date of Easter Sunday as a March date with 
+        // March 32 as April 1 etc. (das Datum des Ostersonntags als 
+        // Märzdatum – 32. März = 1. April usw.)
+    
+    //---* Check the arguments *-------------------------------------    
+    if( requireNonNullArgument( year, "year" ).isBefore( Year.of( 1583 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years greater than or equal to 1583" );
+    }
+    if( year.isAfter( Year.of( 3900 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years less than or equal to 3900" );
+    }
+
+    //---* Lichtenberg's Easter formula *----------------------------
+    x = year.getValue();
+    k = x / 100;    
+    m = 15 + (3 * k + 3) / 4 - (8 * k + 13) / 25;
+    s = 2 - (3 * k + 3) % 4;
+    a = x % 19;
+    d = (19 * a + m) % 30;
+    r = (d + a / 11) / 29;
+    og = 21 + d - r;
+    sz = 7 - (x + x / 4 + s) % 7;
+    oe = 7 - (og - sz) % 7;
+    os = og + oe;
+
+    /*
+     * Initialise the return value with the last day of February and 
+     * add the calculated number of days.
+     */
+    final var retValue = LocalDate.of( y, MARCH, 1 )
+        .minusDays( 1 )
+        .plusDays( os );
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  calcEasterDate()
+\end{lstlisting}
+
+As you can see, for this use case it is acceptable to continue a long comment in the following line (see lines~31 and 32, for example) without using a block comment.
+
+Another use case for these kind of comments is to provide information about the arguments of a method call; usually, you should avoid method signatures where this is required (the formal parameter of the method should be sufficient to explain the argument), but sometimes it makes still sense:
+\begin{lstlisting}
+…
+drawCircle(
+    x, y, // The center of the circle
+    d/2.0 // The radius of the circle, calculated from the diameter
+);
+…
+\end{lstlisting}
+
+The end comment for a method is also of this type:
+\begin{lstlisting}
+public final void method()
+{
+    …
+} //  method()
+\end{lstlisting}
+
+Also a long code block\footnote{But if it seems really necessary to add such a comment to a linear code block, you should consider to re-organise your code.} can be commented like this:
+\begin{lstlisting}
+{
+    //---* Calculate the result *------------------------------------
+    // Lots of code comes here ...
+    …
+} //  End of result calculation
+\end{lstlisting}
+
+The end comments for the bodies of \lstinline|for|, \lstinline|while|, \lstinline|switch| and even \lstinline|if-then-else| blocks are a special case, as those blocks should be introduced by a label, and this label should be repeated as the end comment:
+\begin{lstlisting}
+ScanLoop: for( final var s : lines )
+{
+    // Lots of code comes here ...
+    …
+}   //  ScanLoop:
+
+ForeverLoop: while( true )
+{
+    // Lots of code comes here ...
+    …
+}   //  ForeverLoop:
+
+TypeSwitch: switch( type )
+{
+    case TYPE_1 -> …
+    …
+    case TYPE_n -> …
+    default -> throw new IllegalArgumentException()
+}   //  TypeSwitch:
+
+SpecialCaseTurnout: if( isSpecialCase() )
+    // Lots of code comes here ...
+    …
+}   //  SpecialCaseTurnout:
+else
+{
+    // Not so much code here
+    …
+}    
+\end{lstlisting}
+Note the colon at the end of each of the comments!
+
+Do not use the introducing code line for the end comment! That code line may change at some point in time and then the end comment does not have a corresponding starting line anymore.\footnote{This also means that you should be careful with removing or changing labels in the code.}
+
+Avoid this:
+\begin{lstlisting}
+// AVOID!!!
+for( final var s : lines )
+{
+    // Lots of code comes here ...
+    …
+}   //  for( final var s : lines )
+
+while( true )
+{
+    // Lots of code comes here ...
+    …
+}   //  while( true )
+
+switch( type )
+{
+    case TYPE_1 -> …
+    …
+    case TYPE_n -> …
+    default -> throw new IllegalArgumentException()
+}   //  switch( type )
+
+if( isSpecialCase() )
+    // Lots of code comes here ...
+    …
+}   //  if( isSpecialCase() )
+else
+{
+    // Not so much code here
+    …
+}    
+\end{lstlisting}
+
+\section{Maintenance Comments}\label{sec:MaintenanceComments}
+It is very likely that source code will be changed more than once during its lifetime. Bugs will be fixed, functionality is added or removed, refactorings will be applied, or the code will be migrated to other platforms or different versions of the programming language, the underlying libraries, the connected systems and/or the operating system.
+
+There is a practice that all the changes made in the code will be commented in the code. These comments are usually referred to as “Maintenance Comments”.
+
+This may look like this:
+\begin{lstlisting}
+…
+//<<BEGIN FSP-4711 – applied by Micky Mouse
+//<Old Code>
+//…
+//>><<
+<New Code>
+…
+//>>END FSP-4711
+\end{lstlisting}
+
+It has proved that this is not a good practice at all, and a really bad practice if dealing with code that is managed by an SCCS.
+
+First, this practice causes problems for the compare tools coming with the SCCS – at least it will make it more difficult to read the comparison results from those tools.\footnote{Most comparison tools will recognise the out-commenting of the old code as a change and the new code as additional code instead of the replacement for the old code. This is at least confusing when a code revisions are made on the fix.} And the main function of those comments – documenting the changes – is much better served by the SCCS tools themselves.
+
+Second, this gets even worse when the fix needs a fix. Just think about overlapping changes, like FSP-4712 changes lines from the new code of FSP-4711, together with lines directly below, or changes that has to be partially reverted, and so on.
+
+And finally, the comments does not help to identify if your are currently running the patched code, or the old one.
+
+On the other hand, nothing can be said against adding a line to the file or class comment that lists the patches that were applied to the code.
+
+Therefore I recommend to introduce an annotation that can be used to mark elements that are affected by a fix.
+
+Such an annotation can provide the BUG number of the fix, together with a short description of the issue. This annotation replaces a comment about the applied patches, with the advantage that it can be retrieved also from the compiled classes, even at runtime.
+
+Chapter \tqfullvref{sec:PatchIdentification} provides an example of such an annotation.
+
+Old code will be removed and not commented out, or just replaced by the new code. One or the other short comment with a hint is not mandatory, but does not harm either.
+
+When using the suggested annotation from chapter \tqref{sec:PatchIdentification}, this could look like this:
+\begin{lstlisting}
+…
+@BUG( id = "BUG-4711", comment = "No end criterion for loop" )
+@BUG( id = "BUG-4712", comment = "Exception was swallowed" )
+public final void myMethod()
+{
+    ForeverLoop: while( true )
+    {
+        try
+        {
+            …
+            
+            if( !hasMore() ) break ForeverLoop; // BUG-4711
+        }
+        catch( final IllegalStateException e )
+        {
+            log( e );
+            break ForeverLoop; // BUG-4712: Added exception handling
+        }
+    }   //  ForeverLoop:
+}   //  myMethod()
+…
+\end{lstlisting}
+
+\section{Special Comments}
+The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:SpecialComments} suggests some special comments: \verb#XXX# in a comment flags something that is bogus but works. \verb#FIXME# flags something that is bogus and broken (and has to be fixed very soon).
+
+Eclipse knows a setting that allows to externalise such comments into a task list: \verb#Window|Preferences|General|Editors|Structured Text Editors|Task Tags#.
+
+It also adds \verb#TODO# to that list, for something that still needs to be implemented.
+
+\section{Commenting out Code}
+Use the “//” delimiter to comment out a complete line, only a partial line, or a whole bunch of consecutive lines of code.
+
+Example:
+\begin{lstlisting}
+if( foo > 1 )
+{
+    //---* Do a double-flip *----------------------------------------
+    …
+}
+else
+{
+    return false;          // Explain why here.
+}
+//if( bar > 1 )
+//{
+//    //---* Do a triple-flip *--------------------------------------
+//    …
+//}
+//else
+//{
+//    return false;
+//}
+\end{lstlisting}
+
+To use a block comment (“/*…*/”) for commenting out sections of code is not a good idea, although you do not have to type that much: you cannot have a block comment inside a block comment.
+
+The easiest way to comment out a selected code block this way in Eclipse is to use \verb#Source|Toggle Comment# from the menu or the short key \verb#CTRL+/#\footnote{On a German keyboard, it is “7” instead of “/”.}.
+
+In IntelliJ IDEA, it is the menu command \verb#Code|Comment with Line Comment# or the short key \verb#CTRL+/#\footnote{On a German keyboard, it is “÷” on the numeric keypad instead of “/”.}.
+
+\section{Comments when?}\label{sec:CommentsWhen}
+To repeat what was already said at the beginning of the chapter \tqfullref{sec:WritingProperComments}: The frequency of comments reflects poor quality of code, but code can be “under-commented” or “over-commented”. This means that there is a “frequency band” for comments that has to be hit for good quality code.
+
+The advice “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” raises the question for whom the code has to made clearer, because the experts and the rookies are completely distinct audiences, with different needs in regard of comments in the source code.
+
+Same with that other advice (“Even if you don't think, a comment might be necessary, add it nevertheless”): it is the other extrema, and equally bad.
+
+That leads us (again) to the conclusion, that writing good comments to source code is a complex art.
+
+This means that this document cannot give you a complete rule set here, just some guidance.
+
 \chapter{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -3071,21 +3418,64 @@ public final interface MyInterface
 
 
 
-\subsection{Trailing or End-Of-Line Comments}\label{sec:TrailingOrEndOfLineComments}
 
-\section{Comments when?}\label{sec:CommentsWhen}
-To repeat what was already said at the beginning of the chapter \tqfullref{sec:WritingProperComments}: The frequency of comments reflects poor quality of code, but code can be “under-commented” or “over-commented”. This means that there is a “frequency band” for comments that has to be hit for good quality code.
 
-The advice “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” raises the question for whom the code has to made clearer, because the experts and the rookies are completely distinct audiences, with different needs in regard of comments in the source code.
 
-Same with that other advice (“Even if you don't think, a comment might be necessary, add it nevertheless”): it is the other extrema, and equally bad.
 
-\chapter{----------------------------------------------------- Proceed from here!}
+As for chapter “4.1 Documentation Comments” on page 46, a doc comment has to be written at all locations where a doc comment is possible, so the hints below are just for implementation comments.
+    • No empty blocks are allowed: at least a block contains a comment that describes why it does not hold any code.
+    • A short description of the used algorithm is always helpful; even just mentioning its name can make a difference. But if the implementation changes, such a comment has to be adjusted as well.
+    • Every location where you hurt one of the rules or recommendations from this document is worth a comment:
+value = 7.0 / a; // a != 0.0 was already checked above
+o.execute(); // o != null was checked in foo.bar( o )
+/*
+ * bar.getQ() will never return null, so an explicit check on
+ * null for q was omitted
+ */
+q = bar.getQ();
+q.execute();
+    • A comment is necessary if exceptions are swallowed, no matter if silently or not, meaning the exception is logged somewhere.
+    • As said already in chapter “2.5.6 switch Statements” on page 29, a comment is required on a case fall-through.
+    • Non-obvious class casts should be commented, in order to document that the programmer knew what he did:
+private void valueProcessor( List<Object> values )
+{
+    …
+    Value value;
+    for( Object o : values )
+    {
+        /*
+         * We know that values can only contain Value objects;
+         * otherwise this method would not have been called to
+         * process the list.
+         */
+        value = (Value) o;
+        …
+This makes sense because a check like
+if( o instanceof Value ) value = (Value) o;
+is relatively expensive – especially if the contract for this private method is, that it is only called with lists containing Value objects so that the check is positive only in very, very, very rare cases. And finally: what else can be done in cases where the object is not of the right type than throwing a ClassCastException? That's the same that is done by the code above in such a case, too.
+    • In some sources you will find the recommendation to add a comment at the end of a long compound statement, like this:
+// Not recommended
+if( <condition1> )
+{
+    // Lots of code comes here …
+    …
+} // if( <condition1> )
+Although this helps with navigation inside the code, it may cause confusion when the conditional statement will change. Our recommendation is to use a (meaningful) label instead:
+// RECOMMENDED
+IfWithLargeBlock: if( <condition1> )
+{
+    // Lots of code comes here …
+    …
+} // IfWithLargeBlock:
+Also refer to chapter 2.5.11 on page 33 about labels and the break statement.
+    • tbc
+Maintenance comments are discussed in the next chapter.
 
 \chapter{Coding Rules}\label{sec:CodingRules}
 
 \section{The Annotation @API}\label{sec:APIAnnotation}
 
+\section{“Convention over Configuration”}
 
 \section{Exceptions}
 
@@ -3389,9 +3779,16 @@ Several rules and recommendation in this document, in particular regarding how t
 
 But from my experience I found that verbosity is your friend!
 
-And if you are afraid of the typing work: as I said already earlier (see chapter \tqref{sec:LengthOfNamesAndUseOfAbbreviations}), you should learn typewriting! For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development!
+And if you are afraid of the typing work: as I said already earlier (see chapter \tqref{sec:LengthOfNamesAndUseOfAbbreviations}), you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!
 
 Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents, …).
+
+\section{How to use this Document?}
+First, you can use this document as is! It should work for you, as its predecessors worked for a bunch of project teams.
+
+But you can also shape it to your needs, if you want! Replace the examples and the references to my libraries by some that fits better to your project or your company.
+
+This document was compiled using \TeX/\LaTeX, and its source can be found on GitHub at \href{https://github.com/tquadrat/documents}{https://github.com/tquadrat/documents}. Clone the repository and startover!
 
 \chapter{Appendices}
 
@@ -3549,7 +3946,7 @@ Same as for XML, also only small HTML fragments should be embedded into the Java
 This class is a sample implementation of the idea described in chapter \tqfullvref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left,caption={AutoLock}]
+\begin{lstlisting}[numbers=left,caption={AutoLock.java}]
 package org.tquadrat.util.concurrent;
 
 import static java.util.Objects.requireNonNull;
@@ -3654,11 +4051,120 @@ public class AutoLock implements AutoCloseable
 //  class AutoLock
 \end{lstlisting}
 
+\subsection{Patch Identification}\label{sec:PatchIdentification}
+
+\chapter{-------------------------------------------- Proceed from here!}
+The annotations \lstinline|@BUG| and \lstinline|@FixList| are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
+
+\paragraph{The Code} \
+\begin{lstlisting}[numbers=left,caption={FixList.java}]
+package org.tquadrat.foundation.annotation;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.MODULE;
+import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.RECORD_COMPONENT;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.TYPE_PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+/**
+ *  The annotation container for
+ *  {@link BUG &#64;BUG}
+ *  annotations.
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ */
+@Documented
+@Retention( RUNTIME )
+@Target( {ANNOTATION_TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, MODULE, PACKAGE, PARAMETER, RECORD_COMPONENT, TYPE, TYPE_PARAMETER, TYPE_USE} )
+public @interface FixList
+{
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+    /**
+     *  Provides the list of
+     *  {@link BUG &#64;BUG}
+     *  annotations.
+     *
+     *  @return The annotations.
+     */
+    public BUG [] value();
+}
+//  @interface FixList
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left,caption={BUG.java}]
+package org.tquadrat.foundation.annotation;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.MODULE;
+import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.RECORD_COMPONENT;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.TYPE_PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+/**
+ *  This annotation allows to add information about applied fixes to 
+ *  a program element.
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ */
+@API( status = STABLE, since = "0.1.0" )
+@Documented
+@Retention( RUNTIME )
+@Target( {ANNOTATION_TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, MODULE, PACKAGE, PARAMETER, RECORD_COMPONENT, TYPE, TYPE_PARAMETER, TYPE_USE} )
+@Repeatable( FixList.class )
+public @interface BUG
+{
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+    /**
+     *  An optional comment regarding the bug fix.
+     *
+     *  @return The comment.
+     */
+    String comment() default "";
+
+    /**
+     *  The BUG id as provided by the bug tracking system.
+     *
+     *  @return The BUG id.
+     */
+    String id();
+}
+//  @interface BUG
+\end{lstlisting}
+
 \subsection{PostProcessor}\label{sec:PostProcessor}
 This implementation is basically a PoC; currently it is not part of any library.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left,caption={PostProcessor}]
+\begin{lstlisting}[numbers=left,caption={PostProcessor.java}]
 package util;
 
 import static java.util.Objects.requireNonNull;
@@ -3758,7 +4264,7 @@ var result = switch( color )
 Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 
 \paragraph{The Code} \
-\begin{lstlisting}[numbers=left,caption={UnsupportedEnumError}]
+\begin{lstlisting}[numbers=left,caption={UnsupportedEnumError.java}]
 package org.tquadrat.foundation.exception;
 
 import static org.tquadrat.foundation.lang.Objects.requireNonNullArgument;

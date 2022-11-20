@@ -1,0 +1,156 @@
+\chapter{Introduction}
+
+\begin{quotation}
+“Everybody can write code that can be read by a computer,
+but only good developers will write code that can be read by humans.”
+\autocite{Fowler:Refactoring}
+\end{quotation}
+
+From a magazine dealing with software development tools, I found the following statement:
+
+\begin{quotation}
+“If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.”
+\end{quotation}
+
+Coding conventions are primarily rules that should help making code better to maintain. Usually, this starts with making it more readable. Obviously, “readability” is a relative term, depending from one's habit. So some people are more familiar with the Kernighan-Ritchie (K\&R) style
+
+\begin{lstlisting}
+public void method (){
+    if (flag) {
+        …
+    }
+}
+\end{lstlisting}
+
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
+
+\begin{lstlisting}
+public void method()
+{
+    if( flag )
+    {
+    	…
+    }
+}
+\end{lstlisting}
+
+Both styles will work, but they look different. So as a lot of other rules from a code conventions document, too, this is a matter of taste (but refer to chapter \tqfullvref{sec:IndentationStyle}).
+
+Nevertheless, the main purpose of those rules is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
+
+But there are more practical reasons to enforce these rules on the source: they make it easier …
+\begin{itemize}[nosep]
+\item … to understand the code
+\item … to navigate inside the code
+\item … to detect bugs
+\item … to fix these bugs
+\item … and to amend and enhance the code.
+\end{itemize}
+
+It can make it also easier to use automated tools on the source code.
+
+All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90\% – and nearly no source is maintained by its original author or even a single programmer for its whole lifetime.
+
+The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary or at least useful to me.
+
+\section{About this Document}
+The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next it covers the naming of the program elements before I discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding rules.
+
+The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules or recommendations are first used in the samples \textit{after} being introduced.
+
+For source code samples that obey all rules and follow all recommendations, refer to chapter \tqfullvref{sec:Examples}.
+
+All rules and recommendations assume that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
+
+If you have questions or comments regarding this document, please send me an email to \href{mailto:thomas.thrien@tquadrat.org}{thomas.thrien@tquadrat.org}. Or leave it at \url{https://tquadrat.github.io/}.
+
+\section{History and Implementation}
+I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
+
+Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20~years now, another code is live since 12~years now.
+
+I wrote some libraries that supports some of the rules and recommendations, in particalur those mentioned in chapter \tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
+
+\section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
+Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
+
+Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
+
+In this sense, I would like to steal the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{The numbering was added by me; I also added the ellipsis.} for this document:
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit.\label{lst:ZoP:ExplicitVsImplicit}
+\item Simple is better than complex.
+\item Complex is better than complicated.
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.
+\item Special cases aren't special enough to break the rules …
+\item … although practicality beats purity.
+\item Errors should never pass silently …
+\item … unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it …
+\item … although that way may not be obvious at first unless you're Dutch.
+\item Now is better than never …\label{lst:ZoP:Now}
+\item … although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
+\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Namespaces are one honking great idea – let's do more of those!\label{lst:ZoP:Namespaces}
+\end{enumerate}
+Only number~\ref{lst:ZoP:Namespaces} does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module” …).
+
+A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL, …) code (more precise, your comments) according to coding conventions similar to those defined here.
+
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow} from the “Zen of Python”!}
+
+A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
+
+In chapter \tqfullvref{sec:FormattingSQLInsideJava} we have added some rules on how to format SQL statements when added as literals into a Java program.
+
+\section{Code Generators}
+Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}}
+
+Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this means all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
+
+Since Java~6 there is an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case still Java~5 is used as the source code version, it should be considered to create an own \lstinline|@Generated| annotation along the lines given by that existing in Java~6 and later.}
+
+\section{Programming for Sustaining}
+And what to do with “legacy” code that has to be fixed?
+
+Most probably that code will not follow these coding conventions (if any at all …), and it is rarely a good idea to reformat or rewrite it completely just to align it with the conventions. Instead a fix should be limited to the area that is broken.
+
+But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments, if missing. Or if a new field has to be added to a class, add the “m\_” prefix to its name (see chapter \tqfullref{sec:Fields}).
+
+Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
+
+In this context, see also chapter \tqfullvref{sec:MaintenanceComments}.
+
+\section{Tool Support}
+Several of the rules and recommendations can be implemented through the configuration of the programming enviroment that is used, especially those from chapter \tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
+
+The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
+
+\section{The Basic Rule}\label{sec:TheBasicRule}
+One rule should be followed before any other rule or recommendation given in this document:
+
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
+
+Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug, not adding missing comments …} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
+
+\textit{And this is exactly what we want to avoid!} 
+
+This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about the quick and dirty PoC that made it into a product without significant changes …
+
+So again:
+
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
+

@@ -1,0 +1,540 @@
+\chapter{Naming Conventions}
+Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
+
+The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
+
+Additionally, names provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
+
+But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.
+
+The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Speficication \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
+
+But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may look good in some sample code (like in the sample listings in this document), but they are definitely invalid for real code!
+
+\subsection{Language}
+The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two …) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
+
+The reason to use English is that this is the common language for most international teams.
+
+But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distungiush just by the language if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|; in writing, this looks good, but in oral communications, misunderstandings are easy. }
+
+\subsection{Uppercase, Lowercase, Camelcase}
+Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
+
+The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29 …}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
+
+Details are again discussed in the chapter about the respective code elements.
+
+\subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
+One aspect of abbreviations has been discussed already above. In general, avoid abbreviations and acronyms if those are not \textit{very well known}.
+
+The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names …
+
+This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
+
+If you think you will be more productive when using short names (because you can type them faster …), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents, …).
+
+But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
+
+\subsection{Special Characters}
+Avoid special characters and punctuations in identifiers; the only exception are underscores for constants (see chapter \tqfullvref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). This, too, is a reason for using English for the names and identifiers: usually, you can limit yourself to the ASCII character set.
+
+\subsection{“test” as Part of Names}
+Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
+
+\subsection{Names forced by 3\textsuperscript{rd} Party Components}
+Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
+
+\section{Modules}\label{sec:Modules}
+A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
+
+Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
+
+So the names for modules will follow the same rules as those for packages.
+
+\section{Packages}\label{sec:Packages}
+According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that as well.}
+
+Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
+
+Subsequent components of the package name vary according to an organization's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Valid samples are:
+\begin{itemize}[nosep]
+\item\verb#org.tquadrat#
+\item\verb#com.ibm#
+\item\verb#com.sun#
+\item\verb#de.jug#
+\item\verb#uk.gov.hmrc#
+\end{itemize}
+
+Of course you should use your domain name! Those from the samples are already used by the respective companies or organisations (or persons).
+
+Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Next, a package name is also a folder name: the file with the source code for the class \lstinline|com.foo.bar.internal.MyImpl| is located in the folder \verb#com/foo/bar/internal# in the source code directory tree.
+
+Finally the package name should reflect somehow the function of that package.
+
+\subsection{The Packages “internal” and “spi”}
+The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the non-public package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers.
+
+If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
+
+For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}.
+
+\section{Classes}\label{sec:Classes}
+In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|). Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
+
+According to the Java syntax specification, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)!\footnote{Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner classes and anynomous classes, as well as for the classes that will be generared for lambdas.}
+
+You should also avoid numerical characters in class names.
+
+\subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
+A ‘real’ class is declared with the keyword \lstinline|class|. 
+
+Some parts of a class name will indicate a special position of that class in the class hierarchy. So the suffix ‘Impl’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|}.
+
+‘Adapter’ as the suffix is similar, but here the methods are usually empty, as it is assumed that only a few of the methods of the interface are really required; various samples for this could be found in the Swing packages.
+
+A suffix ‘Base’ indicates that the class has to be extended; usually that class is \lstinline|abstract|.
+
+Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘Error’ and ‘Exception’ for error and exception classes. Others are ‘Visitor’, and ‘Listener’ for the implementations of the respective patterns, ‘DAO’, or ‘Entity’. A more complete list can be found in chapter \tqfullvref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
+
+\subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
+An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
+
+Some coding conventions (particular in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
+
+\subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
+An enum is a special class that will be declared with the keyword \lstinline|enum|.
+
+The name of enum class should be somehow the category of the enumerated entities, but plurals should be avoided; so it should read \lstinline|Type| and not \lstinline|Types|, and \lstinline|DayOfWeek| and not \lstinline|DaysOfWeek|.
+
+Although an enum class can implement an interface, this should not be reflected in the name. This means that \lstinline|TypeImpl| would be an invalid name for an enum class.
+
+For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
+
+\subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
+A record class can implement an interface, like a regular class, so that the suffix ‘Impl’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘Base’ is not permitted, as well as any other suffix indicating a class that should be extended.
+
+Also a record class should not be named ‘Record’.
+
+\subsection{Names for Annotations}\label{sec:NamesForAnnotations}
+Annotations are a special type of an interface, distinguished by the “@” as the first character of their name. The remaining part of the name is determined by the rules for regular interfaces. Samples for valid names are \lstinline|@Text|, \lstinline|@Translation|, \lstinline|@Generated|\footnote{see \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}, or \lstinline|@Deprecated|\footnote{see \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}.
+
+\section{Methods}\label{sec:NamesForMethods}
+Method names have to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized.
+
+The name of a method has to describe what is does; a name like \lstinline|myMethod()| or \lstinline|doSomething()| are discouraged\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as a place holder for a meaningful method name, and definitely \textit{not} as an example for the naming of a method.}.
+
+Chapter \tqref{sec:TheNamingDictionary} beginning on page \pageref{sec:TheNamingDictionary} contains the “Naming Directory” for method names; that is a list of verbs together with their implicit contract. It is highly recommended to refer to this list when searching a name for a new method.
+
+Using digits in method names is acceptable were it makes sense; so using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended. Remember that digits are not allowed as first characters of a method name.
+
+Regarding to “Data Objects” there are two different schools: one supports the JavaBean\footnote{see \autocite{ORACLE_DOC_JAVABEANS}} approach, using explicit getter and setter methods:
+\begin{lstlisting}[numbers=left,caption={JavaBean}]
+class JavaBeanDO
+{
+    private Object m_Attribute;
+
+    public final Object getAttribute() { return m_Attribute; }
+
+    public final void setAttribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }   //  setAttribute()
+}
+//  class JavaBeanDO
+\end{lstlisting}
+
+The other one is in favour of the Property concept, using two methods with the attribute name, but with different signatures as implicit getter and setter methods (here usually named as 'accessor' and 'mutator'):\footnote{I use the term \textit{POJO} (“Plain Old Java Object”) here only to distinguish this approach from a JavaBean; usually, POJOs do not make any assumption about the naming of their methods. This means that a real POJO can have getters and setters, too.}
+
+\begin{lstlisting}[numbers=left,caption={POJO}]
+public class PropertyDO
+{
+    private Object m_Attribute;
+
+    public final Object attribute() { return m_Attribute; }
+
+    public final void attribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }	//	attribute()
+}
+//  class PropertyDO
+\end{lstlisting}
+
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches.
+
+In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
+
+\section{Local Variables}\label{sec:NamesForLocalVariables}
+The identifier names for local variables are in mixed case, with a lowercase first letter. Internal words start with capital letters. The names should not contain underscore (“\_”) or dollar sign (“\$”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
+
+Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended.
+
+In case the first part of the variable name has to be an acronym, it will be written with all lower case:
+\begin{lstlisting}
+String htmlHeader; // OK
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+String hTMLHeader; // AVOID!
+\end{lstlisting}
+
+Also one-character variable names should be avoided except for temporary “throwaway” variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for| loop:
+\begin{lstlisting}
+for( var i = 0; i < max; ++i )
+{
+    …
+}
+\end{lstlisting}
+
+\lstinline|e| is the common name for the exception in a \lstinline|catch| block:
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final IOException e )
+{
+    //---* Handle the exception *------------------------------------
+    …
+}    
+\end{lstlisting}
+
+For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
+
+Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute:
+\begin{lstlisting}
+// OK
+public final int getValue() { return m_Value; }
+
+// RECOMMENDED
+public final int signum( double d )
+{
+    var retValue = 0;
+    if( d < 0.0 )
+    {
+        retValue = -1
+    }
+    else
+    {
+        retValue = 1;
+    }
+
+    return retValue;
+}   //  signum()
+
+// ACCEPTABLE
+public final int signum( double d )
+{
+    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+}   //  signum()
+
+// AVOID!! Use 'retValue' instead of 'i'!!
+public final int signum( double d )
+{
+    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+    return i;
+}   //  signum()
+\end{lstlisting}
+
+A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
+
+Do not use the names \lstinline|in|, \lstinline|out|, and \lstinline|err|. Although these are not reserved words, they should be treated as such, as it would allow to statically import the default streams from the class \lstinline|java.lang.System|.
+
+Usually you would use the singular form for a variable name, but for collections or arrays, the plural form can be perfectly correct:
+\begin{lstlisting}
+final Collection<Component> values = m_Components.values();
+for( final Component value : values )
+{
+    …
+}    
+\end{lstlisting}
+
+Using the class name (with a lower case first letter, of course) for a variable is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “my” has to be avoided.
+\begin{lstlisting}
+// RECOMMENDED
+public final String retrieveMessage( final String messageKey, 
+    final String... additionalInfo )
+{
+    final MessageProvider messageProvider = getMessageProvider();
+    final String rawMessage = 
+        messageProvider.getMessage( messageKey );
+    final var retValue = String.format( rawMessage, additionalInfo );
+    return retValue;
+}   //  retrieveMessage()
+
+// AVOID!!!! Don't use "my..." prefix!!!
+public final String retrieveMessage( final String string, 
+    final String... strings )
+{
+    final MessageProvider myMessageProvider = getMessageProvider();
+    final String s = myMessageProvider.getMessage( string );
+    final var retValue = String.format( s, strings );
+    return retValue;
+}
+\end{lstlisting}
+
+Sometimes it is also a good idea to use the class name of the type as a suffix or prefix for the name, especially if the current block declares more than one variable of that type. In such a case, the rest of the name could be used to indicate how variables belong together.
+\begin{lstlisting}
+// RECOMMENDED
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent clientAgent = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// AVOID!!!! Don't use "my..." prefix!!! And don't abbreviate!
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent myCA = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// RECOMMENDED
+public final ResultData loadData( Connection connection, … )
+{
+    …
+    final Statement customerStatement = …
+    final Statement orderStatement = …
+
+    …
+
+    final ResultSet customerResultSet = customerStatement.execute();
+    …
+
+    final ResultSet orderResultSet = orderStatement.execute();
+    …
+}   //  loadData()
+\end{lstlisting}
+
+Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way.}
+
+Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value – refer chapter \tqfullvref{sec:LambdaResults} for the details.
+
+\section{Parameters}
+The names for formal parameters of methods and constructors are different from those for lambdas.
+\subsection{Names for formal Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
+The names for the formal parameters of a method or a constructors follow the same rules as for local variables. Especially they do \textit{not} have any prefix.
+
+The parameters that are used to initialise a field should have the same name as that field, but without the “m\_” prefix:
+\begin{lstlisting}
+public final class MyClass
+{
+    private String m_Name;
+    
+    public MyClass( final String name )
+    {
+        m_Name = name;
+    }   // MyClass()
+    
+    public final void setName( final String name )
+    {
+        m_Name = name;
+    }   //  setName()
+}
+//  class MyClass
+\end{lstlisting}
+
+\subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
+A typical lambda in Java looks like this:
+\begin{lstlisting}
+Predicate<String> filter = s -> !s.contains( "invalid" );
+\end{lstlisting}
+\lstinline|s| is the parameter of that lambda, and that these parameters have just single character names is common practice. As lambdas are usually quite short, this works sufficiently in most cases. In addition the meaning of the parameters is well explained through the documentation of the functional interface that is implemented by the lambda.
+
+But if in doubt, you can use longer names with more meaningful names for the parameters of a lambda. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context:
+\begin{lstlisting}
+// WILL NOT WORK AT ALL!!
+final var s = "invalid";
+Predicate<String> filter = s -> !s.contains( s ); // Hä?
+
+// Still not good …
+final var s = "invalid";
+Predicate<String> filter = p -> !p.contains( s );
+
+// Better …
+final var s = "invalid";
+Predicate<String> filter = toCheck -> !toCheck.contains( s );
+
+// Recommended
+final var criterion = "invalid";
+Predicate<String> filter = s -> !s.contains( criterion );
+\end{lstlisting}
+
+It does not make much difference if you number the parameters, of if you use different names fo them:
+\begin{lstlisting}
+BiPredicate<String,String> filter = (s1,s2) -> s1.contains( s2 );
+BiPredicate<String,String> filter = (a,b) -> a.contains( b );
+\end{lstlisting}
+
+Nevertheless, an accepted rule of thumb is to use different names if the parameters cannot be exchanged by each other (as in the sample above), while numbering the parameters is used when the parameters are interchangeable, like in an implementation of \lstinline|java.util.Comparator|:
+\begin{lstlisting}
+Comparator<String> comparator = (s1,s2) -> s1.compareToIgnoreCase( s2 );
+\end{lstlisting}
+
+\section{Fields}\label{sec:Fields}
+The name for fields (also referred to as ‘attributes’ or ‘properties’) are prefixed with “m\_”; the first letter after the underscore has to be a capital letter:
+\begin{lstlisting}
+private String m_AString;
+private boolean m_IsValid;
+private String m_HTMLHeader;
+private MessageProvider m_MessageProvider;
+\end{lstlisting}
+This warrants that the names of local variables and formal parameters of methods or constructors will be always distinct from those of fields, and therefore neither local variables nor parameters can collide with or hide fields. Another consequence is that it is not necessary to use \lstinline|this.| when accessing a field.
+
+Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of fields.
+
+Please be aware that a bean property name does not carry the prefix. So the getters for the samples above are
+\begin{lstlisting}[numbers=left]
+public final String getAString() { return m_AString; }
+public final boolean getIsValid() { return m_IsValid; }
+/* Alternatively: */ public final boolean isValid() { return m_IsValid; }
+public final String getHTMLHeader() { return m_HTMLHeader; }
+public final MessageProvider getMessageProvider() { return m_MessageProvider; }
+\end{lstlisting}
+Regarding the alternative getter in line~3 refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3_2}.
+
+Eclipse knows a configuration setting for this prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “m\_” makes sure that the generation of getters and setters will work as expected.
+
+For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
+
+\section{Constants}\label{sec:Constants}
+Constants are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores (‘\_’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+
+Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
+
+Some samples for valid constants:
+\begin{lstlisting}
+public static final double PI = 3.1415;
+public static final int ANSWER_TO_ALL_QUESTIONS = 42;
+public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
+public static final String [] EMPTY_STRING_ARRAY = new String [0];
+\end{lstlisting}
+Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
+
+The field \lstinline|PATTERN| below is not a constant in the sense of this definition:
+\begin{lstlisting}[numbers=left]
+public static final Pattern PATTERN = Pattern.compile( ".*" );
+
+// Better:
+public static final Pattern PATTERN;
+
+static
+{
+    try
+    {
+        PATTERN = Pattern.compile( ".*" );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+
+// Even better:
+public static final String PATTERN_SOURCE = ".*";
+…
+private static final Pattern m_Pattern;
+
+static
+{
+    try
+    {
+        m_Pattern = Pattern.compile( PATTERN_SOURCE );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw (ExceptionInInitializerError) new ExceptionInInitializerError( "Compilation of '%s' failed".formatted( PATTERN_SOURCE ).initCause( e );
+    }    
+}
+\end{lstlisting}
+No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialization”.
+
+\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:Fields} for their naming.
+
+Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
+\begin{lstlisting}[numbers=left]
+// AVOID!! Make it private!
+public static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// AVOID!! Make it private!
+public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
+\end{lstlisting}
+
+If you wonder why the lines~5 and 8 belongs to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used anymore.}
+
+Sometimes you may have classes or groups of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved to help with the readability of the code if this is reflected in the names. For the column names of the table \verb#PERSON#, the constants may be defined as shown here:
+\begin{lstlisting}
+public final static String PERSON_COL_FirstName = "first_name";
+public final static String PERSON_COL_LastName = "last_name";
+…
+\end{lstlisting}
+The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”.
+
+\section{enum Values}\label{sec:EnumValues}
+When the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores (“\_”).
+
+Basically, this works fine, but when using \lstinline|static| imports, you may get name clashes for common terms that can be used in different contexts. So it will make sense to add a prefix to the name of an enum, similar to what we did with the categories or groups for regular constants. This may look like this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_LEFT,
+    DIR_RIGHT;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_CENTER,
+    ALIGN_LEFT,
+    ALIGN_RIGHT;
+}   //  enum Alignment
+\end{lstlisting}
+Using the prefix would allow now to use the values with static imports of their classes; otherwise, they have to be used with their class names as prefix.
+
+Alternatively, you can use this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_Left,
+    DIR_Right;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_Center,
+    ALIGN_Left,
+    ALIGN_Right;
+}   //  enum Alignment
+\end{lstlisting}
+Again the camelCased suffix is the “name” itself, while the “proper” typed prefix is just the category. This is recommended if the suffix consists of multiple words that otherwise require additional underscores.
+
+\section{Type Arguments}\label{sec:TypeVariables}
+Type arguments belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
+\begin{lstlisting}
+public interface Function<T,R> {…}
+\end{lstlisting}
+\lstinline|T| and \lstinline|R| are the type arguments.
+
+It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
+
+Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: \begin{lstlisting}
+public interface Map<Key,Value> {…}
+\end{lstlisting}
+is absolutely valid, although not common. 
+
+But because the type arguments denotes classes, their names have to start with a capital letter.

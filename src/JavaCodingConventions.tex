@@ -1280,36 +1280,127 @@ Second, having a list of \lstinline|Value| objects declared as \lstinline|List<O
 \section{Updating Comments}
 If the code has to be modified, no matter if due to regular maintenance, bug fixing or a migration, all related comments has to be updated accordingly. There is no value in keeping “historical comments”, although mentioning the old algorithm when the former implementation has been replaced completely might be useful in some cases.
 
-But keeping the outdated code as a comment is definitely not useful, in particulara not when there is an SCCS used to manage the code.
-
-\chapter{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
+But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS used to manage the code.
 
 \chapter{Coding Rules}\label{sec:CodingRules}
 
+\section{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+In this sense, I would like to steal the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{The numbering was added by me; I also added the ellipsis.} for this document:
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit.
+\item Simple is better than complex.
+\item Complex is better than complicated.
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.
+\item Special cases aren't special enough to break the rules …
+\item … although practicality beats purity.
+\item Errors should never pass silently …
+\item … unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it …
+\item … although that way may not be obvious at first unless you're Dutch.
+\item Now is better than never …
+\item … although never is often better than \textit{right now}.
+\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Namespaces are one honking great idea – let's do more of those!
+\end{enumerate}
+Only number~\ref{lst:ZoP:Namespaces} does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module” …).
+
+
+
 \section{The Annotation @API}\label{sec:APIAnnotation}
 
+\section{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
 \section{“Convention over Configuration”}
+The phrase “Convention over Configuration” (or “Coding by Convention”) got popular with the introduction of Ruby on Rails, but it is related to earlier ideas like the concept of “Sensible Defaults” and the “Principle of Least Astonishment” in user interface design.
+
+Basically it means that an object instance can be created and used properly with only minimal configuration because all not absolutely mandatory settings will have meaningful – and useful! – default values.
+
+On the other hand, there is that number~\ref{lst:ZoP:ExplicitVsImplicit} from the “Zen of Python”, saying “Explicit is better than implicit” …
+
+These are obviously contradictory statements – so whose right?
+
+Both, to some extent!
+
+Your design should support “Convention over Configuration”, but your code should rely on defaults only when a change of these defaults in unlikely, or such a change will not have an effect to your code.
+
+So assume that you are using a 3\textsuperscript{rd} party library that creates reports in HTML format; the default format was HTML3 with the previous version, but in the current version – that one used by you – it is HTML5. The generated reports are consumed by a tool that converts HTML5 input into PDF.
+
+According to “Convention over Configuration”, you are fine: the convention is HTML5, you do not need to set the HTML version for the output format explicitly.
+
+But what happens, if in a few years the next version of that report creator library will support HTML7 as the default, but your PDF generator stucks still with HTML5 for its input? Nothing happens until your successor as the maintainer of your software decides to use that new library … afterwards you may see funny things in the generated PDF documents.
+
+So the recommendation is: do not always rely on conventions! Whenever possible, provide an explicit configuration! At least leave a comment when you rely on the defaults, and that comment should describe what the anticipated defaults are.
+
+\section{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{Exceptions}
 

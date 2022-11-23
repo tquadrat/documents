@@ -28,6 +28,9 @@
 \usepackage{makecell}
 \usepackage[english]{babel}
 \usepackage[babel]{csquotes}
+
+\usepackage{lipsum}
+
 \usepackage[style=numeric,urldate=iso8601,backend=biber]{biblatex}
 \usepackage{nameref}
 \usepackage[colorlinks=true]{hyperref}
@@ -1283,7 +1286,37 @@ If the code has to be modified, no matter if due to regular maintenance, bug fix
 But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS used to manage the code.
 
 \chapter{Coding Rules}\label{sec:CodingRules}
+These rules are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance.
 
+As always there may be good reasons to do it different from what is recommended or even requested by the rules\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}?}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22.}
+
+One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
+
+And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points~\ref{lst:ZoP:SimpleVsComplex} “Simple is better than complex” and \ref{lst:ZoP:ComplexVsComplicated} “Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
+
+But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendation when to apply comments to your code.
+
+\section{Swap Logic Errors for Compiler Errors}
+From a book about Java programming :
+\begin{quotation}
+“One fundamental principle of programming is that, generally, it is best to swap a logic error for a compiler error. Compiler errors tend to be found in seconds and are corrected just as fast. Syntax errors are a good example […]
+
+Logic errors, on the other hand, are the bane of all programmers. They hide and hate to reveal themselves. Logic errors seem to have minds of their own, constantly evading detection and dodging your efforts to pin down their cause. They can easily take a thousand times more effort to solve than the worst compiler errors. Worst of all, many logic errors are not found at all and occur only intermittently in sensitive places, which causes your customer to scream for a fix. Logic errors often require you to throw thousands of man-hours at them, only to finally discover that they are minor typos.”
+
+Hardcore Java\autocite{HARDCORE_JAVA}
+\end{quotation}
+
+A sample for swapping a logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
+\begin{lstlisting}
+if( length() == len ) …
+if( 5 == len ) …
+\end{lstlisting}
+
+Another sample for this is the recommendation to name fields with the “m\_” prefix (refer to chapter \tqfullvref{sec:Fields}). The compiler will never complain if you omit the \lstinline|this.| prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field\footnote{Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.| and if you shadow a field through a local variable with the same name.} – but it will scream loudly about a non-existing reference if you forget the “m\_” prefix when accessing a field named along the rules defined here.
+
+The best thing about compiler errors is, that they usually show up during development – and not first after deployment at customer side.
+
+See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
 \section{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -1403,29 +1436,74 @@ So the recommendation is: do not always rely on conventions! Whenever possible, 
 \end{lstlisting}
 
 \section{Exceptions}
+\lipsum[1]
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
+\lipsum[1]
 
 \section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
+\lipsum[1]
 
 \subsection{Non-Final Methods}\label{sec:NonFinalMethods}
+\lipsum[1]
+
+\section{Compiler Warnings and Errors}\label{sec:CompilerWarningsAndErrors}
+It is not allowed to commit any code that emits warnings or even errors on a compiler run to the SCCS. It is also not allowed to switch off any compiler warning globally.
+
+In fact, warnings should even not show up in the development environment, also with the most aggressive settings.
+
+It is allowed to use the annotation \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} to locally deactivate a warning. This is often necessary when dealing with legacy APIs that does not use Generics. So this sample would emit an “unchecked” warning for line 3:
+\begin{lstlisting}[numbers=left]
+public final Map<K,V> clone()
+{
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+\end{lstlisting}
+
+To avoid this, the annotation \lstinline|@SuppressWarnings| with the value “unchecked” can be applied – preferably not to the method as a whole, but only to the problematic assignment, even if this means that an additional temporary variable is required (but not in this sample):
+\begin{lstlisting}
+// RECOMMENDED
+public final Map<K,V> clone()
+{
+    @SuppressWarnings( "unchecked" ) 
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+
+// AVOID!!!
+@SuppressWarnings( "unchecked" ) 
+public final Map<K,V> clone()
+{
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+\end{lstlisting}
+
+As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
 
 \section{Returning Values}\label{sec:ReturningValues}
+\lipsum[1]
 
 \subsection{Lambda Results}\label{sec:LambdaResults}
+\lipsum[1]
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
+\lipsum[1]
 
 \section{Encapsulation}
+\lipsum[1]
 
 \subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
+\lipsum[1]
 
 \section{Lambdas}\label{sec:Lambdas}
+\lipsum[1]
 
 \section{Utility Classes}\label{sec:UtilityClasses}
+\lipsum[1]
 
 \section{try-with-resources}\label{sec:TryWithResources}
-
 The feature \lstinline|try-with-resources| was introduced with Java~7; it can help to make programs more stable and less error prone.
 
 \subsection{Basics}
@@ -1696,8 +1774,10 @@ try( final var p = new PostProcessor( forceSorting ) )
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
 \section{Finalisation}
+\lipsum[1]
 
 \section{Deprecation of Elements}\label{sec:DeprecationOfElements}
+\lipsum[1]
 
 \include{Summary}
 

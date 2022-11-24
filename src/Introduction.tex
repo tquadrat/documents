@@ -79,22 +79,21 @@ Obviously there are some common rules that are valid for every programming langu
 In this sense, I would like to steal the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{The numbering was added by me; I also added the ellipsis.} for this document:
 \begin{enumerate}[nosep]
 \item Beautiful is better than ugly.
-\item Explicit is better than implicit.\label{lst:ZoP:ExplicitVsImplicit}
-\item Simple is better than complex.\label{lst:ZoP:SimpleVsComplex}
-\item Complex is better than complicated.\label{lst:ZoP:ComplexVsComplicated}
+\item Explicit is better than implicit.
+\item Simple is better than complex.
+\item Complex is better than complicated.
 \item Flat is better than nested.
 \item Sparse is better than dense.
-\item Readability counts.\label{lst:ZoP:Readablity}
-\item Special cases aren't special enough to break the rules …\label{lst:ZoP:SpecialCases}
-\item … although practicality beats purity.\label{lst:ZoP:Practicality}
+\item Readability counts.
+\item Special cases aren't special enough to break the rules …
+\item … although practicality beats purity.
 \item Errors should never pass silently …
 \item … unless explicitly silenced.
 \item In the face of ambiguity, refuse the temptation to guess.
 \item There should be one – and preferably only one – obvious way to do\\ it …
 \item … although that way may not be obvious at first unless you're Dutch.
-\item Now is better than never …\label{lst:ZoP:Now}
-\item … although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
-\item If the implementation is hard to explain, it's a bad idea.
+\item Now is better than never …
+\item … although never is often better than \textit{right now}.\item If the implementation is hard to explain, it's a bad idea.
 \item If the implementation is easy to explain, it may be a good idea.
 \item Namespaces are one honking great idea – let's do more of those!\label{lst:ZoP:Namespaces}
 \end{enumerate}
@@ -102,7 +101,7 @@ Only number~\ref{lst:ZoP:Namespaces} does not work for code written in Java, unl
 
 A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL, …) code (more precise, your comments) according to coding conventions similar to those defined here.
 
-But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow} from the “Zen of Python”!}
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!
 
 A sample for code conventions for JavaScript can be found in the web at \autocite{JAVASCRIPT_CODE_CONVENTIONS}.
 
@@ -132,7 +131,38 @@ Several of the rules and recommendations can be implemented through the configur
 The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
 
 \section{The Basic Rule}\label{sec:TheBasicRule}
-One rule should be followed before any other rule or recommendation given in this document:
+In the chapter \tqfullref{sec:OtherProgrammingLanguages}, I quoted the “Zen of Python” and I refer to that set of rules several times in this document.
+
+I did this because the “Zen of Python” is a \textit{nearly} generic coding guideline in a nutshell, valid for most, if not all programming languages.
+
+Ok, some of the statements may need an explanation and/or some samples, and I hope that this document will give it to you.
+
+But to get your Coding Guardrails for Java in a nutshell, you can get them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended …).}
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit and verbosity is your friend.\label{lst:ZoP:ExplicitVsImplicit}
+\item Simple is better than complex.\label{lst:ZoP:SimpleVsComplex}
+\item Complex is better than complicated.\label{lst:ZoP:ComplexVsComplicated}
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.\label{lst:ZoP:Readablity}
+\item Special cases aren't special enough to break the rules …\label{lst:ZoP:SpecialCases}
+\item … although practicality beats purity.\label{lst:ZoP:Practicality}
+\item Errors should never pass silently and Exceptions may never be swallowed …
+\item … unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it …
+\item … although that way may not be obvious at first.
+\item Now is better than never …\label{lst:ZoP:Now}
+\item … although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
+\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Think about your future self and add a comment.
+\item Always do it right in the first place!\label{lst:BR:BasicRule}
+\item Have Fun!
+\end{enumerate}
+
+One rule should be followed before any other rule or recommendation given in this document, that one listed as number \ref{lst:BR:BasicRule} above:\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
 
 \begin{center}
 \begin{huge}
@@ -144,7 +174,9 @@ Experiences with lots of programming projects has shown that programmers seldom 
 
 \textit{And this is exactly what we want to avoid!} 
 
-This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about the quick and dirty PoC that made it into a product without significant changes …
+This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code …
+
+Of course you can interpret it also as “Don't make mistakes”, but we all now that humans make mistakes, and that it is unavoidable that our code will contain one or the other bug. So it means that you should \textit{do your best} to avoid mistakes, and the rules and recommendation from this document will help you with that.
 
 So again:
 
@@ -153,4 +185,3 @@ So again:
 \fbox{\textbf{Always do it right in the first place!}}
 \end{huge}
 \end{center}
-

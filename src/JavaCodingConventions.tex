@@ -1277,6 +1277,7 @@ might be clearer, but it is not less expensive.
 
 Second, having a list of \lstinline|Value| objects declared as \lstinline|List<Object>| is bad design – or legacy code.}
 \item{In some sources you will find the recommendation to add a comment at the end of a long compound statement; this was already discussed in chapter \tqfullref{sec:SingleLineComments}.}
+\item{With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.}
 \item{tbc}
 \end{itemize}
 
@@ -1317,6 +1318,134 @@ Another sample for this is the recommendation to name fields with the “m\_” 
 The best thing about compiler errors is, that they usually show up during development – and not first after deployment at customer side.
 
 See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
+
+\section{Access to Properties}
+Encapsulation is an important design principle for classes. This means that the internal state of an object can be manipulated only in a well defined manner, through the methods. Consequently, it may not be possible to modify the attributes  directly, by a direct assignment.
+
+To achieve that, instance or class variables – also known as properties, attributes or fields – have to be \lstinline|private|.
+
+If it is necessary to set or retrieve an instance variable (a property) directly, it mandatory to provide the appropriate methods for this (setter and/or getter, or mutator and/or accessor methods). But often attributes are set or retrieved as a side effect of method calls that modify the internal state of the object instance, or rely on it.
+
+Programmers are inclined to use \lstinline|public| fields when the need a data structure like a \lstinline|struct| in C/C++, and not a full-fledged class. But as Java does not now that data structure, it seems to be a quick solution to have a \lstinline|class| with only \lstinline|public| fields and no methods, just to spare typing effort, and sometimes with the idea, that the direct access to the \lstinline|public| field is much faster that accessing it through a method. But modern optimising compilers will inline the code of a simple getter method, so that there is no difference in the end.
+
+And if you want to avoid the typing, use a \lstinline|record|\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses} instead. Sometimes also an instance of \lstinline|java.util.Map| or another collection implementation could be an alternative to a specialised class.
+ 
+Sometimes fields from base classes are defined as \lstinline|protected|, to make them directly accessible by methods from the derived implementations, but this is also discouraged.\footnote{The idea behind that is the same false assumption that the direct access to the \lstinline|protected| field is much faster that accessing it through a method.}
+
+It does not matter if we talk about properties (instance variables) or \lstinline|static| field (class variables): both should always be \lstinline|private|.
+
+Constants are the only exception, obviously, because a constant is explicitly defined as a \lstinline|public static final| field.
+
+Regarding encapsulation in general, refer to chapter \tqvref{sec:EncapsulationWithModules}.
+
+\section{Accessing Fields or Methods using Reflection}
+First of all, you should avoid to use Reflection whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
+
+One reason is that accessing a field or a method via reflection causes some overhead that decreases a program’s performance. 
+
+Next, such code is usually not easy to read or to understand, not only because of all the necessary error handling code around it.
+
+And with modularisation, it is quite often not even possible to access methods and fields of an object via Reflection, even if they are \lstinline|public|; they are not even visible in some cases.
+
+Of course, there are some patterns whose implementation in Java requires the use of Reflection, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference} are quite often a very good replacement for an implementation based on Reflection.
+
+Reflection also allows you to access non-\lstinline|public| member of a class that are usually not accessible by your code. This is considered a “dirty hack” and may not be used in production code. In particular as it may not work properly with modules.
+
+But there are useful applications for this, too: you can and should used it in unit tests for \lstinline|private| or \lstinline|protected| methods that are not \lstinline|public| for good reasons, and if these methods cannot be tested indirectly.\footnote{The alternative would be to make the method at least \lstinline|protected|, but this would make it (more) visible to the consumers of the API, and perhaps even accessible – but there was a reason why that method was originally \lstinline|private|.}
+
+I recommend to use the following pattern if you want to access a \lstinline|private| method in your unit tests:
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    /**
+     *  Does something.
+     *
+     *  @param  value   The value.
+     *  @return The result.
+     *  @throws IOException Something went wrong.
+     */
+    private final String myMethod( final CharSequence value ) throws IOException      { … }
+}   
+//  class MyClass
+
+/**
+ *  This class provides some unit tests for
+ *  {@link MyClass}.
+ */
+public final class TestMyClass
+{
+        /*------------------------*\
+    ====** Static Initialisations **=================================
+        \*------------------------*/
+    /**
+     *  The reference to {@code myMethod()}.
+     */
+    private static final Method METHOD_myMethod;
+    
+    static
+    {
+        final var targetClass = MyClass.class;
+        String methodName;
+        try
+        {
+            methodName = "myMethod";
+            METHOD_myMethod = targetClass.getDeclaredMethod( methodName, CharSequence.class );
+            METHOD_myMethod.setAccessible( true );
+        }
+        catch( final NoSuchMethodException e )
+        {
+            throw new ExceptionInInitializerError( "Cannot find method '%s()' in class '%s'".formatted( methodName, targetClass.getName() ).initCause( e );
+        }
+    }
+    
+        /*---------*\
+    ====** Methods **================================================ 
+        \*---------*/
+    /**
+     *  Calls
+     *  {@link MyClass#myMethod(CharSequence)}
+     *
+     *  @param  instance    The candidate.
+     *  @param	value   The value.
+     *  @return The result.
+     *  @throws IOException Something went wrong.
+     */
+    protected static final String myMethod( final MyClass instance, final CharSequence value )
+    {
+        final String retValue;
+        try
+        {
+            retValue = (String) METHOD_myMethod.invoke( requireNonNullArgument( instance, "instance" ), value );
+        }
+        catch( final IllegalAccessException | ClassCastException e )
+        {
+            throw new AssertionError( e );
+        }
+        catch( final InvocationTargetException e )
+        {
+            switch( e.getCause() )
+            {
+                case null -> throw new AssertionError( e );
+                case IOException ioe -> throw ioe;
+                default -> throw new AssertionError( e.getCause() );
+            }
+        }
+    }   //  myMethod()   
+    
+    @Test
+    final void testMyMethod() throws Exception
+    {
+        final var candidate = new MyClass();
+        final var result = myMethod( candidate, "" );
+        assertTrue( result instanceof String );
+    }   // testMyMethod()
+}
+//  class TestMyClass  
+\end{lstlisting}
+This allows you to call the method \lstinline|MyClass::myMethod| nearly directly; the method \lstinline|TestMyClass::myMethod| behaves in the same way as the original method.
+
+\lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
+
 \section{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -1800,8 +1929,17 @@ This chapter lists defined suffixes for class names and their function.
 \renewcommand{\cellalign}{tl}
 \LTXtable{\linewidth}{ClassNameSuffixes.tbl.tex}
 
+\section{Configurable Errors and Warnings}\label{sec:ConfigurableErrorsAndWarnings}
+A very convenient feature of most IDE's is the capability to configure additional warnings and even errors for the compilation.
+
+\subsection{Eclipse}\label{sec:EclipseErrorsAndWarnings}
+tdb
+
+\subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJErrorsAndWarnings}
+tdb
+
 \section{IDE Configuration}\label{sec:IDEConfiguration}
-This chapter provides samples of configuration files for some IDEs.
+This chapter provides samples of configuration files for some IDEs. See also the chapter \tqvref{sec:ConfigurableErrorsAndWarnings} about the errors and warnings that can be configured in Eclipse and IntelliJ IDEA.
 
 \subsection{Eclipse}\label{sec:EclipseConfiguration}
 tbd

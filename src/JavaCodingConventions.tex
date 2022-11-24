@@ -1446,6 +1446,230 @@ This allows you to call the method \lstinline|MyClass::myMethod| nearly directly
 
 \lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
 
+\section{Implementing the Object Methods}
+In Java all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT_CLASS:finalize} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
+\begin{itemize}[nosep]
+\item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT_CLASS:clone}}
+\item{\lstinline|equals()|\autocite{ORACLE_DOC_OBJECT_CLASS:equals}}
+\item{\lstinline|hashCode()|\autocite{ORACLE_DOC_OBJECT_CLASS:hashCode}}
+\item{\lstinline|toString()|\autocite{ORACLE_DOC_OBJECT_CLASS:toString}}
+\end{itemize}
+
+The chapters below will provide some guidelines on how to code new implementations for these methods.
+
+\subsection{equals() and hashCode()}\label{sec:EqualsAndHashCode}
+Overriding the method \lstinline|java.lang.Object::equals|\autocite{ORACLE_DOC_OBJECT_CLASS:equals} always requires to override the method \lstinline|java.lang.Object::hashCode|\autocite{ORACLE_DOC_OBJECT_CLASS:hashCode}, too – and vice versa.
+
+\textit{This is not optional!}
+
+The method \lstinline|equals()| returns \lstinline|true| if the given reference to refers to an object to is equals to the current one, according to \textit{your criteria what “being equal” means} in this context, and – obviously – \lstinline| false| otherwise.
+
+So two objects can be considered to be equal when they both have the same unique id, or you require for equality that all attributes do have the same values (are also equal), or something in between. The default implementation of \lstinline|java.lang.Object.equals()| returns \lstinline|true| only if the two objects are identical\footnote{This means that both objects are the \textit{same}; the given reference points to the current object itself.}.
+
+If two objects are equal, the result of \lstinline|hashCode()| has to be the same for both objects, but that the hash values for two objects are the same does not necessarily imply that the two objects are equal.
+
+An implementation for the two methods should look like this:
+\begin{lstlisting}[numbers=left,caption={Methods equal() and hashCode()}]
+public class MyClass
+{
+    /**
+     *  {@inheritDoc}
+     */
+    public boolean equals( final Object o )
+    {
+        var retValue = o == this;
+        if( !retValue && o instanceof MyClass other
+            && getClass().equals( other.getClass() ) )
+        {
+            retValue = Objects.equals( <attribute>, other.<attribute> )
+                && Objects.equals( <…>, other.<…> );
+        }
+            
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  equals()
+    
+    /**
+     *  {@inheritDoc}
+     */
+    public int hashCode()
+    {
+        final var retValue = Objects.hash( <attribute>, <…> );
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  hashCode()    
+}
+//  class MyClass
+\end{lstlisting}
+The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final| or if instances of a derived class can be equal to an instance of the superclass.
+
+The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()| to calculate the hash value.
+
+When both a superclass and its derived classes implement \lstinline|java.lang.Object::equals| and \lstinline|java.lang.Object::hashCode|, the implementation of the derived class may call the superclass implementations of \lstinline|equals()| and \lstinline|hashCode()|:
+\begin{lstlisting}[numbers=left]
+public class OtherClass extends MyClass
+{
+    /**
+     *  {@inheritDoc}
+     */
+    public boolean equals( final Object o )
+    {
+        var retValue = o == this;
+        if( !retValue && o instanceof OtherClass other
+            && super.equals( other ) )
+        {
+            retValue = Objects.equals( <attribute>, other.<attribute> )
+                && Objects.equals( <…>, other.<…> );
+        }
+            
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  equals()
+    
+    /**
+     *  {@inheritDoc}
+     */
+    public int hashCode()
+    {
+        final var retValue = Objects.hash( Integer.valueOf( super.hashCode ), <attribute>, <…> );
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  hashCode()    
+}
+//  class OtherClass
+\end{lstlisting}
+Obviously, both methods consider only the attributes that comes with the definition of the derived class; the attributes of the superclass are already covered.
+
+\subsection{-------------------------------------------- Proceed from here!}
+
+
+\subsection{toString()}\label{sec:ToString}
+\autocite{ORACLE_DOC_OBJECT_CLASS:toString}
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
+\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
+\autocite{ORACLE_DOC_STRINGJOINER_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+
+\subsection{clone()}\label{sec:Clone}
+\autocite{ORACLE_DOC_OBJECT_CLASS:clone}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+
+\section{String Concatenation}
+How to concatenate string has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
+
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
+\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
+\autocite{ORACLE_DOC_STRINGJOINER_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
+\subsection{The Basics}
+How to concatenate two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{}: it is immutable. This means that
+String a = “part1”;
+String b = “part2”;
+a += b;
+will not modify a but return a new String object with the concatenated contents of a and b and assigns a reference to that new object to a.
+Older sources described the internal implementation of the + operator for String like this:
+String operatorPlus( String a, String b )
+{
+    StringBuffer buffer = new StringBuffer( a );
+    buffer.append( b );
+    return buffer.toString();
+}
+This means that an intermediate object of type StringBuffer has to be created for each concatenation. This gets even worse if you want to append a numerical value to the String, like this:
+String a = "part1";
+a += 42;
+The implementation for this was described as
+String operatorPlus( String a, int b )
+{
+    StringBuffer buffer = new StringBuffer( a );
+    String bString = Integer.toString( b );
+    buffer.append( bString );
+    return buffer.toString();
+}
+meaning that two intermediate objects are created.
+Knowing this, the recommendation was always to write
+String a = new StringBuffer( b ).append( c ).toString();
+instead of
+String a = b + c;
+and
+String a = new StringBuffer( a ).append( b ).toString();
+instead of
+a += b;
+in order to increase performance.
+But with each Java version the implementation of + and += for String changed, so that today there is not longer only one recommendation.
+5.4.2. Concatenating String Constants
+String literals will be always concatenated with the plus operator:
+String a = "StringOne" + "StringTwo";
+because they are already concatenated during compile time; using StringBuilder1 here would cause negative effects on both performance and readability. This is also true if static final Strings are concatenated with each other or with String literals:
+public static final String constantA = "StringOne";
+public static final String constantB = "StringTwo";
+String a = constantA + constantB;
+String b = constantA + "StringThree";
+The compiler replaces each reference of the static final String by the literal and concatenates them if required.
+5.4.3. Concatenating String Variables
+Benchmark tests showed that beginning with one of the later versions of Java 1.4 the variant
+String a = “part1”;
+String b = “part2”;
+String s = a + b;
+is significantly faster than
+String a = “part1”;
+String b = “part2”;
+String s = new StringBuffer( a ).append( b );
+Even using StringBuilder in Java 5 instead of StringBuffer is slower than the + operator.
+Appending non-string values to a String can be done as
+String a = “part1”;
+int b = 42;
+String s = a + Integer.toString( b );
+still being faster than the StringBu*er versions.2
+5.4.4. Concatenating Strings in Loops
+The picture changes if Strings are extended permanently as done in loops, or in some implementations of the toString() method like below:
+// AVOID!!!
+public String buildSentence( String... words )
+{
+    String retValue = "";
+    for( String s : words )
+    {
+        if( !retValue.isEmpty() ) retValue += " ";
+        retValue += s;
+    }
+    retValue += ".";
+    return retValue;
+}
+Here it is the better option to use StringBuilder:
+// RECOMMENDED
+public String buildSentence( String... words )
+{
+    StringBuilder retValue = new StringBuilder();
+    for( String s : words )
+    {
+        if( retValue.length > 0 ) retValue.append( ' ' );
+        retValue.append( s );
+    }
+    retValue.append( '.' );
+    return retValue.toString();
+}
+The reason is that even the concatenation with + is faster, it will definitely create more objects that has to be garbage collected later – what will have a negative impact on performance.
+5.4.5. Conclusion
+The recommendation is to use the + operator for Strings where to combine String constants or String variables in a single statement, but StringBuilder if Strings has to be concatenated in loops or a number of consecutive statements.
+When “adding” primitives to a String, these should be translated to Strings first by calling the static toString() method of the appropriate wrapper class first.
+This is not necessary if calling the append() methods of StringBuilder as this class has specialised versions of it for each primitive type.
+Usually StringBuilder should be preferred over StringBuffer.
 \section{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -1902,7 +2126,7 @@ try( final var p = new PostProcessor( forceSorting ) )
 \end{lstlisting}
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
-\section{Finalisation}
+\section{Finalisation}\label{sec:Finalisation}
 \lipsum[1]
 
 \section{Deprecation of Elements}\label{sec:DeprecationOfElements}

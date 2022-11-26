@@ -104,7 +104,9 @@ Other suffixes indicate special usage of the class. Well known and obvious are t
 \subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
 An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
 
-Some coding conventions (particular in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
+But basically, the name should be a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput| and \lstinline|java.io.DataOutput|; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable| and \lstinline|java.lang.Cloneable|.\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}
+
+Some coding conventions (particularly in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
 
 \subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
 An enum is a special class that will be declared with the keyword \lstinline|enum|.

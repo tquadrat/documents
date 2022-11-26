@@ -91,9 +91,9 @@ According to the Java syntax specification, several special characters are allow
 You should also avoid numerical characters in class names.
 
 \subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
-A ‘real’ class is declared with the keyword \lstinline|class|. 
+The term ‘real’ class means that this class is declared with the keyword \lstinline|class|. Record and enum classes are also Java classes, to some extent even interfaces and annotations, but you use a different keyword when you declare them.
 
-Some parts of a class name will indicate a special position of that class in the class hierarchy. So the suffix ‘Impl’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|}.
+Some parts of a class name will indicate a special position of that class in the class hierarchy. So the suffix ‘Impl’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|.}.
 
 ‘Adapter’ as the suffix is similar, but here the methods are usually empty, as it is assumed that only a few of the methods of the interface are really required; various samples for this could be found in the Swing packages.
 

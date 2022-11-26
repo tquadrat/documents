@@ -1469,7 +1469,7 @@ So two objects can be considered to be equal when they both have the same unique
 If two objects are equal, the result of \lstinline|hashCode()| has to be the same for both objects, but that the hash values for two objects are the same does not necessarily imply that the two objects are equal.
 
 An implementation for the two methods should look like this:
-\begin{lstlisting}[numbers=left,caption={Methods equal() and hashCode()}]
+\begin{lstlisting}[numbers=left,caption={Methods equals() and hashCode()}]
 public class MyClass
 {
     /**
@@ -1542,11 +1542,110 @@ public class OtherClass extends MyClass
 \end{lstlisting}
 Obviously, both methods consider only the attributes that comes with the definition of the derived class; the attributes of the superclass are already covered.
 
+\subsection{toString()}\label{sec:ToString}
+According to \autocite{ORACLE_DOC_OBJECT_CLASS:toString}, the method \lstinline|toString()|
+\begin{quotation}
+“Returns a string representation of the object.
+
+In general, the \lstinline|toString()| method returns a string that ‘textually represents’ this object. The result should be a concise but informative representation that is easy for a person to read. It is recommended that all subclasses override this method. […]”
+\end{quotation}
+
+What does “textually represents” mean?
+
+The implementation for \lstinline|java.lang.Object::toString| …
+\begin{quotation}
+“[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
+\lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|”
+\end{quotation}
+But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, it is the current contents of the buffer.
+
+For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}, \lstinline|toString()| is even the method that provides the result.
+
+Originally, the textual representation of an object as provided by the \lstinline|toString()| method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, like for the class \lstinline|java.lang.Integer|.
+
+So how to implement the method \lstinline|toString()| for your method?
+
+If your class represents objects that can be easily written as a string, you should implement \lstinline|toString()| accordingly:
+\begin{lstlisting}
+public final class PhoneNumber
+{
+    private final int m_AreaCode;
+    private final int m_CountryCode;
+    private final int m_SubscriberNumber;
+    
+    …
+    
+    /**
+     *  {@inheritDoc}
+     */
+    @Override 
+    public final String toString()
+    {
+        final var retValue = "+%d %d %d".formatted( m_CountryCode, m_AreaCode, m_SubscriberNumber );
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toString()
+}   
+//  class PhoneNumber
+\end{lstlisting}
+
+Samples for this from the Java Runtime Library are
+\begin{itemize}
+\item\lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
+\item\lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
+\item\lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}
+\item\lstinline|java.time.Instant|\autocite{ORACLE_DOC_INSTANT_CLASS} and the other classes representing time/date values from the \lstinline|java.time| package\autocite{ORACLE_DOC_TIME_PACKAGE}
+\item\lstinline|java.io.File|\autocite{ORACLE_DOC_FILE_CLASS}
+\item\lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS} and the other wrapper classes for the primitives
+\end{itemize}
+
+In all these cases, you can use a call to \lstinline|toString()| to embed the value of the instance into a regular text:
+\begin{lstlisting}
+final var phoneNumber = new PhoneNumber( … );
+out.printf( "The customer's phonenumber is %s.", phoneNumber.toString() );
+\end{lstlisting}
+
+If your class is more complex and/or an output makes only sense for debugging purposes or requires additional formatting instructions, you should consider a different implementation of \lstinline|toString()|:
+\begin{lstlisting}
+public final class EmailMessage
+{
+    private final String m_Body;
+    private final Map<RecipientType,List<EmailAddress>> m_Recipients;
+    private final EmailAddress m_Sender;
+    private final ZonedDateTime m_SentWhen;
+    private final String m_Subject;
+    
+    …
+    
+    /**
+     *  {@inheritDoc}
+     */
+    @Override 
+    public final String toString()
+    {
+        final var buffer = new StringJoiner( ", ", "%s[".formatted( getClass().getName(), "]" )
+            .add( "Body='%s'".formatted( m_Body ) )
+            .add( "Recipients=%s".formatted( Objects.toString( m_Recipients ) ) )
+            .add( "Sender='%s'".formatted( Objects.toString( m_EmailAddress ) ) )
+            .add( "Sent_when=%s".formatted( Objects.toString( m_SentWhen ) ) )
+            .add( "Subject='%s'".formatted( m_Subject ) );
+            
+        //---* Compose the return value *----------------------------    
+        final var retValue = buffer.toString();
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toString()
+}
+//  class EmailMessage
+\end{lstlisting}
+
+This is basically how the IDEs will generate the \lstinline|toString()| method.
 \subsection{-------------------------------------------- Proceed from here!}
 
 
-\subsection{toString()}\label{sec:ToString}
-\autocite{ORACLE_DOC_OBJECT_CLASS:toString}
+
 \autocite{ORACLE_DOC_STRING_CLASS}
 \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
 \autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
@@ -2125,6 +2224,9 @@ try( final var p = new PostProcessor( forceSorting ) )
 }
 \end{lstlisting}
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
+
+\section{Date and Time Values}\label{sec:DateAndTimeValues}
+\lipsum[1]
 
 \section{Finalisation}\label{sec:Finalisation}
 \lipsum[1]

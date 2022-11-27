@@ -2,11 +2,11 @@
 \documentclass[11pt,a4paper,titlepage, parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
 %\usepackage{DejaVuSansMono}
 \usepackage{dejavu}
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 \usepackage{scrhack}
 \usepackage{graphicx} 
 \usepackage[manualmark]{scrlayer-scrpage}
-\usepackage[utf8]{inputenc}
+%\usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
 %\usepackage{amsmath}
 %\usepackage{amsfonts}
@@ -81,6 +81,7 @@ literate=
 }
 
 \colorlet{shadecolor}{gray!10}
+\makeindex
 
 %---* New Commands *-----------------------------------------------------------
 \newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”}}
@@ -1482,7 +1483,7 @@ public class MyClass
             && getClass().equals( other.getClass() ) )
         {
             retValue = Objects.equals( <attribute>, other.<attribute> )
-                && Objects.equals( <…>, other.<…> );
+                && Objects.equals( < … >, other.< … > );
         }
             
         //---* Done *------------------------------------------------
@@ -1494,7 +1495,7 @@ public class MyClass
      */
     public int hashCode()
     {
-        final var retValue = Objects.hash( <attribute>, <…> );
+        final var retValue = Objects.hash( <attribute>, < … > );
         
         //---* Done *------------------------------------------------
         return retValue;
@@ -1502,7 +1503,11 @@ public class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final| or if instances of a derived class can be equal to an instance of the superclass.
+The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final|. If that check is omitted for a non-\lstinline|final| class, it means that instances of derived classes can be equal to an instance of the superclass – something that is rarely wanted, especially because it would break the rule that any implementation of \lstinline|equals()| has to guarantee that
+\begin{lstlisting}
+a.equals( b ) == b.equals( a )
+\end{lstlisting}
+is always valid.
 
 The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()| to calculate the hash value.
 
@@ -1520,7 +1525,7 @@ public class OtherClass extends MyClass
             && super.equals( other ) )
         {
             retValue = Objects.equals( <attribute>, other.<attribute> )
-                && Objects.equals( <…>, other.<…> );
+                && Objects.equals( < … >, other.< … > );
         }
             
         //---* Done *------------------------------------------------
@@ -1532,7 +1537,7 @@ public class OtherClass extends MyClass
      */
     public int hashCode()
     {
-        final var retValue = Objects.hash( Integer.valueOf( super.hashCode ), <attribute>, <…> );
+        final var retValue = Objects.hash( Integer.valueOf( super.hashCode ), <attribute>, < … > );
         
         //---* Done *------------------------------------------------
         return retValue;
@@ -1590,7 +1595,7 @@ public final class PhoneNumber
 //  class PhoneNumber
 \end{lstlisting}
 
-Samples for this from the Java Runtime Library are
+Some samples for this from the Java Runtime Library are the classes below:
 \begin{itemize}
 \item\lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
 \item\lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
@@ -1641,10 +1646,166 @@ public final class EmailMessage
 //  class EmailMessage
 \end{lstlisting}
 
-This is basically how the IDEs will generate the \lstinline|toString()| method.
+This is basically how the IDEs will generate the \lstinline|toString()| method. The output may look like this\footnote{The backslash indicates where I inserted a linebreak so that it looks fine in this document; otherwise it would be just one long line.}:
+\begin{verbatim}
+org.tquadrat.sample.EmailMessage[Body='This is the body of the\
+email', Recipients=[a.b@c.de], Sender='thomas.thrien@tquadrat.\
+org', Sent_when=2022-11-26T20:31:17.884636950+01:00[Europe/Ber\
+lin], Subject='Ping!']
+\end{verbatim}
+
+This will work fine for a debug log, but to get it ‘pretty printed’, you may have to provide another method. Refer to chapter \tqvref{sec:FormattableInterface} for how
+this could look like.
+
+If your class is not \lstinline|final|, the method \lstinline|toString()| should not be \lstinline|final| as well. 
+
+\subsection{clone()}\label{sec:Clone}
+Per \autocite{ORACLE_DOC_OBJECT_CLASS:clone}, the method \lstinline|java.lang.Object::clone| returns a copy of the current object.
+
+Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPITON_CLASS} when called.
+
+When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, and then you need to override the method \lstinline|clone()|.
+
+The simpliest implementation looks like this:
+\begin{lstlisting}[numbers=left,caption={A simple clone() Method}]
+public final MyClass implements Cloneable
+{
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final MyClass clone()
+    {
+        final MyClass retValue;
+        try
+        {
+            retValue = (MyClass) super.clone();
+        }    
+        catch( final CloneNotSupportedException e )
+        {
+            throw new UnexpectedExceptionError( e );
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  clone() 
+}
+//  class MyClass
+\end{lstlisting}
+This works despite the fact that the class \lstinline|java.lang.Object| \textit{does not} implement \lstinline|java.lang.Cloneable|!
+
+But it fails in case your class extends a class (other than \lstinline|java.lang.Object|) that does not implement \lstinline|java.lang.Cloneable|.
+
+The implementation of \lstinline|java.lang.Object::clone| uses native code to make a shallow copy of the current object. If all attributes of the class are either immutable or primitives, the implementation shown above is sufficient.
+
+But if any of the attributes are collections, arrays or mutable types, there is some
+more work to do; in this case, your implementation of \lstinline|clone()| should declare the \lstinline|java.lang.CloneNotSupportedException|.
+
+Such an extended implementation of \lstinline|clone()| may look like below; it is assumed that \lstinline|T| is not immutable\footnote{If \lstinline|T| will not implement  \lstinline|java.lang.Cloneable|, we can reduce the implementation of \lstinline|clone()| to just throw \lstinline|java.lang.CloneNotSupportedException|. But even if \lstinline|T| implements \lstinline|java.lang.Cloneable|, \lstinline|T::clone| can still throw that exception.}.
+\begin{lstlisting}[numbers=left,caption={An extended clone() Method}]
+public final MyClass<T extends Cloneable> implements Cloneable
+{
+    private final T [] m_Array;
+    private final Collection<T> m_Collection;
+    private T m_Mutable; // MAY NOT BE FINAL!!
+    
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final MyClass clone() throws CloneNotSupportedException
+    {
+        final var retValue = (MyClass) super.clone();
+        for( var i = 0; i < m_Array.size; ++i )
+        {
+            retValue.m_Array [i] = nonNull( m_Array [i] ) 
+                ? m_Array [i].clone() 
+                : null;
+        }
+        retValue.m_Collection.clear();
+        for( final var t : m_Collection ) retValue.m_Collection.add( t.clone() );
+        retValue.m_Mutable = m_Mutable.clone();
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  clone() 
+}
+//  class MyClass
+\end{lstlisting}
+
+The code in line~21 supposes that the collection does not contain any \lstinline|null| values. And obviously, the collection has to be mutable, otherwise already the attempt to clear it in line~20 would throw an exception.
+
+Unfortunately, the interface \lstinline|java.lang.Cloneable| does not declare the method \lstinline|clone()|, therefore the code below will not work:
+\begin{lstlisting}
+// WILL NOT WORK!!
+CloneLoop: for( final var t : m_Collection ) 
+{
+    if( isNull( t ) ) continue CloneLoop;
+    if( t instanceof Cloneable c )
+    {
+        retValue.m_Collection.add( c.clone() );
+    }
+    else
+    {
+        throw new CloneNotSupportedException( t.toString() );
+    }    
+}   //  CloneLoop:
+\end{lstlisting}
+
+So in case a collection (or an array) may contain components that can or cannot be cloned, the test is a bit more complex:
+\begin{lstlisting}
+CloneLoop: for( final var t : m_Collection ) 
+{
+    if( isNull( t ) ) continue CloneLoop;
+    boolean isCloneable = false;
+    if( t instanceof Cloneable )
+    {
+    	isCloneable = stream( getClass().getMethods() )
+    	    .filter( m -> m.getParameterCount() == 0 )
+    	    .map( Method::getName )
+    	    .filter( n -> n.equals( "clone" ) )
+    	    .count() == 1;
+    }
+    
+    if( isCloneable )
+    {
+        retValue.m_Collection.add( c.clone() );
+    }
+    else
+    {
+        throw new CloneNotSupportedException( t.toString() );
+    }    
+}   //  CloneLoop:
+\end{lstlisting}
+Instead of the stream operation, you can also use \lstinline|java.lang.Class::getMethod| and respond to the \lstinline|java.lang.NoSuchMethodException| for the check.
+
+If you have to implement the method \lstinline|java.lang.Object::clone| for lots of classes, it could make sense to implement your own \lstinline|Cloneable| interface that then can be used with the \lstinline|instanceof| operator and the pattern:
+\begin{lstlisting}
+public interface Cloneable<T> extends java.lang.Cloneable
+{
+    /**
+     *  Forces the implementation of
+     *  {@link Object#clone()}
+     *
+     *  @returns The cloned object.
+     *  @throws  CloneNotSupportedException One of the mutable
+     *      attributes is not cloneable.
+     */
+    public T clone() throws CloneNotSupportedException; 
+}
+//  interface Cloneable
+\end{lstlisting}
+
+There are several ongoing discussions whether the API that was defined through the \lstinline|java.lang.Object::clone| is generally usefull or more a pain in the ass, and as far as I am aware, these discussions will last for some more time.
+
+I am not a friend of \lstinline|clone()| and I try to avoid its implementation whenever possible. This means that sometimes it is not possible to circumvent the implementation of that method.
+
+My recommendation is to ignore the method \lstinline|java.lang.Object::clone| unless there is a strict requirement to use it.
+
 \subsection{-------------------------------------------- Proceed from here!}
 
-
+\begin{lstlisting}
+\end{lstlisting}
 
 \autocite{ORACLE_DOC_STRING_CLASS}
 \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
@@ -1653,18 +1814,6 @@ This is basically how the IDEs will generate the \lstinline|toString()| method.
 \autocite{ORACLE_DOC_FORMATTER_CLASS}
 \autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
 
-\subsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-
-\subsection{clone()}\label{sec:Clone}
-\autocite{ORACLE_DOC_OBJECT_CLASS:clone}
-\subsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
 
 
 \section{String Concatenation}
@@ -1950,6 +2099,17 @@ As there is no rule without exception, here is one: I recommend to use labels to
 \lipsum[1]
 
 \section{Lambdas}\label{sec:Lambdas}
+\lipsum[1]
+
+\section{The Interface “java.util.Formattable”}\label{sec:FormattableInterface}
+
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
+\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
+\autocite{ORACLE_DOC_STRINGJOINER_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
 \lipsum[1]
 
 \section{Utility Classes}\label{sec:UtilityClasses}
@@ -2795,4 +2955,6 @@ public final class UnsupportedEnumError extends Error
 \lstlistoflistings
 
 \printbibliography
+
+\printindex
 \end{document}

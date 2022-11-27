@@ -6,7 +6,7 @@ I start the chapter with a description of the general structure of a source file
 \section{Java Source File Structure}
 A file with Java source code consists of sections that should be separated by blank lines and a comment identifying each section.
 
-Files longer than 2000~lines are cumbersome and should be avoided.\footnote{There are some well known scenarios where it is difficult to adhere with this limit. The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding rules proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but we have seen more than one real life application where database tables had more than that number of columns. I do not think that this is a good design anyway, but if our new Java class has to reflect the legacy data model, it has to have that number of attributes.}
+Files longer than 2000~lines are cumbersome and should be avoided.\footnote{There are some well known scenarios where it is difficult to adhere with this limit. The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but we have seen more than one real life application where database tables had more than that number of columns. I do not think that this is a good design anyway, but if our new Java class has to reflect the legacy data model, it has to have that number of attributes.}
 
 Each Java source file contains a single \lstinline|public| class or interface. When \lstinline|private| top-level classes and interfaces are associated with a \lstinline|public| class, they can be put into the same source file as the \lstinline|public| class, although this is not recommended.\footnote{Usually, it should be considered to have these classes or interfaces as \textit{inner} classes/interfaces} In such a case, the \lstinline|public| class should be the first class or interface in the file.
 
@@ -832,7 +832,7 @@ Compound statements are statements that contain lists of statements enclosed in 
 
 Here some general rules first:
 \begin{itemize}
-\item{The enclosed statements should be indented one more level than the compound statement.}
+\item{The enclosed statements has be indented one more level than the compound statement.}
 \item{The opening brace should be at a line of itself, indented to the same level as the compound statement.
 Accordingly, the closing brace should begin a line and be indented to the beginning of the compound statement. The exception are short methods where all is one line (refer to chapter \tqfullvref{sec:ClassAndInterfaceDeclarations})}.
 \item{Braces are used around all statements (meaning even if there is just one) when they are part of a control structure, such as a \lstinline|if-else| or \lstinline|for| statement. This makes it easier to add statements without accidentally introducing bugs due to forgetting to add braces.

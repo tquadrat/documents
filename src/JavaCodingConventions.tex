@@ -1,5 +1,5 @@
 %\RequirePackage{lmodern}
-\documentclass[11pt,a4paper,titlepage, parskip=half, headsepline, footsepline, cleardoubleplain]{scrbook}
+\documentclass[11pt,a4paper,titlepage, parskip=half, headsepline, footsepline,cleardoublepage=current]{scrbook}
 %\usepackage{DejaVuSansMono}
 \usepackage{dejavu}
 %\usepackage[T1]{fontenc}
@@ -31,7 +31,7 @@
 
 \usepackage{lipsum}
 
-\usepackage[style=numeric,urldate=iso8601,backend=biber]{biblatex}
+\usepackage[style=numeric,urldate=iso,backend=biber]{biblatex}
 \usepackage{nameref}
 \usepackage[colorlinks=true]{hyperref}
 
@@ -114,6 +114,159 @@ One basic recommendation is that you should not write the same code over and ove
 And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points~\ref{lst:ZoP:SimpleVsComplex} “Simple is better than complex” and \ref{lst:ZoP:ComplexVsComplicated} “Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
 
 But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendation when to apply comments to your code.
+
+\subsection{Types of Products}\label{sec:TypesOfProducts}
+Some of coding guidelines below are different for the type of product or project you are working on. Basically, we can distinguish the following types that will be explained in the following chapters:
+\begin{itemize}
+\item{Function Libraries}
+\item{Feature Libraries}
+\item{Tools}
+\item{Standalone Applications}
+\item{Serverbased Applications}
+\end{itemize}
+The individual types cannot be clearly distinguished from one another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation fits for your project.
+
+\subsubsection{Function Library}\label{sec:FunctionLibrary}
+\subsubsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsubsection{Feature Library}\label{sec:FeatureLibrary}
+\subsubsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsubsection{Tool}\label{sec:Tool}
+\subsubsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsubsection{Standalone Application}\label{sec:StandaloneApplication}
+\subsubsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsubsection{Serverbased Application}\label{sec:ServerbasedApplication}
+\subsubsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\section{Error Handling}\label{sec:ErrorHandling}
+\section{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsection{Logging}\label{sec:Logging}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+Every important method has to have a trace statement that logs the method entry. If a method logs method entry, it also has to log method exit, or it has to log an exception.
+For Chordiant code from the Foundation product, this will look like the sample below:
+\begin{lstlisting}
+public final void method()
+{
+    final String METHOD_NAME = "method";
+    LogHelper.methodEntry( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
+    …
+    try
+    {
+        …
+    }
+    catch( <SomeException> e )
+    {
+        LogHelper.error( PACKAGE_NAME, CLASS_NAME, METHOD_NAME, "<A Message>", e );
+        throw e;
+    }
+
+    //---* Done *----------------------------------------------------
+    LogHelper.methodExit( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
+}  // method()
+\end{lstlisting}
+Code from Chordiant's Marketing Director 7.0 (“Project Thunder”) would look like this:
+\begin{lstlisting}
+public final void method()
+{
+    entering();
+    …
+    try
+    {
+        …
+    }
+    catch( <SomeException> e )
+    {
+        m_Logger.log( ERROR, "<A Message>", e );
+        throw e;
+    }
+
+    //---* Done *----------------------------------------------------
+    exiting();
+}  // method()
+\end{lstlisting}
+If an error conditions is to be logged that was indicated by a caught exception, that exception has to be logged including its stack trace. If the caught exception is just a wrapper for another exception (the “cause”), this exception is to be logged also, including its stack trace and its cause.
+The stack trace provides vital information about the location of the problem, and sometimes also for the reason.
+Any additional information that is available when the exception is caught (and relevant for the cause) should be logged also. This could be call parameters or the values of fields that are affected by a method call.
+Refer to the classes in the package java.util.logging (LOGGING\_PACKAGE) to see a sample how this should look. See also chapter 5.6 below for details on exceptions.
+
+\subsection{Exceptions}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming :
@@ -792,85 +945,6 @@ Also when "adding" an instance of another type to a string, you should consider 
 
 Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.
 
-\section{Logging}\label{sec:Logging}
-\subsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\autocite{ORACLE_DOC_STRING_CLASS}
-\autocite{ORACLE_DOC_FORMATTER_CLASS}
-\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-Every important method has to have a trace statement that logs the method entry. If a method logs method entry, it also has to log method exit, or it has to log an exception.
-For Chordiant code from the Foundation product, this will look like the sample below:
-\begin{lstlisting}
-public final void method()
-{
-    final String METHOD_NAME = "method";
-    LogHelper.methodEntry( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
-    …
-    try
-    {
-        …
-    }
-    catch( <SomeException> e )
-    {
-        LogHelper.error( PACKAGE_NAME, CLASS_NAME, METHOD_NAME, "<A Message>", e );
-        throw e;
-    }
-
-    //---* Done *----------------------------------------------------
-    LogHelper.methodExit( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
-}  // method()
-\end{lstlisting}
-Code from Chordiant's Marketing Director 7.0 (“Project Thunder”) would look like this:
-\begin{lstlisting}
-public final void method()
-{
-    entering();
-    …
-    try
-    {
-        …
-    }
-    catch( <SomeException> e )
-    {
-        m_Logger.log( ERROR, "<A Message>", e );
-        throw e;
-    }
-
-    //---* Done *----------------------------------------------------
-    exiting();
-}  // method()
-\end{lstlisting}
-If an error conditions is to be logged that was indicated by a caught exception, that exception has to be logged including its stack trace. If the caught exception is just a wrapper for another exception (the “cause”), this exception is to be logged also, including its stack trace and its cause.
-The stack trace provides vital information about the location of the problem, and sometimes also for the reason.
-Any additional information that is available when the exception is caught (and relevant for the cause) should be logged also. This could be call parameters or the values of fields that are affected by a method call.
-Refer to the classes in the package java.util.logging (LOGGING\_PACKAGE) to see a sample how this should look. See also chapter 5.6 below for details on exceptions.
-
-
 \section{The Annotation @API}\label{sec:APIAnnotation}
 \lipsum[1]
 
@@ -940,12 +1014,6 @@ So the recommendation is: do not always rely on conventions! Whenever possible, 
 
 \begin{lstlisting}
 \end{lstlisting}
-
-\section{Exceptions}
-\lipsum[1]
-
-\subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
-\lipsum[1]
 
 \section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
 \lipsum[1]

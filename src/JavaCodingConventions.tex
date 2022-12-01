@@ -1,5 +1,5 @@
 %\RequirePackage{lmodern}
-\documentclass[11pt,a4paper,titlepage, parskip=half, headsepline, footsepline,cleardoublepage=current]{scrbook}
+\documentclass[11pt,a4paper, titlepage, parskip=half, headsepline, footsepline, cleardoublepage=current, headheight=1cm]{scrbook}
 %\usepackage{DejaVuSansMono}
 \usepackage{dejavu}
 %\usepackage[T1]{fontenc}
@@ -31,7 +31,7 @@
 
 \usepackage{lipsum}
 
-\usepackage[style=numeric,urldate=iso,backend=biber]{biblatex}
+\usepackage[style=numeric, urldate=iso, date=iso, seconds=true, backend=biber]{biblatex}
 \usepackage{nameref}
 \usepackage[colorlinks=true]{hyperref}
 
@@ -111,68 +111,77 @@ As always there may be good reasons to do it different from what is recommended 
 
 One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
 
-And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points~\ref{lst:ZoP:SimpleVsComplex} “Simple is better than complex” and \ref{lst:ZoP:ComplexVsComplicated} “Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
+And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
 
 But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendation when to apply comments to your code.
 
 \subsection{Types of Products}\label{sec:TypesOfProducts}
-Some of coding guidelines below are different for the type of product or project you are working on. Basically, we can distinguish the following types that will be explained in the following chapters:
+Some of the coding guidelines below are different for the type of product or project you are working on. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms ‘Framework’ and ‘Server’ on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}, and a \textit{Server} is a \textit{Standalone Application} (what else could a server be?).}:
 \begin{itemize}
 \item{Function Libraries}
 \item{Feature Libraries}
 \item{Tools}
 \item{Standalone Applications}
-\item{Serverbased Applications}
+\item{Server-based Applications}
+\item{Extensions}
 \end{itemize}
 The individual types cannot be clearly distinguished from one another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation fits for your project.
 
 \subsubsection{Function Library}\label{sec:FunctionLibrary}
-\subsubsection{-------------------------------------------- Proceed from here!}
+A function library is a collection of functions (often organised in utility classes – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes. A function library does not have a state or requires an initialisation or configuration.
 
-\begin{lstlisting}
-\end{lstlisting}
+Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}, or Google Guava\autocite{GOOGLE_GUAVA}.
 
-\lipsum[1]
+My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too.
 
 \subsubsection{Feature Library}\label{sec:FeatureLibrary}
-\subsubsection{-------------------------------------------- Proceed from here!}
+A feature library adds a service or a complex functionality to your application. Quite often that functionality runs in its own thread(s) and is accessed like an external service, it has its own configuration and initialisation.
 
-\begin{lstlisting}
-\end{lstlisting}
+Sometimes these libraries can even be started standalone.
 
-\lipsum[1]
+Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H2_DATABASE}, ActiveMQ\autocite{APACHE_ACTIVEMQ}, Jetty\autocite{ECLIPSE_JETTY}, or Hibernate\autocite{HIBERNATE_ORM}.
+
+In the gray area here I would place JUnit\autocite{JUNIT5} and Log4J\autocite{APACHE_LOG4J}.
 
 \subsubsection{Tool}\label{sec:Tool}
-\subsubsection{-------------------------------------------- Proceed from here!}
+A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, but takes all input data somehow from the command line.
 
-\begin{lstlisting}
-\end{lstlisting}
+Programs like \verb#ls# or \verb#grep# belongs to this type, although they are of course not written in Java.
 
-\lipsum[1]
+Gray area candidates are \verb#awk# and also \verb#sed#, but even \verb#javac#, the Java compiler, or \verb#javadoc#.
 
 \subsubsection{Standalone Application}\label{sec:StandaloneApplication}
-\subsubsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\lipsum[1]
+A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are a text editor, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE} or a web container like Tomcat\autocite{APACHE_TOMCAT}.
 
 \subsubsection{Serverbased Application}\label{sec:ServerbasedApplication}
-\subsubsection{-------------------------------------------- Proceed from here!}
+Serverbased applications are applicationn that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT} or any of the appservers mentioned before.
 
-\begin{lstlisting}
-\end{lstlisting}
+In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be used by the application.
 
-\lipsum[1]
+Other samples are Maillets for James\autocite{APACHE_JAMES} or the customisations (“mods”) for Minecraft\autocite{MINECRAFT} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions).
+
+\subsubsection{Extension}\label{sec:Extension}
+An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN} plugins.
 
 \section{Error Handling}\label{sec:ErrorHandling}
-\section{-------------------------------------------- Proceed from here!}
+A proper error handling is crucial for any type of program – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
 
-\begin{lstlisting}
-\end{lstlisting}
+\subsection{Signalling an Error}\label{sec:SignallingAnError}
+Basically, we have to deal with only a very limited set of possible error categories:
+\begin{itemize}
+\item{An exception is thrown by an operation triggered by our code. This is covered in detail in chapter \tqvref{sec:GeneralExceptionHandling}.}
+\item{An operation returns an unexpected or unwanted value, and the current code is unable to cope with that situation.
 
-\lipsum[1]
+Usually, we will throw an exception in that case, but for a tool, it might be also possible to immediately terminate the program, after printing an appropriate message to standard out.}
+\item{Again we will throw an exception if the arguments for a method call are invalid, usually an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}.}
+\item{In case input data is wrong, corrupted, or missing, we have several options.
+
+As always, we can throw an exception and let someone else solve the problem. A tool can be terminated immediately, and an extension or a serverbased application can signal the problem to the environment, as this is in most cases the source of the input data.
+
+A standalone application may return to the user (if it has a UI) and request new data, or it may retry to get the data.
+
+The code in a feature library may also try to get new data from the caller or from an external resource.}
+\end{itemize}
 
 \subsection{Logging}\label{sec:Logging}
 \subsection{-------------------------------------------- Proceed from here!}
@@ -1057,22 +1066,25 @@ public final Map<K,V> clone()
 As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
 
 \section{Returning Values}\label{sec:ReturningValues}
-\lipsum[1]
+\lipsum[5]
 
 \subsection{Lambda Results}\label{sec:LambdaResults}
-\lipsum[1]
+\lipsum[5]
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
-\lipsum[1]
+\lipsum[5]
 
 \section{Encapsulation}
-\lipsum[1]
+\lipsum[5]
 
 \subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
-\lipsum[1]
+\lipsum[5]
 
 \section{Lambdas}\label{sec:Lambdas}
-\lipsum[1]
+\lipsum[5]
+
+\subsection{Functional Interfaces}\label{sec:FunctionalInterfaces}
+\lipsum[5]
 
 \section{The Interface “java.util.Formattable”}\label{sec:FormattableInterface}
 
@@ -1085,8 +1097,11 @@ As there is no rule without exception, here is one: I recommend to use labels to
 
 \lipsum[1]
 
+\section{The Interface “java.lang.Comparable”}\label{sec:ComparableInterface}
+\lipsum[5]
+
 \section{Utility Classes}\label{sec:UtilityClasses}
-\lipsum[1]
+\lipsum[5]
 
 \section{try-with-resources}\label{sec:TryWithResources}
 The feature \lstinline|try-with-resources| was introduced with Java~7; it can help to make programs more stable and less error prone.

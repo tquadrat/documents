@@ -1,6 +1,7 @@
 \chapter{Naming Conventions}
 Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
 
+\section{General Accords}
 The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
 
 Additionally, names provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.

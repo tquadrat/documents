@@ -172,7 +172,7 @@ Basically, we have to deal with only a very limited set of possible error catego
 \item{An exception is thrown by an operation triggered by our code. This is covered in detail in chapter \tqvref{sec:GeneralExceptionHandling}.}
 \item{An operation returns an unexpected or unwanted value, and the current code is unable to cope with that situation.
 
-Usually, we will throw an exception in that case, but for a tool, it might be also possible to immediately terminate the program, after printing an appropriate message to standard out.}
+Usually, we will throw an exception in that case, but for a tool, it might be also possible to immediately terminate the program, after printing an appropriate message to standard out or standard err.}
 \item{Again we will throw an exception if the arguments for a method call are invalid, usually an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}.}
 \item{In case input data is wrong, corrupted, or missing, we have several options.
 

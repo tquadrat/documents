@@ -111,7 +111,7 @@ As always there may be good reasons to do it different from what is recommended 
 
 One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
 
-And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
+And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
 
 But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendations on when to apply comments to your code.
 
@@ -125,14 +125,14 @@ Some of the coding guidelines below are different for the type of product or pro
 \item{Server-based Applications}
 \item{Extensions}
 \end{itemize}
-The individual types cannot be clearly distinguished from one another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation fits for your project.
+The individual types cannot be clearly distinguished one from another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation really fits for \textit{your project}.
 
 \paragraph{Function Library}\label{sec:FunctionLibrary}
 A function library is a collection of functions (often organised in utility classes – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes. A function library does not have a state or requires an initialisation or configuration.
 
 Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}, or Google Guava\autocite{GOOGLE_GUAVA}.
 
-My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too.
+My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
 
 \paragraph{Feature Library}\label{sec:FeatureLibrary}
 A feature library adds a service or a complex functionality to your application. Quite often that functionality runs in its own thread(s) and is accessed like an external service, it has its own configuration and initialisation.
@@ -144,7 +144,7 @@ Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H
 In the gray area here I would place JUnit\autocite{JUNIT5} and Log4J\autocite{APACHE_LOG4J}.
 
 \paragraph{Tool}\label{sec:Tool}
-A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, but takes all input data somehow from the command line.
+A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, but takes all input data somehow from the command line. Perhaps it may even work as a filter\autocite{WIKIPEDIA:Filter}, reading from standard input and writing to standard output.
 
 Programs like \verb#ls# or \verb#grep# belongs to this type, although they are of course not written in Java.
 
@@ -205,9 +205,12 @@ Application servers, frameworks and the hosts for extensions usually provides a 
 If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
 
 If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.}
-\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications must not call \lstinline|System.exit()|! Never!
+\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications must not call \lstinline|System.exit()|! Never! More details about logging are discussed in chapter \tqvref{sec:Logging}.
 
 A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
+\item{Only the main thread (that one that executes the method \lstinline|main()|) reports to the console when it aborts due to an exception; per default, all other threads will die silently.
+
+Of course this can be changed; chapter \tqvref{sec:Exception Handling in Threads} describes how this is done.}
 \end{itemize}
 
 \subsection{Throwing Exceptions}
@@ -278,7 +281,12 @@ static
 \lipsum[1]
 
 
+\subsection{Exceptions in Threads}\label{sec:Exception Handling in Threads}
+\subsection{-------------------------------------------- Proceed from here!}
+\begin{lstlisting}
+\end{lstlisting}
 
+\lipsum[1]
 
 
 \subsection{Signalling an Error}\label{sec:SignallingAnError}
@@ -1061,9 +1069,8 @@ Also when "adding" an instance of another type to a string, you should consider 
 Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.
 
 \section{The Annotation @API}\label{sec:APIAnnotation}
-\lipsum[1]
-
 \section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
 
 \begin{lstlisting}
 \end{lstlisting}
@@ -1131,9 +1138,14 @@ So the recommendation is: do not always rely on conventions! Whenever possible, 
 \end{lstlisting}
 
 \section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
 \subsection{Non-Final Methods}\label{sec:NonFinalMethods}
+\lipsum[1]
+
+\section{Types of Arguments and Return Values}\label{sec:TypeOfArgumentsAndReturnValues}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
 \section{Compiler Warnings and Errors}\label{sec:CompilerWarningsAndErrors}
@@ -1172,27 +1184,35 @@ public final Map<K,V> clone()
 As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
 
 \section{Returning Values}\label{sec:ReturningValues}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \subsection{Lambda Results}\label{sec:LambdaResults}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{Encapsulation}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{Lambdas}\label{sec:Lambdas}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \subsection{Functional Interfaces}\label{sec:FunctionalInterfaces}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{The Interface “java.util.Formattable”}\label{sec:FormattableInterface}
+\section{-------------------------------------------- Proceed from here!}
 
 \autocite{ORACLE_DOC_STRING_CLASS}
 \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
@@ -1204,9 +1224,11 @@ As there is no rule without exception, here is one: I recommend to use labels to
 \lipsum[1]
 
 \section{The Interface “java.lang.Comparable”}\label{sec:ComparableInterface}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{Utility Classes}\label{sec:UtilityClasses}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
 \section{try-with-resources}\label{sec:TryWithResources}
@@ -1480,12 +1502,15 @@ try( final var p = new PostProcessor( forceSorting ) )
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
 \section{Date and Time Values}\label{sec:DateAndTimeValues}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
 \section{Finalisation}\label{sec:Finalisation}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
 \section{Deprecation of Elements}\label{sec:DeprecationOfElements}
+\section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
 \section{Miscellaneous}
@@ -1497,23 +1522,315 @@ In this chapter I collected some dos and don'ts that do not fit into one of the 
 If you do not know what I talking about: start \verb#jshell#, type in \lstinline|021 + 021| and be surprised that the result is not the ultimate answer to life, the universe, and everything.\autocite{ADAMS_HITCHHIKERS_GUIDE}
 
 Or to summarise it: Do not prefix integer literals with \verb#0#!}
+
+\item{Avoid using an object to access a class (static) variable or method. If you cannot use a static import, refer the element through the class name instead. For example:
+\begin{lstlisting}
+public final class AClass
+{
+    public static final void classMethod() { … }
+}
+//  class AClass
+
+…
+
+import static some.package.AClass.classMethod;
+
+public final class MyClass
+{
+    public final void myMethod()
+    {
+        // RECOMMENDED!
+        classMethod(); // Using the static import
+        
+        // OK
+        AClass.classMethod();
+        
+        // AVOID!!
+        final var anObject = new AClass();
+        …
+        anObject.classMethod();
+    }   //  myMethod()
+}
+    //  class MyClass
+\end{lstlisting}
+
+You can configure both Eclipse and IntelliJ IDEA to report the access to a static member of a class through an instance as a warning or even as an error.}
+
+\item{In general, static imports are preferred over using the class name as prefix for references to static class members, either to class methods or to constants.}
+
+\item{Try to initialize local variables where they are declared. The only reason not to initialize a variable where it's declared is if the initial value depends on some computation occurring first.}
+
+\item{Avoid the multi-line initialisation for fields; use a constructor instead:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final String m_Field;
+    // AVOID!!!!!
+    {                                                
+        final var propertyName = readConfig( "user.property" );
+        m_Field = System.getProperty( propertyName );
+    }
+    
+    /**
+     *  Creates a new instance for {@code MyClass}.
+     */
+    public MyClass() 
+    {                                                
+        // INSTEAD DO IT IN THE CONSTRUCTOR!!
+        final var propertyName = readConfig( "user.property" );
+        m_Field = System.getProperty( propertyName );
+    }   //  MyClass()
+}
+//  class MyClass    
+\end{lstlisting}}
+
+\item{Try to call a method only when its result is needed. This is even more true if the method does not return a value but has other effects.
+
+Although this may seem to be self-evident, you may find often code like this:
+\begin{lstlisting}
+// AVOID!!!
+final var logMessage = composeMessage( params );
+if( logEnabled )
+{
+    //---* Log the parameters *--------------------------------------
+    writeLog( logMessage );
+}
+…
+\end{lstlisting}
+or
+\begin{lstlisting}
+// AVOID!!!
+{
+    final var param1 = retrieveData( data1 );
+    final var param2 = retrieveData( data2 );
+    if( option )
+    {
+        process( param1 );
+    }
+    else
+    {
+        process( param2 );
+    }
+}
+\end{lstlisting}
+Instead, the samples should look like below:
+\begin{lstlisting}
+// RECOMMENDED
+if( logEnabled )
+{
+    //---* Log the parameters *--------------------------------------
+    final var logMessage = composeMessage( params );
+    writeLog( logMessage );
+}
+
+…
+
+// RECOMMENDED
+{
+    final Data param;
+    if( option )
+    {
+        param = retrieveData( data1 );
+    }
+    else
+    {
+        param = retrieveData( data2 );
+    }
+    process( param );
+}
+// RECOMMENDED/Using the trinary operator
+{
+    final var param = option 
+        ? retrieveData( data1 )
+        : retrieveData( data2 );
+    process( param );
+}
+\end{lstlisting}
+}
+
+\item{Avoid anonymous classes! Although it (sometimes) reduces the code to write and the number of source files, it makes the resulting code very hard to read in most cases. And the number of generated class files remains exactly the same, no matter if anonymous classes, inner classes, non-\lstinline|public| or \lstinline|public| classes are used.
+
+In most cases, you can use a lambda instead of an anonymous class.}
+
+\item{If you are using collections or maps, declare and define them with generics.
+
+If a legacy interface returns a collection or map that is not declared with generics, map it. The resulting warning can be suppressed using the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation.
+
+Sometimes this may require the introduction of a temporary helper variable, as in the last sample, below.
+
+\begin{lstlisting}
+// AVOID!!
+List x = new LinkedList(); 
+
+// RECOMMENDED!!
+List<String> x = new LinkedList<String>(); 
+
+public abstract Vector method1();
+public abstract Vector method2() throws IOException;
+…
+public static final void main( String... args )
+{
+    @SuppressWarnings( "unchecked" )
+    final List<String> method1Result = method1();
+    List<String> method2Result = null;
+    try
+    {
+        @SuppressWarnings( "unchecked" )
+        final List<String> temporary = method2();
+        method2result = temporary;
+    }
+    catch( final IOException e ) { … }
+}   //  main()
+\end{lstlisting}}
+
+\item{Using \lstinline|java.lang.Object| as the type parameter for a generic data type is useless in most cases and should be avoided:
+\begin{lstlisting}
+// AVOID!!!
+private final List<Object> m_List = new LinkedList<Object>();
+\end{lstlisting}
+If you want to declare a variable of a generic type that should work for any parameter class, you have to use the question mark:
+\begin{lstlisting}
+Class<?> dataClass = data.getClass();
+\end{lstlisting}}
+
+\item{The classes \lstinline|java.util.Vector|\autocite{ORACLE_DOC_VECTOR_CLASS} or \lstinline|java.util.Hashtable|\autocite{ORACLE_DOC_HASHTABLE_CLASS} should not be used! Although their implementation had been modernised already with Java~1.2, their performance is still inferior to the alternative implementations, because \lstinline|Vector| and \lstinline|Hashtable| are still synchronised.
+
+For method arguments and return values, you should use the interfaces \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE} instead of \lstinline|Vector|, and \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE} instead of \lstinline|Hashtable|. Refer also to chapter \tqvref{sec:TypeOfArgumentsAndReturnValues} that elaborates further on this topic.
+
+If you need an implementation of the \lstinline|List| interface, you should prefer \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS} over \lstinline|java.util.LinkedList|\autocite{ORACLE_DOC_LINKEDLIST_CLASS}. The latter is only more performant in some very rare cases, and it also has a bigger memory footprint\footnote{Internally, an \lstinline|ArrayList| uses an array for the entries, and when this gets too small, a new array with twice the size will be allocated. This means that for some time two large array will exist. For really, really large lists, this may cause an issue. In the opposite, a \lstinline|LinkedList| will grow entry by entry.}.
+
+Instead of \lstinline|Hashtable|, you should use \lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS} as the implementation for the \lstinline|Map| interface.
+
+If you really need a synchronised list, you can still consider to use \lstinline|Vector| as your implementation of \lstinline|List|, but for a syncronised implementation of \lstinline|Map|, you should take \lstinline|java.util.concurrent.ConcurrentHashMap|\autocite{ORACLE_DOC_CONCURRENTHASHMAP_CLASS}.}
+
+\item{Use the enhanced \lstinline|for-loop| when iterating over collections\footnote{Ok, only implementations of \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE} provide methods for random access.}. It is also preferred when iterating over arrays.
+
+Alternatively, you can use an iterator, the \lstinline|java.lang.Iterable::forEach| method, or the Stream API:
+\begin{lstlisting}
+// AVOID!
+for( var i = 0; i < list.length(); ++i )
+{
+    process( list.get( i ) );
+}
+
+// RECOMMENDED
+for( final var element : collection ) process( element );
+
+collection.forEach( this::process );
+
+// OK
+for( final var i = collection.iterator(); i.hasNext(); ) process( i.next() );
+
+collection.stream()
+    .forEach( this::process );
+\end{lstlisting}
+
+The Stream API allows you to filter the elements in the collection.}
+
+\item{Consider to use the varargs feature when a method takes only one single argument, but can be called repeatedly with different arguments, or when it takes an array as argument:
+
+\begin{lstlisting}
+public final void addListener( final Listener... listeners ) { … }
+\end{lstlisting}
+
+instead of
+\begin{lstlisting}
+public final void addListener( final Listener listener ) { … }
+\end{lstlisting}
+
+Obviously, the implementation now has to deal with multiple entries, but it allows to write
+\begin{lstlisting}
+addListener( listener1, listener2, listener3 );
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+addListener( listener1 );
+addListener( listener2 );
+addListener( listener3 );
+\end{lstlisting}
+making the code easier to read.}
+
+\item{Prefer \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE} over \lstinline|java.lang.String| for the type of method arguments. See also chapter \tqvref{sec:TypeOfArgumentsAndReturnValues} on the topic of argument and return types.}
+
+\item{“Forever” loops should be coded as
+\begin{lstlisting}
+ForeverLoop: while( true ) 
+{ 
+    … 
+    
+    //---* Terminate the loop *--------------------------------------
+    if( <condition> ) break ForeverLoop;
+}   //  ForeverLoop:
+\end{lstlisting} }
+
+\item{Do not use \lstinline|new String()| with a string constant or a string expression as the argument. There are only very few situations where this is useful or necessary, and most of them are related to JNI. Usually \lstinline|new String()| is a waste of memory and computing time, except you use if with a \lstinline|byte|, \lstinline|char| or \lstinline|int| array as the argument. Refer to \autocite{ORACLE_DOC_STRING_CLASS} for the details.}
+
+\item{Some programmers do not like the Autoboxing feature that was introduced with Java~5. It is up to you to use it, or to transform the primitive types explicitly into their corresponding object types and vice versa.\footnote{Nevertheless, you should consider “\ref{lst:ZoP:ExplicitVsImplicit}.~Explicit is better than implicit, and verbosity is your friend” – see chapter \tqvref{sec:TheBasicRule}.}}
+
+\item{If a constructor calls a method of its own class or a superclass, this method has to be \lstinline|static|, \lstinline|private|, or \lstinline|final|\footnote{The important setting is \lstinline|final|, because \lstinline|private| and \lstinline|static| methods are implicitely \lstinline|final|}.
+
+In addition, it may call another constructor of the same or the super class, using \lstinline|this()| or \lstinline|super()|.}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
+
 \item{}
-\item{}
-\item{}
-\item{}
-\item{}
+
 \item{}
 \end{itemize}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\section{-------------------------------------------- Proceed from here!}
+    • If there is a getter for a field, it should be used even by the methods of the same class. Usually the same yields for setters, but there are exceptions from that rule3, in case a field can be set internally to values that are invalid if set from the outside. In such cases the direct access to the field has to be commented accordingly.
+    • 
+    • A method or constructor should not have more than 7 (in words: seven) arguments. If you feel inclined to provide more arguments to construct an instance, consider to use an instance of Map instead.
+    • Do not use BitFields, at least do not expose them to the API. Although the Java API is using them itself, they are still problematic.
+    • Whenever you have to convert a date, time or date-time value to a String that is not primarily meant to be display, used an internal format that is independent from any locale. Our recommendation is to use the ISO 8601 format “YYYY-MM-dd'T'hh:mm:ss.SSS”, normalised to UTC, and to use the class SimpleDateFormat to format the date.4
+    • Although releasing resources when they are not longer needed is a good idea in most cases, it can cause trouble in rare occasions.
+In some customer code we found a code sequence like this:
+\begin{lstlisting}
+…
+}
+catch( Exception e )
+{
+    PrintStream ps = new PrintStream( System.out );
+    ps.println( "Error occured" );
+    e.printStackTrace( ps );
+    ps.close()
+}
+\end{lstlisting}
+This will not only close the PrintStream ps, but also the wrapped System.out stream – with the consequence, that this exception was the last that was displayed on the console (or written to the log output).
+So make sure that your code will only cleans up objects that your code is responsible for, either because it created them or the responsibility was delegated to it. In case of a wrapper (like most implementations of Stream, Reader and Writer), your code should not call methods like close() if it is not responsible for the wrapped object, as in most cases the wrapper would delegate them to the wrapped object.
+    • …
+
+
+
+
 
 \include{6_Summary}
 

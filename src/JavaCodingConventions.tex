@@ -210,10 +210,10 @@ If a library needs to issue log messages, you should consider to use SLF4J\autoc
 A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
 \item{Only the main thread (that one that executes the method \lstinline|main()|) reports to the console when it aborts due to an exception; per default, all other threads will die silently.
 
-Of course this can be changed; chapter \tqvref{sec:Exception Handling in Threads} describes how this is done.}
+Of course this can be changed; chapter \tqvref{sec:ExceptionHandlingInThreads} describes how this is done.}
 \end{itemize}
 
-\subsection{Throwing Exceptions}
+\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
 Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; here I will only repeat the basics.
 
 For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}, or – more precise – from one of the child classes of \lstinline|Throwable|:
@@ -231,7 +231,7 @@ While an ordinary program can potentially recover from an error condition signal
 
 The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception| or \lstinline|java.lang.RuntimeException| is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException| in case a divisor is 0.
 
-When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a CORBA related package in a code segment that does nothing with CORBA at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
 
 When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
 \begin{lstlisting}
@@ -252,9 +252,11 @@ protected final void doGet( HttpServletRequest request, HttpServletResponse resp
 }  //  doGet()
 \end{lstlisting}
 
-When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax. In this regard, the sample above is bad, because it does not provide such an explanation.
+When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax.\footnote{In this regard, the sample above is bad, because it does not provide such an explanation.} These text have to be in English language, for the same reason why the names and the comments are in English.
 
-Some exception classes do not have a constructor that allow to provide a cause, or they have constructors that allow only a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
+Of course, messages that will be presented to the end user in a UI have to be localised, but the UI should not display the raw exception message anyway at all.
+
+Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
 
 Below you will find a workaround that allows you to still provide both, cause and message, with these exceptions\footnote{For the method \lstinline|initCause()| refer to  \autocite{ORACLE_DOC_THROWABLE_CLASS:initCause}.}: 
 \begin{lstlisting}
@@ -273,15 +275,180 @@ static
 \end{lstlisting}
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
+A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubble up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
+
+To handle an exception you first have to catch it.
+
+Catching \lstinline|java.lang.Exception| is discouraged in most cases; it \textit{can} be acceptable when you need to wrap all checked exceptions into a runtime exception or an error:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final Exception e )
+    {
+        throw new WrapperException( e );
+    }
+}   // run()
+\end{lstlisting}
+
+You should absolutely avoid to catch \lstinline|java.lang.Error| and all its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
+
+Provide a \lstinline|catch| block for each and every exception that you want to handle:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final FileNotFoundException e )
+    {
+        throw new ApplicationError( "Cannot find file", e );
+    }
+    catch( final IOException e )
+    {
+        throw new ApplicationError( "An error occurred on processing the input file", e );
+    }
+    catch( final NumberFormatException e )
+    {
+        throw new ApplicationError( "Input Data is corrupted", e );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ApplicationError( "Pattern invalid", e );
+    }
+}   // run()
+\end{lstlisting}
+
+Sometimes when a large number of exceptions has to be handled with all the same code, you may be tempted to just catch \lstinline|java.lang.Exception|. As already said: don't do it! This approach will definitely cause problems as it may handle runtime exceptions in the same \lstinline|catch|-block as the checked exceptions, and usually this is not intended.
+
+A simplificatin for the sample above could look like this:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final IOException | NumberFormatException | PatternSyntaxException e )
+    {
+        throw new ApplicationError( "Processing failed", e );
+    }
+}   // run()
+\end{lstlisting}
+Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because the class \lstinline|java.io.IOException| is its superclass.}.
+
+Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library … but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:
+\begin{lstlisting}
+…
+var amount = 0.0;
+final var requestParam = request.getParameter( "amount" );
+try
+{
+    if( nonNull( requestParam ) )
+    {
+        amount = Double.parseDouble( requestParam );
+    }
+}
+catch( final NumberFormatException ignored )
+{
+    //---* If amount in request is not numeric, set it to 0.0 *------
+    amount = 0.0;
+}
+…
+\end{lstlisting}
+
+As shown in the example, a comment is required in the catch clause, because you do not further propagate the exception neither do you log it.
+
+It is also possible that you checked the preconditions, but you still have to deal with some checked exceptions:
+
+\begin{lstlisting}
+…
+final var file = new File( … );
+if( file.exists() )
+{
+    try( final var input = new FileInputStream( file ) )
+    {
+        …
+    }
+    catch( final FileNotFoundException e )
+    {
+        throw new UnexpectedExceptionError( "File was there when checked!", e );
+    }
+}
+…
+\end{lstlisting}
+
+A sample for the class \lstinline|UnexpectedExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_UNEXPECTEDEXCEPTIONERROR}.
+
+Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
+\begin{lstlisting}
+…
+String s = null;
+try
+{
+    s = new String( byteArray, "UTF-8" );
+}
+catch( final UnsupportedEncodingException e )
+{
+    throw new ImpossibleExceptionError( "UTF-8 must exist!", e );
+}
+…
+\end{lstlisting}
+
+According to \autocite{ORACLE_DOC_CHARSET:StandardCharsets}, the UTF-8 encoding is mandatory for each JDK/JVM implementation, therefore the code sequence above will \textit{never} throw an \lstinline|UnsupportedEncodingException|. Nevertheless, it is not allowed to swallow the exception; instead an error should be thrown in the \lstinline|catch| clause, indicating the error condition. In the improbable case UTF-8 is not supported by the current Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason.\footnote{If, of course, there is no catch for \lstinline|Throwable| somewhere on the path.} It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset| will cause noise.
+
+Of course, the problem could be solved differently, by using an instance of \lstinline|java.nio.charset.Charset|\autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String| constructor, instead of the name of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|. 
+
+Another example is the interface \lstinline|java.lang.Appendable|\autocite{ORACLE_DOC_APPENDABLE_INTERFACE}: it is implemented by \lstinline|java.io.Writer| and \lstinline|java.io.PrintStream|, but also by \lstinline|java.lang.StringBuilder| (and a few more). The method \lstinline|java.lang.Appendable::append| declares to throw an \lstinline|IOException|, but the implementation of that method for \lstinline|StringBuilder| will never throw it and does not even declare it.
+\begin{lstlisting}
+…
+final Appendable appendable = new StringBuilder();
+try
+{
+    appendable.append( "Some Text" );
+}
+catch( final IOException e )
+{
+    throw new ImpossibleExceptionError( "Append to StringBuilder", e );
+}
+…
+\end{lstlisting}
+
+Again, a sample for \lstinline|ImpossibleExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_IMPOSSIBLEEXCEPTIONERROR}.
+
+Sometimes a method wants to act upon an error condition without handling the exception. In this case, it may catch the exception, does whatever necessary, then throw it again. An example:
+\begin{lstlisting}
+public final void myMethod() throw IOException
+{
+    final Predicate<String> isNetworkError = m_NetworkErrorPattern.asMatchPredicate();
+    …
+    try
+    {
+        …
+    }
+    catch( final IOException e )
+    {
+        final var message = e.getMessage();
+        if( nonNull( message ) && isNetworkError.test( message ) ) ++networkErrors;
+        throw e;
+    }
+    …
+}   // myMethod()
+\end{lstlisting}
+
+It is usually not a good idea to log an exception and to rethrow or to wrap it afterwards, because this might cause the exception to be logged twice (or even more often). More details about logging can be found in chapter \tqvref{sec:Logging}.
+
 \subsection{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
 \end{lstlisting}
 
-\lipsum[1]
 
-
-\subsection{Exceptions in Threads}\label{sec:Exception Handling in Threads}
+\subsection{Exceptions in Threads}\label{sec:ExceptionHandlingInThreads}
 \subsection{-------------------------------------------- Proceed from here!}
 \begin{lstlisting}
 \end{lstlisting}
@@ -382,6 +549,31 @@ If an error conditions is to be logged that was indicated by a caught exception,
 The stack trace provides vital information about the location of the problem, and sometimes also for the reason.
 Any additional information that is available when the exception is caught (and relevant for the cause) should be logged also. This could be call parameters or the values of fields that are affected by a method call.
 Refer to the classes in the package java.util.logging (LOGGING\_PACKAGE) to see a sample how this should look. See also chapter 5.6 below for details on exceptions.
+
+
+
+It was said in chapter \tqref{sec:GeneralExceptionHandling} that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is on exception on this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. In this case, you can log it for debugging: 
+\begin{lstlisting}
+public final void myMethod() throw IOException
+{
+    …
+    try
+    {
+        …
+    }
+    catch( final IOException e )
+    {
+        m_Logger.debug( e );
+        throw e;
+    }
+    …
+}   // myMethod()
+\end{lstlisting}
+
+In this case, you also accept that the same exception might be logged twice.
+
+
+
 
 \subsection{Exceptions}
 \subsection{-------------------------------------------- Proceed from here!}

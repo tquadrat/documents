@@ -105,7 +105,7 @@ Other suffixes indicate special usage of the class. Well known and obvious are t
 \subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
 An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
 
-But basically, the name should be a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput| and \lstinline|java.io.DataOutput|; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable| and \lstinline|java.lang.Cloneable|.\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}
+According to the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}, the name of an interface should be basically a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput| and \lstinline|java.io.DataOutput|; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE} and \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}.
 
 Some coding conventions (particularly in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
 

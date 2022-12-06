@@ -238,6 +238,8 @@ You think that this cannot happen, because you have logged the exception?
 
 I think that the accountants are no longer your friend when they find out that this piece of code was written by you~…
 
+The chapters \tqvref{sec:ThrowingExceptions} and \tqvref{sec:GeneralExceptionHandling} discuss throwing and handling exception. More about reporting the various error conditions can be found in chapter \tqvref{sec:ReportingErrors} and the chapter \tqvref{sec:Logging} deals with logging in particular.
+
 \subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
 Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
 
@@ -250,7 +252,7 @@ For the Java programming language, an exception is an instance of a class that i
 
 The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
 
-Exception classes that extend \lstinline|java.lang.Exception| are so-called \textit{checked} exceptions; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. \lstinline|java.lang.RuntimeException| is a direct subclass of \lstinline|java.lang.Exception| and the superclass of all \textit{run-time} exceptions – declaring these is not mandatory.
+Exception classes that extend \lstinline|java.lang.Exception| are so-called \textit{checked} exceptions; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. \lstinline|java.lang.RuntimeException| is a direct subclass of \lstinline|java.lang.Exception| and the superclass of all \textit{runtime} exceptions – declaring these is not mandatory.
 
 While an ordinary program can potentially recover from an error condition signalled by an \lstinline|Exception| instance, it is assumed that instances of \lstinline|java.lang.Error| and its subclasses will indicate unrecoverable error conditions.
 
@@ -468,7 +470,7 @@ It is usually not a good idea to log an exception and to rethrow or to wrap it a
 
 Finally, you handle the exception somehow, by assigning a default value\footnote{see the sample about the conversion from string to number, above.}, or by performing an alternative action. In any case, you need to provide a comment in the \lstinline|catch| why you do not further delegate the handling of the exception.
 
-If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()| for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
+If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()|\autocite{ORACLE_DOC_RUNNABLE:run} for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
 
 \subsection{Exceptions in Threads}\label{sec:ExceptionHandlingInThreads}
 When we execute the Java program below, the \lstinline|Error| is printed to the console:
@@ -484,7 +486,7 @@ $
 In the sample below, we abort a secondary thread:
 \lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
 
-The output looks like this\footnote{When using an older version of Java, no output from the thread wold be shown.}
+The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown.}
 \begin{verbatim}
 $ java TestAbortRun.java
 Exception in thread "Thread-0" java.lang.Error: run() aborted!
@@ -523,35 +525,198 @@ public static final void main( final String... args )
 In this case, the \lstinline|catch| statement catches \lstinline|Throwable| and the 
 \lstinline|catch|-block does nothing else but logging the exception!
 
-This is acceptable here because the program ends after the closing curly brace of the \lstinline|catch|-block!
-\subsection{-------------------------------------------- Proceed from here!}
+This is acceptable here only because the program ends immediately after the closing curly brace of the \lstinline|catch|-block!\footnote{Ok, technically only the main thread ends here because other non-deamon threads may still run at this point. But the goal should be that the main thread dies always at last.}
 
-When a Java We are used to the behaviour that the JVM displays an exception on System.err that is not handled somewhere, and then to terminate the program.
-Unfortunately, this is only the case for the main thread (that one that calls the main() method of a program). The default behaviour for any other thread is to die silently.
-Although we do not want to encounter any problems in a thread, we want to know when any issue arises. Java provides several solutions to this.
-The first one is to catch all exceptions in the run() method of the thread:
+Theoretically, you can do the same thing for threads:
 \begin{lstlisting}
-public void run()
+public final void run()
 {
     try
     {
+        //---* The thread's payload *--------------------------------
         …
     }
-    catch( Throwable t )
+    // NOT Recommended
+    catch( final Throwable t )
     {
-        //---* Handle the exception somehow *------------------------
+        //---* Log the previously unhandled exceptions *-------------
+        m_Logger.error( "Unhandled Exception/Error", e );
     }
-}  // run()
+}   //  run()
 \end{lstlisting}
-This seems to be in contradiction to the statements in chapter 5.6.2 above, but here it is allowed as it is the last chance to do something with this exception that will be otherwise vanish in limbo.
-Nevertheless, we do not recommend the approach above, only for small, tool-like programs. Instead it should be considered to provide an implementation of Thread.UncaughtExceptionHandler.
-This could be done in three ways:
-    1. Each single thread can get its own uncaught exception handler by calling setUncaughtExceptionHandler() on it, with an instance of an implementation of Thread.UncaughtExceptionHandler as the argument.
-    2. On creation of a thread, a ThreadGroup object will be assigned to it (if none is explicitly set, it will be the group of the current thread); its uncaughtException() method is called in the case the thread itself does not have an uncaugth exception handler assigned to it. To change the behaviour of that standard handler it is necessary to derive a new class from ThreadGroup and to overwrite the uncaughtException() there.
-    3. By calling the Thread.setDefaultUncaughtExceptionHandler(), an instance of an implementation of Thread.UncaughtExceptionHandler can be installed for all threads. It will be called as a last resort.
-A sample implementation for an uncaught exception handler is provided in the chapter 6.7 on page 150. For details refer to the documentation in [UNCAUGHT\_EXCEPTION\_HANDLER].
 
+One reason is that the method \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run} can be called also in other contexts than just as the main method of a thread; swallowing the exception like shown in the example is a bad idea in that case.
+
+Another reason is that when the method is implemented as part of a library, an extension or even a serverbased application, different facilities may be used to report the error.
+
+But the main reason is that there is a much better mechanism that handles those otherwise unhandled exceptions: the “Uncaught Exception Handler”\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE}.
+
+The interface \lstinline|java.lang.Thread.UncaughtExceptionHandler| is a functional interface\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterfaces, ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterface, ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} providing the method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException}.
+
+There are basically two ways\footnote{In fact, three ways. But as you should avoid anonymous classes, this option is omitted here.} to implement an uncaught exception handler; the classical way would be to create a new class:
+\begin{lstlisting}[numbers=left,caption={class UncaughtExceptionHandlerImpl}]
+/**
+ *  The implementation of the interface
+ *  {@link java.lang.Thread.UncaughtExceptionHandler}
+ *  that is used by this project.
+ */
+public final class UncaughtExceptionHandlerImpl implements Thread.UncaughtExceptionHandler
+{
+    /**
+     *  The logger that is used to report the uncaught exceptions.
+     */
+    private static final Logger m_Logger = getLogger( UncaughtExceptionHandlerImpl.class );
+     
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final void uncaughtException( final Thread t, final Throwable e )
+    {
+        m_Logger.error( "Unhandled Exception/Error in Thread '%s'".formatted( t.getName(), e );
+    }   //  uncaughtException()
+}
+//  class UncaughtExceptionHandlerImpl 
+\end{lstlisting}
+
+Otherwise you can benefit from \lstinline|java.lang.Thread.UncaughtExceptionHandler| being a functional interface and implement the uncaught exception handler as a method in your class:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class );
+     
+    /**
+     *  <p>{@summary This method will be invoked when the given
+     *  thread terminates due to the given uncaught exception.}</p>
+     *  <p>Any exception thrown by this method will be ignored by
+     *  the Java Virtual Machine.</p>
+     *
+     *  @param  t   The thread that terminated.
+     *  @param  e   The exception that caused the termination.
+     *     
+     *  @see UncaughtExceptionHandler#uncaughtException(Thread,Throwable)
+     */
+    private final void uncaughtException( final Thread t, final Throwable e )
+    {
+        m_Logger.error( "Unhandled Exception/Error in Thread '%s'".formatted( t.getName(), e );
+    }   //  uncaughtException()
+}
+//  class MyClass
+\end{lstlisting}
+In the second case, the uncaught exception handler uses the resources provided by the class it lives in. This may be desired or not.
+
+A thread can be configured with the uncaught exception handler in three ways:
+\begin{enumerate}
+\item{Each single thread can get its own uncaught exception handler by calling \lstinline|setUncaughtExceptionHandler()|\autocite{ORACLE_DOC_THREAD:setUncaughtExceptionHandler} on it, with an instance of an implementation of \lstinline|Thread.UncaughtExceptionHandler| as the argument:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        final var thread = new Thread( this::run, "MyWorkerThread" );
+        thread.setUncaughtExceptionHandler( this::uncaughtException );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\item{On creation of a thread, a \lstinline|ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} instance will be assigned to it; if none is explicitly set, it will be the group of the current thread.
+
+The instance has a method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_THREADGROUP:uncaughtException} method is called in the case the thread itself does not have an uncaught exception handler assigned to it. To change the behaviour of the handler from the thread group it is necessary to derive a new class from \lstinline|ThreadGroup| and to overwrite the \lstinline|uncaughtException()|.
+
+Chapter \tqvref{sec:ThreadGroup} shows an implementation for \lstinline|ThreadGroup| that allows to configure the uncaught exception handler; when using that, the configuration can look like this:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  The thread group for all threads used by this program.
+     */
+    private final ThreadGroup m_ThreadGroup;
+    
+    /**
+     *  Creates a new instance of {@code MyClass}.
+     */
+    public MyClass()
+    {
+        m_ThreadGroup = new ThreadGroupExt( "MyWorkerThreads", this::uncaughtException );
+    }   //  MyClass()
+    
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        final var thread = new Thread( m_ThreadGroup, this::run, "MyWorkerThread" );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\item{By calling \lstinline|java.lang.Thread::setDefaultUncaughtExceptionHandler|\autocite{ORACLE_DOC_THREAD:setDefaultUncaughtExceptionHandler} it is possible to install an instance of \lstinline|Thread.UncaughtExceptionHandler| for all threads that does neither have their own handler nor got one from their thread group. This uncaught exception will be called as a last resort.
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        //---* Install the default uncaught exception handler *------
+        Thread.setDefaultUncaughtExceptionHandler( new UncaughtExceptionHandlerImpl() );
+        
+        final var thread = new Thread( this::run, "MyWorkerThread" );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\end{enumerate}
+
+The last option can be used only from standalone applications and from tools. The environments for serverbased applications and extensions do quite often restrict the creation of additional threads. A feature library should accept an uncaught exception handler and/or a thread group as a configuration value.
+
+If a function library creates new threads, the respective methods must accept at least an uncaught exception handler and optionally a thread group. Alternatively, a thread factory\autocite{ORACLE_DOC_THREADFACTORY_INTERFACE} can be injected.
+ 
 \subsection{Reporting Errors}\label{sec:ReportingErrors}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
 
 , although these can combined with each other, to some extent:
 
@@ -1767,9 +1932,9 @@ try( final var p = new PostProcessor( doAfter ) )
     …
 }
 \end{lstlisting}
-The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run| in its \lstinline|close()| method when the \lstinline|try| block is left. Chapter \tqfullref{sec:PostProcessor} in the Appendices provides the source for the class.
+The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run} in its \lstinline|close()| method when the \lstinline|try| block is left. Chapter \tqfullref{sec:PostProcessor} in the Appendices provides the source for the class.
 
-‘Unconditional’ means here that the post-processing will be executed if the block terminates regularly or by a thrown exception. Other conditions can be injected into the \lstinline|Runnable| implementation.
+‘Unconditional’ means here that the post-processing will be executed if the block terminates regularly or by a thrown exception. Other conditions can be injected into the \lstinline|Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE} implementation.
 
 The difference between this approach and simply calling \lstinline|doAfter.run()| in a \lstinline|finally| block is that the \lstinline|close()| method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \tqfullref{sec:ExecutionSequence}).
 
@@ -2072,11 +2237,13 @@ ForeverLoop: while( true )
 
 \item{Some programmers do not like the Autoboxing feature that was introduced with Java~5. It is up to you to use it, or to transform the primitive types explicitly into their corresponding object types and vice versa.\footnote{Nevertheless, you should consider “\ref{lst:ZoP:ExplicitVsImplicit}.~Explicit is better than implicit, and verbosity is your friend” – see chapter \tqvref{sec:TheBasicRule}.}}
 
-\item{If a constructor calls a method of its own class or a superclass, this method has to be \lstinline|static|, \lstinline|private|, or \lstinline|final|\footnote{The important setting is \lstinline|final|, because \lstinline|private| and \lstinline|static| methods are implicitely \lstinline|final|}.
+\item{If a constructor calls a method of its own class or a superclass, this method has to be \lstinline|static|, \lstinline|private|, or \lstinline|final|\footnote{The important setting is \lstinline|final|, because \lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|}.
 
 In addition, it may call another constructor of the same or the super class, using \lstinline|this()| or \lstinline|super()|.}
 
-\item{}
+\item{Ensure that the main thread (that one that executes \lstinline|main()|) always dies as the last non-deamon thread.
+
+This means that you should keep a reference of all the threads that your code starts so that you can kill them explicitly before the program terminates.}
 
 \item{}
 
@@ -2411,7 +2578,7 @@ public class AutoLock implements AutoCloseable
 
 \subsection{Patch Identification}\label{sec:PatchIdentification}
 
-\chapter{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
 The annotations \lstinline|@BUG| and \lstinline|@FixList| are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
 
 \paragraph{The Code} \
@@ -2573,6 +2740,174 @@ public class PostProcessor implements AutoCloseable
 //  class PostProcessor
 \end{lstlisting}
 
+\subsection{ThreadGroup}\label{sec:ThreadGroup}
+The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.
+
+The method \lstinline|java.lang.ThreadGroup:uncaughtException| is called by the Java Virtual Machine when a thread in this thread group stops because of an uncaught exception, and no specific \lstinline|Thread.UncaughtExceptionHandler|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} instance was installed
+to that thread.
+
+The default implementation of that method does the following:
+\begin{enumerate}
+\item{If this thread group has a parent thread group, the \lstinline|uncaughtException()| method of that parent is called with the same two arguments.}
+\item{Otherwise, this method checks to see if there is a default uncaught exception handler installed, and if so, its \lstinline|uncaughtException()| method is called with the same two arguments.}
+\item{Otherwise, this method determines if the \lstinline|Throwable| argument is an instance of \lstinline|java.lang.ThreadDeath|. If so, nothing special is done.
+
+Otherwise, a message containing the thread's name, as returned from the thread's \lstinline|getName()| method, and a stack backtrace, using the \lstinline|Throwable|'s \lstinline|printStackTrace()| method, is printed to the standard error stream.}
+\end{enumerate}
+
+Unfortunately, the class \lstinline|java.lang.ThreadGroup| itself does not provide an API to change the behaviour of its \lstinline|uncaughtException()| method. To do that, you have to override that method in a subclass.
+
+Below you find an implementation of \lstinline|ThreadGroup| that fixes that.
+
+\paragraph{The Code} \
+\begin{lstlisting}[numbers=left,caption={ThreadGroupExt.java}]
+package org.tquadrat.foundation.lang;
+
+import static org.tquadrat.foundation.lang.Objects.isNull;
+import static org.tquadrat.foundation.lang.Objects.requireNonNullArgument;
+import static org.tquadrat.foundation.lang.Objects.requireNotBlankArgument;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+
+/**
+ *  <p>{@summary An implementation of
+ *  {@link ThreadGroup}
+ *  that allows to configure the behaviour of
+ *  {@link #uncaughtException(Thread, Throwable)}}.</p>
+ *  <p>This class is not final, to allow further modifications.</p>
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ */
+public class ThreadGroupExt extends ThreadGroup
+{
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+    /**
+     *  The
+     *  {@link java.lang.Thread.UncaughtExceptionHandler}
+     *  for this thread group. It can be {@code null}.
+     */
+    private final UncaughtExceptionHandler m_UncaughtExceptionHandler;
+
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    /**
+     *  <p>{@summary Constructs a new thread group.}</p>
+     *  <p>The parent of this new group is the thread group of the 
+     *  currently running thread.</p>
+     *  <p>The behaviour of
+     *  {@link #uncaughtException(Thread, Throwable)}
+     *  is that of the superclass.</p>
+     *
+     *  @param  name    The name of the new thread group.
+     *  @throws IllegalArgumentException    The {@code name} argument
+     *      is either {@code null}, empty or blank.
+     *  @throws SecurityException   The current thread cannot create
+     *      a thread in this thread group.
+     */
+    public ThreadGroupExt( final String name ) throws IllegalArgumentException
+    {
+        super( requireNotBlankArgument( name, "name" ) );
+        m_UncaughtExceptionHandler = null;
+    }   //  ThreadGroupExt()
+
+    /**
+     *  <p>{@summary Constructs a new thread group.}</p>
+     *  <p>The parent of this new group is the specified thread
+     *  group.</p>
+     *  <p>The behaviour of
+     *  {@link #uncaughtException(Thread, Throwable)}
+     *  is that of the superclass.</p>
+     *
+     *  @param  parent  The parent thread group.
+     *  @param  name    The name of the new thread group.
+     *  @throws IllegalArgumentException    The {@code name} argument
+     *      is either {@code null}, empty or blank, or the 
+     *      {@code parent} thread group argument is {@code null}.
+     *  @throws SecurityException   The current thread cannot create
+     *      a thread in this thread group.
+     */
+    public ThreadGroupExt( final ThreadGroup parent, final String name ) throws IllegalArgumentException
+    {
+        super( requireNonNullArgument( parent, "parent" ), requireNotBlankArgument( name, "name" ) );
+        m_UncaughtExceptionHandler = null;
+    }   //  ThreadGroupExt()
+
+    /**
+     *  <p>{@summary Constructs a new thread group.}</p>
+     *  <p>The parent of this new group is the specified thread
+     *  group.</p>
+     *  <p>The behaviour of
+     *  {@link #uncaughtException(Thread, Throwable)}
+     *  is determined by the provided handler.</p>
+     *
+     *  @param  name    The name of the new thread group.
+     *  @param  handler The handler for the uncaught exceptions.
+     *  @throws IllegalArgumentException    The {@code name} argument
+     *      is either {@code null}, empty or blank, or the
+     *      {@code handler} argument is {@code null}.
+     *  @throws SecurityException   The current thread cannot create
+     *      a thread in this thread group.
+     */
+    public ThreadGroupExt( final String name, final UncaughtExceptionHandler handler ) throws IllegalArgumentException
+    {
+        super( requireNotBlankArgument( name, "name" ) );
+        m_UncaughtExceptionHandler = requireNonNullArgument( handler, "handler" );
+    }   //  ThreadGroupExt()
+
+    /**
+     *  <p>{@summary Constructs a new thread group.}</p>
+     *  <p>The parent of this new group is the specified thread
+     *      group.</p>
+     *  <p>The behaviour of
+     *  {@link #uncaughtException(Thread, Throwable)}
+     *  is determined by the provided handler.</p>
+     *
+     *  @param  parent  The parent thread group.
+     *  @param  name    The name of the new thread group.
+     *  @param  handler The handler for the uncaught exceptions.
+     *  @throws IllegalArgumentException    The {@code name} argument
+     *      is either {@code null}, empty or blank, or one of the 
+     *      {@code parent} thread group  or the {@code handler}
+     *      arguments is {@code null}.
+     *  @throws SecurityException   The current thread cannot create
+     *      a thread in this thread group.
+     */
+    public ThreadGroupExt( final ThreadGroup parent, final String name, final UncaughtExceptionHandler handler ) throws IllegalArgumentException
+    {
+        super( requireNonNullArgument( parent, "parent" ), requireNotBlankArgument( name, "name" ) );
+        m_UncaughtExceptionHandler = requireNonNullArgument( handler, "handler" );
+    }   //  ThreadGroupExt()
+
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final void uncaughtException( final Thread t, final Throwable e )
+    {
+        if( isNull( m_UncaughtExceptionHandler ) )
+        {
+            super.uncaughtException( t, e );
+        }
+        else
+        {
+            m_UncaughtExceptionHandler.uncaughtException( t, e );
+        }
+    }   //  uncaughtException()
+}
+//  class ThreadGroupExt
+
+/*
+ *  End of File
+ */
+\end{lstlisting}
+
+
 \subsection{UnsupportedEnumError}\label{sec:UnsupportedEnumError}
 This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \tqfullvref{sec:SwitchStatements}), in cases where the selector is an enum.
 
@@ -2697,7 +3032,9 @@ public final class UnsupportedEnumError extends Error
 
 \lstlistoflistings
 
+\begin{FlushLeft}
 \printbibliography
+\end{FlushLeft}
 
 \printindex
 \end{document}

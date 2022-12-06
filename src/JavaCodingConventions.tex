@@ -111,7 +111,7 @@ As always there may be good reasons to do it different from what is recommended 
 
 One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
 
-And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python …}
+And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{KNUTH:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python~…}
 
 But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendations on when to apply comments to your code.
 
@@ -164,7 +164,7 @@ Other samples are Maillets for James\autocite{APACHE_JAMES} or the customisation
 An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN} plugins.
 
 \section{Error Handling}\label{sec:ErrorHandling}
-A proper error handling is crucial for any type of program – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
+A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
 
 Basically, we have to deal with only a very limited set of possible error categories:
 \begin{enumerate}[nosep]
@@ -177,44 +177,69 @@ Basically, we have to deal with only a very limited set of possible error catego
 \item{An external resource is not or no longer available.}
 \end{enumerate}
 
-Of course, all those categories are possible triggers for an exception in Java. But this means that we can quite simply generalise the response to an error: \textit{in case of an error condition, throw an exception}!
+Of course, all those categories are possible triggers for an exception in Java. This means that we can quite simply generalise the response to an error: \textit{in case of an error condition, throw an exception}!
 
-Consequently, we can also simplify error handling to exception handling. And there are only a few option on how to respond to an exception, although these can combined with each other, to some extent:
+Consequently, we can also simplify \textit{error} handling to \textit{exception} handling. And there are only a few options on how to respond to an exception:
 \begin{itemize}
-\item{Throw an exception and make it an S.E.P.\footnote{S.E.P~=~Someone Else's Problem (refer to \autocite{ADAMS_HITCHHIKERS_GUIDE}).} – particularly useful (no irony!) for libraries.}
-\item{Write an error message to the console, a message window or status bar.}
+\item{Throw an exception and make it an S.E.P.\footnote{S.E.P~=~Someone Else's Problem (refer to \autocite{ADAMS_HITCHHIKERS_GUIDE}).} – particularly suitable (no irony!) for libraries.}
+\item{Perform an alternate operation or provide a default value.}
 \item{Retry/repeat the operation.}
-\item{Log an error message.}
-\item{Display an error dialog.}
-\item{Abort the current operation – either a thread or the whole program.}
-\item{Perform an alternate operation.}
+\item{Abort the current operation – either the current thread or the whole program.}
 \end{itemize}
 
 As said, throwing an exception will always work, but at some point exceptions need to be handled in some way.
 
 The other alternatives are feasible only in some special contexts:
-
 \begin{itemize}
-\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
+\item{Repeating or retrying a failed operation depends on the kind of operation, and not that much on the type of the product. This also should not be done indefinitely; at some point, it gets useless to repeat or retry a constantly failing operation.}
 
-Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
-\item{Whether repeating or retrying a failed operation depends on the kind of operation, and not that much on the type of the product. This also should not be done indefinitely; at some point, it gets useless to repeat or retry a constantly failing operation.}
 \item{Same for an alternate operation that will be executed in case of an error.}
-\item{With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
 
-If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
+\item{Providing a default value demands that this default value makes sense in the current context. It should be obvious that this is not always the case.}
 
-If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.}
-\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications must not call \lstinline|System.exit()|! Never! More details about logging are discussed in chapter \tqvref{sec:Logging}.
+\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
 
 A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
-\item{Only the main thread (that one that executes the method \lstinline|main()|) reports to the console when it aborts due to an exception; per default, all other threads will die silently.
-
-Of course this can be changed; chapter \tqvref{sec:ExceptionHandlingInThreads} describes how this is done.}
 \end{itemize}
 
+Only these four options do exist for handling an exception! This means that afterwards the error condition is fixed, or that it persists.
+
+I bet that you now ask yourself why the actions below are missing from my list above:
+\begin{itemize}
+\item{Log an error message.}
+\item{Write an error message to the console, a message window or status bar.}
+\item{Display an error dialog.}
+\end{itemize}
+
+That is because \textit{none of these are handling the error}! Of course you should log an error, of course you should inform the user about an error condition. But none of these actions will change the state of the system!
+
+Far too often you find code like this:
+\begin{lstlisting}
+…
+try
+{
+    writeStatusToBillingSystem( invoice );
+}
+catch( final TimeOutException e )
+{
+    m_Logger.error( e );
+}
+invoice.markAsPaid();
+…
+\end{lstlisting}
+
+Looks good, right?
+
+Really?
+
+You mark the invoice as paid, despite the writing to the billing system failed?
+
+You think that this cannot happen, because you have logged the exception?
+
+I think that the accountants are no longer your friend when they find out that this piece of code was written by you~…
+
 \subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
-Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; here I will only repeat the basics.
+Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
 
 For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}, or – more precise – from one of the child classes of \lstinline|Throwable|:
 \begin{itemize}[nosep]
@@ -231,7 +256,7 @@ While an ordinary program can potentially recover from an error condition signal
 
 The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception| or \lstinline|java.lang.RuntimeException| is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException| in case a divisor is 0.
 
-When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|, \lstinline|RuntimeException|, or \lstinline|Error|, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable| directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
 
 When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
 \begin{lstlisting}
@@ -258,7 +283,7 @@ Of course, messages that will be presented to the end user in a UI have to be lo
 
 Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
 
-Below you will find a workaround that allows you to still provide both, cause and message, with these exceptions\footnote{For the method \lstinline|initCause()| refer to  \autocite{ORACLE_DOC_THROWABLE_CLASS:initCause}.}: 
+Below you will find a workaround that allows you to still provide both, cause and message, with these exceptions\footnote{For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE_CLASS:initCause}.}: 
 \begin{lstlisting}
 static
 {
@@ -275,7 +300,7 @@ static
 \end{lstlisting}
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
-A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubble up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
+A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
 
 To handle an exception you first have to catch it.
 
@@ -294,7 +319,7 @@ public final void run()
 }   // run()
 \end{lstlisting}
 
-You should absolutely avoid to catch \lstinline|java.lang.Error| and all its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
+You should absolutely avoid to catch \lstinline|java.lang.Error| and all of its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
 
 Provide a \lstinline|catch| block for each and every exception that you want to handle:
 \begin{lstlisting}
@@ -341,7 +366,7 @@ public final void run()
 \end{lstlisting}
 Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because the class \lstinline|java.io.IOException| is its superclass.}.
 
-Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library … but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:
+Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library~… but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:
 \begin{lstlisting}
 …
 var amount = 0.0;
@@ -364,7 +389,6 @@ catch( final NumberFormatException ignored )
 As shown in the example, a comment is required in the catch clause, because you do not further propagate the exception neither do you log it.
 
 It is also possible that you checked the preconditions, but you still have to deal with some checked exceptions:
-
 \begin{lstlisting}
 …
 final var file = new File( … );
@@ -387,7 +411,7 @@ A sample for the class \lstinline|UnexpectedExceptionError| can be found in \aut
 Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
 \begin{lstlisting}
 …
-String s = null;
+final String s;
 try
 {
     s = new String( byteArray, "UTF-8" );
@@ -442,19 +466,108 @@ public final void myMethod() throw IOException
 
 It is usually not a good idea to log an exception and to rethrow or to wrap it afterwards, because this might cause the exception to be logged twice (or even more often). More details about logging can be found in chapter \tqvref{sec:Logging}.
 
-\subsection{-------------------------------------------- Proceed from here!}
+Finally, you handle the exception somehow, by assigning a default value\footnote{see the sample about the conversion from string to number, above.}, or by performing an alternative action. In any case, you need to provide a comment in the \lstinline|catch| why you do not further delegate the handling of the exception.
 
-\begin{lstlisting}
-\end{lstlisting}
-
+If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()| for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
 
 \subsection{Exceptions in Threads}\label{sec:ExceptionHandlingInThreads}
-\subsection{-------------------------------------------- Proceed from here!}
+When we execute the Java program below, the \lstinline|Error| is printed to the console:
+\lstinputlisting[numbers=left,caption={Test Abort main()}]{TestAbortMain.java}
+
+\begin{verbatim}
+$ java TestAbortMain.java
+Exception in thread "main" java.lang.Error: Aborted
+    at TestAbortMain.main(TestAbortMain.java:5)
+$ 
+\end{verbatim}
+
+In the sample below, we abort a secondary thread:
+\lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
+
+The output looks like this\footnote{When using an older version of Java, no output from the thread wold be shown.}
+\begin{verbatim}
+$ java TestAbortRun.java
+Exception in thread "Thread-0" java.lang.Error: run() aborted!
+    at TestAbortRun.run(TestAbortRun.java:5)
+    at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "main" java.lang.Error: main() aborted!
+    at TestAbortRun.main(TestAbortRun.java:20)
+$ 
+\end{verbatim}
+
+This behaviour is sufficient for a tool in most cases, but not for a standalone application and not for a feature library. A function library usually relies on the a caller, while serverbase applications and extensions use the facilities provided by the host applications.
+
+For both a standalone application and for a feature library, you want that error conditions will be logged, under all circumstances.
+
+For the main thread of an application this can be achieved quite easily, by implementing the method \lstinline|main()| like this:
 \begin{lstlisting}
+/**
+ *  The program entry method.
+ *
+ *  @param  args    The command line arguments.
+ */
+public static final void main( final String... args )
+{
+    try
+    {
+        final var application = new MyClass();
+        applicaton.execute( … );
+    }
+    catch( final Throwable t )
+    {
+        //---* Log the previously unhandled exceptions *-------------
+        m_Logger.error( "Unhandled Exception/Error", e );
+    }
+}   //  main()
 \end{lstlisting}
+In this case, the \lstinline|catch| statement catches \lstinline|Throwable| and the 
+\lstinline|catch|-block does nothing else but logging the exception!
 
-\lipsum[1]
+This is acceptable here because the program ends after the closing curly brace of the \lstinline|catch|-block!
+\subsection{-------------------------------------------- Proceed from here!}
 
+When a Java We are used to the behaviour that the JVM displays an exception on System.err that is not handled somewhere, and then to terminate the program.
+Unfortunately, this is only the case for the main thread (that one that calls the main() method of a program). The default behaviour for any other thread is to die silently.
+Although we do not want to encounter any problems in a thread, we want to know when any issue arises. Java provides several solutions to this.
+The first one is to catch all exceptions in the run() method of the thread:
+\begin{lstlisting}
+public void run()
+{
+    try
+    {
+        …
+    }
+    catch( Throwable t )
+    {
+        //---* Handle the exception somehow *------------------------
+    }
+}  // run()
+\end{lstlisting}
+This seems to be in contradiction to the statements in chapter 5.6.2 above, but here it is allowed as it is the last chance to do something with this exception that will be otherwise vanish in limbo.
+Nevertheless, we do not recommend the approach above, only for small, tool-like programs. Instead it should be considered to provide an implementation of Thread.UncaughtExceptionHandler.
+This could be done in three ways:
+    1. Each single thread can get its own uncaught exception handler by calling setUncaughtExceptionHandler() on it, with an instance of an implementation of Thread.UncaughtExceptionHandler as the argument.
+    2. On creation of a thread, a ThreadGroup object will be assigned to it (if none is explicitly set, it will be the group of the current thread); its uncaughtException() method is called in the case the thread itself does not have an uncaugth exception handler assigned to it. To change the behaviour of that standard handler it is necessary to derive a new class from ThreadGroup and to overwrite the uncaughtException() there.
+    3. By calling the Thread.setDefaultUncaughtExceptionHandler(), an instance of an implementation of Thread.UncaughtExceptionHandler can be installed for all threads. It will be called as a last resort.
+A sample implementation for an uncaught exception handler is provided in the chapter 6.7 on page 150. For details refer to the documentation in [UNCAUGHT\_EXCEPTION\_HANDLER].
+
+\subsection{Reporting Errors}\label{sec:ReportingErrors}
+
+, although these can combined with each other, to some extent:
+
+\begin{itemize}
+\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
+
+Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
+
+\item{With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
+
+If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
+
+If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
+
+ More details about logging are discussed in chapter \tqvref{sec:Logging}.}
+\end{itemize}
 
 \subsection{Signalling an Error}\label{sec:SignallingAnError}
 \begin{itemize}
@@ -590,7 +703,7 @@ From a book about Java programming :
 
 Logic errors, on the other hand, are the bane of all programmers. They hide and hate to reveal themselves. Logic errors seem to have minds of their own, constantly evading detection and dodging your efforts to pin down their cause. They can easily take a thousand times more effort to solve than the worst compiler errors. Worst of all, many logic errors are not found at all and occur only intermittently in sensitive places, which causes your customer to scream for a fix. Logic errors often require you to throw thousands of man-hours at them, only to finally discover that they are minor typos.”
 
-Hardcore Java\autocite{HARDCORE_JAVA}
+Robert Simmons Jr.: \textit{Hardcore Java}\autocite{HARDCORE_JAVA}
 \end{quotation}
 
 A sample for swapping a logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
@@ -842,7 +955,7 @@ In general, the \lstinline|toString()| method returns a string that ‘textually
 
 What does “textually represents” mean?
 
-The implementation for \lstinline|java.lang.Object::toString| …
+The implementation for \lstinline|java.lang.Object::toString|~…
 \begin{quotation}
 “[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
 \lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|”
@@ -1290,7 +1403,7 @@ The phrase “Convention over Configuration” (or “Coding by Convention”) g
 
 Basically it means that an object instance can be created and used properly with only minimal configuration because all not absolutely mandatory settings will have meaningful – and useful! – default values.
 
-On the other hand, there is that number~\ref{lst:ZoP:ExplicitVsImplicit} from the “Zen of Python”, saying “Explicit is better than implicit” …
+On the other hand, there is that number~\ref{lst:ZoP:ExplicitVsImplicit} from the “Zen of Python”, saying “Explicit is better than implicit”~…
 
 These are obviously contradictory statements – so whose right?
 
@@ -1302,7 +1415,7 @@ So assume that you are using a 3\textsuperscript{rd} party library that creates 
 
 According to “Convention over Configuration”, you are fine: the convention is HTML5, you do not need to set the HTML version for the output format explicitly.
 
-But what happens, if in a few years the next version of that report creator library will support HTML7 as the default, but your PDF generator stucks still with HTML5 for its input? Nothing happens until your successor as the maintainer of your software decides to use that new library … afterwards you may see funny things in the generated PDF documents.
+But what happens, if in a few years the next version of that report creator library will support HTML7 as the default, but your PDF generator stucks still with HTML5 for its input? Nothing happens until your successor as the maintainer of your software decides to use that new library~… afterwards you may see funny things in the generated PDF documents.
 
 So the recommendation is: do not always rely on conventions! Whenever possible, provide an explicit configuration! At least leave a comment when you rely on the defaults, and that comment should describe what the anticipated defaults are.
 
@@ -2032,7 +2145,7 @@ So make sure that your code will only cleans up objects that your code is respon
 The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
 
 \subsection{Verbs}
-This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’ …} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
+This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’~…} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
 
 \renewcommand{\cellalign}{tl}
 \LTXtable{\linewidth}{Verbs.tbl.tex}

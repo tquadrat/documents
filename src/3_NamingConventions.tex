@@ -13,7 +13,7 @@ The details on how names and identifiers are composed in Java, and where they ar
 But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may look good in some sample code (like in the sample listings in this document), but they are definitely invalid for real code!
 
 \subsection{Language}
-The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two …) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
+The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two~…) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
 
 The reason to use English is that this is the common language for most international teams.
 
@@ -22,18 +22,18 @@ But even if you are working in an environment where English is a foreign languag
 \subsection{UPPERCASE, lowercase, CamelCase}
 Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
 
-The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29 …}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
+The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29~…}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
 
 Details are again discussed in the chapter about the respective code elements.
 
 \subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
 One aspect of abbreviations has been discussed already above. In general, avoid abbreviations and acronyms if those are not \textit{very well known}.
 
-The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names …
+The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
 
 This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
 
-If you think you will be more productive when using short names (because you can type them faster …), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents, …).
+If you think you will be more productive when using short names (because you can type them faster~…), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
 
 But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
 

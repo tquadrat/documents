@@ -137,7 +137,7 @@ I did this because the “Zen of Python” is a \textit{nearly} generic coding g
 
 Ok, some of the statements may need an explanation and/or some samples, and I hope that this document will give it to you.
 
-But to get your Coding Guardrails for Java in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended …).}
+But to get your Coding Guardrails for Java in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…).}
 \begin{enumerate}[nosep]
 \item Beautiful is better than ugly.
 \item Explicit is better than implicit, and verbosity is your friend.\label{lst:ZoP:ExplicitVsImplicit}
@@ -146,15 +146,15 @@ But to get your Coding Guardrails for Java in a nutshell, you can take them from
 \item Flat is better than nested.
 \item Sparse is better than dense.
 \item Readability counts.\label{lst:ZoP:Readablity}
-\item Special cases aren't special enough to break the rules …\label{lst:ZoP:SpecialCases}
-\item … although practicality beats purity.\label{lst:ZoP:Practicality}
-\item Errors should never pass silently and Exceptions may never be swallowed …
-\item … unless explicitly silenced.
+\item Special cases aren't special enough to break the rules~…\label{lst:ZoP:SpecialCases}
+\item …~although practicality beats purity.\label{lst:ZoP:Practicality}
+\item Errors should never pass silently and Exceptions may never be swallowed~…
+\item …~unless explicitly silenced.
 \item In the face of ambiguity, refuse the temptation to guess.
-\item There should be one – and preferably only one – obvious way to do\\ it …
-\item … although that way may not be obvious at first.
-\item Now is better than never …\label{lst:ZoP:Now}
-\item … although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
+\item There should be one – and preferably only one – obvious way to do\\ it~…
+\item …~although that way may not be obvious at first.
+\item Now is better than never~…\label{lst:ZoP:Now}
+\item …~although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
 \item If the implementation is hard to explain, it's a bad idea.
 \item If the implementation is easy to explain, it may be a good idea.
 \item Think about your future self and add a comment.
@@ -170,11 +170,11 @@ One rule should be followed before any other rule or recommendation given in thi
 \end{huge}
 \end{center}
 
-Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug, not adding missing comments …} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
+Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug, not adding missing comments~…} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
 
 \textit{And this is exactly what we want to avoid!} 
 
-This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code …
+This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code~…
 
 Of course you can interpret it also as “Don't make mistakes”, but we all now that humans make mistakes, and that it is unavoidable that our code will contain one or the other bug. So it means that you should \textit{do your best} to avoid mistakes, and the rules, guidelines and recommendation from this document will help you with that.
 

@@ -277,3 +277,6 @@ TSWLatexianTemp*
 
 # temporary generated files
 *.tbl
+
+# joe's backup files
+*~

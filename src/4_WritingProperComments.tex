@@ -9,7 +9,7 @@ So Java source code can generally have three kinds of comments:
 \item{implementation comments}
 \item{maintenance comments}
 \end{itemize}
-In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “/**…*/” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
+In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “\verb#/**…*/#” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
 
 \textit{Maintenance comments} are technically a special form of implementation comments, but as the have a special function, they are covered separately (see chapter \tqfullvref{sec:MaintenanceComments}).
 
@@ -33,7 +33,7 @@ In general:
 \item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
 \item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).}
 \item{Comments should be in full sentence and using a clear language.}
-\item{Finally: all comments has to be in English language; they should be grammatically correct and without typos.\footnote{… but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.}}
+\item{Finally: all comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.}}
 \end{itemize}
 
 \section{Documentation Comments}\label{sec:DocumentationComments}
@@ -47,7 +47,7 @@ Eclipse can be configured in a way that it will issue warnings or even errors fo
 
 To achieve the same for IntelliJ IDEA, you go to \verb#File|Settings#, and there you select \verb#Editor|Inspections>Java>Javadoc#.
 
-Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “/**…*/”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
+Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
 
 \begin{lstlisting}
 /**
@@ -505,7 +505,7 @@ Same as the \nameref{sec:TagCode} tag, but the text is shown as plain text and n
 
 \paragraph{\lstinline|@param|}\label{sec:TagParam}  Usage: \lstinline|@param <parameter-name> <description>|
 
-Adds a parameter with the specified parameter name followed by the specified description to the “Parameters” section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (“<…>”) around such a parameter name to indicate the use of a type parameter.
+Adds a parameter with the specified parameter name followed by the specified description to the “Parameters” section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (“\verb#<…>#”) around such a parameter name to indicate the use of a type parameter.
 
 \paragraph{\lstinline|@provides|}\label{sec:TagProvides}  Usage: \lstinline|@provides <service-type> <description>|
 
@@ -779,7 +779,7 @@ else
 }
 \end{lstlisting}
 
-But it is more common to use “//” instead of “/*…*/” for these trailing comments:
+But it is more common to use “\verb#//#” instead of “\verb#/*…*/#” for these trailing comments:
 \begin{lstlisting}
 if( a == 2 )
 {
@@ -1063,7 +1063,7 @@ else
 //}
 \end{lstlisting}
 
-To use a block comment (“/*…*/”) for commenting out sections of code is not a good idea, although you do not have to type that much: you cannot have a block comment inside a block comment.
+To use a block comment (“\verb#/*…*/#”) for commenting out sections of code is not a good idea, although you do not have to type that much: you cannot have a block comment inside a block comment.
 
 The easiest way to comment out a selected code block this way in Eclipse is to use \verb#Source|Toggle Comment# from the menu or the short key \verb#CTRL+/#\footnote{On a German keyboard, it is “7” instead of “/”.}.
 

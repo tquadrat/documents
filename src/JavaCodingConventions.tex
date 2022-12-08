@@ -107,7 +107,7 @@ literate=
 \chapter{Coding Guidelines}\label{sec:CodingRules}
 These guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
 
-As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}?}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22.}
+As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython, PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}?}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22.}
 
 One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
 
@@ -153,8 +153,8 @@ Gray area candidates are \verb#awk# and also \verb#sed#, but even \verb#javac#, 
 \paragraph{Standalone Application}\label{sec:StandaloneApplication}
 A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are a text editor, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE} or a web container like Tomcat\autocite{APACHE_TOMCAT}.
 
-\paragraph{Serverbased Application}\label{sec:ServerbasedApplication}
-Serverbased applications are applicationn that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT} or any of the appservers mentioned before.
+\paragraph{Server-based Application}\label{sec:ServerbasedApplication}
+Server-based applications are applicationn that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT} or any of the appservers mentioned before.
 
 In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be used by the application.
 
@@ -547,14 +547,14 @@ public final void run()
 
 One reason is that the method \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run} can be called also in other contexts than just as the main method of a thread; swallowing the exception like shown in the example is a bad idea in that case.
 
-Another reason is that when the method is implemented as part of a library, an extension or even a serverbased application, different facilities may be used to report the error.
+Another reason is that when the method is implemented as part of a library, an extension or even a server-based application, different facilities may be used to report the error.
 
 But the main reason is that there is a much better mechanism that handles those otherwise unhandled exceptions: the “Uncaught Exception Handler”\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE}.
 
 The interface \lstinline|java.lang.Thread.UncaughtExceptionHandler| is a functional interface\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterfaces, ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterface, ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} providing the method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException}.
 
 There are basically two ways\footnote{In fact, three ways. But as you should avoid anonymous classes, this option is omitted here.} to implement an uncaught exception handler; the classical way would be to create a new class:
-\begin{lstlisting}[numbers=left,caption={class UncaughtExceptionHandlerImpl}]
+\begin{lstlisting}[numbers=left,caption={Class UncaughtExceptionHandlerImpl}]
 /**
  *  The implementation of the interface
  *  {@link java.lang.Thread.UncaughtExceptionHandler}
@@ -608,7 +608,7 @@ public final class MyClass
 \end{lstlisting}
 In the second case, the uncaught exception handler uses the resources provided by the class it lives in. This may be desired or not.
 
-A thread can be configured with the uncaught exception handler in three ways:
+A thread can be configured with the uncaught exception handler in three different ways:
 \begin{enumerate}
 \item{Each single thread can get its own uncaught exception handler by calling \lstinline|setUncaughtExceptionHandler()|\autocite{ORACLE_DOC_THREAD:setUncaughtExceptionHandler} on it, with an instance of an implementation of \lstinline|Thread.UncaughtExceptionHandler| as the argument:
 \begin{lstlisting}
@@ -708,11 +708,65 @@ public final class MyClass
 }
 \end{enumerate}
 
-The last option can be used only from standalone applications and from tools. The environments for serverbased applications and extensions do quite often restrict the creation of additional threads. A feature library should accept an uncaught exception handler and/or a thread group as a configuration value.
+The last option can be used only from standalone applications and from tools. The environments for server-based applications and extensions do quite often restrict the creation of additional threads. A feature library should accept an uncaught exception handler and/or a thread group as a configuration value.
 
 If a function library creates new threads, the respective methods must accept at least an uncaught exception handler and optionally a thread group. Alternatively, a thread factory\autocite{ORACLE_DOC_THREADFACTORY_INTERFACE} can be injected.
  
 \subsection{Reporting Errors}\label{sec:ReportingErrors}
+As already said earlier, at some point we need to report an error condition to the user of the program; this can happen in various ways. The most common is to log the error somehow, but as logging has various additional aspects, it is covered by a chapter of its own: chapter \tqfullvref{sec:Logging}.
+
+Other means to report the error condition are the following:
+\begin{itemize}
+\item{Write an error message to the console, a message window or status bar.}
+\item{Display an error dialog.}
+\item{Send an email, a tweet or another kind of message.}
+\item{Trigger an external signalling device (an alarm bell, a horn, a flashlight,~…).}
+\item{…}
+\end{itemize}
+
+Before discussing this further, I want to repeat: \textit{Reporting an error condition is not handling it!}
+
+Obviously, not all ways of reporting an error condition are feasible for types of products.
+
+\begin{itemize}
+\item{First, a function library should not report an error condition in any other way than just throwing the appropriate exception. It should not even log them.}
+
+\item{Extensions and server-based applications should use the APIs that are provided to them by their host/container for reporting the error conditions, although server-based applications may introduce additionals ways to report an error.}
+
+\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
+
+Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
+
+\item{Sending messages around to report an error condition should be considered mainly for dark (headless) applications, either standalone or server-based. Of course, this something that can be provided by a feature library (as the new featured), but a feature library should not use it.
+
+Whether it makes sense for a tool depends on the kind of the tool.}
+
+\item{Same for the use of external signalling devices.}
+\end{itemize}
+
+In most cases, it is not sufficient to provide the user with the caught exception only – meaning just calling \lstinline|java.lang.Throwable::printStackTrace| is not enough. In fact, for most users, this is even too much information. Also providing the call stack for an operation in an \textit{error message} is sometimes considered as a security loophole, because it may give a potential attacker information about code internals that they can use to shape their attack against your system.
+
+You should also consider to localise the error message to the locale of the user; that is mainly translating it to the user's language, but not only. You should always add the time zone to timestamps, or at least the offset to UTC, even when you adjust them to the user's time zone.
+
+It is a good idea to have a unique error code with your error message. That allows you to identify it when the user reports it back to you, and you do not understand their language. 
+
+Obviously, you should avoid to have sensitive data in your error messages. But ‘sensitive data’ may depend from the context your program is running in.
+
+\subsection{Logging}\label{sec:Logging}
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
+
+If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
+
+If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
+
+More details about logging are discussed in chapter \tqvref{sec:Logging}.
+
+
+
 \subsection{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -720,41 +774,9 @@ If a function library creates new threads, the respective methods must accept at
 
 , although these can combined with each other, to some extent:
 
-\begin{itemize}
-\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
 
-Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
 
-\item{With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
 
-If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
-
-If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
-
- More details about logging are discussed in chapter \tqvref{sec:Logging}.}
-\end{itemize}
-
-\subsection{Signalling an Error}\label{sec:SignallingAnError}
-\begin{itemize}
-\item{An exception is thrown by an operation triggered by our code. This is covered in detail in chapter \tqvref{sec:GeneralExceptionHandling}.}
-\item{An operation returns an unexpected or unwanted value, and the current code is unable to cope with that situation.
-
-Usually, we will throw an exception in that case, but for a tool, it might be also possible to immediately terminate the program, after printing an appropriate message to standard out or standard err.}
-\item{Again we will throw an exception if the arguments for a method call are invalid, usually an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}.}
-\item{In case input data is wrong, corrupted, or missing, we have several options.
-
-As always, we can throw an exception and let someone else solve the problem. A tool can be terminated immediately, and an extension or a serverbased application can signal the problem to the environment, as this is in most cases the source of the input data.
-
-A standalone application may return to the user (if it has a UI) and request new data, or it may retry to get the data.
-
-The code in a feature library may also try to get new data from the caller or from an external resource.}
-\end{itemize}
-
-\subsection{Logging}\label{sec:Logging}
-\subsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
 
 \autocite{ORACLE_DOC_STRING_CLASS}
 \autocite{ORACLE_DOC_FORMATTER_CLASS}
@@ -1129,7 +1151,7 @@ But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER
 
 For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}, \lstinline|toString()| is even the method that provides the result.
 
-Originally, the textual representation of an object as provided by the \lstinline|toString()| method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, like for the class \lstinline|java.lang.Integer|.
+Originally, the textual representation of an object as provided by the \lstinline|toString()| method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|, \lstinline|java.util.UUID| or \lstinline|java.time.Instant|.
 
 So how to implement the method \lstinline|toString()| for your method?
 
@@ -2577,9 +2599,35 @@ public class AutoLock implements AutoCloseable
 \end{lstlisting}
 
 \subsection{Patch Identification}\label{sec:PatchIdentification}
+The chapter \tqfullvref{sec:MaintenanceComments} discussed how to mark areas in the code that has been changed to fix a bug. There I suggested to use annotations for this task.
 
-\subsection{-------------------------------------------- Proceed from here!}
-The annotations \lstinline|@BUG| and \lstinline|@FixList| are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
+This can look like this:
+\begin{lstlisting}[numbers=left]
+@BUG( id  = "BUG-123456", comment = "Introduced base class MyClassBase" )
+public final class MyClass extends MyClassBase
+{
+    @BUG( id = "BUG-100000", comment = "Made generic; added Typ 'String'" )
+    @BUG( id = "BUG-100003", comment = "Changed type to 'CharSequence'" )
+    private final List<CharSequence> m_Texts = new LinkedList<>();
+
+    @BUG( id  = "BUG-123456", comment = "Introduced base class MyClassBase; calling super()" )
+    public MyClass()
+    {
+        super();
+    }   //  MyClass()
+    
+    @BUG( id = "BUG-100003", comment = "Changed type to 'CharSequence'" )
+    @BUG( id = "BUG-100022", comment = "Made generic; changed to 'extends CharSequence'" )
+    @BUG( id = "BUG-123456", comment = "Introduced base class MyClassBase; added @Override" )
+    @Override
+    public final <T extends Charsequence> void addText( final T text ) { … }
+}
+//  class MyClass
+\end{lstlisting}
+
+That the same annotation can be applied multiple times to the same element requires a “container annotation” for that annotation\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RepeatableAnnotationInterfaces}, but the use of this annotation is implicit.
+
+The annotations \lstinline|@BUG| and \lstinline|@FixList| (the “container annotation”) are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_BUG, TQUADRAT_ORG_FOUNDATION_FIXLIST}.
 
 \paragraph{The Code} \
 \begin{lstlisting}[numbers=left,caption={FixList.java}]
@@ -2757,7 +2805,7 @@ Otherwise, a message containing the thread's name, as returned from the thread's
 
 Unfortunately, the class \lstinline|java.lang.ThreadGroup| itself does not provide an API to change the behaviour of its \lstinline|uncaughtException()| method. To do that, you have to override that method in a subclass.
 
-Below you find an implementation of \lstinline|ThreadGroup| that fixes that.
+Below you find an implementation of \lstinline|ThreadGroup| that fixes that. A similar class is also part of my Foundation library – see \autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_THREADGROUP}.
 
 \paragraph{The Code} \
 \begin{lstlisting}[numbers=left,caption={ThreadGroupExt.java}]

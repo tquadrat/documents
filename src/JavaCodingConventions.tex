@@ -753,55 +753,136 @@ It is a good idea to have a unique error code with your error message. That allo
 Obviously, you should avoid to have sensitive data in your error messages. But ‘sensitive data’ may depend from the context your program is running in.
 
 \subsection{Logging}\label{sec:Logging}
+Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.
+
+The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
+
+Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
+
+Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by Log4J\autocite{APACHE_LOG4J}.
+
+Next, only tools and standalone applications should configure a logging framework. Function libraries should no log at all, while feature libraries rely on the logging facilities of the host environment, same as server-based applications and extensions.
+
+Logging for the latter two depends on the host environment, but for feature libraries (and for function libraries that really require logging) it is recommended to use SLF4J\autocite{SLF4J}.
+
+SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4J, but it has evolved since then. SLF4J supports Log4J, JDK Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
+
+Looking a the code to write, all three works basically the same:
+\begin{enumerate}[nosep]
+\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it.}
+\item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
+\item{Check whether the desired log level is active.}
+\item{If the desired log level is active, log your message.}
+\end{enumerate}
+
+Even APIs are quite similar\footnote{Of course the code sample will not compile.}: 
+\begin{lstlisting}[numbers=left]
+// For JDK Logging:
+import static java.util.logging.Logger.getLogger;
+import static java.util.logging.Level.*; 
+import java.util.logging.Logger;
+
+// For Log4J:
+import static org.apache.logging.log4j.LogManager.getLogger;
+import org.apache.logging.log4j.Logger;
+
+// For SLF4J:
+import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
+
+public final class MyClass
+{
+       /*------------------------*\
+    ===** Static Initialisations **==================================
+       \*------------------------*/
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
+    
+    // For Log4J and SLF4J, this also works:
+    private static final Logger m_Logger = getLogger( MyClass.class );
+    
+       /*---------*\
+    ===** Methods **=================================================
+       \*---------*/
+    public final void myMethod()
+    {
+        //---* Logging an error message *----------------------------
+        final var message = "An error occurred!";
+        final var error = new Error( "Something happened!" );
+        
+        // With JDK Logging
+        m_Logger.severe( message );
+        m_Logger.log( SEVERE, message, error );
+        
+        // With Log4J and SLF4J
+        m_Logger.error( message, error );
+
+        //---* Logging an informational message *--------------------
+        // With JDK Logging
+        if( m_Logger.isLoggable( INFO ) )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.log( INFO, message );
+        }
+        
+        // With Log4j and SLF4J
+        if( m_Logger.isInfoEnabled() )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.info( message );
+        }
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+The predefined log levels differ:
+\begin{filecontents}{LogLevels.tbl}
+  \begin{longtable}{|c|c|c|X|}
+  \caption{Log Levels} \\
+  \hline 
+  JDK Logging & Log4J & SLF4J & Description \\ 
+  \hline
+  \endfirsthead
+  \multicolumn{4}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+  \hline 
+  JDK Logging & Log4J & SLF4J & Description \\ 
+  \hline
+  \endhead
+  \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
+  & FATAL & & A fatal event that will prevent the application from continuing. \\
+  \hline
+  SEVERE & ERROR & ERROR & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
+  \hline 
+  WARNING & WARN & WARN & An event that might possible lead to an error. \\ 
+  \hline 
+  INFO & INFO & INFO & An event for informational purposes. \\ 
+  \hline 
+  CONFIG & & & A message level for static configuration messages. \\ 
+  \hline 
+  FINE & DEBUG & & A general debugging event. A message level providing tracing information. \\ 
+  \hline 
+  FINER & & & A fairly detailed tracing message.\\
+  \hline 
+  FINEST & TRACE & TRACE & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{LogLevels.tbl}
+
 \subsection{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
 \end{lstlisting}
-With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
-
-If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
-
-If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
-
-More details about logging are discussed in chapter \tqvref{sec:Logging}.
-
-
-
-\subsection{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-, although these can combined with each other, to some extent:
 
 
 
 
-
-\autocite{ORACLE_DOC_STRING_CLASS}
-\autocite{ORACLE_DOC_FORMATTER_CLASS}
-\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
 
 Every important method has to have a trace statement that logs the method entry. If a method logs method entry, it also has to log method exit, or it has to log an exception.
 For Chordiant code from the Foundation product, this will look like the sample below:
@@ -873,6 +954,56 @@ public final void myMethod() throw IOException
 In this case, you also accept that the same exception might be logged twice.
 
 
+
+
+
+
+
+With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
+
+If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
+
+If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
+
+More details about logging are discussed in chapter \tqvref{sec:Logging}.
+
+
+
+\subsection{-------------------------------------------- Proceed from here!}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+, although these can combined with each other, to some extent:
+
+
+
+
+
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\begin{lstlisting}
+\end{lstlisting}
 
 
 \subsection{Exceptions}

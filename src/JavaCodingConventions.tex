@@ -2137,11 +2137,13 @@ When the database will be accessed (and updated) from different locations, this 
 
 How to get universally unique ids (UUID) is defined in RFC~4122\autocite{Leach:RFC4122}, among others. Java provides an implementation for these UUIDs with the class \lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}. Unfortunately, the class provides only one method that creates new arbitrary UUIDs (\lstinline|java.util.UUID::randomUUID()|\autocite{ORACLE_DOC_UUID:randomUUID}), and these are version~3 pseudo-random UUIDs.
 
-These are large enough that collisions are unlikely, but when used as primary keys on a database table, the database indexing can get quite inefficient. This is discussed in more detail in \autocite{Mihalcea:UUID_Database_Primary_Key}.
+These are large enough that collisions are unlikely, but when used as primary keys on a database table, the database indexing can get quite inefficient (lack of locality in the indexes). This is discussed in more detail in \autocite{Mihalcea:UUID_Database_Primary_Key}.
 
-Partially, this is addressed by timebased UUIDs (version~1) and new formats will be discussed (see \autocite{Davis:NewUUIDs}), but another issue is that these UUIDs occupies at least 128~bit – when you use the binary format. But usually, the textual representation is used (mainly because the Java class \lstinline|UUID| does not provide a method to get the binary format), and that has even 288~bit (36~bytes or characters). I provide a utility class \lstinline|UniqueIdUtils|\autocite{TQUADRAT_ORG_FOUNDATION_UNIQUEIDUTILS} that provides some tools to address these issues. So it allows you to create timebased UUIDs or to get the binary representation from a UUID.
+Partially, this is addressed by timebased UUIDs (version~1), and new formats will be discussed (see \autocite{Davis:NewUUIDs, Leach:RFC4122bis}), but another issue is that these UUIDs occupy at least 128~bit – when you use the binary format. But usually, the textual representation is used (mainly because the Java class \lstinline|UUID| does not provide a method to get the binary format), and that has even 288~bit (36~bytes or characters). I provide a utility class \lstinline|UniqueIdUtils|\autocite{TQUADRAT_ORG_FOUNDATION_UNIQUEIDUTILS} that provides some tools to address these issues. So it allows you to create timebased UUIDs or to get the binary representation from a UUID.
 
 The already mentioned article in \autocite{Mihalcea:UUID_Database_Primary_Key} suggests to use shorter unique ids that should be timebased; the article refers to a the \verb#TSID_CREATOR# library\autocite{Lima:TSID_CREATOR}, but alternatively, my \lstinline|UniqueIdUtils| do also provide a \lstinline|TSID| type with 64~bit length.
+
+Another issue with UUIDs is that it should not be too easy to guess a valid instance.
 
 
 \section{Finalisation}\label{sec:Finalisation}

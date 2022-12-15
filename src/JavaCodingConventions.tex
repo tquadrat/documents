@@ -769,7 +769,7 @@ Logging for the latter two depends on the host environment, but for feature libr
 
 SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4J, but it has evolved since then. SLF4J supports Log4J, JDK Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
 
-Looking a the code to write, all three works basically the same:
+Looking a the code to write, all three work basically the same:
 \begin{enumerate}[nosep]
 \item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it.}
 \item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
@@ -857,25 +857,37 @@ The predefined log levels differ:
   \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
   \endfoot
   \endlastfoot
-  & FATAL & & A fatal event that will prevent the application from continuing. \\
+  & \verb#FATAL# & & A fatal event that will prevent the application from continuing. \\
   \hline
-  SEVERE & ERROR & ERROR & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
+  \verb#SEVERE# & \verb#ERROR# & \verb#ERROR# & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
   \hline 
-  WARNING & WARN & WARN & An event that might possible lead to an error. \\ 
+  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possible lead to an error. \\ 
   \hline 
-  INFO & INFO & INFO & An event for informational purposes. \\ 
+  \verb#INFO# & \verb#INFO# & \verb#INFO# & An event for informational purposes. \\ 
   \hline 
-  CONFIG & & & A message level for static configuration messages. \\ 
+  \verb#CONFIG# & & & A message level for static configuration messages. \\ 
   \hline 
-  FINE & DEBUG & & A general debugging event. A message level providing tracing information. \\ 
+  \verb#FINE# & \verb#DEBUG# & & A general debugging event. A message level providing tracing information. \\ 
   \hline 
-  FINER & & & A fairly detailed tracing message.\\
+  \verb#FINER# & & & A fairly detailed tracing message.\\
   \hline 
-  FINEST & TRACE & TRACE & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
+  \verb#FINEST# & \verb#TRACE# & \verb#TRACE# & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
   \hline 
  \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{LogLevels.tbl}
+
+So when you should log something? And what should you log?
+
+First, you should log error conditions. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method.
+
+We said already that a function library will not log at all. For a feature library, an extension and server-based application, you should log when the control flow is about to leave the realm of your component and you do not know how the host code will handle the exception.
+
+You should also log (uncaught) exceptions in threads that your code creates; this was already discussed in chapter \tqfullvref{sec:ExceptionHandlingInThreads}.
+
+The log message should contain all information that you have a this point; this is at least the exception itself with its message and stacktrace. But perhaps you know additional things, for example what your code attempted when the exception was thrown, that name of resources that should be tried to access, the user name, the access rights and many other things – as long as these are not sensible data! So you should never add a password to a log message. And even the user name is already in a gray area.
+
+Obviously, the log levels \verb#FATAL#, \verb#SEVERE# and \verb#ERROR# are meant for these messages.
 
 \subsection{-------------------------------------------- Proceed from here!}
 
@@ -2143,7 +2155,7 @@ Partially, this is addressed by timebased UUIDs (version~1), and new formats wil
 
 The already mentioned article in \autocite{Mihalcea:UUID_Database_Primary_Key} suggests to use shorter unique ids that should be timebased; the article refers to a the \verb#TSID_CREATOR# library\autocite{Lima:TSID_CREATOR}, but alternatively, my \lstinline|UniqueIdUtils| do also provide a \lstinline|TSID| type with 64~bit length.
 
-Another issue with UUIDs is that it should not be too easy to guess a valid instance.
+Another issue with UUIDs is that it should not be \textit{too} easy to guess a valid instance. This means that a database sequence\autocite{TOAD_WORLD_BLOG:DatabaseSequence} that just increments a counter in order to get a new identifier is the worst choice in this regard.
 
 
 \section{Finalisation}\label{sec:Finalisation}

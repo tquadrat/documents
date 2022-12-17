@@ -757,6 +757,8 @@ Obviously, you should avoid to have sensitive data in your error messages. But �
 \subsection{Logging}\label{sec:Logging}
 Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.
 
+Nevertheless, \textit{logging} is mainly for the recording of technical issues. If you need to keep track of business transactions (if you have to provide an audit log or a journal), we talk about \textit{journalling} instead. There may be some overlapping between those two, and the requirements look similar, but logging and journalling are two distinct topics and should be treated independently from each other.
+
 \subsubsection{Logging Infrastructure}
 The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
 
@@ -913,13 +915,24 @@ Another reason to log a warning would be when you handle an error condition by r
 
 Then you should emit a warning to the logs when a resource gets short; even when the application recovers from that, it should be tracked.
 
-If you run out on a particular resource, this would be an error condition, no longer a warning condition.
+If you run out of a particular resource, this would be an error condition, no longer a warning condition.
+
+Obviously, this is not a complete list.
+
+\paragraph{Info} You \textit{may} also log other important events that are clearly no error condition nor a warning. The log level for this kind of log entries is \verb#INFO#. You should assume that this is the default log level for each new logger, meaning that messages with the log levels \verb#INFO#, \verb#WARNING#/\verb#WARN# and \verb#FATAL#/\verb#ERROR#/\verb#SEVERE# are always written to the log file.
+
+This may be the successfully established connection with an external system, the start and the termination of a long running background process, the creation of a new user and alike.
+
+It is also a good idea to log the system configuration on startup.
+
+You should not log (at least not with a log level of \verb#INFO#) the successful termination of common operations.\footnote{The kind of application that you create may request an audit log of some kind, but this is not covered by \textit{logging}. Instead we talk about \textit{journalling} here.}
+
+In general, you should avoid to log the “happy path” in your code – at least, you should not do this with the log level \verb#INFO#.
 
 \subsubsection{-------------------------------------------- Proceed from here!}
-\paragraph{Info} \lipsum[1]
 \paragraph{Debug} \lipsum[1]
 \paragraph{Trace} \lipsum[1]
-\paragraph{Configuration} I have to confess that I never got the purpose of the log level \verb#CONFIG# for the JDK Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
+\paragraph{Configuration} I have to confess that I never understood the purpose of the log level \verb#CONFIG# for the JDK Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
 
 Of course, these could be relevant information for debugging issues, and it would make sense to log them with each restart of your program.
 
@@ -927,7 +940,7 @@ But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when
 
 Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
 
-My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead.
+My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead. If you are using another logging framework than JDK Logging, you don't have another choice.
 
 \begin{lstlisting}
 \end{lstlisting}
@@ -1059,6 +1072,17 @@ More details about logging are discussed in chapter \tqvref{sec:Logging}.
 \begin{lstlisting}
 \end{lstlisting}
 
+\subsubsection{An  Example}
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
+
+\subsubsection{Summary}
+\begin{lstlisting}
+\end{lstlisting}
+
+\lipsum[1]
 
 \subsection{Exceptions}
 \subsection{-------------------------------------------- Proceed from here!}

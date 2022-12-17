@@ -757,6 +757,7 @@ Obviously, you should avoid to have sensitive data in your error messages. But �
 \subsection{Logging}\label{sec:Logging}
 Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.
 
+\subsubsection{Logging Infrastructure}
 The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
 
 Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
@@ -769,9 +770,9 @@ Logging for the latter two depends on the host environment, but for feature libr
 
 SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4J, but it has evolved since then. SLF4J supports Log4J, JDK Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
 
-Looking a the code to write, all three work basically the same:
+Looking a the code to write, all three (JDK Logging, Log4J and SLF4J) work basically the same:
 \begin{enumerate}[nosep]
-\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it.}
+\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it\footnote{This is discussed in more detail in chapter \tqvref{sec:NamingOfLoggers}.}. These names are used for the configuration of a logger.}
 \item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
 \item{Check whether the desired log level is active.}
 \item{If the desired log level is active, log your message.}
@@ -840,7 +841,8 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 
-The predefined log levels differ:
+\subsubsection{The Log Levels}\label{sec:LogLevels}
+The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For the JDK Logging, Log4J and SLF4J, the predefined log levels differ:
 \begin{filecontents}{LogLevels.tbl}
   \begin{longtable}{|c|c|c|X|}
   \caption{Log Levels} \\
@@ -861,7 +863,7 @@ The predefined log levels differ:
   \hline
   \verb#SEVERE# & \verb#ERROR# & \verb#ERROR# & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
   \hline 
-  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possible lead to an error. \\ 
+  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possibly lead to an error. \\ 
   \hline 
   \verb#INFO# & \verb#INFO# & \verb#INFO# & An event for informational purposes. \\ 
   \hline 
@@ -876,24 +878,62 @@ The predefined log levels differ:
  \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{LogLevels.tbl}
+In addition, they also know the ‘levels’ \verb#ALL# (log everything) and \verb#OFF# (log nothing), but you cannot check for these.
 
-So when you should log something? And what should you log?
+A lower level includes all the higher levels, too. So when a logger is configured for the log level \verb#INFO#, \lstinline|m_Logger.isLoggable()| will return \lstinline|true| for \verb#INFO#, \verb#WARNING# (or \verb#WARN#), \verb#SEVERE#, \verb#ERROR# and \verb#FATAL#, but not for \verb#DEBUG# or \verb#FINER#.
 
-First, you should log error conditions. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method.
+JDK Logging and Log4J allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
+
+\subsubsection{How to log}\label{sec:HowToLog}
+This chapter discusses how to emit log messages, but also when you should log something, and what you should log.
+
+\paragraph{Errors} First, you should log error conditions at some point in the program flow. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method.
 
 We said already that a function library will not log at all. For a feature library, an extension and server-based application, you should log when the control flow is about to leave the realm of your component and you do not know how the host code will handle the exception.
 
 You should also log (uncaught) exceptions in threads that your code creates; this was already discussed in chapter \tqfullvref{sec:ExceptionHandlingInThreads}.
 
+As a rule of thumb, you log an exception at the latest possible occasion.
+
 The log message should contain all information that you have a this point; this is at least the exception itself with its message and stacktrace. But perhaps you know additional things, for example what your code attempted when the exception was thrown, that name of resources that should be tried to access, the user name, the access rights and many other things – as long as these are not sensible data! So you should never add a password to a log message. And even the user name is already in a gray area.
 
 Obviously, the log levels \verb#FATAL#, \verb#SEVERE# and \verb#ERROR# are meant for these messages.
 
-\subsection{-------------------------------------------- Proceed from here!}
+The other log levels are not meant for reporting \textit{current} error conditions.
+
+\paragraph{Warnings} The description for the log levels \verb#WARNING# and \verb#WARN# says that these indicate “an event that might possibly lead to an error” somewhen in the future.
+
+Such an event could be the repeatingly failed login attempt of a user, as that could be the indication for a hacker attack. Most probably, you should not log the first failed attempt, perhaps not even the second or third (at least not as a warning), but consecutive attempts from the same devide and/or with the same user name should be logged. And obviously, the respective log message must contain all the necessary data that can be used to repel that attack. Whether the used passwords should be added to the log messages can be discussed.
+
+In the same way obvious, you have to implement the necessary infrastructure to collect the data for all failed (and successful) logins, and you do this only to be able to log the respective warning.\footnote{Although you can collect this data also for general monitoring if your application lives in an environment where this is provided. Or you make it available through JMX – see chapter \tqvref{sec:UtilisingJMX}.} This means that you can switch it off when the log level is disabled.
+
+In the same way, you should log attempts of unauthorised access by authenticated users.
+
+Another reason to log a warning would be when you handle an error condition by repeating an operation or by performing an alternative operation. Although the current problem is solved for now, it is worth to keep track of it in the logs.
+
+Then you should emit a warning to the logs when a resource gets short; even when the application recovers from that, it should be tracked.
+
+If you run out on a particular resource, this would be an error condition, no longer a warning condition.
+
+\subsubsection{-------------------------------------------- Proceed from here!}
+\paragraph{Info} \lipsum[1]
+\paragraph{Debug} \lipsum[1]
+\paragraph{Trace} \lipsum[1]
+\paragraph{Configuration} I have to confess that I never got the purpose of the log level \verb#CONFIG# for the JDK Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
+
+Of course, these could be relevant information for debugging issues, and it would make sense to log them with each restart of your program.
+
+But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when you activate \verb#CONFIG#, you have also activated \verb#INFO# for that logger. This is probably not wanted.
+
+Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
+
+My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead.
 
 \begin{lstlisting}
 \end{lstlisting}
 
+\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
+\lipsum[1]
 
 
 
@@ -2156,6 +2196,11 @@ Partially, this is addressed by timebased UUIDs (version~1), and new formats wil
 The already mentioned article in \autocite{Mihalcea:UUID_Database_Primary_Key} suggests to use shorter unique ids that should be timebased; the article refers to a the \verb#TSID_CREATOR# library\autocite{Lima:TSID_CREATOR}, but alternatively, my \lstinline|UniqueIdUtils| do also provide a \lstinline|TSID| type with 64~bit length.
 
 Another issue with UUIDs is that it should not be \textit{too} easy to guess a valid instance. This means that a database sequence\autocite{TOAD_WORLD_BLOG:DatabaseSequence} that just increments a counter in order to get a new identifier is the worst choice in this regard.
+
+\section{Utilising JMX}\label{sec:UtilisingJMX}
+\section{-------------------------------------------- Proceed from here!}
+See \ref{sec:Logging}, and there the part about warnings! Keeping track about failed logins.!!!
+\lipsum[1]
 
 
 \section{Finalisation}\label{sec:Finalisation}

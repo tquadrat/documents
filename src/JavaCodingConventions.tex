@@ -1242,7 +1242,28 @@ java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
 com.xyz.foo.level = SEVERE
 \end{lstlisting}
 
-\autocite{ORACLE_DOC_LOGGING_PACKAGE,ORACLE_DOC_LOGGING_OVERVIEW}
+To provide your own configuration, you can modify this file (not recommended) or you create your own configuration file that you announce through the system property \verb#java.util.logging.config.file#.
+
+A sample configuration file for the sample provided above may look like this:
+\begin{lstlisting}[language=,numbers=left,caption={Sample JDK~Logging Configuration}]
+handlers=java.util.logging.FileHandler
+.level=SEVERE
+
+java.util.logging.FileHandler.pattern=%h/target/Sample.log
+java.util.logging.FileHandler.level=ALL
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
+
+BugHunt_2022-12-14_Logger.level=FINEST
+CRUD.level=OFF
+\end{lstlisting}
+
+It defines a configuration with two loggers, “\verb#BugHunt_2022-12-14_Logger#" and “\verb#CRUD#". The default log level is set to \verb#SEVERE#, while the logger  \verb#CRUD# is switched off, together with all it is child loggers, and the log level for \verb#BugHunt_2022-12-14_Logger# is set to \verb#FINEST#.
+
+A handler determines the destination for the log messages, and here we selected the file handler. A handler has its own log level, and you define the formatter that determines how the log messages will look like when written by the respective handler. Finally, ‘pattern’ specifies the name of the logfile.
+
+This is more or less the simplest configuration you can make. Refer to \autocite{ORACLE_DOC_LOGGING_OVERVIEW, ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_PACKAGE} and the JavaDoc for the various handlers and formatters for more details.
+
+Some parts of the configuration are also accessible through JMX (the Java Management Extension), so that they can be modified during runtime.
 
 \paragraph{Log4j} The configuration for Log4j is described in \autocite{APACHE_LOG4J:Configuration}. It allows four different formats for the configuration file (XML, JSON, YAML, or properties format), but the XML format is still the most common one.
 
@@ -1303,11 +1324,13 @@ A \verb#log4j2.xml# file may look like that one below:
 </Configuration>
 \end{lstlisting}
 
-It defines a configuration with the name “\verb#Sample#”, and that has one appender, named “\verb#File#” and two named loggers, “\verb#CRUD#" and that infamous “\verb#BugHunt_2022-12-14_Logger#", together with the default configuration (named “\verb#Root#”).
+It defines a configuration with the name “\verb#Sample#”, and that has one appender, named “\verb#File#” and two named loggers, “\verb#CRUD#" and that infamous “\verb#BugHunt_2022-12-14_Logger#", together with the default configuration (with the name “\verb#Root#”).
 
 An appender is basically the definition for the target of the log messages and how the messages will look like (the ‘layout’); you can define as many appenders as you want. The name of the defined loggers match with those we used in the program code, and you will set the level and the destination (the ‘appender reference’) for it.
 
 But the configuration is much more powerful than that what I will show here. For more details, see the documentation in \autocite{APACHE_LOG4J:Configuration}.
+
+\subsubsection{Summary}
 \subsubsection{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
@@ -1336,13 +1359,6 @@ But the configuration is much more powerful than that what I will show here. For
 \begin{lstlisting}
 \end{lstlisting}
 
-\subsubsection{An  Example}
-\begin{lstlisting}
-\end{lstlisting}
-
-\lipsum[1]
-
-\subsubsection{Summary}
 \begin{lstlisting}
 \end{lstlisting}
 

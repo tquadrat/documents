@@ -141,7 +141,7 @@ Sometimes these libraries can even be started standalone.
 
 Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H2_DATABASE}, ActiveMQ\autocite{APACHE_ACTIVEMQ}, Jetty\autocite{ECLIPSE_JETTY}, or Hibernate\autocite{HIBERNATE_ORM}.
 
-In the gray area here I would place JUnit\autocite{JUNIT5} and Log4J\autocite{APACHE_LOG4J}.
+In the gray area here I would place JUnit\autocite{JUNIT5} and Log4j\autocite{APACHE_LOG4J}.
 
 \paragraph{Tool}\label{sec:Tool}
 A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, but takes all input data somehow from the command line. Perhaps it may even work as a filter\autocite{WIKIPEDIA:Filter}, reading from standard input and writing to standard output.
@@ -762,17 +762,17 @@ Nevertheless, \textit{logging} is mainly for the recording of technical issues. 
 \subsubsection{Logging Infrastructure}
 The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
 
-Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
+Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK~Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
 
-Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by Log4J\autocite{APACHE_LOG4J}.
+Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by Log4j\autocite{APACHE_LOG4J}.
 
 Next, only tools and standalone applications should configure a logging framework. Function libraries should no log at all, while feature libraries rely on the logging facilities of the host environment, same as server-based applications and extensions.
 
 Logging for the latter two depends on the host environment, but for feature libraries (and for function libraries that really require logging) it is recommended to use SLF4J\autocite{SLF4J}.
 
-SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4J, but it has evolved since then. SLF4J supports Log4J, JDK Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
+SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4j, but it has evolved since then. SLF4J supports Log4j, JDK~Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
 
-Looking a the code to write, all three (JDK Logging, Log4J and SLF4J) work basically the same:
+Looking a the code to write, all three (JDK~Logging, Log4j and SLF4J) work basically the same:
 \begin{enumerate}[nosep]
 \item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it\footnote{This is discussed in more detail in chapter \tqvref{sec:NamingOfLoggers}.}. These names are used for the configuration of a logger.}
 \item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
@@ -787,7 +787,7 @@ import static java.util.logging.Logger.getLogger;
 import static java.util.logging.Level.*; 
 import java.util.logging.Logger;
 
-// For Log4J:
+// For Log4j:
 import static org.apache.logging.log4j.LogManager.getLogger;
 import org.apache.logging.log4j.Logger;
 
@@ -805,7 +805,7 @@ public final class MyClass
      */
     private static final Logger m_Logger = getLogger( MyClass.class.getName() );
     
-    // For Log4J and SLF4J, this also works:
+    // For Log4j and SLF4J, this also works:
     private static final Logger m_Logger = getLogger( MyClass.class );
     
        /*---------*\
@@ -821,7 +821,7 @@ public final class MyClass
         m_Logger.severe( message );
         m_Logger.log( SEVERE, message, error );
         
-        // With Log4J and SLF4J
+        // With Log4j and SLF4J
         m_Logger.error( message, error );
 
         //---* Logging an informational message *--------------------
@@ -844,18 +844,18 @@ public final class MyClass
 \end{lstlisting}
 
 \subsubsection{The Log Levels}\label{sec:LogLevels}
-The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For the JDK Logging, Log4J and SLF4J, the predefined log levels differ:
+The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For JDK~Logging, Log4j and SLF4J, the predefined log levels differ:
 \begin{filecontents}{LogLevels.tbl}
   \begin{longtable}{|c|c|c|X|}
   \caption{Log Levels} \\
   \hline 
-  JDK Logging & Log4J & SLF4J & Description \\ 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
   \hline
   \endfirsthead
   \multicolumn{4}{c}%
   {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
   \hline 
-  JDK Logging & Log4J & SLF4J & Description \\ 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
   \hline
   \endhead
   \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
@@ -884,7 +884,7 @@ In addition, they also know the ‘levels’ \verb#ALL# (log everything) and \ve
 
 A lower level includes all the higher levels, too. So when a logger is configured for the log level \verb#INFO#, \lstinline|m_Logger.isLoggable()| will return \lstinline|true| for \verb#INFO#, \verb#WARNING# (or \verb#WARN#), \verb#SEVERE#, \verb#ERROR# and \verb#FATAL#, but not for \verb#DEBUG# or \verb#FINER#.
 
-JDK Logging and Log4J allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
+JDK~Logging and Log4j allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
 
 \subsubsection{How to log}\label{sec:HowToLog}
 This chapter discusses how to emit log messages, but also when you should log something, and what you should log.
@@ -929,78 +929,89 @@ You should not log (at least not with a log level of \verb#INFO#) the successful
 
 In general, you should avoid to log the “happy path” in your code – at least, you should not do this with the log level \verb#INFO#.
 
-\subsubsection{-------------------------------------------- Proceed from here!}
-\paragraph{Debug} \lipsum[1]
-\paragraph{Trace} \lipsum[1]
-\paragraph{Configuration} I have to confess that I never understood the purpose of the log level \verb#CONFIG# for the JDK Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
+\paragraph{Debug and Trace} A very basic tecnic for the debugging of a program is to add statements to the code that prints the current state to the console.
 
-Of course, these could be relevant information for debugging issues, and it would make sense to log them with each restart of your program.
+Logging with the log levels \verb#DEBUG#, \verb#TRACE#, \verb#FINE#, \verb#FINER#, and \verb#FINEST# is basically the same, just with the difference that you do not emit to a console, but to the log file.
 
-But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when you activate \verb#CONFIG#, you have also activated \verb#INFO# for that logger. This is probably not wanted.
-
-Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
-
-My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead. If you are using another logging framework than JDK Logging, you don't have another choice.
-
+There are some recommendations to log the entry and exit for each method, together with the arguments and the return value. In JDK~Logging, the class \lstinline|java.util.logging.Logger| does even have a set of specialised methods to support this approach (\lstinline|Logger::entering| and \lstinline|Logger::exiting|) that emit messages with the log level \verb#FINER#. That will look like this:
 \begin{lstlisting}
-\end{lstlisting}
-
-\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
-\lipsum[1]
-
-
-
-
-Every important method has to have a trace statement that logs the method entry. If a method logs method entry, it also has to log method exit, or it has to log an exception.
-For Chordiant code from the Foundation product, this will look like the sample below:
-\begin{lstlisting}
-public final void method()
+public final class myClass
 {
-    final String METHOD_NAME = "method";
-    LogHelper.methodEntry( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
-    …
-    try
+    private static final String CLASS_NAME = myClass.class.getName();
+    private static final Logger m_Logger = getLogger( CLASS_NAME );
+    
+    public final String myMethod( final String value, final boolean flag )
     {
+        final var METHOD_NAME = "myMethod";
+        m_Logger.entering( CLASS_NAME, METHOD_NAME, value, Boolean.valueOf( flag ) );
+        
+        //---* Does some work here … *-------------------------------
         …
-    }
-    catch( <SomeException> e )
-    {
-        LogHelper.error( PACKAGE_NAME, CLASS_NAME, METHOD_NAME, "<A Message>", e );
-        throw e;
-    }
-
-    //---* Done *----------------------------------------------------
-    LogHelper.methodExit( PACKAGE_NAME, CLASS_NAME, METHOD_NAME );
-}  // method()
+    
+        //---* Done *------------------------------------------------
+        m_Logger.exiting( CLASS_NAME, METHOD_NAME, retValue );
+        return retValue;
+    }   //  myMethod()
+}
+//  class myClass
 \end{lstlisting}
-Code from Chordiant's Marketing Director 7.0 (“Project Thunder”) would look like this:
+Similar methods are missing in the other logging frameworks, for a reason:
+\begin{itemize}
+\item{First, the kind of information provided by this kind of logging is rarely useful.}
+\item{If really each and every method is instrumented in that way, the log file will be flooded with messages when the general log level is set to \verb#FINER# or \verb#FINEST#, making it very difficult to find the information you really need.}
+\item{It requires a real lot amount of unnecessary code to write.}
+\item{Neither the name of the class nor that of the method will be detected automatically; instead, these values have to be provided as a constant.That makes some refactorings quite challenging~…}
+\end{itemize}
+
+As a result, I do not recommend to use this approach. In fact, you should think twice before you add log statement for \verb#DEBUG# and \verb#TRACE# proactively.
+
+Of course, there are scenarios that are well known to cause issues during runtime quite often and therefore \verb#DEBUG# logging should be added for them. One good sample is the processing of emails, others are REST and SOAP communications.
+
+But in general, you should never add \verb#TRACE# logging \textit{proactively}, and \verb#DEBUG# logging only in special cases.
+
+On the other hand, you should never remove \verb#DEBUG# and \verb#TRACE# logging that you added during a bug hunt; it may get useful again if a regression tests fails. This also means that the \verb#DEBUG# and \verb#TRACE# log messages should be very verbose so that you can identify them even years later.
 \begin{lstlisting}
-public final void method()
+public final String myMethod( final String value, final boolean flag )
 {
-    entering();
-    …
-    try
+    // DISCOURAGED!!
+    m_Logger.trace( value );
+    
+    // RECOMMENDED
+    m_Logger.trace( "BUGHUNT_2022-12-14 - entering myMethod()|value = '{}', flag = {}", value, flag );
+    
+    final var buffer = retrieveData( value, flag );
+    
+    // DISCOURAGED
+    m_Logger.debug( buffer );
+    
+    // RECOMMENDED
+    if( m_Logger.isDebugEnabled )
     {
-        …
+        m_Logger.debug( "BUGHUNT_2022-12-14 - myMethod() called retrieveData()|value = '{}', flag = {}", value, flag );
+        if( isNull( buffer )
+        {
+            m_Logger.debug( "BUGHUNT_2022-12-14 - retrieveData() returned null!" );
+        }
+        else
+        {
+            m_Logger.debug( "BUGHUNT_2022-12-14 - retrieveData() returned '{}'", buffer );
+        }
     }
-    catch( <SomeException> e )
-    {
-        m_Logger.log( ERROR, "<A Message>", e );
-        throw e;
-    }
-
+    
+    final var retValue = process( buffer );
+    
     //---* Done *----------------------------------------------------
-    exiting();
-}  // method()
+    // DISCOURAGED
+    m_Logger.debug( retValue );
+    
+    // RECOMMENDED
+    m_Logger.trace( "BUGHUNT_2022-12-14 - exting myMethod()|retValue = '{}'", retValue );
+    
+    return retValue;
+}   //  myMethod()
 \end{lstlisting}
-If an error conditions is to be logged that was indicated by a caught exception, that exception has to be logged including its stack trace. If the caught exception is just a wrapper for another exception (the “cause”), this exception is to be logged also, including its stack trace and its cause.
-The stack trace provides vital information about the location of the problem, and sometimes also for the reason.
-Any additional information that is available when the exception is caught (and relevant for the cause) should be logged also. This could be call parameters or the values of fields that are affected by a method call.
-Refer to the classes in the package java.util.logging (LOGGING\_PACKAGE) to see a sample how this should look. See also chapter 5.6 below for details on exceptions.
 
-
-
-It was said in chapter \tqref{sec:GeneralExceptionHandling} that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is on exception on this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. In this case, you can log it for debugging: 
+In chapter \tqref{sec:GeneralExceptionHandling} I said that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is on exception on this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. Or you have some additional information at the current code location that you cannot add to the wrapper exception (perhaps because of its size). In this case, you can log that exception for debugging (the sample uses Log4j/SLF4J): 
 \begin{lstlisting}
 public final void myMethod() throw IOException
 {
@@ -1011,45 +1022,298 @@ public final void myMethod() throw IOException
     }
     catch( final IOException e )
     {
-        m_Logger.debug( e );
+        //---* Log and rethrow *-------------------------------------
+        m_Logger.catching( DEBUG, e );
         throw e;
+    }
+    …
+    try
+    {
+        …
+    }
+    catch( final IllegalStateException e )
+    {
+        //---* Log and wrap *----------------------------------------
+        if( m_Logger.isDebugEnabled() )
+        {
+            final var message = composeIllegalStateContextMessage();
+            m_Logger.debug( message, e );
+        }    
+        throw new ApplicationError( "Already in use", e );
     }
     …
 }   // myMethod()
 \end{lstlisting}
 
-In this case, you also accept that the same exception might be logged twice.
+Here you also accept that the same exception might be logged twice.
 
+\paragraph{Configuration} I have to confess that I never understood the purpose of the log level \verb#CONFIG# for the JDK~Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
 
+Of course, these could be relevant information for debugging issues, and it would make sense to log them with each restart of your program.
 
+But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when you activate \verb#CONFIG#, you have also activated \verb#INFO# for that logger. This is probably not wanted.
 
+Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
 
+My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead. If you are using another logging framework than JDK~Logging, you don't have another choice either.
 
+\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
+In all samples we have seen so far in this chapter, the logger was given the fully qualified name of the class it lives in:
+\begin{lstlisting}
+public final class MyClass
+{
+       /*------------------------*\
+    ===** Static Initialisations **==================================
+       \*------------------------*/
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
+    
+    // For Log4j and SLF4J, this also works:
+    private static final Logger m_Logger = getLogger( MyClass.class );
+}
+//  class MyClass
+\end{lstlisting}
+This make sense, as there is a in fact a hierarchy for the loggers (I will come back to that in chapter \ref{sec:LoggerConfiguration} about the configuration of loggers).
 
-With a log message much more information can be provided to the user than through printing to the console or to a message window. But logging subsystems like Log4J\autocite{APACHE_LOG4J} are usually configured only for feature libraries and standalone applications. Application servers provides a logging facility, too.
+Assume \lstinline|com.foo.application.internal.MyClass| is the fully qualified name of your class; then this is also the name of the logger that is configured for that class.
 
-If present, extensions can use the logging facility of their host. Tools usually do not use logging when they will be terminated at the first error condition.
+If you have not made any other settings\footnote{Like \lstinline|m_Logger.setParent()|~…}, you can change the log level for the logger like this:
+\begin{lstlisting}[numbers=left]
+getLogger( "com" ).setLevel( newLevel );
+getLogger( "com.foo" ).setLevel( newLevel );
+getLogger( "com.foo.application" ).setLevel( newLevel );
+getLogger( MyClass.class.getPackage().getName() ).setLevel( newLevel );
+getLogger( "com.foo.application.internal" ).setLevel( newLevel );
+m_Logger.setLevel( newLevel );
+getLogger( MyClass.class.getName() ).setLevel( newLevel );
+\end{lstlisting}
 
-If a library needs to issue log messages, you should consider to use SLF4J\autocite{SLF4J} instead of any other logging subsystem.
+The lines~4 and 5 as well as the lines~6 and 7 are effectivly the same, and in all cases, the log level for the logger is set to the value of \lstinline|newLevel|. This works first because each call to \lstinline|Logger::getLogger| (for JDK~Logging), \lstinline|LogManager::getLogger| (for Log4j), or \lstinline|LoggerFactory::getLogger| (for SLF4J) with the same argument will always return the \textit{same} logger instance:
+\begin{lstlisting}
+if( MyClass.class.getName()
+    .equals( "com.foo.application.internal.MyClass" ) )
+{
+    // Always true
+    getLogger( MyClass.class.getName() ) == 
+        getLogger( "com.foo.application.internal.MyClass" );
+}
+\end{lstlisting}
 
-More details about logging are discussed in chapter \tqvref{sec:Logging}.
+Next, the dot (‘.’) indicates a hierarchy: the logger with the name \verb#com# is the parent of all loggers whose name starts with \verb#com.# (like \verb#com.foo# for the sample), and the logger with the name \verb#com.foo# is the parent of all loggers with names starting with \verb#com.foo.# and so on.
 
+Now if a configuration value is not explicitly set by a logger itself, it will pull this setting from the logger that is set as its parent.
 
+If the logger \verb#com.foo.application.internal.MyClass# is only logger that our program creates explicitly, a seven commands from the sample above are equivalent. Otherwise, those in the lines~1 to 5 may have the side effect to set the log level for these other loggers, too. This is exactly what want to achieve in the logger configuration that makes use of this relationship.
 
-\subsection{-------------------------------------------- Proceed from here!}
+Please keep in mind that, once created, you cannot get rid of a logger instance. It will live until the current JVM is shut down. But in the sample above, no new logger will be created; all the loggers in the hierarchy, those with the names \verb#com.foo.application.internal#, \verb#com.foo.application#, \verb#com.foo# and \verb#com# were created implicitely already when creating the logger for the class name. It also means that there is nothing like a temporary logger!
+
+There is no special requirement for the name of a logger. This means that “\verb#logger#”, “\verb#my.logger#”, “\verb#1.2.3.4.5.6.7.8#” or “\verb#Fritz#” are all valid logger names.
+
+Using the fully qualified class name for the main loggers makes perfect sense, as you want to need a predictable naming scheme for the configuration (the log level is not the only configuration parameter to set).
+
+But when you are on a bug hunt and add additional log statements to emit \verb#DEBUG# or \verb#TRACE# messages, this usually affects more then one class. If you use the class logger for the debug or trace logging, you always have to configure multiple loggers. That's not only inconvenient, but also error prone.
+
+Same when you want to provide a debugging facility for a transaction; usually this will also span multiple classes.
+
+So instead of using multiple class loggers, you should consider to introduce dedicated loggers that are reference in multiple classes – all classes that are involved in the respective operation:
+\begin{lstlisting}
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger = getLogger( MyClass.class.getName() ); 
+
+/**
+ *  The loggers for the database transactions.
+ */
+private static final Lazy<Logger> m_InsertLogger = Lazy.use( () -> getLogger( "CRUD.Insert" ) );
+private static final Lazy<Logger> m_SelectLogger = Lazy.use( () -> getLogger( "CRUD.Select" ) );
+private static final Lazy<Logger> m_UpdateLogger = Lazy.use( () -> getLogger( "CRUD.Update" ) );
+private static final Lazy<Logger> m_DeleteLogger = Lazy.use( () -> getLogger( "CRUD.Delete" ) );
+
+/**
+ *  The logger for the bug hunt started on 2022-12-14.
+ */
+private static final Lazy<Logger> m_BugHunt_2022-12-14_Logger = Lazy.use( () -> getLogger( "BugHunt.2022-12-14" ) );
+
+public final void myMethod( final Operation operation, final Record data ) throws SQLException
+{
+    m_BugHunt_2022-12-14_Logger.debug( "entered MyClass.myMethod|operation = '{}'", operation );
+    try( final var connection = obtainConnection() )
+    {
+        OperationSwitch: switch( requireNonNullArgument( operation, "operation" ) )
+        {
+            case INSERT:
+                m_InsertLogger.get().debug( "Performing an Insert" );
+                …
+                break OperationSwitch;
+                
+            case …
+        }   //  OperationSwitch:
+        m_BugHunt_2022-12-14_Logger.debug( "MyClass.myMethod – Operation successfully termninated|operation = '{}'", operation );       
+    }
+    catch( final PoolExhaustedException e )
+    {
+        m_Logger.warn( "Connection Pool exhausted; operation postponed", e );
+        m_BugHunt_2022-12-14_Logger.debug( "MyClass.myMethod – Operation postponed|operation = '{}'", operation );       
+        postponeOperation( operation, data ); 
+    }    
+    catch( final SQLException e )
+    {
+        m_BugHunt_2022-12-14_Logger.debug( () -> format( "MyClass.myMethod – Operation aborted|operation = '%s'", operation ), e );
+        throw e;
+    }
+}   //  myMethod() 
+\end{lstlisting}
+
+An example for the class \lstinline|Lazy| is given in chapter \tqvref{sec:Lazy}.
+
+\subsubsection{Logger Configuration}\label{sec:LoggerConfiguration}
+Both, JDK~Logging and Log4j are best configured through configuration file.\footnote{SLF4J does not have a configuration of its own, as it is just a facade to a ‘real’ logging framework, like JDK~Logging or Log4j …}
+
+\paragraph{JDK~Logging} The basic information about the configuration of JDK~Logging are given in \autocite{ORACLE_DOC_LOGGING_OVERVIEW:ConfigurationFile, ORACLE_DOC_LOGGING_OVERVIEW:DefaultConfiguration} and some important details can be found at \autocite{ORACLE_DOC_LOGMANAGER_CLASS}.
+
+Usually JDK~Logging will be configured through a properties file; the default path for that file is \verb#${JAVA_HOME}/conf/logging.properties#, and out-of-the-box, it looks like this:
+\begin{lstlisting}[language=,numbers=left,caption={Default JDK~Logging Configuration}]
+############################################################
+#  	Default Logging Configuration File
+#
+# You can use a different file by specifying a filename
+# with the java.util.logging.config.file system property.  
+# For example java -Djava.util.logging.config.file=myfile
+############################################################
+
+############################################################
+#  	Global properties
+############################################################
+
+# "handlers" specifies a comma separated list of log Handler 
+# classes.  These handlers will be installed during VM startup.
+# Note that these classes must be on the system classpath.
+# By default we only configure a ConsoleHandler, which will only
+# show messages at the INFO and above levels.
+handlers= java.util.logging.ConsoleHandler
+
+# To also add the FileHandler, use the following line instead.
+#handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+
+# Default global logging level.
+# This specifies which kinds of events are logged across
+# all loggers.  For any given facility this global level
+# can be overriden by a facility specific level
+# Note that the ConsoleHandler also has a separate level
+# setting to limit messages printed to the console.
+.level= INFO
+
+############################################################
+# Handler specific properties.
+# Describes specific configuration info for Handlers.
+############################################################
+
+# default file output is in user's home directory.
+java.util.logging.FileHandler.pattern = %h/java%u.log
+java.util.logging.FileHandler.limit = 50000
+java.util.logging.FileHandler.count = 1
+# Default number of locks FileHandler can obtain synchronously.
+# This specifies maximum number of attempts to obtain lock file by 
+# FileHandler implemented by incrementing the unique field %u as per 
+# FileHandler API documentation.
+java.util.logging.FileHandler.maxLocks = 100
+java.util.logging.FileHandler.formatter = java.util.logging.XMLFormatter
+
+# Limit the message that are printed on the console to INFO and above.
+java.util.logging.ConsoleHandler.level = INFO
+java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+
+# Example to customize the SimpleFormatter output format 
+# to print one-line log message like this:
+#     <level>: <log message> [<date/time>]
+#
+# java.util.logging.SimpleFormatter.format=%4$s: %5$s [%1$tc]%n
+
+############################################################
+# Facility specific properties.
+# Provides extra control for each logger.
+############################################################
+
+# For example, set the com.xyz.foo logger to only log SEVERE
+# messages:
+com.xyz.foo.level = SEVERE
+\end{lstlisting}
+
+\autocite{ORACLE_DOC_LOGGING_PACKAGE,ORACLE_DOC_LOGGING_OVERVIEW}
+
+\paragraph{Log4j} The configuration for Log4j is described in \autocite{APACHE_LOG4J:Configuration}. It allows four different formats for the configuration file (XML, JSON, YAML, or properties format), but the XML format is still the most common one.
+
+Log4j has the ability to automatically configure itself during initialization. 
+\begin{enumerate}
+\item{When Log4j starts it will inspect the “\verb#log4j2.configurationFile#” system property and, if set, will attempt to load the configuration using a \lstinline|ConfigurationFactory| that matches the file extension.
+
+Note that this is not restricted to a location on the local file system and may contain a URL.}
+\item{If no system property is set the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.properties# in the classpath.}
+\item{If no such file is found the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.yaml# or \verb#log4j2-test.yml# in the classpath.}
+\item{If no such file is found the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.json# or \verb#log4j2-test.jsn# in the classpath.}
+\item{If no such file is found the “XML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.xml# in the classpath.}
+\item{If a test file cannot be located the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2.properties# on the classpath.}
+\item{If a properties file cannot be located the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2.yaml# or \verb#log4j2.yml# on the classpath.}
+\item{If a YAML file cannot be located the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2.json# or \verb#log4j2.jsn# on the classpath.}
+\item{If a JSON file cannot be located the “XML \lstinline|ConfigurationFactory|” will try to locate \verb#log4j2.xml# on the classpath.}
+\item{If no configuration file could be located the \lstinline|DefaultConfiguration|” will be used. This will cause logging output to go to the console.}
+\end{enumerate}
+
+A \verb#log4j2.xml# file may look like that one below:
+\begin{lstlisting}[language=XML,numbers=left,caption={Sample Log4j Configuration}]
+<?xml version="1.0"
+      encoding="UTF-8"?>
+<Configuration name="SampleConfiguration" 
+               status="debug" 
+               strict="true">
+  <Properties>
+    <Property name="filename">target/Sample.log</Property>
+  </Properties>
+ 
+  <Appenders>
+    <Appender type="File" 
+              name="File" 
+              fileName="${filename}">
+      <Layout type="PatternLayout">
+        <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+      </Layout>
+    </Appender>
+  </Appenders>
+ 
+  <Loggers>
+    <Logger name="BugHunt_2022-12-14_Logger" 
+            level="trace" 
+            additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Logger name="CRUD" 
+            level="off" 
+            additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Root level="error">
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+</Configuration>
+\end{lstlisting}
+
+It defines a configuration with the name “\verb#Sample#”, and that has one appender, named “\verb#File#” and two named loggers, “\verb#CRUD#" and that infamous “\verb#BugHunt_2022-12-14_Logger#", together with the default configuration (named “\verb#Root#”).
+
+An appender is basically the definition for the target of the log messages and how the messages will look like (the ‘layout’); you can define as many appenders as you want. The name of the defined loggers match with those we used in the program code, and you will set the level and the destination (the ‘appender reference’) for it.
+
+But the configuration is much more powerful than that what I will show here. For more details, see the documentation in \autocite{APACHE_LOG4J:Configuration}.
+\subsubsection{-------------------------------------------- Proceed from here!}
 
 \begin{lstlisting}
 \end{lstlisting}
 
-, although these can combined with each other, to some extent:
 
-
-
-
-
-\autocite{ORACLE_DOC_STRING_CLASS}
-\autocite{ORACLE_DOC_FORMATTER_CLASS}
-\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
 
 \begin{lstlisting}
 \end{lstlisting}
@@ -2826,6 +3090,374 @@ public class AutoLock implements AutoCloseable
     }   //  lock()
 }
 //  class AutoLock
+\end{lstlisting}
+
+\subsection{Lazy}\label{sec:Lazy}
+The interface \lstinline|Lazy| and the associated implementation \lstinline|LazyImpl| provide a holder for a lazy initialised object instance. The initialisation happens on the first call to the method \lstinline|Lazy::get| through a call to the \lstinline|Supplier| instance the \lstinline|Lazy| instance was created with.
+
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  An attribute of type
+     *  {@link AClass}.
+     */
+    private final Lazy<AClass> m_Attribute;
+    
+    public MyClass()
+    {
+        m_Attribute = Lazy.use( ()-> new AClass( this ) );
+    }
+    
+    public final void myMethod()
+    {
+        m_Attribute.get().aMethod();
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+\lstinline|Lazy| is part of my Foundation Library and can be found at \autocite{TQUADRAT_ORG_FOUNDATION_LAZY}.
+
+\paragraph{The Code}\
+\begin{lstlisting}[numbers=left,caption={Lazy.java}]
+package org.tquadrat.foundation.lang;
+
+import static org.tquadrat.foundation.lang.Objects.requireNonNullArgument;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import org.apiguardian.api.API;
+import org.tquadrat.foundation.annotation.ClassVersion;
+import org.tquadrat.foundation.lang.internal.LazyImpl;
+
+/**
+ *  <p>{@summary A holder for a lazy initialised object 
+ *  instance.}</p>
+ *  <p>An instance of an implementation of this interface holds a
+ *  value that will be initialised by a call to the supplier 
+ *  (provided with the method
+ *  {@link #use(Supplier)})
+ *  on a first call to
+ *  {@link #get()}.</p>
+ *  <p>Use
+ *  {@link #isPresent()}
+ *  to avoid unnecessary initialisation.</p>
+ *  <p>As a lazy initialisation makes the value unpredictable, it is 
+ *  necessary that the implementations of
+ *  {@link #equals(Object)}
+ *  and
+ *  {@link #hashCode()}
+ *  do force the initialisation.</p>
+ *  <p>{@link #toString()}
+ *  will not force the initialisation.</p>
+ *  <p>This interface is not feasible for the lazy initialisation of
+ *  connections to resources of any kind, as these will usually 
+ *  throw (checked) exceptions when problems arise, and usually these
+ *  should be handled on one central location.</p>
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ *
+ *  @param  <T> The type of the value for this instance of 
+ *  {@code Lazy}.
+ */
+public sealed interface Lazy<T>
+    permits org.tquadrat.foundation.lang.internal.LazyImpl
+{
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public boolean equals( final Object obj );
+
+    /**
+     *  Returns the value for this instance of {@code Lazy}.
+     *
+     *  @return The value.
+     */
+    public T get();
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public int hashCode();
+
+    /**
+     *  If this {@code Lazy} instance has been initialised already, 
+     *  the provided
+     *  {@link Consumer}
+     *  will be executed; otherwise nothing happens.
+     *
+     *  @param  consumer    The consumer.
+     */
+    public default void ifPresent( final Consumer<? super T> consumer )
+    {
+        if( isPresent() ) requireNonNullArgument( consumer, "consumer" ).accept( get() );
+    }   //  ifPresent()
+
+    /**
+     *  Checks whether this {@code Lazy} instance has been 
+     *  initialised already. But even it was initialised,
+     *  {@link #get()}
+     *  may still return {@code null}.
+     *
+     *  @return {@code true} if the instance was initialised, 
+     *      {@code false} otherwise.
+     */
+    public boolean isPresent();
+
+    /**
+     *  If this instance of {@code Lazy} is initialised, the provided 
+     *  mapper function will be executed on the value.
+     *
+     *  @param  <R> The result type for the mapper function.
+     *  @param  mapper  The mapper function.
+     *  @return An instance of
+     *      {@link Optional}
+     *      that holds the result for the mapping.
+     */
+    public default <R> Optional<R> map( final Function<? super T,? extends R> mapper )
+    {
+        final Optional<R> retValue = isPresent() ? Optional.ofNullable( mapper.apply( get() ) ) : Optional.empty();
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  map()
+
+    /**
+     *  Returns the value or throws the exception that is created by 
+     *  the given
+     *  {@link Supplier}
+     *  when not yet initialised.
+     *
+     *  @param  <X> The type of the implementation of
+     *      {@link Throwable}.
+     *  @param  exceptionSupplier   The supplier for the exception 
+     *      to throw when the instance was not yet initialised.
+     *  @return The value.
+     *  @throws X   When not initialised, the exception created by 
+     *      the given supplier will be thrown.
+     */
+    public <X extends Throwable> T orElseThrow( Supplier<? extends X> exceptionSupplier ) throws X;
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public String toString();
+
+    /**
+     *  Creates a new {@code Lazy} instance that uses the given 
+     *  supplier to initialise.
+     *
+     *  @param  <T> The type of the value for the new instance of 
+     *      {@code Lazy}.
+     *  @param  supplier    The supplier that initialises the value 
+     *      for this instance on the first call to
+     *      {@link #get()}.
+     *  @return The new instance.
+     */
+    public static <T> Lazy<T> use( final Supplier<T> supplier )
+    {
+        return new LazyImpl<>( supplier );
+    }   //  use()
+}
+//  interface Lazy
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left,caption={LazyImpl.java}]
+/*
+ * ============================================================================
+ * Copyright © 2002-2021 by Thomas Thrien.
+ * All Rights Reserved.
+ * ============================================================================
+ * Licensed to the public under the agreements of the GNU Lesser General Public
+ * License, version 3.0 (the "License"). You may obtain a copy of the License at
+ *
+ *      http://www.gnu.org/licenses/lgpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.tquadrat.foundation.lang.internal;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.tquadrat.foundation.lang.CommonConstants.NULL_STRING;
+import static org.tquadrat.foundation.lang.Objects.isNull;
+import static org.tquadrat.foundation.lang.Objects.nonNull;
+import static org.tquadrat.foundation.lang.Objects.requireNonNullArgument;
+
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.apiguardian.api.API;
+import org.tquadrat.foundation.annotation.ClassVersion;
+import org.tquadrat.foundation.lang.AutoLock;
+import org.tquadrat.foundation.lang.Lazy;
+import org.tquadrat.foundation.lang.Objects;
+
+/**
+ *  <p>{@summary The implementation of the interface
+ *  {@link Lazy}.}</p>
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @since 0.0.5
+ *
+ *  @param  <T> The type of the value for this instance of {@code Lazy}.
+ */
+public final class LazyImpl<T> implements Lazy<T>
+{
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+    /**
+     *  The lock that protects the value creation. It will be set to
+     *  {@linkplain Optional#empty() empty}
+     *  after
+     *  {@link #m_Value} is initialised.
+     */
+    @SuppressWarnings( "OptionalUsedAsFieldOrParameterType" )
+    private Optional<AutoLock> m_Lock;
+
+    /**
+     *  The supplier for the value of this {@code Lazy} instance. It 
+     *  will be set to {@code null} after
+     *  {@link #m_Value}
+     *  is initialised.
+     */
+    private Supplier<T> m_Supplier;
+
+    /**
+     *  The value of this {@code Lazy} instance; it is {@code null} 
+     *  if it was not yet initialised.
+     */
+    private T m_Value;
+
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    /**
+     *  Creates a new {@code Lazy} instance.
+     *
+     *  @param  supplier    The supplier that initialises the value 
+     *      for this instance on the first call to
+     *      {@link #get()}.
+     */
+    public LazyImpl( final Supplier<T> supplier )
+    {
+        m_Supplier = requireNonNullArgument( supplier, "supplier" );
+        m_Lock = Optional.of( AutoLock.of() );
+        m_Value = null;
+    }   //  LazyImpl()
+
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final boolean equals( final Object obj )
+    {
+        var retValue = this == obj;
+        if( !retValue && nonNull( obj ) )
+        {
+            if( obj instanceof Lazy other )
+            {
+                retValue = get().equals( other.get() );
+            }
+            else
+            {
+                retValue = get().equals( obj );
+            }
+        }
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  equals()
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final T get()
+    {
+        m_Lock.ifPresent( l ->
+        {
+            try( @SuppressWarnings( "unused" ) final var lock = l.lock() )
+            {
+                /*
+                 * When the lock is present, the supplier must have 
+                 * been not null; this is enforced by the respective 
+                 * constructor.
+                 * So when the supplier is NOW null, another thread 
+                 * has performed the initialisation while this one 
+                 * was waiting for the lock.
+                 */
+                if( nonNull( m_Supplier ) )
+                {
+                    m_Value = m_Supplier.get();
+                    m_Lock = Optional.empty();
+                    m_Supplier = null;
+                }
+            }
+        } );
+
+        //---* Done *------------------------------------------------
+        return m_Value;
+    }   //  get()
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final int hashCode() { return get().hashCode(); }
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final boolean isPresent() { return isNull( m_Supplier ); }
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public <X extends Throwable> T orElseThrow( final Supplier<? extends X> exceptionSupplier ) throws X
+    {
+        if( !isPresent() ) throw exceptionSupplier.get();
+
+        //---* Done *------------------------------------------------
+        return m_Value;
+    }   //  orElseThrow()
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final String toString()
+    {
+        final var retValue = Objects.toString( m_Value, 
+            isPresent() 
+                ? NULL_STRING 
+                : "[Not initialized]" );
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toString()
+}
+//  class LazyImpl
 \end{lstlisting}
 
 \subsection{Patch Identification}\label{sec:PatchIdentification}

@@ -1,0 +1,1294 @@
+\section{Error Handling}\label{sec:ErrorHandling}
+A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
+
+Basically, we have to deal with only a very limited set of possible error categories:
+\begin{enumerate}[nosep]
+\item{An exception is thrown by an operation triggered by our code.}
+\item{An operation returns an error state.}
+\item{The result of an operation is an unexpected or an unwanted value.}
+\item{A method is called with an invalid argument.}
+\item{Input data is invalid or corrupted.}
+\item{A command line argument is invalid.}
+\item{An external resource is not or no longer available.}
+\end{enumerate}
+
+Of course, all those categories are possible triggers for an exception in Java. This means that we can quite simply generalise the response to an error: \textit{in case of an error condition, throw an exception}!
+
+Consequently, we can also simplify \textit{error} handling to \textit{exception} handling. And there are only a few options on how to respond to an exception:
+\begin{itemize}
+\item{Throw an exception and make it an S.E.P.\footnote{S.E.P~=~Someone Else's Problem (refer to \autocite{ADAMS_HITCHHIKERS_GUIDE}).} – particularly suitable (no irony!) for libraries.}
+\item{Perform an alternate operation or provide a default value.}
+\item{Retry/repeat the operation.}
+\item{Abort the current operation – either the current thread or the whole program.}
+\end{itemize}
+
+As said, throwing an exception will always work, but at some point exceptions need to be handled in some way.
+
+The other alternatives are feasible only in some special contexts:
+\begin{itemize}
+\item{Repeating or retrying a failed operation depends on the kind of operation, and not that much on the type of the product. This also should not be done indefinitely; at some point, it gets useless to repeat or retry a constantly failing operation.}
+
+\item{Same for an alternate operation that will be executed in case of an error.}
+
+\item{Providing a default value demands that this default value makes sense in the current context. It should be obvious that this is not always the case.}
+
+\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
+
+A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
+\end{itemize}
+
+Only these four options do exist for handling an exception! This means that afterwards the error condition is fixed, or that it persists.
+
+I bet that you now ask yourself why the actions below are missing from my list above:
+\begin{itemize}
+\item{Log an error message.}
+\item{Write an error message to the console, a message window or status bar.}
+\item{Display an error dialog.}
+\end{itemize}
+
+That is because \textit{none of these are handling the error}! Of course you should log an error, of course you should inform the user about an error condition. But none of these actions will change the state of the system!
+
+Far too often you find code like this:
+\begin{lstlisting}
+…
+try
+{
+    writeStatusToBillingSystem( invoice );
+}
+catch( final TimeOutException e )
+{
+    m_Logger.error( e );
+}
+invoice.markAsPaid();
+…
+\end{lstlisting}
+
+Looks good, right?
+
+Really?
+
+You mark the invoice as paid, despite the writing to the billing system failed?
+
+You think that this cannot happen, because you have logged the exception?
+
+I think that the accountants are no longer your friend when they find out that this piece of code was written by you~…
+
+The chapters \tqvref{sec:ThrowingExceptions} and \tqvref{sec:GeneralExceptionHandling} discuss throwing and handling exception. More about reporting the various error conditions can be found in chapter \tqvref{sec:ReportingErrors} and the chapter \tqvref{sec:Logging} deals with logging in particular.
+
+\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
+Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
+
+For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}, or – more precise – from one of the child classes of \lstinline|Throwable|:
+\begin{itemize}[nosep]
+\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}}
+\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}}
+\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}}
+\end{itemize}
+
+The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
+
+Exception classes that extend \lstinline|java.lang.Exception| are so-called \textit{checked} exceptions; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException| is a direct subclass of \lstinline|java.lang.Exception| and the superclass of all \textit{runtime} exceptions – declaring these is not mandatory.
+
+While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception| instance, it is assumed that instances of the class \lstinline|java.lang.Error| and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
+
+The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception| or \lstinline|java.lang.RuntimeException| is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException| in case a divisor is 0.
+
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|, \lstinline|RuntimeException|, or \lstinline|Error|, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable| directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
+
+When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
+\begin{lstlisting}
+protected final void doGet( HttpServletRequest request, HttpServletResponse response )
+    throws ServletException, IOException
+{
+    …
+    try
+    {
+        …
+    }
+    catch( final TimeOutException e )
+    {
+        throw new ServletException( e );
+    }
+
+    …
+}  //  doGet()
+\end{lstlisting}
+
+When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax.\footnote{In this regard, the sample above is bad, because it does not provide such an explanation.} These text have to be in English language, for the same reason why the names and the comments are in English.
+
+Of course, messages that will be presented to the end user in a UI have to be localised, but the UI should not display the raw exception message anyway at all.
+
+Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
+
+Some of these exception classes will allow a workaround that allows you to still provide both, cause and message, with them exceptions, like below:\footnote{Unfortunately, \lstinline|ExceptionInInitializerError| does not belong to this group of exception classes.}: 
+\begin{lstlisting}
+static
+{
+    try
+    {
+        …    
+    }
+    catch( final Exception e )
+    {
+        throw new DumpException( "Message" )
+            .initCause( e );    
+    }
+}
+\end{lstlisting}
+
+For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE_CLASS:initCause}.
+
+\subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
+A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
+
+To handle an exception you first have to catch it.
+
+Catching \lstinline|java.lang.Exception| is discouraged in most cases; it \textit{can} be acceptable when you need to wrap all checked exceptions into a runtime exception or an error:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final Exception e )
+    {
+        throw new WrapperException( e );
+    }
+}   // run()
+\end{lstlisting}
+
+You should absolutely avoid to catch \lstinline|java.lang.Error| and all of its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
+
+Provide a \lstinline|catch| block for each and every exception that you want to handle:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final FileNotFoundException e )
+    {
+        throw new ApplicationError( "Cannot find file", e );
+    }
+    catch( final IOException e )
+    {
+        throw new ApplicationError( "An error occurred on processing the input file", e );
+    }
+    catch( final NumberFormatException e )
+    {
+        throw new ApplicationError( "Input Data is corrupted", e );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ApplicationError( "Pattern invalid", e );
+    }
+}   // run()
+\end{lstlisting}
+
+Sometimes when a large number of exceptions has to be handled with all the same code, you may be tempted to just catch \lstinline|java.lang.Exception|. As already said: don't do it! This approach will definitely cause problems as it may handle runtime exceptions in the same \lstinline|catch|-block as the checked exceptions, and usually this is not intended.
+
+A simplificatin for the sample above could look like this:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        …
+    }
+    catch( final IOException | NumberFormatException | PatternSyntaxException e )
+    {
+        throw new ApplicationError( "Processing failed", e );
+    }
+}   // run()
+\end{lstlisting}
+Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because the class \lstinline|java.io.IOException| is its superclass.}.
+
+Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library~… but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:
+\begin{lstlisting}
+…
+var amount = 0.0;
+final var requestParam = request.getParameter( "amount" );
+try
+{
+    if( nonNull( requestParam ) )
+    {
+        amount = Double.parseDouble( requestParam );
+    }
+}
+catch( final NumberFormatException ignored )
+{
+    //---* If amount in request is not numeric, set it to 0.0 *------
+    amount = 0.0;
+}
+…
+\end{lstlisting}
+
+As shown in the example, a comment is required in the catch clause, because you do not further propagate the exception neither do you log it.
+
+It is also possible that you checked the preconditions, but you still have to deal with some checked exceptions:
+\begin{lstlisting}
+…
+final var file = new File( … );
+if( file.exists() )
+{
+    try( final var input = new FileInputStream( file ) )
+    {
+        …
+    }
+    catch( final FileNotFoundException e )
+    {
+        throw new UnexpectedExceptionError( "File was there when checked!", e );
+    }
+}
+…
+\end{lstlisting}
+
+A sample for the class \lstinline|UnexpectedExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_UNEXPECTEDEXCEPTIONERROR}.
+
+Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
+\begin{lstlisting}
+…
+final String s;
+try
+{
+    s = new String( byteArray, "UTF-8" );
+}
+catch( final UnsupportedEncodingException e )
+{
+    throw new ImpossibleExceptionError( "UTF-8 must exist!", e );
+}
+…
+\end{lstlisting}
+
+According to \autocite{ORACLE_DOC_CHARSET:StandardCharsets}, the UTF-8 encoding is mandatory for each JDK/JVM implementation, therefore the code sequence above will \textit{never} throw an \lstinline|UnsupportedEncodingException|. Nevertheless, it is not allowed to swallow the exception; instead an error should be thrown in the \lstinline|catch| clause, indicating the error condition. In the improbable case UTF-8 is not supported by the current Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason.\footnote{If, of course, there is no catch for \lstinline|Throwable| somewhere on the path.} It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset| will cause noise.
+
+Of course, the problem could be solved differently, by using an instance of \lstinline|java.nio.charset.Charset|\autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String| constructor, instead of the name of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|. 
+
+Another example is the interface \lstinline|java.lang.Appendable|\autocite{ORACLE_DOC_APPENDABLE_INTERFACE}: it is implemented by \lstinline|java.io.Writer| and \lstinline|java.io.PrintStream|, but also by \lstinline|java.lang.StringBuilder| (and a few more). The method \lstinline|java.lang.Appendable::append| declares to throw an \lstinline|IOException|, but the implementation of that method for \lstinline|StringBuilder| will never throw it and does not even declare it.
+\begin{lstlisting}
+…
+final Appendable appendable = new StringBuilder();
+try
+{
+    appendable.append( "Some Text" );
+}
+catch( final IOException e )
+{
+    throw new ImpossibleExceptionError( "Append to StringBuilder", e );
+}
+…
+\end{lstlisting}
+
+Again, a sample for \lstinline|ImpossibleExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_IMPOSSIBLEEXCEPTIONERROR}.
+
+Sometimes a method wants to act upon an error condition without handling the exception. In this case, it may catch the exception, does whatever necessary, then throw it again. An example:
+\begin{lstlisting}
+public final void myMethod() throw IOException
+{
+    final Predicate<String> isNetworkError = m_NetworkErrorPattern.asMatchPredicate();
+    …
+    try
+    {
+        …
+    }
+    catch( final IOException e )
+    {
+        final var message = e.getMessage();
+        if( nonNull( message ) && isNetworkError.test( message ) ) ++networkErrors;
+        throw e;
+    }
+    …
+}   // myMethod()
+\end{lstlisting}
+
+It is usually not a good idea to log an exception and to rethrow or to wrap it afterwards, because this might cause the exception to be logged twice (or even more often). More details about logging can be found in chapter \tqvref{sec:Logging}.
+
+Finally, you handle the exception somehow, by assigning a default value\footnote{see the sample about the conversion from string to number, above.}, or by performing an alternative action. In any case, you need to provide a comment in the \lstinline|catch| why you do not further delegate the handling of the exception.
+
+If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()|\autocite{ORACLE_DOC_RUNNABLE:run} for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
+
+\subsection{Exceptions in Threads}\label{sec:ExceptionHandlingInThreads}
+When we execute the Java program below, the \lstinline|Error| is printed to the console:
+\lstinputlisting[numbers=left,caption={Test Abort main()}]{TestAbortMain.java}
+
+\begin{verbatim}
+$ java TestAbortMain.java
+Exception in thread "main" java.lang.Error: Aborted
+    at TestAbortMain.main(TestAbortMain.java:5)
+$ 
+\end{verbatim}
+
+In the sample below, we abort a secondary thread:
+\lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
+
+The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown.}
+\begin{verbatim}
+$ java TestAbortRun.java
+Exception in thread "Thread-0" java.lang.Error: run() aborted!
+    at TestAbortRun.run(TestAbortRun.java:5)
+    at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "main" java.lang.Error: main() aborted!
+    at TestAbortRun.main(TestAbortRun.java:20)
+$ 
+\end{verbatim}
+
+This behaviour is sufficient for a tool in most cases, but not for a standalone application and not for a feature library. A function library usually relies on the a caller, while serverbase applications and extensions use the facilities provided by the host applications.
+
+For both a standalone application and for a feature library, you want that error conditions will be logged, under all circumstances.
+
+For the main thread of an application this can be achieved quite easily, by implementing the method \lstinline|main()| like this:
+\begin{lstlisting}
+/**
+ *  The program entry method.
+ *
+ *  @param  args    The command line arguments.
+ */
+public static final void main( final String... args )
+{
+    try
+    {
+        final var application = new MyClass();
+        applicaton.execute( … );
+    }
+    catch( final Throwable t )
+    {
+        //---* Log the previously unhandled exceptions *-------------
+        m_Logger.error( "Unhandled Exception/Error", e );
+    }
+}   //  main()
+\end{lstlisting}
+In this case, the \lstinline|catch| statement catches \lstinline|Throwable| and the 
+\lstinline|catch|-block does nothing else but logging the exception!
+
+This is acceptable here only because the program ends immediately after the closing curly brace of the \lstinline|catch|-block!\footnote{Ok, technically only the main thread ends here because other non-deamon threads may still run at this point. But the goal should be that the main thread dies always at last.}
+
+Theoretically, you can do the same thing for threads:
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        //---* The thread's payload *--------------------------------
+        …
+    }
+    // NOT Recommended
+    catch( final Throwable t )
+    {
+        //---* Log the previously unhandled exceptions *-------------
+        m_Logger.error( "Unhandled Exception/Error", e );
+    }
+}   //  run()
+\end{lstlisting}
+
+One reason is that the method \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run} can be called also in other contexts than just as the main method of a thread; swallowing the exception like shown in the example is a bad idea in that case.
+
+Another reason is that when the method is implemented as part of a library, an extension or even a server-based application, different facilities may be used to report the error.
+
+But the main reason is that there is a much better mechanism that handles those otherwise unhandled exceptions: the “Uncaught Exception Handler”\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE}.
+
+The interface \lstinline|java.lang.Thread.UncaughtExceptionHandler| is a functional interface\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterfaces, ORACLE_DOC_LANGUAGE_SPECIFICATION:FunctionalInterface, ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} providing the method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException}.
+
+There are basically two ways\footnote{In fact, three ways. But as you should avoid anonymous classes, this option is omitted here.} to implement an uncaught exception handler; the classical way would be to create a new class:
+\begin{lstlisting}[numbers=left,caption={Class UncaughtExceptionHandlerImpl}]
+/**
+ *  The implementation of the interface
+ *  {@link java.lang.Thread.UncaughtExceptionHandler}
+ *  that is used by this project.
+ */
+public final class UncaughtExceptionHandlerImpl implements Thread.UncaughtExceptionHandler
+{
+    /**
+     *  The logger that is used to report the uncaught exceptions.
+     */
+    private static final Logger m_Logger = getLogger( UncaughtExceptionHandlerImpl.class );
+     
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final void uncaughtException( final Thread t, final Throwable e )
+    {
+        m_Logger.error( "Unhandled Exception/Error in Thread '%s'".formatted( t.getName(), e );
+    }   //  uncaughtException()
+}
+//  class UncaughtExceptionHandlerImpl 
+\end{lstlisting}
+
+Otherwise you can benefit from \lstinline|java.lang.Thread.UncaughtExceptionHandler| being a functional interface and implement the uncaught exception handler as a method in your class:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class );
+     
+    /**
+     *  <p>{@summary This method will be invoked when the given
+     *  thread terminates due to the given uncaught exception.}</p>
+     *  <p>Any exception thrown by this method will be ignored by
+     *  the Java Virtual Machine.</p>
+     *
+     *  @param  t   The thread that terminated.
+     *  @param  e   The exception that caused the termination.
+     *     
+     *  @see UncaughtExceptionHandler#uncaughtException(Thread,Throwable)
+     */
+    private final void uncaughtException( final Thread t, final Throwable e )
+    {
+        m_Logger.error( "Unhandled Exception/Error in Thread '%s'".formatted( t.getName(), e );
+    }   //  uncaughtException()
+}
+//  class MyClass
+\end{lstlisting}
+In the second case, the uncaught exception handler uses the resources provided by the class it lives in. This may be desired or not.
+
+A thread can be configured with the uncaught exception handler in three different ways:
+\begin{enumerate}
+\item{Each single thread can get its own uncaught exception handler by calling \lstinline|setUncaughtExceptionHandler()|\autocite{ORACLE_DOC_THREAD:setUncaughtExceptionHandler} on it, with an instance of an implementation of \lstinline|Thread.UncaughtExceptionHandler| as the argument:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        final var thread = new Thread( this::run, "MyWorkerThread" );
+        thread.setUncaughtExceptionHandler( this::uncaughtException );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\item{On creation of a thread, a \lstinline|ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} instance will be assigned to it; if none is explicitly set, it will be the group of the current thread.
+
+The instance has a method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_THREADGROUP:uncaughtException} method is called in the case the thread itself does not have an uncaught exception handler assigned to it. To change the behaviour of the handler from the thread group it is necessary to derive a new class from \lstinline|ThreadGroup| and to overwrite the \lstinline|uncaughtException()|.
+
+Chapter \tqvref{sec:ThreadGroup} shows an implementation for \lstinline|ThreadGroup| that allows to configure the uncaught exception handler; when using that, the configuration can look like this:
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  The thread group for all threads used by this program.
+     */
+    private final ThreadGroup m_ThreadGroup;
+    
+    /**
+     *  Creates a new instance of {@code MyClass}.
+     */
+    public MyClass()
+    {
+        m_ThreadGroup = new ThreadGroupExt( "MyWorkerThreads", this::uncaughtException );
+    }   //  MyClass()
+    
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        final var thread = new Thread( m_ThreadGroup, this::run, "MyWorkerThread" );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\item{By calling \lstinline|java.lang.Thread::setDefaultUncaughtExceptionHandler|\autocite{ORACLE_DOC_THREAD:setDefaultUncaughtExceptionHandler} it is possible to install an instance of \lstinline|Thread.UncaughtExceptionHandler| for all threads that does neither have their own handler nor got one from their thread group. This uncaught exception will be called as a last resort.
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  Does the program's work.
+     *
+     *  @throws InterruptedException   The worker thread was
+     *      interrupted.
+     */
+    private final void execute() throws InterruptedException
+    {
+        //---* Install the default uncaught exception handler *------
+        Thread.setDefaultUncaughtExceptionHandler( new UncaughtExceptionHandlerImpl() );
+        
+        final var thread = new Thread( this::run, "MyWorkerThread" );
+        thread.start();
+        thread.join();
+    }   //  execute()
+     
+    /**
+     *  The thread's main method.
+     */
+    private final void run() { … }
+}
+//  class MyClass
+\end{lstlisting}
+}
+\end{enumerate}
+
+The last option can be used only from standalone applications and from tools. The environments for server-based applications and extensions do quite often restrict the creation of additional threads. A feature library should accept an uncaught exception handler and/or a thread group as a configuration value.
+
+If a function library creates new threads, the respective methods must accept at least an uncaught exception handler and optionally a thread group. Alternatively, a thread factory\autocite{ORACLE_DOC_THREADFACTORY_INTERFACE} can be injected.
+ 
+\subsection{Reporting Errors}\label{sec:ReportingErrors}
+As already said earlier, at some point we need to report an error condition to the user of the program; this can happen in various ways. The most common is to log the error somehow, but as logging has various additional aspects, it is covered by a chapter of its own: chapter \tqfullvref{sec:Logging}.
+
+Other means to report the error condition are the following:
+\begin{itemize}
+\item{Write an error message to the console, a message window or status bar.}
+\item{Display an error dialog.}
+\item{Send an email, a tweet or another kind of message.}
+\item{Trigger an external signalling device (an alarm bell, a horn, a flashlight,~…).}
+\item{…}
+\end{itemize}
+
+Before discussing this further, I want to repeat: \textit{Reporting an error condition is not handling it!}
+
+Obviously, not all ways of reporting an error condition are feasible for types of products.
+
+\begin{itemize}
+\item{First, a function library should not report an error condition in any other way than just throwing the appropriate exception. It should not even log them.}
+
+\item{Extensions and server-based applications should use the APIs that are provided to them by their host/container for reporting the error conditions, although server-based applications may introduce additionals ways to report an error.}
+
+\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
+
+Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
+
+\item{Sending messages around to report an error condition should be considered mainly for dark (headless) applications, either standalone or server-based. Of course, this something that can be provided by a feature library (as the new featured), but a feature library should not use it.
+
+Whether it makes sense for a tool depends on the kind of the tool.}
+
+\item{Same for the use of external signalling devices.}
+\end{itemize}
+
+In most cases, it is not sufficient to provide the user with the caught exception only – meaning just calling \lstinline|java.lang.Throwable::printStackTrace| is not enough. In fact, for most users, this is even too much information. Also providing the call stack for an operation in an \textit{error message} is sometimes considered as a security loophole, because it may give a potential attacker information about code internals that they can use to shape their attack against your system.
+
+You should also consider to localise the error message to the locale of the user; that is mainly translating it to the user's language, but not only. You should always add the time zone to timestamps, or at least the offset to UTC, even when you adjust them to the user's time zone.
+
+It is a good idea to have a unique error code with your error message. That allows you to identify it when the user reports it back to you, and you do not understand their language. 
+
+Obviously, you should avoid to have sensitive data in your error messages. But ‘sensitive data’ may depend from the context your program is running in.
+
+\subsection{Logging}\label{sec:Logging}
+Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.
+
+Nevertheless, \textit{logging} is mainly for the recording of technical issues. If you need to keep track of business transactions (if you have to provide an audit log or a journal), we talk about \textit{journalling} instead. There may be some overlapping between those two, and the requirements look similar, but logging and journalling are two distinct topics and should be treated independently from each other.
+
+\subsubsection{Logging Infrastructure}
+The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
+
+Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK~Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
+
+Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by Log4j\autocite{APACHE_LOG4J}.
+
+Next, only tools and standalone applications should configure a logging framework. Function libraries should no log at all, while feature libraries rely on the logging facilities of the host environment, same as server-based applications and extensions.
+
+Logging for the latter two depends on the host environment, but for feature libraries (and for function libraries that really require logging) it is recommended to use SLF4J\autocite{SLF4J}.
+
+SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4j, but it has evolved since then. SLF4J supports Log4j, JDK~Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
+
+Looking a the code to write, all three (JDK~Logging, Log4j and SLF4J) work basically the same:
+\begin{enumerate}[nosep]
+\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it\footnote{This is discussed in more detail in chapter \tqvref{sec:NamingOfLoggers}.}. These names are used for the configuration of a logger.}
+\item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
+\item{Check whether the desired log level is active.}
+\item{If the desired log level is active, log your message.}
+\end{enumerate}
+
+Even APIs are quite similar\footnote{Of course the code sample will not compile.}: 
+\begin{lstlisting}[numbers=left]
+// For JDK Logging:
+import static java.util.logging.Logger.getLogger;
+import static java.util.logging.Level.*; 
+import java.util.logging.Logger;
+
+// For Log4j:
+import static org.apache.logging.log4j.LogManager.getLogger;
+import org.apache.logging.log4j.Logger;
+
+// For SLF4J:
+import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
+
+public final class MyClass
+{
+       /*------------------------*\
+    ===** Static Initialisations **==================================
+       \*------------------------*/
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
+    
+    // For Log4j and SLF4J, this also works:
+    private static final Logger m_Logger = getLogger( MyClass.class );
+    
+       /*---------*\
+    ===** Methods **=================================================
+       \*---------*/
+    public final void myMethod()
+    {
+        //---* Logging an error message *----------------------------
+        final var message = "An error occurred!";
+        final var error = new Error( "Something happened!" );
+        
+        // With JDK Logging
+        m_Logger.severe( message );
+        m_Logger.log( SEVERE, message, error );
+        
+        // With Log4j and SLF4J
+        m_Logger.error( message, error );
+
+        //---* Logging an informational message *--------------------
+        // With JDK Logging
+        if( m_Logger.isLoggable( INFO ) )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.log( INFO, message );
+        }
+        
+        // With Log4j and SLF4J
+        if( m_Logger.isInfoEnabled() )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.info( message );
+        }
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+\subsubsection{The Log Levels}\label{sec:LogLevels}
+The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For JDK~Logging, Log4j and SLF4J, the predefined log levels differ:
+\begin{filecontents}{LogLevels.tbl}
+  \begin{longtable}{|c|c|c|X|}
+  \caption{Log Levels} \\
+  \hline 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
+  \hline
+  \endfirsthead
+  \multicolumn{4}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+  \hline 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
+  \hline
+  \endhead
+  \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
+  & \verb#FATAL# & & A fatal event that will prevent the application from continuing. \\
+  \hline
+  \verb#SEVERE# & \verb#ERROR# & \verb#ERROR# & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
+  \hline 
+  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possibly lead to an error. \\ 
+  \hline 
+  \verb#INFO# & \verb#INFO# & \verb#INFO# & An event for informational purposes. \\ 
+  \hline 
+  \verb#CONFIG# & & & A message level for static configuration messages. \\ 
+  \hline 
+  \verb#FINE# & \verb#DEBUG# & & A general debugging event. A message level providing tracing information. \\ 
+  \hline 
+  \verb#FINER# & & & A fairly detailed tracing message.\\
+  \hline 
+  \verb#FINEST# & \verb#TRACE# & \verb#TRACE# & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{LogLevels.tbl}
+In addition, they also know the ‘levels’ \verb#ALL# (log everything) and \verb#OFF# (log nothing), but you cannot check for these.
+
+A lower level includes all the higher levels, too. So when a logger is configured for the log level \verb#INFO#, \lstinline|m_Logger.isLoggable()| will return \lstinline|true| for \verb#INFO#, \verb#WARNING# (or \verb#WARN#), \verb#SEVERE#, \verb#ERROR# and \verb#FATAL#, but not for \verb#DEBUG# or \verb#FINER#.
+
+JDK~Logging and Log4j allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
+
+\subsubsection{How to log}\label{sec:HowToLog}
+This chapter discusses how to emit log messages, but also when you should log something, and what you should log.
+
+\paragraph{Errors} First, you should log error conditions at some point in the program flow. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method.
+
+We said already that a function library will not log at all. For a feature library, an extension and server-based application, you should log when the control flow is about to leave the realm of your component and you do not know how the host code will handle the exception.
+
+You should also log (uncaught) exceptions in threads that your code creates; this was already discussed in chapter \tqfullvref{sec:ExceptionHandlingInThreads}.
+
+As a rule of thumb, you log an exception at the latest possible occasion.
+
+The log message should contain all information that you have a this point; this is at least the exception itself with its message and stacktrace. But perhaps you know additional things, for example what your code attempted when the exception was thrown, that name of resources that should be tried to access, the user name, the access rights and many other things – as long as these are not sensible data! So you should never add a password to a log message. And even the user name is already in a gray area.
+
+Obviously, the log levels \verb#FATAL#, \verb#SEVERE# and \verb#ERROR# are meant for these messages.
+
+The other log levels are not meant for reporting \textit{current} error conditions.
+
+\paragraph{Warnings} The description for the log levels \verb#WARNING# and \verb#WARN# says that these indicate “an event that might possibly lead to an error” somewhen in the future.
+
+Such an event could be the repeatingly failed login attempt of a user, as that could be the indication for a hacker attack. Most probably, you should not log the first failed attempt, perhaps not even the second or third (at least not as a warning), but consecutive attempts from the same devide and/or with the same user name should be logged. And obviously, the respective log message must contain all the necessary data that can be used to repel that attack. Whether the used passwords should be added to the log messages can be discussed.
+
+In the same way obvious, you have to implement the necessary infrastructure to collect the data for all failed (and successful) logins, and you do this only to be able to log the respective warning.\footnote{Although you can collect this data also for general monitoring if your application lives in an environment where this is provided. Or you make it available through JMX – see chapter \tqvref{sec:UtilisingJMX}.} This means that you can switch it off when the log level is disabled.
+
+In the same way, you should log attempts of unauthorised access by authenticated users.
+
+Another reason to log a warning would be when you handle an error condition by repeating an operation or by performing an alternative operation. Although the current problem is solved for now, it is worth to keep track of it in the logs.
+
+Then you should emit a warning to the logs when a resource gets short; even when the application recovers from that, it should be tracked.
+
+If you run out of a particular resource, this would be an error condition, no longer a warning condition.
+
+Obviously, this is not a complete list.
+
+\paragraph{Info} You \textit{may} also log other important events that are clearly no error condition nor a warning. The log level for this kind of log entries is \verb#INFO#. You should assume that this is the default log level for each new logger, meaning that messages with the log levels \verb#INFO#, \verb#WARNING#/\verb#WARN# and \verb#FATAL#/\verb#ERROR#/\verb#SEVERE# are always written to the log file.
+
+This may be the successfully established connection with an external system, the start and the termination of a long running background process, the creation of a new user and alike.
+
+It is also a good idea to log the system configuration on startup.
+
+You should not log (at least not with a log level of \verb#INFO#) the successful termination of common operations.\footnote{The kind of application that you create may request an audit log of some kind, but this is not covered by \textit{logging}. Instead we talk about \textit{journalling} here.}
+
+In general, you should avoid to log the “happy path” in your code – at least, you should not do this with the log level \verb#INFO#.
+
+\paragraph{Debug and Trace} A very basic tecnic for the debugging of a program is to add statements to the code that prints the current state to the console.
+
+Logging with the log levels \verb#DEBUG#, \verb#TRACE#, \verb#FINE#, \verb#FINER#, and \verb#FINEST# is basically the same, just with the difference that you do not emit to a console, but to the log file.
+
+There are some recommendations to log the entry and exit for each method, together with the arguments and the return value. In JDK~Logging, the class \lstinline|java.util.logging.Logger| does even have a set of specialised methods to support this approach (\lstinline|Logger::entering| and \lstinline|Logger::exiting|) that emit messages with the log level \verb#FINER#. That will look like this:
+\begin{lstlisting}
+public final class myClass
+{
+    private static final String CLASS_NAME = myClass.class.getName();
+    private static final Logger m_Logger = getLogger( CLASS_NAME );
+    
+    public final String myMethod( final String value, final boolean flag )
+    {
+        final var METHOD_NAME = "myMethod";
+        m_Logger.entering( CLASS_NAME, METHOD_NAME, value, Boolean.valueOf( flag ) );
+        
+        //---* Does some work here … *-------------------------------
+        …
+    
+        //---* Done *------------------------------------------------
+        m_Logger.exiting( CLASS_NAME, METHOD_NAME, retValue );
+        return retValue;
+    }   //  myMethod()
+}
+//  class myClass
+\end{lstlisting}
+Similar methods are missing in the other logging frameworks, for a reason:
+\begin{itemize}
+\item{First, the kind of information provided by this kind of logging is rarely useful.}
+\item{If really each and every method is instrumented in that way, the log file will be flooded with messages when the general log level is set to \verb#FINER# or \verb#FINEST#, making it very difficult to find the information you really need.}
+\item{It requires a real lot amount of unnecessary code to write.}
+\item{Neither the name of the class nor that of the method will be detected automatically; instead, these values have to be provided as a constant.That makes some refactorings quite challenging~…}
+\end{itemize}
+
+As a result, I do not recommend to use this approach. In fact, you should think twice before you add log statement for \verb#DEBUG# and \verb#TRACE# proactively.
+
+Of course, there are scenarios that are well known to cause issues during runtime quite often and therefore \verb#DEBUG# logging should be added for them. One good sample is the processing of emails, others are REST and SOAP communications.
+
+But in general, you should never add \verb#TRACE# logging \textit{proactively}, and \verb#DEBUG# logging only in special cases.
+
+On the other hand, you should never remove \verb#DEBUG# and \verb#TRACE# logging that you added during a bug hunt; it may get useful again if a regression tests fails. This also means that the \verb#DEBUG# and \verb#TRACE# log messages should be very verbose so that you can identify them even years later.
+\begin{lstlisting}
+public final String myMethod( final String value, final boolean flag )
+{
+    // DISCOURAGED!!
+    m_Logger.trace( value );
+    
+    // RECOMMENDED
+    m_Logger.trace( "BUGHUNT_2022-12-14 - entering myMethod()|value = '{}', flag = {}", value, flag );
+    
+    final var buffer = retrieveData( value, flag );
+    
+    // DISCOURAGED
+    m_Logger.debug( buffer );
+    
+    // RECOMMENDED
+    if( m_Logger.isDebugEnabled )
+    {
+        m_Logger.debug( "BUGHUNT_2022-12-14 - myMethod() called retrieveData()|value = '{}', flag = {}", value, flag );
+        if( isNull( buffer )
+        {
+            m_Logger.debug( "BUGHUNT_2022-12-14 - retrieveData() returned null!" );
+        }
+        else
+        {
+            m_Logger.debug( "BUGHUNT_2022-12-14 - retrieveData() returned '{}'", buffer );
+        }
+    }
+    
+    final var retValue = process( buffer );
+    
+    //---* Done *----------------------------------------------------
+    // DISCOURAGED
+    m_Logger.debug( retValue );
+    
+    // RECOMMENDED
+    m_Logger.trace( "BUGHUNT_2022-12-14 - exting myMethod()|retValue = '{}'", retValue );
+    
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+
+In chapter \tqref{sec:GeneralExceptionHandling} I said that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is on exception on this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. Or you have some additional information at the current code location that you cannot add to the wrapper exception (perhaps because of its size). In this case, you can log that exception for debugging (the sample uses Log4j/SLF4J): 
+\begin{lstlisting}
+public final void myMethod() throw IOException
+{
+    …
+    try
+    {
+        …
+    }
+    catch( final IOException e )
+    {
+        //---* Log and rethrow *-------------------------------------
+        m_Logger.catching( DEBUG, e );
+        throw e;
+    }
+    …
+    try
+    {
+        …
+    }
+    catch( final IllegalStateException e )
+    {
+        //---* Log and wrap *----------------------------------------
+        if( m_Logger.isDebugEnabled() )
+        {
+            final var message = composeIllegalStateContextMessage();
+            m_Logger.debug( message, e );
+        }    
+        throw new ApplicationError( "Already in use", e );
+    }
+    …
+}   // myMethod()
+\end{lstlisting}
+
+Here you also accept that the same exception might be logged twice.
+
+\paragraph{Configuration} I have to confess that I never understood the purpose of the log level \verb#CONFIG# for the JDK~Logging. The description says “A message level for static configuration messages”. So you should use it to log the configuration parameters of your program – things like the current IP address, but also the system properties, or at least the command line parameters.
+
+Of course, these could be relevant information for debugging issues, and it would make sense to log them with each restart of your program.
+
+But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when you activate \verb#CONFIG#, you have also activated \verb#INFO# for that logger. This is probably not wanted.
+
+Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
+
+My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead. If you are using another logging framework than JDK~Logging, you don't have another choice either.
+
+\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
+In all samples we have seen so far in this chapter, the logger was given the fully qualified name of the class it lives in:
+\begin{lstlisting}
+public final class MyClass
+{
+       /*------------------------*\
+    ===** Static Initialisations **==================================
+       \*------------------------*/
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
+    
+    // For Log4j and SLF4J, this also works:
+    private static final Logger m_Logger = getLogger( MyClass.class );
+}
+//  class MyClass
+\end{lstlisting}
+This make sense, as there is a in fact a hierarchy for the loggers (I will come back to that in chapter \ref{sec:LoggerConfiguration} about the configuration of loggers).
+
+Assume \lstinline|com.foo.application.internal.MyClass| is the fully qualified name of your class; then this is also the name of the logger that is configured for that class.
+
+If you have not made any other settings\footnote{Like \lstinline|m_Logger.setParent()|~…}, you can change the log level for the logger like this:
+\begin{lstlisting}[numbers=left]
+getLogger( "com" ).setLevel( newLevel );
+getLogger( "com.foo" ).setLevel( newLevel );
+getLogger( "com.foo.application" ).setLevel( newLevel );
+getLogger( MyClass.class.getPackage().getName() ).setLevel( newLevel );
+getLogger( "com.foo.application.internal" ).setLevel( newLevel );
+m_Logger.setLevel( newLevel );
+getLogger( MyClass.class.getName() ).setLevel( newLevel );
+\end{lstlisting}
+
+The lines~4 and 5 as well as the lines~6 and 7 are effectivly the same, and in all cases, the log level for the logger is set to the value of \lstinline|newLevel|. This works first because each call to \lstinline|Logger::getLogger| (for JDK~Logging), \lstinline|LogManager::getLogger| (for Log4j), or \lstinline|LoggerFactory::getLogger| (for SLF4J) with the same argument will always return the \textit{same} logger instance:
+\begin{lstlisting}
+if( MyClass.class.getName()
+    .equals( "com.foo.application.internal.MyClass" ) )
+{
+    // Always true
+    getLogger( MyClass.class.getName() ) == 
+        getLogger( "com.foo.application.internal.MyClass" );
+}
+\end{lstlisting}
+
+Next, the dot (‘.’) indicates a hierarchy: the logger with the name \verb#com# is the parent of all loggers whose name starts with \verb#com.# (like \verb#com.foo# for the sample), and the logger with the name \verb#com.foo# is the parent of all loggers with names starting with \verb#com.foo.# and so on.
+
+Now if a configuration value is not explicitly set by a logger itself, it will pull this setting from the logger that is set as its parent.
+
+If the logger \verb#com.foo.application.internal.MyClass# is only logger that our program creates explicitly, a seven commands from the sample above are equivalent. Otherwise, those in the lines~1 to 5 may have the side effect to set the log level for these other loggers, too. This is exactly what want to achieve in the logger configuration that makes use of this relationship.
+
+Please keep in mind that, once created, you cannot get rid of a logger instance. It will live until the current JVM is shut down. But in the sample above, no new logger will be created; all the loggers in the hierarchy, those with the names \verb#com.foo.application.internal#, \verb#com.foo.application#, \verb#com.foo# and \verb#com# were created implicitely already when creating the logger for the class name. It also means that there is nothing like a temporary logger!
+
+There is no special requirement for the name of a logger. This means that “\verb#logger#”, “\verb#my.logger#”, “\verb#1.2.3.4.5.6.7.8#” or “\verb#Fritz#” are all valid logger names.
+
+Using the fully qualified class name for the main loggers makes perfect sense, as you want to need a predictable naming scheme for the configuration (the log level is not the only configuration parameter to set).
+
+But when you are on a bug hunt and add additional log statements to emit \verb#DEBUG# or \verb#TRACE# messages, this usually affects more then one class. If you use the class logger for the debug or trace logging, you always have to configure multiple loggers. That's not only inconvenient, but also error prone.
+
+Same when you want to provide a debugging facility for a transaction; usually this will also span multiple classes.
+
+So instead of using multiple class loggers, you should consider to introduce dedicated loggers that are reference in multiple classes – all classes that are involved in the respective operation:
+\begin{lstlisting}
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger = getLogger( MyClass.class.getName() ); 
+
+/**
+ *  The loggers for the database transactions.
+ */
+private static final Lazy<Logger> m_InsertLogger = Lazy.use( () -> getLogger( "CRUD.Insert" ) );
+private static final Lazy<Logger> m_SelectLogger = Lazy.use( () -> getLogger( "CRUD.Select" ) );
+private static final Lazy<Logger> m_UpdateLogger = Lazy.use( () -> getLogger( "CRUD.Update" ) );
+private static final Lazy<Logger> m_DeleteLogger = Lazy.use( () -> getLogger( "CRUD.Delete" ) );
+
+/**
+ *  The logger for the bug hunt started on 2022-12-14.
+ */
+private static final Lazy<Logger> m_BugHunt_2022-12-14_Logger = Lazy.use( () -> getLogger( "BugHunt.2022-12-14" ) );
+
+public final void myMethod( final Operation operation, final Record data ) throws SQLException
+{
+    m_BugHunt_2022-12-14_Logger.debug( "entered MyClass.myMethod|operation = '{}'", operation );
+    try( final var connection = obtainConnection() )
+    {
+        OperationSwitch: switch( requireNonNullArgument( operation, "operation" ) )
+        {
+            case INSERT:
+                m_InsertLogger.get().debug( "Performing an Insert" );
+                …
+                break OperationSwitch;
+                
+            case …
+        }   //  OperationSwitch:
+        m_BugHunt_2022-12-14_Logger.debug( "MyClass.myMethod – Operation successfully termninated|operation = '{}'", operation );       
+    }
+    catch( final PoolExhaustedException e )
+    {
+        m_Logger.warn( "Connection Pool exhausted; operation postponed", e );
+        m_BugHunt_2022-12-14_Logger.debug( "MyClass.myMethod – Operation postponed|operation = '{}'", operation );       
+        postponeOperation( operation, data ); 
+    }    
+    catch( final SQLException e )
+    {
+        m_BugHunt_2022-12-14_Logger.debug( () -> format( "MyClass.myMethod – Operation aborted|operation = '%s'", operation ), e );
+        throw e;
+    }
+}   //  myMethod() 
+\end{lstlisting}
+
+An example for the class \lstinline|Lazy| is given in chapter \tqvref{sec:Lazy}.
+
+\subsubsection{Logger Configuration}\label{sec:LoggerConfiguration}
+Both, JDK~Logging and Log4j are best configured through configuration files.\footnote{SLF4J does not have a configuration of its own, as it is just a facade to a ‘real’ logging framework, like JDK~Logging or Log4j~…} But both allow also a programmatical configuration, to some extend. This should be used to add a feature to change the logging configuration during runtime, at least for the log levels. This makes definitely sense for server-based applications, to some extent for feature libraries, and of course for long running standalone applications.
+
+JDK~Logging and Log4j will also support JMX for configuration changes\autocite{ORACLE_DOC_LOGGINGMXBEAN_INTERFACE, APACHE_LOG4J:JMX}; this can be used with long running tools to modify log levels during runtime.
+
+\paragraph{JDK~Logging} The basic information about the configuration of JDK~Logging are given in \autocite{ORACLE_DOC_LOGGING_OVERVIEW:ConfigurationFile, ORACLE_DOC_LOGGING_OVERVIEW:DefaultConfiguration} and some important details can be found at \autocite{ORACLE_DOC_LOGMANAGER_CLASS}.
+
+Usually JDK~Logging will be configured through a properties file; the default path for that file is \verb#${JAVA_HOME}/conf/logging.properties#, and out-of-the-box, it looks like this:
+\begin{lstlisting}[language=,numbers=left,caption={Default JDK~Logging Configuration}]
+############################################################
+#  	Default Logging Configuration File
+#
+# You can use a different file by specifying a filename
+# with the java.util.logging.config.file system property.  
+# For example java -Djava.util.logging.config.file=myfile
+############################################################
+
+############################################################
+#  	Global properties
+############################################################
+
+# "handlers" specifies a comma separated list of log Handler 
+# classes.  These handlers will be installed during VM startup.
+# Note that these classes must be on the system classpath.
+# By default we only configure a ConsoleHandler, which will only
+# show messages at the INFO and above levels.
+handlers= java.util.logging.ConsoleHandler
+
+# To also add the FileHandler, use the following line instead.
+#handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+
+# Default global logging level.
+# This specifies which kinds of events are logged across
+# all loggers.  For any given facility this global level
+# can be overriden by a facility specific level
+# Note that the ConsoleHandler also has a separate level
+# setting to limit messages printed to the console.
+.level= INFO
+
+############################################################
+# Handler specific properties.
+# Describes specific configuration info for Handlers.
+############################################################
+
+# default file output is in user's home directory.
+java.util.logging.FileHandler.pattern = %h/java%u.log
+java.util.logging.FileHandler.limit = 50000
+java.util.logging.FileHandler.count = 1
+# Default number of locks FileHandler can obtain synchronously.
+# This specifies maximum number of attempts to obtain lock file by 
+# FileHandler implemented by incrementing the unique field %u as per 
+# FileHandler API documentation.
+java.util.logging.FileHandler.maxLocks = 100
+java.util.logging.FileHandler.formatter = java.util.logging.XMLFormatter
+
+# Limit the message that are printed on the console to INFO and above.
+java.util.logging.ConsoleHandler.level = INFO
+java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+
+# Example to customize the SimpleFormatter output format 
+# to print one-line log message like this:
+#     <level>: <log message> [<date/time>]
+#
+# java.util.logging.SimpleFormatter.format=%4$s: %5$s [%1$tc]%n
+
+############################################################
+# Facility specific properties.
+# Provides extra control for each logger.
+############################################################
+
+# For example, set the com.xyz.foo logger to only log SEVERE
+# messages:
+com.xyz.foo.level = SEVERE
+\end{lstlisting}
+
+To provide your own configuration, you can modify this file (not recommended) or you create your own configuration file that you announce through the system property \verb#java.util.logging.config.file#.
+
+A sample configuration file for the sample provided above may look like this:
+\begin{lstlisting}[language=,numbers=left,caption={Sample JDK~Logging Configuration}]
+handlers=java.util.logging.FileHandler
+.level=SEVERE
+
+java.util.logging.FileHandler.pattern=%h/target/Sample.log
+java.util.logging.FileHandler.level=ALL
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
+
+BugHunt_2022-12-14_Logger.level=FINEST
+CRUD.level=OFF
+\end{lstlisting}
+
+It defines a configuration with two loggers, “\verb#BugHunt_2022-12-14_Logger#" and “\verb#CRUD#". The default log level is set to \verb#SEVERE#, while the logger  \verb#CRUD# is switched off, together with all it is child loggers, and the log level for \verb#BugHunt_2022-12-14_Logger# is set to \verb#FINEST#.
+
+A handler determines the destination for the log messages, and here we selected the file handler. A handler has its own log level, and you define the formatter that determines how the log messages will look like when written by the respective handler. Finally, ‘pattern’ specifies the name of the logfile.
+
+This is more or less the simplest configuration you can make. Refer to \autocite{ORACLE_DOC_LOGGING_OVERVIEW, ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_PACKAGE} and the JavaDoc for the various handlers and formatters for more details.
+
+\paragraph{Log4j} The configuration for Log4j is described in \autocite{APACHE_LOG4J:Configuration}. It allows four different formats for the configuration file (XML, JSON, YAML, or properties format), but the XML format is still the most common one.
+
+Log4j has the ability to automatically configure itself during initialization. 
+\begin{enumerate}
+\item{When Log4j starts it will inspect the “\verb#log4j2.configurationFile#” system property and, if set, will attempt to load the configuration using a \lstinline|ConfigurationFactory| that matches the file extension.
+
+Note that this is not restricted to a location on the local file system and may contain a URL.}
+\item{If no system property is set the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.properties# in the classpath.}
+\item{If no such file is found the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.yaml# or \verb#log4j2-test.yml# in the classpath.}
+\item{If no such file is found the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.json# or \verb#log4j2-test.jsn# in the classpath.}
+\item{If no such file is found the “XML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.xml# in the classpath.}
+\item{If a test file cannot be located the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2.properties# on the classpath.}
+\item{If a properties file cannot be located the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2.yaml# or \verb#log4j2.yml# on the classpath.}
+\item{If a YAML file cannot be located the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2.json# or \verb#log4j2.jsn# on the classpath.}
+\item{If a JSON file cannot be located the “XML \lstinline|ConfigurationFactory|” will try to locate \verb#log4j2.xml# on the classpath.}
+\item{If no configuration file could be located the \lstinline|DefaultConfiguration|” will be used. This will cause logging output to go to the console.}
+\end{enumerate}
+
+A \verb#log4j2.xml# file may look like that one below:
+\begin{lstlisting}[language=XML,numbers=left,caption={Sample Log4j Configuration}]
+<?xml version="1.0"
+      encoding="UTF-8"?>
+<Configuration name="SampleConfiguration" 
+               status="debug" 
+               strict="true">
+  <Properties>
+    <Property name="filename">target/Sample.log</Property>
+  </Properties>
+ 
+  <Appenders>
+    <Appender type="File" 
+              name="File" 
+              fileName="${filename}">
+      <Layout type="PatternLayout">
+        <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+      </Layout>
+    </Appender>
+  </Appenders>
+ 
+  <Loggers>
+    <Logger name="BugHunt_2022-12-14_Logger" 
+            level="trace" 
+            additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Logger name="CRUD" 
+            level="off" 
+            additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Root level="error">
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+</Configuration>
+\end{lstlisting}
+
+It defines a configuration with the name “\verb#Sample#”, and that has one appender, named “\verb#File#” and two named loggers, “\verb#CRUD#" and that infamous “\verb#BugHunt_2022-12-14_Logger#", together with the default configuration (with the name “\verb#Root#”).
+
+An appender is basically the definition for the target of the log messages and how the messages will look like (the ‘layout’); you can define as many appenders as you want. The name of the defined loggers match with those we used in the program code, and you will set the level and the destination (the ‘appender reference’) for it.
+
+But the configuration is much more powerful than that what I will show here. For more details, see the documentation in \autocite{APACHE_LOG4J:Configuration}.
+
+\subsubsection{Side Effects of Logging}
+Logging may not have side-effects!
+
+This means that your code have to behave always in the same way, no matter which log levels are active for any of the loggers.
+
+Although this is literally impossible (a call to the \lstinline|log()| method will consume more or less CPU cycles, depending on whether the respective log level is active or not), you should take care to reduce the impact as much as possible.
+
+On the other side, an inactive log level also should not have any impact.
+
+The good thing is that this problem usually shows up only for \verb#DEBUG# and \verb#TRACE#, rarely for \verb#INFO#.
+
+Some samples:
+\begin{lstlisting}[numbers=left]
+public final void myMethod()
+{
+    // AVOID!
+    final var logMessage = composeLogMessage();
+    m_Logger.debug( logMessage );
+    
+    // BETTER
+    if( m_Logger.isDebugEnabled() )
+    {
+        final var logMessage = composeLogMessage();
+        m_Logger.debug( logMessage );
+    }
+    
+    // RECOMMENDED
+    m_Logger.debug( this::composeLogMessage );
+}   //  myMethod()
+\end{lstlisting}
+
+The method \lstinline|composeLogMessage()| is just a placeholder here, but to keep the code readable, it is sometimes really a good idea to place the generation of the logging output into a dedicated method.
+
+\begin{lstlisting}[numbers=left]
+public final void myMethod()
+{
+    // AVOID!
+    final var bufferForLogOutput = new StringBuilder();
+    while( input.hasMore() )
+    {
+        final var line = processInput( input.next() );
+        output.println( line );
+        bufferForLogOutput.append( line )
+            .append( '\n' );
+    }
+    m_Logger.debug( "Output: {}", bufferForLogOutput.toString() );
+    
+    // A LITTLE BIT BETTER
+    StringBuilder bufferForLogOutput = null;
+    if( m_Logger.isLoggable( DEBUG ) ) bufferForLogOutput = new StringBuilder();
+    while( input.hasMore() )
+    {
+        final var line = processInput( input.next() );
+        output.println( line );
+        if( nonNull( bufferForLogOutput ) )
+        {
+        	bufferForLogOutput.append( line )
+            	.append( '\n' );
+        }
+    }
+    m_Logger.debug( "Output: {}", bufferForLogOutput.toString() );
+    
+    // RECOMMNENDED
+    while( input.hasMore() )
+    {
+        final var line = processInput( input.next() );
+        output.println( line );
+        m_Logger.debug( "Output: {}", line );
+    }
+}   //  myMethod()
+\end{lstlisting}
+
+The variants starting in line~3 and line~14 have both the risk that they may cause an \lstinline|OutOfMemoryError| when the output is larger. But it is in general a bad idea to have a variable that exists only for debugging purposes.
+
+On the other hand, the variant starting on line~29 may pollute the logs with a high number of messages. But for debugging purposes, this should be acceptable.
+
+Something that I have seen in real life code, another variant of the pattern above:
+\begin{lstlisting}[numbers=left]
+public final void myMethod() throws IOException
+{
+    // AVOID! BY ALL MEANS!!
+    PrintStream logOutput = null;
+    if( m_Logger.isLoggable( DEBUG ) )
+    {
+    	final var logOutputName = generateFileName();
+    	logOutput = new PrintStream( new FileOutputStream( logOutputName ) );
+    	m_Logger.debug( "Writing logOutput File {}", logOutputName );
+    };
+    while( input.hasMore() )
+    {
+        final var line = processInput( input.next() );
+        output.println( line );
+        if( nonNull( logOutput ) )
+        {
+        	bufferForLogOutput.append( line )
+            	.append( '\n' );
+        }
+    }
+    if( nonNull( logOutput ) logOutput.close();
+}   //  myMethod()
+\end{lstlisting}
+
+In this case, enabling \verb#DEBUG# for the logger can cause exceptions that will never occur in normal operation.
+
+One more?
+\begin{lstlisting}[numbers=left]
+public final Data myMethod() throws IOException
+{
+    // AVOID! BY ALL MEANS!!
+    final Data retValue;
+    
+    if( m_Logger.isTraceEnabled() )
+    {
+        retValue = composeOutputDataWithTrace()
+    }
+    else
+    {
+        retValue = composeOutputData();
+    }
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+Do I have to comment this?
+
+As a conclusion, you should avoid side effects of (debug) logging as good as possible. The impact on time can be reduced if the operations done for logging are kept short. And instead of collecting large data chunks, log each small chunk separately.

@@ -166,13 +166,306 @@ An extension or a plugin requires also an environment to run in, but it is not a
 \include{5_CodingGuidelines_ErrorHandling}
 
 \section{Checking Method Parameters and Return Values}\label{sec:CheckingMethodParametersAndReturnValues}
+A \lstinline|NullPointerException| that is thrown by your code indicates a serious bug: it reveals that either a method argument or a return value was not properly checked before it was further used.
+
+Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.
+
+In case the problematic \lstinline|null| value is an argument to a method or to a constructor, you should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}:
+\begin{lstlisting}
+public final class MyClass
+{
+    public MyClass( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    public final void myMethod( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+As this check is quite common, I suggest to create a custom exception for this purpose: \lstinline|NullArgumentException|, extending \lstinline|java.lang.IllegalArgumentException|; chapter \tqvref{sec:IllegalArgumentExceptions} provides sample implementations for this and the other exceptions discussed here. With that the sample looks like this:
+\begin{lstlisting}
+public final class MyClass
+{
+    public MyClass( final String value )
+    {
+        if( isNull( value ) ) throw new NullArgumentException( "value" );
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    public final void myMethod( final String value )
+    {
+        if( isNull( value ) ) throw new NullArgumentException( "value" );
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+You may have noticed that I always use \lstinline|isNull()|\autocite{ORACLE_DOC_OBJECTS:isNull} and \lstinline|nonNull()|\autocite{ORACLE_DOC_OBJECTS:nonNull}\footnote{Both methods are defined in the class \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} that will be discussed in more detail later in this chapter.} instead of \lstinline|… == null| and \lstinline|… != null|. I think that the method calls are easier to read than the \verb#==# and \verb#!0# operators.
+
+Foreign code will still throw a \lstinline|NullPointerException| if called with \lstinline|null|, but we are not allowed to catch that …
+
+This means that we have to check the values before we call that foreign code. That's easy for a method, we already check all arguments. But what if we have to call the constructor of a super class?
+\begin{lstlisting}
+public final class MyClass extends ForeignClass
+{
+    public MyClass( final String value )
+    {
+        // WILL NOT COMPILE!!
+        if( isNull( value ) ) throw new NullArgumentException( "value" );
+        super( value );
+    }   //  MyClass()
+}
+//  class MyClass
+\end{lstlisting}
+
+The solution is to have a method that is doing the \lstinline|null| and throwing the \lstinline|NullArgumentException| if that fails. Then our sample may look like this:
+
+\begin{lstlisting}
+public final class MyClass extends ForeignClass
+{
+    public MyClass( final String value, final Data data )
+    {
+        super( requireNonNullArgument( data, "data" ) );
+        
+        m_Value = requireNonNullArgument( value, "value" );
+    }   //  MyClass()
+    
+    public final void myMethod( final String value, final Data data )
+    {
+        if( requireNonNullArgument( value, "value" ).equals( m_Value ) && requireNonNullArgument( data, "data" ).equals( getData() ) )
+        {
+            …
+        }
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+The method \lstinline|requireNonNullArgument()| looks like this\footnote{This one and the other methods in this chapter are implemented in the class \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} that also provides reimplementations of the methods from \lstinline|java.util.Objects|.}:
+\begin{lstlisting}[numbers=left,caption={requireNonNullArgument()}]
+/**
+ *  Checks if the given argument {@code a} is {@code null} and throws a
+ *  {@link NullArgumentException}
+ *  if it is {@code null}.
+ *
+ *  @param  <T> The type of the argument to check.
+ *  @param  a   The argument to check.
+ *  @param  name    The name of the argument; this is used for the 
+ *      error message.
+ *  @return The argument if it is not {@code null}.
+ *  @throws NullArgumentException   {@code a} is {@code null}.
+ */
+public static final <T> T requireNonNullArgument( final T a, final String name )
+{
+    if( isNull( name ) ) throw new NullArgumentException( "name" );
+    if( name.isEmpty() ) throw new EmptyArgumentException( "name" );
+    if( isNull( a ) ) throw new NullArgumentException( name );
+
+    //---* Done *----------------------------------------------------
+    return a;
+}   //  requireNonNullArgument()
+\end{lstlisting}
+
+In general, it is a good idea to check the arguments for a method or a constructor is as soon as possible, but is needs to be checked latest before it is used in some way.
+
+We can check an argument for being empty, and Strings can be even tested for being blank, in the same way as for the null check:
+\begin{lstlisting}[numbers=left,caption={requireNotEmptyArgument()}]
+/**
+ *  <p>{@summary Checks if the given argument {@code arg} is 
+ *  {@code null} or empty and throws a
+ *  {@link NullArgumentException}
+ *  if it is {@code null}, or an
+ *  {@link EmptyArgumentException}
+ *  if it is empty.}</p>
+ *  <p>Strings, arrays, instances of
+ *  {@link java.util.Collection} and
+ *  {@link java.util.Map}
+ *  as well as instances of
+ *  {@link java.lang.StringBuilder},
+ *  {@link java.lang.StringBuffer},
+ *  and
+ *  {@link java.lang.CharSequence}
+ *  will be checked on being empty.</p>
+ *  <p>For an instance of
+ *  {@link java.util.Optional},
+ *  the presence of a value is checked in order to determine whether
+ *  the
+ *  {@link Optional} is empty or not.</p>
+ *  <p>Because the interface
+ *  {@link java.util.Enumeration}
+ *  does not provide an API for the check on emptiness
+ *  ({@link java.util.Enumeration#hasMoreElements() hasMoreElements()}
+ *  will return {@code false} after all elements have been taken from
+ *  the {@code Enumeration} instance), the result for arguments of
+ *  this type has to be taken with caution.</p>
+ *  <p>For instances of
+ *  {@link java.util.stream.Stream},
+ *  this method will only check for {@code null} (like
+ *  {@link #requireNonNullArgument(Object,String)}.
+ *  This is because any operation on the stream itself would render 
+ *  it unusable for later processing.</p>
+ *  <p>In case the argument is of type
+ *  {@link Optional},
+ *  this method behaves different from
+ *  {@link #requireNotEmptyArgument(Optional,String)};
+ *  this one will return the {@code Optional} instance, while the
+ *  other method will return the contents of the 
+ *  {@code Optional}.</p>
+ *  <p>This method will not work properly for instances of
+ *  {@link java.util.StringJoiner}, because its method
+ *  {@link java.util.StringJoiner#length() length()}
+ *  will not return 0 when a prefix, suffix, or an
+ *  &quot;{@linkplain java.util.StringJoiner#setEmptyValue(CharSequence) 
+ *  empty value}&quot; was provided.</p>
+ *
+ *  @param  <T> The type of the argument to check.
+ *  @param  arg The argument to check; may be {@code null}.
+ *  @param  name    The name of the argument; this is used for the 
+ *      error message.
+ *  @return The argument if it is not {@code null} or empty.
+ *  @throws NullArgumentException   {@code arg} is {@code null}.
+ *  @throws EmptyArgumentException   {@code arg} is empty.
+ */
+public static final <T> T requireNotEmptyArgument( final T arg, final String name )
+{
+    if( isNull( name ) ) throw new NullArgumentException( "name" );
+    if( name.isEmpty() ) throw new EmptyArgumentException( "name" );
+
+    switch( arg )
+    {
+        /*
+         * When using guarding expressions, the code would not get
+         * better to read and to understand, as the positive cases
+         * will be handled all by the default case then.
+         */
+        case null -> throw new NullArgumentException( name );
+        case CharSequence charSequence ->
+        {
+            if( charSequence.isEmpty() ) throw new EmptyArgumentException( name );
+        }
+        case Collection<?> collection ->
+        {
+            if( collection.isEmpty() ) throw new EmptyArgumentException( name );
+        }
+        case Map<?,?> map ->
+        {
+            if( map.isEmpty() ) throw new EmptyArgumentException( name );
+        }
+        case Enumeration<?> enumeration ->
+        {
+            /*
+             * The funny thing with an Enumeration is that it could 
+             * have been not empty in the beginning, but it may be 
+             * empty (= having no more elements) now.
+             * The good thing is that Enumeration.hasMoreElements() 
+             * will not change the state of the Enumeration - at 
+             * least it should not do so.
+             */
+            if( !enumeration.hasMoreElements() ) throw new EmptyArgumentException( name );
+        }
+        case Optional<?> optional ->
+        {
+            if( optional.isEmpty() ) throw new EmptyArgumentException( name );
+        }
+        default ->
+        {
+            if( arg.getClass().isArray() )
+            {
+                if( Array.getLength( arg ) == 0 ) throw new EmptyArgumentException( name );
+            }
+            else
+            {
+                /*
+                 * Other data types are not further processed; in
+                 * particular, instances of Stream cannot be checked 
+                 * on being empty. This is because any operation on 
+                 * the Stream itself will change its state and may 
+                 * make the Stream unusable.
+                 */
+            }
+        }
+    }
+
+    //---* Done *----------------------------------------------------------
+    return arg;
+}   //  requireNotEmptyArgument()
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left,caption={requireNotBlankArgument()}]
+/**
+ *  <p>{@summary Checks if the given String argument {@code arg} is
+ *  {@code null}, empty or blank and throws a
+ *  {@link NullArgumentException}
+ *  if it is {@code null}, an
+ *  {@link EmptyArgumentException}
+ *  if it is empty, or a
+ *  {@link BlankArgumentException}
+ *  if it is blank.}</p>
+ *
+ *  @param  <T> The type of the argument to check.
+ *  @param  arg The argument to check; may be {@code null}.
+ *  @param  name    The name of the argument; this is used for the
+ *      error message.
+ *  @return The argument if it is not {@code null}, empty or blank.
+ *  @throws NullArgumentException   {@code arg} is {@code null}.
+ *  @throws EmptyArgumentException   {@code arg} is empty.
+ *  @throws BlankArgumentException   {@code arg} is blank.
+ *
+ *  @see    String#isBlank()
+ */
+public static final <T extends CharSequence> T requireNotBlankArgument( final T arg, final String name )
+{
+    if( isNull( name ) ) throw new NullArgumentException( "name" );
+    if( name.isEmpty() ) throw new EmptyArgumentException( "name" );
+
+    switch( arg )
+    {
+        case null -> throw new NullArgumentException( name );
+        case String string ->
+        {
+            if( string.isEmpty() ) throw new EmptyArgumentException( name );
+            if( string.isBlank() ) throw new BlankArgumentException( name );
+        }
+        case CharSequence charSequence ->
+        {
+            if( charSequence.isEmpty() ) throw new EmptyArgumentException( name );
+            if( charSequence.toString().isBlank() ) throw new BlankArgumentException( name );
+        }
+    }
+
+    //---* Done *----------------------------------------------------------
+    return arg;
+}   //  requireNotBlankArgument()
+\end{lstlisting}
+
+
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
+
 \lipsum[1]
 
 \begin{lstlisting}
 \end{lstlisting}
+
+As said in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, a \lstinline|NullPointerException| that is thrown from your code has to be seen as a coding bug: a value was not properly checked before it was used. Nevertheless, values can be \lstinline|null|, for various reasons, and this still can be an error that needs to be signalled.
+
+For that, I suggested a bunch of custom exceptions that are shown here; they are also part of my Foundation Library: for \lstinline|ValidationException| see \autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, the \lstinline|NullArgumentException| can be found at \autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}, the \lstinline|EmptyArgumentException| is documented at \autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}, and finally the documentation for \lstinline|BlankArgumentException| is at \autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}.
+
+
+
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming:
@@ -323,533 +616,9 @@ This allows you to call the method \lstinline|MyClass::myMethod| nearly directly
 
 \lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
 
-\section{Implementing the Object Methods}
-In Java all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT_CLASS:finalize} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
-\begin{itemize}[nosep]
-\item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT_CLASS:clone}}
-\item{\lstinline|equals()|\autocite{ORACLE_DOC_OBJECT_CLASS:equals}}
-\item{\lstinline|hashCode()|\autocite{ORACLE_DOC_OBJECT_CLASS:hashCode}}
-\item{\lstinline|toString()|\autocite{ORACLE_DOC_OBJECT_CLASS:toString}}
-\end{itemize}
+\include{5_CodingGuidelines_ImplementingTheObjectMethods}
 
-The chapters below will provide some guidelines on how to code new implementations for these methods.
-
-\subsection{equals() and hashCode()}\label{sec:EqualsAndHashCode}
-Overriding the method \lstinline|java.lang.Object::equals|\autocite{ORACLE_DOC_OBJECT_CLASS:equals} always requires to override the method \lstinline|java.lang.Object::hashCode|\autocite{ORACLE_DOC_OBJECT_CLASS:hashCode}, too – and vice versa.
-
-\textit{This is not optional!}
-
-The method \lstinline|equals()| returns \lstinline|true| if the given reference to refers to an object to is equals to the current one, according to \textit{your criteria what “being equal” means} in this context, and – obviously – \lstinline| false| otherwise.
-
-So two objects can be considered to be equal when they both have the same unique id, or you require for equality that all attributes do have the same values (are also equal), or something in between. The default implementation of \lstinline|java.lang.Object.equals()| returns \lstinline|true| only if the two objects are identical\footnote{This means that both objects are the \textit{same}; the given reference points to the current object itself.}.
-
-If two objects are equal, the result of \lstinline|hashCode()| has to be the same for both objects, but that the hash values for two objects are the same does not necessarily imply that the two objects are equal.
-
-An implementation for the two methods should look like this:
-\begin{lstlisting}[numbers=left,caption={Methods equals() and hashCode()}]
-public class MyClass
-{
-    /**
-     *  {@inheritDoc}
-     */
-    public boolean equals( final Object o )
-    {
-        var retValue = o == this;
-        if( !retValue && o instanceof MyClass other
-            && getClass().equals( other.getClass() ) )
-        {
-            retValue = Objects.equals( <attribute>, other.<attribute> )
-                && Objects.equals( < … >, other.< … > );
-        }
-            
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  equals()
-    
-    /**
-     *  {@inheritDoc}
-     */
-    public int hashCode()
-    {
-        final var retValue = Objects.hash( <attribute>, < … > );
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  hashCode()    
-}
-//  class MyClass
-\end{lstlisting}
-The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final|. If that check is omitted for a non-\lstinline|final| class, it means that instances of derived classes can be equal to an instance of the superclass – something that is rarely wanted, especially because it would break the rule that any implementation of \lstinline|equals()| has to guarantee that
-\begin{lstlisting}
-a.equals( b ) == b.equals( a )
-\end{lstlisting}
-is always valid.
-
-The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()| to calculate the hash value.
-
-When both a superclass and its derived classes implement \lstinline|java.lang.Object::equals| and \lstinline|java.lang.Object::hashCode|, the implementation of the derived class may call the superclass implementations of \lstinline|equals()| and \lstinline|hashCode()|:
-\begin{lstlisting}[numbers=left]
-public class OtherClass extends MyClass
-{
-    /**
-     *  {@inheritDoc}
-     */
-    public boolean equals( final Object o )
-    {
-        var retValue = o == this;
-        if( !retValue && o instanceof OtherClass other
-            && super.equals( other ) )
-        {
-            retValue = Objects.equals( <attribute>, other.<attribute> )
-                && Objects.equals( < … >, other.< … > );
-        }
-            
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  equals()
-    
-    /**
-     *  {@inheritDoc}
-     */
-    public int hashCode()
-    {
-        final var retValue = Objects.hash( Integer.valueOf( super.hashCode ), <attribute>, < … > );
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  hashCode()    
-}
-//  class OtherClass
-\end{lstlisting}
-Obviously, both methods consider only the attributes that comes with the definition of the derived class; the attributes of the superclass are already covered.
-
-\subsection{toString()}\label{sec:ToString}
-According to \autocite{ORACLE_DOC_OBJECT_CLASS:toString}, the method \lstinline|toString()|
-\begin{quotation}
-“Returns a string representation of the object.
-
-In general, the \lstinline|toString()| method returns a string that ‘textually represents’ this object. The result should be a concise but informative representation that is easy for a person to read. It is recommended that all subclasses override this method. […]”
-\end{quotation}
-
-What does “textually represents” mean?
-
-The implementation for \lstinline|java.lang.Object::toString|~…
-\begin{quotation}
-“[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
-\lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|”
-\end{quotation}
-But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, it is the current contents of the buffer.
-
-For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}, \lstinline|toString()| is even the method that provides the result.
-
-Originally, the textual representation of an object as provided by the \lstinline|toString()| method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|, \lstinline|java.util.UUID| or \lstinline|java.time.Instant|.
-
-So how to implement the method \lstinline|toString()| for your method?
-
-If your class represents objects that can be easily written as a string, you should implement \lstinline|toString()| accordingly:
-\begin{lstlisting}
-public final class PhoneNumber
-{
-    private final int m_AreaCode;
-    private final int m_CountryCode;
-    private final int m_SubscriberNumber;
-    
-    …
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override 
-    public final String toString()
-    {
-        final var retValue = "+%d %d %d".formatted( m_CountryCode, m_AreaCode, m_SubscriberNumber );
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  toString()
-}   
-//  class PhoneNumber
-\end{lstlisting}
-
-Some samples for this from the Java Runtime Library are the classes below:
-\begin{itemize}
-\item\lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
-\item\lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
-\item\lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}
-\item\lstinline|java.time.Instant|\autocite{ORACLE_DOC_INSTANT_CLASS} and the other classes representing time/date values from the \lstinline|java.time| package\autocite{ORACLE_DOC_TIME_PACKAGE}
-\item\lstinline|java.io.File|\autocite{ORACLE_DOC_FILE_CLASS}
-\item\lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS} and the other wrapper classes for the primitives
-\end{itemize}
-
-In all these cases, you can use a call to \lstinline|toString()| to embed the value of the instance into a regular text:
-\begin{lstlisting}
-final var phoneNumber = new PhoneNumber( … );
-out.printf( "The customer's phonenumber is %s.", phoneNumber.toString() );
-\end{lstlisting}
-
-If your class is more complex and/or an output makes only sense for debugging purposes or requires additional formatting instructions, you should consider a different implementation of \lstinline|toString()|:
-\begin{lstlisting}
-public final class EmailMessage
-{
-    private final String m_Body;
-    private final Map<RecipientType,List<EmailAddress>> m_Recipients;
-    private final EmailAddress m_Sender;
-    private final ZonedDateTime m_SentWhen;
-    private final String m_Subject;
-    
-    …
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override 
-    public final String toString()
-    {
-        final var buffer = new StringJoiner( ", ", "%s[".formatted( getClass().getName(), "]" )
-            .add( "Body='%s'".formatted( m_Body ) )
-            .add( "Recipients=%s".formatted( Objects.toString( m_Recipients ) ) )
-            .add( "Sender='%s'".formatted( Objects.toString( m_EmailAddress ) ) )
-            .add( "Sent_when=%s".formatted( Objects.toString( m_SentWhen ) ) )
-            .add( "Subject='%s'".formatted( m_Subject ) );
-            
-        //---* Compose the return value *----------------------------    
-        final var retValue = buffer.toString();
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  toString()
-}
-//  class EmailMessage
-\end{lstlisting}
-
-This is basically how the IDEs will generate the \lstinline|toString()| method. The output may look like this\footnote{The backslash indicates where I inserted a linebreak so that it looks fine in this document; otherwise it would be just one long line.}:
-\begin{verbatim}
-org.tquadrat.sample.EmailMessage[Body='This is the body of the\
-email', Recipients=[a.b@c.de], Sender='thomas.thrien@tquadrat.\
-org', Sent_when=2022-11-26T20:31:17.884636950+01:00[Europe/Ber\
-lin], Subject='Ping!']
-\end{verbatim}
-
-This will work fine for a debug log, but to get it ‘pretty printed’, you may have to provide another method. Refer to chapter \tqvref{sec:FormattableInterface} for how
-this could look like.
-
-If your class is not \lstinline|final|, the method \lstinline|toString()| should not be \lstinline|final| as well. 
-
-\subsection{clone()}\label{sec:Clone}
-Per \autocite{ORACLE_DOC_OBJECT_CLASS:clone}, the method \lstinline|java.lang.Object::clone| returns a copy of the current object.
-
-Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPITON_CLASS} when called.
-
-When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, and then you need to override the method \lstinline|clone()|.
-
-The simpliest implementation looks like this:
-\begin{lstlisting}[numbers=left,caption={A simple clone() Method}]
-public final MyClass implements Cloneable
-{
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final MyClass clone()
-    {
-        final MyClass retValue;
-        try
-        {
-            retValue = (MyClass) super.clone();
-        }    
-        catch( final CloneNotSupportedException e )
-        {
-            throw new UnexpectedExceptionError( e );
-        }
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  clone() 
-}
-//  class MyClass
-\end{lstlisting}
-This works despite the fact that the class \lstinline|java.lang.Object| \textit{does not} implement \lstinline|java.lang.Cloneable|!
-
-But it fails in case your class extends a class (other than \lstinline|java.lang.Object|) that does not implement \lstinline|java.lang.Cloneable|.
-
-The implementation of \lstinline|java.lang.Object::clone| uses native code to make a shallow copy of the current object. If all attributes of the class are either immutable or primitives, the implementation shown above is sufficient.
-
-But if any of the attributes are collections, arrays or mutable types, there is some
-more work to do; in this case, your implementation of \lstinline|clone()| should declare the \lstinline|java.lang.CloneNotSupportedException|.
-
-Such an extended implementation of \lstinline|clone()| may look like below; it is assumed that \lstinline|T| is not immutable\footnote{If \lstinline|T| will not implement  \lstinline|java.lang.Cloneable|, we can reduce the implementation of \lstinline|clone()| to just throw \lstinline|java.lang.CloneNotSupportedException|. But even if \lstinline|T| implements \lstinline|java.lang.Cloneable|, \lstinline|T::clone| can still throw that exception.}.
-\begin{lstlisting}[numbers=left,caption={An extended clone() Method}]
-public final MyClass<T extends Cloneable> implements Cloneable
-{
-    private final T [] m_Array;
-    private final Collection<T> m_Collection;
-    private T m_Mutable; // MAY NOT BE FINAL!!
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final MyClass clone() throws CloneNotSupportedException
-    {
-        final var retValue = (MyClass) super.clone();
-        for( var i = 0; i < m_Array.size; ++i )
-        {
-            retValue.m_Array [i] = nonNull( m_Array [i] ) 
-                ? m_Array [i].clone() 
-                : null;
-        }
-        retValue.m_Collection.clear();
-        for( final var t : m_Collection ) retValue.m_Collection.add( t.clone() );
-        retValue.m_Mutable = m_Mutable.clone();
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  clone() 
-}
-//  class MyClass
-\end{lstlisting}
-
-The code in line~21 supposes that the collection does not contain any \lstinline|null| values. And obviously, the collection has to be mutable, otherwise already the attempt to clear it in line~20 would throw an exception.
-
-Unfortunately, the interface \lstinline|java.lang.Cloneable| does not declare the method \lstinline|clone()|, therefore the code below will not work:
-\begin{lstlisting}
-// WILL NOT WORK!!
-CloneLoop: for( final var t : m_Collection ) 
-{
-    if( isNull( t ) ) continue CloneLoop;
-    if( t instanceof Cloneable c )
-    {
-        retValue.m_Collection.add( c.clone() );
-    }
-    else
-    {
-        throw new CloneNotSupportedException( t.toString() );
-    }    
-}   //  CloneLoop:
-\end{lstlisting}
-
-So in case a collection (or an array) may contain components that can or cannot be cloned, the test is a bit more complex:
-\begin{lstlisting}
-CloneLoop: for( final var t : m_Collection ) 
-{
-    if( isNull( t ) ) continue CloneLoop;
-    boolean isCloneable = false;
-    if( t instanceof Cloneable )
-    {
-    	isCloneable = stream( getClass().getMethods() )
-    	    .filter( m -> m.getParameterCount() == 0 )
-    	    .map( Method::getName )
-    	    .filter( n -> n.equals( "clone" ) )
-    	    .count() == 1;
-    }
-    
-    if( isCloneable )
-    {
-        retValue.m_Collection.add( c.clone() );
-    }
-    else
-    {
-        throw new CloneNotSupportedException( t.toString() );
-    }    
-}   //  CloneLoop:
-\end{lstlisting}
-Instead of the stream operation, you can also use \lstinline|java.lang.Class::getMethod| and respond to the \lstinline|java.lang.NoSuchMethodException| for the check.
-
-If you have to implement the method \lstinline|java.lang.Object::clone| for lots of classes, it could make sense to implement your own \lstinline|Cloneable| interface that then can be used with the \lstinline|instanceof| operator and the pattern:
-\begin{lstlisting}
-public interface Cloneable<T> extends java.lang.Cloneable
-{
-    /**
-     *  Forces the implementation of
-     *  {@link Object#clone()}
-     *
-     *  @returns The cloned object.
-     *  @throws  CloneNotSupportedException One of the mutable
-     *      attributes is not cloneable.
-     */
-    public T clone() throws CloneNotSupportedException; 
-}
-//  interface Cloneable
-\end{lstlisting}
-
-There are several ongoing discussions whether the API that was defined through the \lstinline|java.lang.Object::clone| is generally usefull or more a pain in the ass, and as far as I am aware, these discussions will last for some more time.
-
-I am not a friend of \lstinline|clone()| and I try to avoid its implementation whenever possible. This means that sometimes it is not possible to circumvent the implementation of that method.
-
-My recommendation is to ignore the method \lstinline|java.lang.Object::clone| unless there is a strict requirement to use it.
-
-\section{String Concatenation}
-How to concatenate strings has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
-
-\subsection{The Basics}
-The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}: it is immutable. This means that
-\begin{lstlisting}
-String a = "part1";
-String b = "part2";
-a += b;
-\end{lstlisting}
-will not modify \lstinline|a| but returns a new \lstinline|String| object with the concatenated contents of \lstinline|a| and \lstinline|b| and assigns a reference to that new object to \lstinline|a|.
-
-Older sources described the internal implementation of the \lstinline|+| operator for \lstinline|java.lang.String| like this:
-\begin{lstlisting}
-// NOT THE REAL IMPLEMENTATION!!
-private final String operatorPlus( String a, String b )
-{
-    final var buffer = new StringBuffer( a )
-        .append( b );
-    final var retValue = buffer.toString();
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  operatorPlus()
-\end{lstlisting}
-
-This means that an intermediate object of type \lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS} has to be created for each concatenation. This gets even worse if you want to append a numerical value to the String, like this:
-\begin{lstlisting}
-String a = "part1";
-a += 42;
-\end{lstlisting}
-
-The implementation for this was described as
-\begin{lstlisting}
-// NOT THE REAL IMPLEMENTATION!!
-private final String operatorPlus( String a, int b )
-{
-    StringBuffer buffer = new StringBuffer( a );
-    String bString = Integer.toString( b );
-    buffer.append( bString );
-    final var retValue = buffer.toString();
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  operatorPlus()
-\end{lstlisting}
-meaning that two intermediate objects are created.
-
-Knowing this, the recommendation was always to write
-\begin{lstlisting}
-String a = new StringBuffer( b )
-    .append( c )
-    .toString();
-\end{lstlisting}
-instead of
-\begin{lstlisting}
-String a = b + c;
-\end{lstlisting}
-and
-\begin{lstlisting}
-String a = new StringBuffer( a )
-    .append( b )
-    .toString();
-\end{lstlisting}
-instead of
-\begin{lstlisting}
-a += b;
-\end{lstlisting}
-in order to increase performance.\footnote{These recommendations origin from a time when the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} did not yet exist. Java~5 introduced \lstinline|StringBuilder| as the successor/replacement for \lstinline|StringBuffer|; it is more perfomant than \lstinline|StringBuffer| because its operations are not synchronised and therefore have less overhead than that of \lstinline|StringBuffer|.}
-
-But with each Java version the \textit{real} implementation of \lstinline|+| and \lstinline|+=| for \lstinline|String| changed, so that today there is no longer just only one recommendation.
-
-\subsection{Concatenating String Constants}
-In your code, string literals will be always concatenated with the \verb#plus# operator:
-\begin{lstlisting}
-String a = "StringOne" + "StringTwo";
-\end{lstlisting}
-because this way, they will already be concatenated \textit{during compile time}; using \lstinline|StringBuilder| here would cause negative effects on both performance and readability. This is also true when \lstinline|static final String| variables, initialised with a literal, are concatenated with each other or with another string literal:
-\begin{lstlisting}
-public static final String constantA = "StringOne";
-public static final String constantB = "StringTwo";
-String a = constantA + constantB;
-String b = constantA + "StringThree";
-\end{lstlisting}
-The compiler replaces each reference to the \lstinline|static final String| variables by either the literal itself or a reference to the literal and concatenates them if required.
-
-\subsection{Concatenating String Variables}
-Benchmark tests showed that beginning with one of the later versions of Java~1.4 the variant
-\begin{lstlisting}
-String a = "part1";
-String b = "part2";
-String s = a + b;
-\end{lstlisting}
-is significantly faster than
-\begin{lstlisting}
-String a = "part1";
-String b = "part2";
-String s = new StringBuffer( a )
-    .append( b );
-\end{lstlisting}
-Even using \lstinline|StringBuilder| in Java~5 instead of \lstinline|StringBuffer| is slower than the \verb#+# operator.
-
-Appending non-string values to a \lstinline|String| can be done as
-\begin{lstlisting}
-String a = "part1";
-int b = 42;
-String s = a + Integer.toString( b );
-\end{lstlisting}
-and that is still being faster than the \lstinline|StringBu*er| versions.
-
-\subsection{Concatenating Strings in Loops}
-The picture changes if strings are extended permanently in a loop:
-\begin{lstlisting}
-// AVOID!!!
-public final String buildSentence( String... words )
-{
-    var retValue = "";
-    for( final var s : words )
-    {
-        if( !retValue.isEmpty() ) retValue += " ";
-        retValue += s;
-    }
-    retValue += ".";
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  buildSentence()
-\end{lstlisting}
-
-Here it is the better option to use \lstinline|StringBuilder| or even \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}:
-\begin{lstlisting}
-// BETTER
-public final String buildSentence( String... words )
-{
-    final var buffer = new StringBuilder()
-    for( final var s : words )
-    {
-        if( buffer.length() > 0 ) buffer.append( " " );
-        buffer.append( s );
-    }
-    buffer.append( "." );
-    final var retValue = buffer.toString();
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  buildSentence()
-
-// RECOMMENDED
-public final String buildSentence( String... words )
-{
-    final var buffer = new StringJoiner( " ", "", "." );
-    for( final var s : words )
-    {
-        buffer.add( s );
-    }
-    final var retValue = buffer.toString();
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  buildSentence()
-\end{lstlisting}
-
-This is faster than the first version, although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|, because the shown version will definitely create much less objects that has to be garbage collected later – what will have a negative impact on performance.
-
-\subsection{Conclusion}
-The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder| or even \lstinline|StringJoiner| if strings have to be concatenated in loops or (large) a number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
-
-When “adding” primitives to a string, these should be translated to a \lstinline|String| first by calling the \lstinline|static toString()| method of the appropriate wrapper class. This is not necessary if calling \lstinline|StringBuilder::append| as this exists as specialised versions each primitive type.
-
-Also when "adding" an instance of another type to a string, you should consider to first call \lstinline|toString()| on that object.This is not mandatory, as it is done implicitly anyway, but it clearly shows what you intended.
-
-Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.
+\include{5_CodingGuidelines_StringConcatenation}
 
 \section{The Annotation @API}\label{sec:APIAnnotation}
 \section{-------------------------------------------- Proceed from here!}

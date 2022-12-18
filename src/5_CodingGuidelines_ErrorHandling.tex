@@ -1005,9 +1005,11 @@ public final void myMethod( final Operation operation, final Record data ) throw
 An example for the class \lstinline|Lazy| is given in chapter \tqvref{sec:Lazy}.
 
 \subsubsection{Logger Configuration}\label{sec:LoggerConfiguration}
-Both, JDK~Logging and Log4j are best configured through configuration files.\footnote{SLF4J does not have a configuration of its own, as it is just a facade to a ‘real’ logging framework, like JDK~Logging or Log4j~…} But both allow also a programmatical configuration, to some extend. This should be used to add a feature to change the logging configuration during runtime, at least for the log levels. This makes definitely sense for server-based applications, to some extent for feature libraries, and of course for long running standalone applications.
+Both, JDK~Logging and Log4j are best configured through configuration files.\footnote{SLF4J does not have a configuration of its own, as it is just a facade to a ‘real’ logging framework, like JDK~Logging or Log4j~…} These configuration files should be provided with the source code for your product.
 
-JDK~Logging and Log4j will also support JMX for configuration changes\autocite{ORACLE_DOC_LOGGINGMXBEAN_INTERFACE, APACHE_LOG4J:JMX}; this can be used with long running tools to modify log levels during runtime.
+But both frameworks allow also a programmatical configuration, at least for the log level. This should be used to add a feature to change the log levels during runtime, to switch debugging on and off with requiring a restart of the application. This makes definitely sense for server-based applications, to some extent for feature libraries, and of course for long running standalone applications.
+
+JDK~Logging and Log4j will also support JMX for changes to the log levels\autocite{ORACLE_DOC_LOGGINGMXBEAN_INTERFACE, APACHE_LOG4J:JMX}; this can be used with long running tools to enable or disable some debug output during runtime.
 
 \paragraph{JDK~Logging} The basic information about the configuration of JDK~Logging are given in \autocite{ORACLE_DOC_LOGGING_OVERVIEW:ConfigurationFile, ORACLE_DOC_LOGGING_OVERVIEW:DefaultConfiguration} and some important details can be found at \autocite{ORACLE_DOC_LOGMANAGER_CLASS}.
 

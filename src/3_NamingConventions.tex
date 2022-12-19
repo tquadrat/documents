@@ -51,7 +51,7 @@ A module will be defined in the file \verb#module-info.java# that is located in 
 
 Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
 
-So the names for modules will follow the same rules as those for packages.
+So the names for modules will follow basically the same rules as those for packages.
 
 \section{Packages}\label{sec:Packages}
 According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that as well.}
@@ -541,3 +541,11 @@ public interface Map<Key,Value> {…}
 is absolutely valid, although not common. 
 
 But because the type arguments denotes classes, their names have to start with a capital letter.
+
+\section{Projects}\label{sec:Projects}
+You can name your project however you want, although some IDEs have some constraints about the exact format.
+
+I recommend to name the project after the module.
+
+\section{Library Files}\label{sec:LibraryFiles}
+Usually, the library files of a project are named after the project, appended by a version number and/or a release date. They have to be valid file names.

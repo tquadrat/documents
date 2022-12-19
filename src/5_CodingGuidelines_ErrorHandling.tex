@@ -32,7 +32,7 @@ The other alternatives are feasible only in some special contexts:
 
 \item{Providing a default value demands that this default value makes sense in the current context. It should be obvious that this is not always the case.}
 
-\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM_CLASS:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
+\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
 
 A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
 \end{itemize}
@@ -136,7 +136,7 @@ static
 }
 \end{lstlisting}
 
-For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE_CLASS:initCause}.
+For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE:initCause}.
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
 A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.

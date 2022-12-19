@@ -168,7 +168,71 @@ An extension or a plugin requires also an environment to run in, but it is not a
 \section{Checking Method Parameters and Return Values}\label{sec:CheckingMethodParametersAndReturnValues}
 A \lstinline|NullPointerException| that is thrown by your code indicates a serious bug: it reveals that either a method argument or a return value was not properly checked before it was further used.
 
-Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.
+Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|.} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.
+
+Consequently, you need to check the arguments for each and every method and constructor. But as these checks are not for free, it could be acceptable to omit these checks for \lstinline|private| methods and constructors, when the caller guarantees that the arguments are valid. But even then you should consider to check the arguments with assertions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert, ORACLE_DOC_ASSERTIONS}, at least for methods (for constructors that calls to \lstinline|this()| or \lstinline|super()|, this has to be the very first statement; no \lstinline|assert| statement can be placed before it).
+
+\begin{lstlisting}
+public final class MyClass
+{
+    private MyClass( final String value )
+    {
+        assert nonNull( value ) : "value is null";
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    private final void myMethod( final String value )
+    {
+        assert nonNull( value ) : "value is null";
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+    
+    public static final MyClass myFactory( final String value1, final String value2 )
+    {
+    	final var retValue = nonNull( value1 ) ? new MyClass( value1 ) : null;
+    	if( nonNull( retValue ) && nonNull( value2 ) ) retValue.myMethod( value2 );
+    }   //  myFactory()
+}
+//  class MyClass
+\end{lstlisting}
+As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
+\begin{quotation}
+“[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
+
+A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
+\end{quotation}
+
+You can also delegate the argument check to another method:
+\begin{lstlisting}
+public final class MyClass
+{
+    public MyClass( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    public final void myMethod( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+    
+    public static final MyClass myFactory( final String value1, final String value2 )
+    {
+    	//---* Null check is done by constructor *----------------------
+    	final var retValue = new MyClass( value1 );
+    	
+    	//---* Null check is done by myMethod() *-----------------------
+    	retValue.myMethod( value2 );
+    }   //  myFactory()
+}
+//  class MyClass
+\end{lstlisting}
 
 In case the problematic \lstinline|null| value is an argument to a method or to a constructor, you should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}:
 \begin{lstlisting}
@@ -450,22 +514,30 @@ public static final <T extends CharSequence> T requireNotBlankArgument( final T 
 }   //  requireNotBlankArgument()
 \end{lstlisting}
 
+The classes \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} and \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} provide a bunch of additional methods that can help with the validation of arguments.
 
+Beside the arguments to a method or constructor, you also have to check the values that are returned by a method call, at least that they are not \lstinline|null|. But don't be paranoid: if the specification of the called method clearly declares that the method will not return \lstinline|null|, you should trust it\footnote{Although you can still add an \lstinline|assert| statement to ensure that.}
+
+The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
+
+Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
+
+\section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
-
 \lipsum[1]
 
 \begin{lstlisting}
 \end{lstlisting}
 
-As said in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, a \lstinline|NullPointerException| that is thrown from your code has to be seen as a coding bug: a value was not properly checked before it was used. Nevertheless, values can be \lstinline|null|, for various reasons, and this still can be an error that needs to be signalled.
+\subsection{Non-Final Methods}\label{sec:NonFinalMethods}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[1]
 
-For that, I suggested a bunch of custom exceptions that are shown here; they are also part of my Foundation Library: for \lstinline|ValidationException| see \autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, the \lstinline|NullArgumentException| can be found at \autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}, the \lstinline|EmptyArgumentException| is documented at \autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}, and finally the documentation for \lstinline|BlankArgumentException| is at \autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}.
-
-
-
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming:
@@ -672,13 +744,6 @@ So the recommendation is: do not always rely on conventions! Whenever possible, 
 
 \begin{lstlisting}
 \end{lstlisting}
-
-\section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\subsection{Non-Final Methods}\label{sec:NonFinalMethods}
-\lipsum[1]
 
 \section{Types of Arguments and Return Values}\label{sec:TypeOfArgumentsAndReturnValues}
 \section{-------------------------------------------- Proceed from here!}
@@ -1332,9 +1397,43 @@ In addition, it may call another constructor of the same or the super class, usi
 
 This means that you should keep a reference of all the threads that your code starts so that you can kill them explicitly before the program terminates.}
 
-\item{}
+\item{Ensure that assertions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert,ORACLE_DOC_ASSERTIONS} are enabled during testing and disabled in production.
 
-\item{}
+To enable assertions, add \verb#-ea# or \verb#-enableassertions# to the JVM command line.}
+
+\item{Although releasing resources when they are no longer needed is a good idea in most cases, it can cause trouble in rare occasions.
+
+I found a code sequence like this in some real life code:
+\begin{lstlisting}
+…
+}
+catch( Exception e )
+{
+    PrintStream ps = new PrintStream( System.out );
+    ps.println( "Error occured" );
+    e.printStackTrace( ps );
+    ps.close()
+}
+\end{lstlisting}
+This will not only close the \lstinline|PrintStream| \lstinline|ps|, but also the wrapped \lstinline|System.out| stream – with the consequence, that this exception was the last that was displayed on the console (or written to the log output).
+
+So make sure that your code will only cleans up objects that your code is responsible for, either because it created them or the responsibility was clearly delegated to it. In case of a wrapper (like most implementations of \lstinline|java.io.InputStream|, \lstinline|java.io.OutputStream| \lstinline|java.io.Reader| and \lstinline|java.io.Writer|), your code should not call methods like \lstinline|close()| if it is not responsible for the wrapped object, as in most cases the wrapper would delegate them to the wrapped object.
+
+If your code has to provide references to resources to 3\textsuperscript{rd}~party code, you should consider to protect those resources from being freed (if required). For an instance of \lstinline|PrintStream|, this could look like this:
+\begin{lstlisting}
+…
+final var tempStream = new PrintStream( myStream ) 
+{
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public void close() { /* Does nothing! */ }
+};
+externalMethodWritingToPrintStream( tempStream );
+…
+\end{lstlisting}}
+
 
 \item{}
 
@@ -1370,21 +1469,7 @@ This means that you should keep a reference of all the threads that your code st
     • A method or constructor should not have more than 7 (in words: seven) arguments. If you feel inclined to provide more arguments to construct an instance, consider to use an instance of Map instead.
     • Do not use BitFields, at least do not expose them to the API. Although the Java API is using them itself, they are still problematic.
     • Whenever you have to convert a date, time or date-time value to a String that is not primarily meant to be display, used an internal format that is independent from any locale. Our recommendation is to use the ISO 8601 format “YYYY-MM-dd'T'hh:mm:ss.SSS”, normalised to UTC, and to use the class SimpleDateFormat to format the date.4
-    • Although releasing resources when they are not longer needed is a good idea in most cases, it can cause trouble in rare occasions.
-In some customer code we found a code sequence like this:
-\begin{lstlisting}
-…
-}
-catch( Exception e )
-{
-    PrintStream ps = new PrintStream( System.out );
-    ps.println( "Error occured" );
-    e.printStackTrace( ps );
-    ps.close()
-}
-\end{lstlisting}
-This will not only close the PrintStream ps, but also the wrapped System.out stream – with the consequence, that this exception was the last that was displayed on the console (or written to the log output).
-So make sure that your code will only cleans up objects that your code is responsible for, either because it created them or the responsibility was delegated to it. In case of a wrapper (like most implementations of Stream, Reader and Writer), your code should not call methods like close() if it is not responsible for the wrapped object, as in most cases the wrapper would delegate them to the wrapped object.
+    • 
     • …
 
 

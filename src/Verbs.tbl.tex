@@ -39,7 +39,7 @@
    \makecell{\lstinline|clear()|} & A method with this name will empty or reset the owning object. \\
     \hline
 
-   \makecell{\lstinline|clone()|} & The method \lstinline|clone()| creates an identical copy of the owning object.\newline Refer to chapter \tqvref{sec:Clone} and to \autocite{ORACLE_DOC_OBJECT_CLASS:clone} and \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}. \\
+   \makecell{\lstinline|clone()|} & The method \lstinline|clone()| creates an identical copy of the owning object.\newline Refer to chapter \tqvref{sec:Clone} and to \autocite{ORACLE_DOC_OBJECT:clone} and \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}. \\
     \hline
 
     \makecell{\lstinline|close()| \\ \lstinline|close…()|} & This name will be assigned to methods to close a connection to an external resource, like a file or device.\newline Refer to \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE} and \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} for details. \\
@@ -107,6 +107,9 @@ public final class MyProgram
     \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|} & If this is used as the prefix for a method name, that method also loads data from an external source, but it initialised and returns a data structure that is described by the remainder of the name.\newline Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
     \hline
 
+    \makecell{\lstinline|log( <arg> )| \\ \lstinline|log()|} & A method with this name will write something to the logging subsystem. The method is either a member of the class representing the logger instance, or it is a member of an arbitrary class. In the first case, the arguments determine what is logged. In the latter case, it logs the internal state of the respective object instance – without modifying it! \\
+    \hline
+
     \makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|} & Although ‘main’ is not a reserved word in the Java language, it should be treated as one. Therefore a method should never be named as \lstinline|main()| unless it is the program entry point. Not to mention that ‘main’ is not even a verb at all.\newline The usual signature for the main method is
 \begin{lstlisting}
 public static void main( String [] args )
@@ -140,7 +143,7 @@ public final File openLogFile( final File logFolder ) {…}
 that can be even used with \lstinline|try-with-resources|. \\
     \hline
 
-    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE_INTERFACE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM_INTERFACE:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
+    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
     \hline
 
     \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\

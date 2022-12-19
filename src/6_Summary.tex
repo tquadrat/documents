@@ -1,4 +1,4 @@
-\chapter{Summary}
+\chapter{Summary}\label{sec:Summary}
 Several rules and recommendation in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that.
 
 But from my experience I found that verbosity is your friend!
@@ -11,5 +11,37 @@ Writing code is not the only area where you would benefit from mastering that im
 First, you can use this document as is! It should work for you, as its predecessors already worked for a bunch of project teams.
 
 But you can also shape it closer to your particular needs, if you want! Replace the examples and the references to my libraries by some that fits better to your project and/or your company.
+
+In particular, for your project, you should elaborate on the following topics:
+\begin{itemize}
+\item{Chapters \tqfullvref{sec:Projects}, \tqfullvref{sec:Modules}, \tqfullvref{sec:Packages} and \tqfullvref{sec:LibraryFiles}\\
+In no particular order:
+    \begin{itemize}
+    \item{Specify the name your project.}
+    \item{Specify format for the names of the library file(s) produced by your project.}
+    \item{Specify the names for the modules and packages of your project.}
+    \end{itemize}}
+
+\item{Chapters \tqfullvref{sec:Logging} and \tqfullvref{sec:LoggerConfiguration}:
+    \begin{itemize}
+    \item{Specify the type of the logging framework you use in your product – if any – or if you want to code against SLF4J (or if you do not want to log at all).}
+    \item{Specify the names of the loggers.}
+    \item{Specify the format for the log messages, in particular for the log levels \verb#DEBUG# and \verb#TRACE# (or \verb#FINE#, \verb#FINER# and \verb#FINEST#, if you are using JDK~Logging).}
+    \item{Provide a (default) logging configuration.}
+    \item{Optionally, you may remove all references to the logging frameworks and APIs that you do not use in your project.}
+    \end{itemize}}
+    
+\item{Chapter \tqfullvref{sec:TheNamingDictionary}:
+    \begin{itemize}
+    \item{Add verbs that are specific to your project, remove obsolete/unwanted ones.}
+    \item{Adjust the description for verbs where appropriate.}
+    \item{Do the same for the class name suffixes.}
+    \item{Add a Glossary that explains special terms used in the context of your project (the “Domain Specific Terminology”).}
+    \end{itemize}}
+
+\item{Provide code snippets for recurring patterns that are specific to your project.}
+
+\item{Remove this chapter \tqfullref{sec:Summary}.}
+\end{itemize}
 
 This document was compiled using \TeX/\LaTeX\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \href{https://www.xm1math.net/texmaker/download.html}{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on  \href{https://github.com/tquadrat/documents}{GitHub}. Clone the repository and startover!

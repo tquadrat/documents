@@ -535,7 +535,7 @@ Non-\lstinline|final| methods require a comment about when and how they can be o
 \subsection{Non-“final” Classes}\label{sec:NonFinalClasses}
 As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
 
-Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses}, this is obsolete: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations has to be provided by you. This is discussed further in chapter \tqvref{sec:EncapsulationWithModules}.
+Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses, ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedInterfaces}, this is obsolete: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations has to be provided by you. This is discussed further in chapter \tqvref{sec:EncapsulationWithModules}.
 
 Unfortunately it is difficult to provide a globally valid recipe for extensible classes. In general, such a class should provide some so called ‘mount points’ or ‘extension points’ where the behaviour could be changed or added. This could be an \lstinline|abstract| method, an empty, non-\lstinline|final| place holder method, or a non-\lstinline|final| method providing some default behaviour. Such a method should be marked with the annotation \lstinline|@Mountpoint|\footnote{Refer to chapter \tqvref{sec:MountPoint} for an implementation of the Annotation.} (if not \lstinline|abstract| or part of an interface), to indicate that you have not just forgotten to add the \lstinline|final| keyword.
 
@@ -548,7 +548,7 @@ A method will be overridden to change the behaviour of an extended class, compar
 
 In the latter case, it is very likely that this method was already added to design an extendable class.
 
-In the other case, the new method's behaviour will completely replace that of the original one with new functionality. If this is not possible – meaning that some of the original method's functionality has to be kept, this needs to be described in the documentation comment for that method. Or, even better, you should change the design of you class to use the Template Method Pattern.
+In the other case, the new method's behaviour will completely replace that of the original one with new functionality. If this is not possible – meaning that some of the original method's functionality has to be kept, this needs to be described in the documentation comment for that method. Or, even better, you should change the design of your class to use the Template Method Pattern\autocite{Gamma:DesignPatterns}.
 
 Assume your class has to implement the following process:
 \begin{enumerate}
@@ -731,7 +731,7 @@ public class MyClass // Second attempt
 //  class MyClass
 \end{lstlisting}
 
-Looks good now! Test were successful! Job done!
+Looks good now! Tests were successful! Job done!
 
 Your colleagues implemented some custom classes extending your class, and basically, all is fine. Just once in a blue moon, the programs using one of the custom classes crashes spectacularly.
 
@@ -743,24 +743,24 @@ protected final String filterData( final String data, final ProcessContext conte
     
     final var retValue = … // Do some filtering on validData
         
-    //---* Done *------------------------------------------------
+    //---* Done *----------------------------------------------------
     return retValue;
 }   //  filterData()
 \end{lstlisting}
 
-This was not what you meant! It should be:
+This was not what you meant! It should be, to ensure that \textit{after} filtering the data is valid:
 \begin{lstlisting}
 protected final String filterData( final String data, final ProcessContext context )
 {
     final var filteredData = … // Do some filtering on data
     final var retValue = super.filterData( filteredData, context );
         
-    //---* Done *------------------------------------------------
+    //---* Done *----------------------------------------------------
     return retValue;
 }   //  filterData()
 \end{lstlisting}
 
-But your colleagues says that they have have to check the input data – and it seems that they are right! But the data has to be checked after the filtering again~…
+But your colleagues says that they have to check the input data – and it seems that they are right! But the data has to be checked after the filtering again~…
 
 So you modified your base class once more:
 \begin{lstlisting}[numbers=left]
@@ -864,13 +864,219 @@ public class MyClass // Third attempt
 \end{lstlisting}
 
 Now \lstinline|filterData()| does only filter data, it is no longer responsible for the validation, too. And the default implementation of that method is now empty.
+
+So you have basically the following options:
+\begin{itemize}
+\item{The method (and the base class) is \lstinline|abstract|; this forces that any instantiable implementation (any non-\lstinline|abstract| subclass) is required to implement that method.}
+\item{The method does nothing (the method body is empty or contains only a return statement) and can be implemented to add functionality if needed/desired.}
+\item{The method provides a default behaviour that can be \textit{completely} replaced in a subclass.}
+\end{itemize}
+
+You should avoid the \textit{requirement} to call the super implementation of the overriden method, by all means! But if you cannot avoid it, provide a detailed comment on how this has to be done!
+
+That does not mean that an overriding method is not allowed to call the super implementation! Assume that in the sample above, the method \lstinline|MyClass::formatData| is more or less doing what you want, but there is just one caption that you want to have different. Then a completely legal implementation for \lstinline|CustomClass::formatData| could look like this:
+\begin{lstlisting}
+/**
+ *  {@inheritDoc}
+ */
+@Override
+protected final String formatData( final String data, final ProcessContext context )
+{
+	final var formattedData = super.formatData( data, context );
+    final var retValue = formattedData.replace( "Caption:", "Description:" );
+       
+    //---* Done *------------------------------------------------
+   return retValue;
+}   //  formatData()
+\end{lstlisting}
+
+And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
+
+\subsection{Adapter Classes}\label{sec:Adapter}
+An adapter class implements an interface with mainly optional methods; all methods in the class are empty. In addition, an adapter class does not define any attributes\footnote{Otherwise, it would need at least accessor and probably also mutator methods for these attributes that could not be empty.}. A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|; it implements the interface \lstinline|java.awt.event.KeyListener|.
+
+This is used like this:
+\begin{lstlisting}
+public final class MyClass 
+{
+    public static final void main( final String... args ) 
+    {
+        final var frame = new JFrame( "Key Listener" );
+        final var contentPane = frame.getContentPane();
+        final KeyListener listener = new KeyAdapter() 
+        {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                printEventInfo("Key Pressed", event);
+            }
+            @Override
+            public void keyReleased(KeyEvent event) {
+                printEventInfo("Key Released", event);
+            }
+            @Override
+            public void keyTyped(KeyEvent event) {
+                printEventInfo("Key Typed", event);
+            }
+            
+            private final void printEventInfo( final String str, final KeyEvent e ) 
+            {
+                System.out.println( str );
+                int code = e.getKeyCode();
+                System.out.println( "   Code: " + KeyEvent.getKeyText( code ) );
+                System.out.println( "   Char: " + e.getKeyChar() );
+                int mods = e.getModifiersEx();
+                System.out.println( "    Mods: " + KeyEvent.getModifiersExText( mods ) );
+                System.out.println( "    Location: " + keyboardLocation( e.getKeyLocation() ) );
+                System.out.println( "    Action? " + e.isActionKey() );
+            }   //  printEventInfo()
+            
+            
+            private final String keyboardLocation( final int keybrd ) 
+            {
+                final var retValue = switch( keybrd ) 
+                {
+                    case KeyEvent.KEY_LOCATION_RIGHT -> "Right";
+                    case KeyEvent.KEY_LOCATION_LEFT -> "Left";
+                    case KeyEvent.KEY_LOCATION_NUMPAD -> "NumPad";
+                    case KeyEvent.KEY_LOCATION_STANDARD -> "Standard";
+                    default -> "Unknown";
+                };
+                
+                //---* Done *----------------------------------------
+                return retValue;
+            }	//	keyboardLocation()
+        };
+        
+        final var textField = new JTextField();
+        textField.addKeyListener( listener );
+        contentPane.add( textField, BorderLayout.NORTH );
+        frame.pack();
+        frame.setVisible( true );
+    }   //  main()
+}
+//  class MyClass
+\end{lstlisting}
+
+The advantage from using \lstinline|KeyAdapter| instead of implementing the interface \lstinline|KeyListener| directly is that you do not have to implement those methods you are not interested in. Below the relevant part when using the interface:
+
+\begin{lstlisting}
+public final class MyClass 
+{
+    public static final void main( final String... args ) 
+    {
+        …
+        final KeyListener listener = new KeyListener() 
+        {
+            @Override
+            public void keyPressed( KeyEvent event ) { /* Does nothing */ }
+
+            @Override
+            public void keyReleased(KeyEvent event) { /* Does nothing */ }
+            
+            @Override
+            public final void keyTyped( final KeyEvent event ) 
+            {
+                printEventInfo("Key Typed", event);
+            }   //  keyTyped()
+            
+			…
+    }   //  main()
+}
+//  class MyClass
+\end{lstlisting}
+
+For this interface and this adapter class, the advantage is marginal, but already the JDK knows some interfaces with much more methods that do have an adapter class, and these would benefit much more from an adapter class.
+
+But since Java~8, interfaces may have \lstinline|default| methods\autocite{ORACLE_TUTORIALS:DefaultMethods, ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface}. Therefore, today the concept of an adapter class has got obsolete. Instead, you would define the interface differently, using \lstinline|default| methods.
+
+For the interface \lstinline|java.awt.event.KeyListener| this would look like this:
+\begin{lstlisting}
+package java.awt.event;
+
+import java.util.EventListener;
+
+/**
+ *  The listener interface for receiving keyboard events (keystrokes).
+ *  […]
+ *
+ *  @author Carl Quinn
+ *
+ *  @see KeyAdapter
+ *  @see KeyEvent
+ */
+public interface KeyListener extends EventListener 
+{
+    /**
+     *  <p>{@summary Invoked when a key has been typed.} See the
+     *  class description for 
+     *  {@link KeyEvent} 
+     *  for a definition of a key typed event.</p>
+     *
+     *  @param	e   The event to be processed.
+     */
+    public default void keyTyped( final KeyEvent e ) { /* Does nothing */ }
+
+    /**
+     *  <p>{@summary Invoked when a key has been pressed.} See the
+     *  class description for 
+     *  {@link KeyEvent}
+     *  for a definition of a key pressed event.</p>
+     *
+     *  @param  e   The event to be processed.
+     */
+    public default void keyPressed( final KeyEvent e ) { /* Does nothing */ }
+
+    /**
+     *  <p>{@summary Invoked when a key has been released.} See the
+     *  class description for 
+     *  {@link KeyEvent} 
+     *  for a definition of a key released event.</p>
+     *
+     *  @param  e   The event to be processed.
+     */
+    public default void keyReleased( final KeyEvent e ) { /* Does nothing */ }
+}
+//  interface KeyListener
+\end{lstlisting}
+
+This would allow to use the interface, but to implement only the method \lstinline|keyTyped()|.
+
+\section{Types for Argument and Return Values}\label{sec:TypesForArgumentAndReturnValues}
+This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
+\begin{enumerate}
+\item{Interface vs. concrete Class}
+\item{Mutable vs. Immutable}
+\end{enumerate}
+
+In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
+
+\subsection{Return Types}\label{sec:ReturnTypes}
+A method, in particular a non-\lstinline|private| method, should return the most general interface whenever possible. This means \lstinline|List| and not \lstinline|ArrayList|, \lstinline|Map| and not \lstinline|HashMap|, and \lstinline|InputStream| and not \lstinline|FileInputStream|.
+
+Only when a concrete class or a more specialised interface provides features that are relevant to the caller, the method should be defined to return that type.
+
+The only exception is \lstinline|java.lang.String| as the return type. Here you should really use that type, and not \lstinline|java.lang.CharSequence|. That is because this interface is implemented by immutable types (\lstinline|String|) and mutable types (e.g. \lstinline|StringBuilder|) as well.
+
+Basically it is not bad if a method returns a mutable type, but it can get nasty.
+\section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
-
 \lipsum[1]
 
 \begin{lstlisting}
 \end{lstlisting}
+5.9. 
+The formal parameter of a method should always be defined with the most general type that still matches its function. This depends on how the argument is processed by the method. So it is possible to use CharSequence instead of String, List or even Collection instead of ArrayList or Vector, and Map instead of HashMap or Hashtable.1
+It is preferred that a method returns an interface instead of the implementing class. So it should return List instead of LinkedList (or even better Collection), Map instead of Hashtable, and so on.
+In case a collection is returned, it should be considered to return an array instead, especially if the returned set is not meant to be modified. This increases the type safety again.
+Next the returned values should be either immutable or copies of the internal objects if it is not explicitly intended to return a reference to the internal object. A comment about the nature of the return value is always useful.
+As stated above, a collection can be returned as an array. If it is to large for that, or for a map, the collection can be made immutable by calling one of
+    • java.util.Collections.immutableList()
+    • java.util.Collections.immutableSet() or
+    • java.util.Collections.immutableMap()
+with it.
+If the objects inside the collection are mutable themselves, it should be considered to clone them. The same yields for single mutable objects.
+Methods should neither define returns values from the type Object, nor should they define arguments of that type. Instead it should be considered to define an interface that can be used instead. We are aware of the fact that this may not be possible always.
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming:
@@ -1047,7 +1253,7 @@ Both, to some extent!
 
 Your design should support “Convention over Configuration”, but your code should rely on defaults only when a change of these defaults in unlikely, or such a change will not have an effect to your code.
 
-So assume that you are using a 3\textsuperscript{rd} party library that creates reports in HTML format; the default format was HTML3 with the previous version, but in the current version – that one used by you – it is HTML5. The generated reports are consumed by a tool that converts HTML5 input into PDF.
+So assume that you are using a 3\textsuperscript{rd}~party library that creates reports in HTML format; the default format was HTML3 with the previous version, but in the current version – that one used by you – it is HTML5. The generated reports are consumed by a tool that converts HTML5 input into PDF.
 
 According to “Convention over Configuration”, you are fine: the convention is HTML5, you do not need to set the HTML version for the output format explicitly.
 

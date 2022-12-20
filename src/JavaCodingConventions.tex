@@ -523,17 +523,350 @@ The methods in your code should \textit{never} return \lstinline|null|, at least
 Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
 
 \section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+This chapter provides some hints for the design and implementation of classes and methods that should be/can be extended. This is basically relevant for libraries, but also for applications that should be customisable in some way and therefore providing an API.
 
-\begin{lstlisting}
+\subsection{“final” for Classes and Methods}
+Each non-\lstinline|private| method, that is not explicitly meant to be overridden by an extending class has to be \lstinline|final|. Each non-\lstinline|final| class is implicitly meant to be extended – even if it contains only \lstinline|final| methods.
+
+Non-\lstinline|final| methods require a comment about when and how they can be overridden, and if the super implementation has to be called, and when. On how to write the comments for classes and methods, refer to the respective chapters \tqvref{sec:ClassComment} and \tqvref{sec:MethodComment}.
+
+\lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|. Nevertheless, they will be marked as \lstinline|final|, too, although that is redundant.
+
+\subsection{Non-“final” Classes}\label{sec:NonFinalClasses}
+As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
+
+Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses}, this is obsolete: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations has to be provided by you. This is discussed further in chapter \tqvref{sec:EncapsulationWithModules}.
+
+Unfortunately it is difficult to provide a globally valid recipe for extensible classes. In general, such a class should provide some so called ‘mount points’ or ‘extension points’ where the behaviour could be changed or added. This could be an \lstinline|abstract| method, an empty, non-\lstinline|final| place holder method, or a non-\lstinline|final| method providing some default behaviour. Such a method should be marked with the annotation \lstinline|@Mountpoint|\footnote{Refer to chapter \tqvref{sec:MountPoint} for an implementation of the Annotation.} (if not \lstinline|abstract| or part of an interface), to indicate that you have not just forgotten to add the \lstinline|final| keyword.
+
+An extensible class can also provide useful and/or convenience functionality as \lstinline|protected final| methods. 
+
+Although \textit{it is not recommended}, an extensible class can even provide direct access to fields by declaring them \lstinline|protected| instead of \lstinline|private|.
+
+\subsection{Non-“final” Methods}\label{sec:NonFinalMethods}
+A method will be overridden to change the behaviour of an extended class, compared with its base class. The method either has already a behaviour, or it is empty, doing nothing\footnote{…~or it is \lstinline|abstract|, but that is another pattern.}.
+
+In the latter case, it is very likely that this method was already added to design an extendable class.
+
+In the other case, the new method's behaviour will completely replace that of the original one with new functionality. If this is not possible – meaning that some of the original method's functionality has to be kept, this needs to be described in the documentation comment for that method. Or, even better, you should change the design of you class to use the Template Method Pattern.
+
+Assume your class has to implement the following process:
+\begin{enumerate}
+\item{Initialisation}
+\item{Gathering data}
+\item{Validate the input data}
+\item{Filtering the input data}
+\item{Processing the data}
+\item{Formatting the output data}
+\item{Cleanup and housekeeping}
+\item{Writing the output}
+\end{enumerate}
+
+Your first, naïve implementation looks like this:
+\begin{lstlisting}[numbers=left]
+public class MyClass
+{
+    public String process() throw IOException
+    {
+        //---* Initialise the process context *----------------------
+        final var context = …
+        
+        //---* Gather the input data *-------------------------------
+        final String inputData;
+        try( final var inputFile = new FileInputStream( "inputFileName" ) )
+        {
+            inputData = readStream( inputFile );
+        }
+        
+        //---* Validate and filter the data *------------------------
+        final var filteredData = … // Do something with inputData
+        
+        //---* Process the filtered data to the result data *--------
+        final var resultData = … // Do something with filtererdData
+        
+        //---* Format the data *-------------------------------------
+        final var retValue = … // Do something with resultData
+        
+        //---* Cleanup *---------------------------------------------
+        // Do whatever is necessary …
+        
+        //---* Done *------------------------------------------------
+        /*
+         * Let the caller write the data to wherever it should end up.
+         */
+        return retValue; 
+    }   //  process()
+}
+//  class MyClass
+\end{lstlisting}
+Works! Job done! Until your project manager returns to you with the requirement that the input data should be taken alternatively from other source that just a file, that different filter schemes are possible, and that the output format has to be customisable. But the initialisation step, the validation and the housekeeping are fine~…
+
+Ok, the method \lstinline|MyClass::process| is not final, you override it:
+
+\begin{lstlisting}[numbers=left]
+public class CustomClass extends MyClass
+{
+    public String process() throw IOException
+    {
+        //---* Initialise the process context *----------------------
+        final var context = …
+        
+        //---* Gather the input data *-------------------------------
+        final String inputData;
+        try( final var inputFile = new FileInputStream( new URL( "192.168.0.1" ).openStream() )
+        {
+            inputData = readStream( inputFile );
+        }
+        
+        //---* Validate and filter the data *------------------------
+        final var filteredData = … // Do something with inputData
+        
+        //---* Process the filtered data to the result data *--------
+        final var resultData = … // Do something with filtererdData
+        
+        //---* Format the data *-------------------------------------
+        final var retValue = … // Do something else with resultData
+        
+        //---* Cleanup *---------------------------------------------
+        // Do whatever is necessary …
+        
+        //---* Done *------------------------------------------------
+        /*
+         * Let the caller write the data to wherever it should end up.
+         */
+        return retValue; 
+    }   //  process()
+}
+//  class CustomClass
 \end{lstlisting}
 
-\subsection{Non-Final Methods}\label{sec:NonFinalMethods}
+But obviously, this is not the solution … so you modify the original class:
+\begin{lstlisting}[numbers=left]
+public class MyClass // Second attempt
+{
+    /**
+     *  Validate and filters the input data. Usually, no filtering should
+     *  be required.
+     *  An implementation of this method in a subclass needs to call this
+     *  implementation in order to validate the data.
+     *  
+     *  @param  data    The raw input data.
+     *  @param  context The process context.
+     *  @return	The validated and filtered data.
+     *  @throws IllegalArgumentException  The input data is invalid.
+     */
+    @MountPoint 
+    protected String filterData( final String data, final ProcessContext context )
+    {
+        if( /* data is not valid */ ) throw new IllegalArgumentException();
+        
+        //---* Done *------------------------------------------------
+        return data;
+    }   //  filterData()
+    
+    /**
+     *  Formats the output data.
+     * 
+     *  @param  data    The data to prepare for the output.
+     *  @param  context The process context.
+     *  @return	The formatted data.
+     */
+    @MountPoint
+    protected String formatData( final String data, final ProcessContext context )
+    {
+        final var retValue = … // Do something with data
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  formatData()
+    
+    /**
+     *  Obtains the input data from somewhere; the default 
+     *  implementation reads it from the file {@code inputFileName}.
+     *
+     *  @return The input data.
+     *  @throws IOException An I/O error occurred while gathering the 
+     *      data.
+     */
+    @MountPoint
+    protected String obtainInputData() throws IOException
+    {
+        final String retValue;
+        try( final var inputFile = new FileInputStream( "inputFileName" ) )
+        {
+            retValue = readStream( inputFile );
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  obtainInputData()
+        
+    public final String process() throw IOException
+    {
+        //---* Initialise the process context *----------------------
+        final var context = …
+        
+        //---* Gather the input data *-------------------------------
+        final var inputData = obtainInputData();
+        
+        //---* Validate and filter the data *------------------------
+        final var filteredData = filterData( inputData, context );
+        
+        //---* Process the filtered data to the result data *--------
+        final var resultData = … // Do something with filtererdData
+        
+        //---* Format the data *-------------------------------------
+        final var retValue = formatData( resultData, context );
+        
+        //---* Cleanup *---------------------------------------------
+        // Do whatever is necessary …
+        
+        //---* Done *------------------------------------------------
+        /*
+         * Let the caller write the data to wherever it should end up.
+         */
+        return retValue; 
+    }   //  process()
+}
+//  class MyClass
+\end{lstlisting}
+
+Looks good now! Test were successful! Job done!
+
+Your colleagues implemented some custom classes extending your class, and basically, all is fine. Just once in a blue moon, the programs using one of the custom classes crashes spectacularly.
+
+When you look into the the source, you found this implementation for \lstinline|filterData()|
+\begin{lstlisting}
+protected final String filterData( final String data, final ProcessContext context )
+{
+    final var validData = super.filterData( data, context );
+    
+    final var retValue = … // Do some filtering on validData
+        
+    //---* Done *------------------------------------------------
+    return retValue;
+}   //  filterData()
+\end{lstlisting}
+
+This was not what you meant! It should be:
+\begin{lstlisting}
+protected final String filterData( final String data, final ProcessContext context )
+{
+    final var filteredData = … // Do some filtering on data
+    final var retValue = super.filterData( filteredData, context );
+        
+    //---* Done *------------------------------------------------
+    return retValue;
+}   //  filterData()
+\end{lstlisting}
+
+But your colleagues says that they have have to check the input data – and it seems that they are right! But the data has to be checked after the filtering again~…
+
+So you modified your base class once more:
+\begin{lstlisting}[numbers=left]
+public class MyClass // Third attempt
+{
+    /**
+     *  Filters the input data. This implementation does nothing.
+     *  
+     *  @param  data    The raw input data.
+     *  @param  context The process context.
+     *  @return	The filtered data.
+     */
+    @MountPoint 
+    protected String filterData( final String data, final ProcessContext context )
+    {
+        /* Does nothing */
+        
+        //---* Done *------------------------------------------------
+        return data;
+    }   //  filterData()
+    
+    /**
+     *  Formats the output data.
+     * 
+     *  @param  data    The data to prepare for the output.
+     *  @param  context The process context.
+     *  @return	The formatted data.
+     */
+    @MountPoint
+    protected String formatData( final String data, final ProcessContext context )
+    {
+        final var retValue = … // Do something with data
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  formatData()
+    
+    /**
+     *  Obtains the input data from somewhere; the default 
+     *  implementation reads it from the file {@code inputFileName}.
+     *
+     *  @return The input data.
+     *  @throws IOException An I/O error occurred while gathering the 
+     *      data.
+     */
+    @MountPoint
+    protected String obtainInputData() throws IOException
+    {
+        final String retValue;
+        try( final var inputFile = new FileInputStream( "inputFileName" ) )
+        {
+            retValue = readStream( inputFile );
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  obtainInputData()
+        
+    /**
+     *  Validates the input data.
+     *  
+     *  @param  data    The input data.
+     *  @param  context The process context.
+     *  @throws IllegalArgumentException  The input data is invalid.
+     */
+    private final void validateData( final String data, final ProcessContext context )
+    {
+        if( /* data is not valid */ ) throw new IllegalArgumentException();
+    }   //  validateData()
+    
+    public final String process() throw IOException
+    {
+        //---* Initialise the process context *----------------------
+        final var context = …
+        
+        //---* Gather the input data *-------------------------------
+        final var inputData = obtainInputData();
+        
+        //---* Validate and filter the data *------------------------
+        validateData( inputData );
+        final var filteredData = filterData( inputData, context );
+        if( !inputData.equals( filteredData ) ) validateData( filteredData );
+        
+        //---* Process the filtered data to the result data *--------
+        final var resultData = … // Do something with filtererdData
+        
+        //---* Format the data *-------------------------------------
+        final var retValue = formatData( resultData, context );
+        
+        //---* Cleanup *---------------------------------------------
+        // Do whatever is necessary …
+        
+        //---* Done *------------------------------------------------
+        /*
+         * Let the caller write the data to wherever it should end up.
+         */
+        return retValue; 
+    }   //  process()
+}
+//  class MyClass
+\end{lstlisting}
+
+Now \lstinline|filterData()| does only filter data, it is no longer responsible for the validation, too. And the default implementation of that method is now empty.
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
+
 \lipsum[1]
 
 \begin{lstlisting}
@@ -836,7 +1169,7 @@ As there is no rule without exception, here is one: I recommend to use labels to
 The feature \lstinline|try-with-resources| was introduced with Java~7; it can help to make programs more stable and less error prone.
 
 \subsection{Basics}
-Basically, \lstinline|try-with-resources| is an extension of the previously existing \lstinline|try-catch-finally| feature.
+Basically, \lstinline|try-with-resources|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TryWithResources} is an extension of the previously existing \lstinline|try-catch-finally| feature.
 
 Instead of writing
 \begin{lstlisting}[numbers=left]
@@ -958,6 +1291,8 @@ catch( final IOException e )
     /* Fails because the log file is already closed! */
 }
 \end{lstlisting}
+
+Refer also to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ExtendedTryWithResources}.
 
 \subsection{When to use?}
 \lstinline|try-with-resources| is a very powerful feature that should be used whenever possible. Definitively it should be used with all the Java classes that already implement \lstinline|java.lang.AutoCloseable| or \lstinline|java.io.Closeable|:
@@ -1690,6 +2025,14 @@ public final class MyClass
 \lstinputlisting[numbers=left,caption={Lazy.java}]{Lazy.java}
 
 \lstinputlisting[numbers=left,caption={LazyImpl.java}]{LazyImpl.java}
+
+\subsection{MountPoint}\label{sec:MountPoint}
+The annotation \lstinline|@MountPoint| and how to use it is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}.
+
+The annotation is part of my foundation library, refer to \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}.
+
+\paragraph{The Code}\
+\lstinputlisting[numbers=left,caption={MountPoint.java}]{MountPoint.java}
 
 \subsection{Patch Identification}\label{sec:PatchIdentification}
 The chapter \tqfullvref{sec:MaintenanceComments} discussed how to mark areas in the code that has been changed to fix a bug. There I suggested to use annotations for this task.

@@ -107,7 +107,7 @@ literate=
 \chapter{Coding Guidelines}\label{sec:CodingRules}
 These guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
 
-As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython, PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}?}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22.}
+As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython, PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}? If not, here are they again: “\ref{lst:ZoP:SpecialCases}~Special cases aren't special enough to break the rules~…” and “\ref{lst:ZoP:Practicality}~…~although practicality beats purity”.}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22\autocite{WIKIPEDIA:Catch22}.}
 
 One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
 
@@ -1051,13 +1051,142 @@ This topic is relevant for all types of code, not only for code in a public API.
 In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
 
 \subsection{Return Types}\label{sec:ReturnTypes}
-A method, in particular a non-\lstinline|private| method, should return the most general interface whenever possible. This means \lstinline|List| and not \lstinline|ArrayList|, \lstinline|Map| and not \lstinline|HashMap|, and \lstinline|InputStream| and not \lstinline|FileInputStream|.
+A method, in particular a non-\lstinline|private| method, should return the most general interface or class whenever possible. This means~…
+\begin{itemize}[nosep]
+\item{…~the interface \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE} or even \lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE} instead of the concrete implementation \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}}
+\item{…~the interface \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE} and not the class \lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}}
+\item{…the base class ~\lstinline|java.io.InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS} and not the wrapper class \lstinline|java.io.FileInputStream|\autocite{ORACLE_DOC_FILEINPUTSTREAM_CLASS}}
+\end{itemize}
 
 Only when a concrete class or a more specialised interface provides features that are relevant to the caller, the method should be defined to return that type.
 
 The only exception is \lstinline|java.lang.String| as the return type. Here you should really use that type, and not \lstinline|java.lang.CharSequence|. That is because this interface is implemented by immutable types (\lstinline|String|) and mutable types (e.g. \lstinline|StringBuilder|) as well.
 
-Basically it is not bad if a method returns a mutable type, but it can get nasty.
+In general, it is not evil if a method returns a mutable type, but it can get nasty under some circumstances – for example when you expose the object's internal state this way:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+
+    // PROBLEMATIC!!    
+    public final List<String> getAttribute() { return m_Attribute; }
+}
+//  class MyClass    
+\end{lstlisting}
+
+This means that code like that below would modify \lstinline|myObject| – and not only the lines~3 to~5, but also the lines~9 to~11:
+\begin{lstlisting}[numbers=left]
+final var myObject = new MyClass();
+
+myObject.getAttribute().add( "Some String" );
+myObject.getAttribute().sort( String.CASE_INSENSITIVE_ORDER );
+myObject.getAttritute().clear();
+
+final var list = myObject.getAttribute();
+
+list.getAttribute().add( "Some String" );
+list.getAttribute().sort( String.CASE_INSENSITIVE_ORDER );
+list.getAttritute().clear();
+\end{lstlisting}
+Usually, this is not desired! Otherwise, it should be clearly documented: 
+\begin{lstlisting}
+…
+/**
+ *  Returns a reference to the attribute.
+ * 
+ *  @note Any modification of the returned value will be reflected to
+ *      the attribute itself and changes the state of the object.
+ * 
+ *  @return The reference to the attribute.
+ */ 
+public final List<String> getAttribute() { return m_Attribute; }
+…
+\end{lstlisting}
+
+Some better implementations of \lstinline|getAttribute()| would be:
+\begin{lstlisting}[numbers=left]
+…
+/**
+ *  Returns the attribute.
+ * 
+ *  @return The attribute.
+ */ 
+public final List<String> getAttribute() 
+{ 
+	final var retValue = List.copyOf( m_Attribute );
+	final List<String> retValue = unmodifiableList( m_Attribute );
+	final List<> retValue = new ArrayList<>( m_Attribute );
+	final List<String> retValue = unmodifiableList( new ArrayList<>( m_Attribute ) );
+	final List<String> retValue = m_Attribute.clone();
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  getAttribute()
+…
+\end{lstlisting}
+
+\paragraph{Line~9} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE} and \lstinline|java.util.Map|. The only limitation is that \lstinline|null| is not valid as a value, and – for \lstinline|Map| – as a key.
+
+It is important to know, that in case a \lstinline|Set| is a \lstinline|SortedSet|\autocite{ORACLE_DOC_SORTEDSET_CLASS} or a \lstinline|Map| is a \lstinline|TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}, the sort order gets lost for the copy.
+
+\paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|. Drawback is that the returned value changes when the attribute itself will be changed.
+
+The method \lstinline|unmodifiableList()| is part of the utility class \lstinline|java.util.Collections|\autocite{ORACLE_DOC_COLLECTIONS_CLASS}.
+
+\paragraph{Line~11} creates a copy of \lstinline|m_Attribute|; the returned value will be mutable, but changes will not affect the attribute and therefore will not affect the state of the object instance, too. And \lstinline|null| values are no problem.
+
+\paragraph{Line~12} creates a copy of \lstinline|m_Attribute| and wraps it into an umodifiable instance of \lstinline|List| – it combines lines~10 and 11, eliminating the shortcoming of the solutions from lines~9 and 10.
+
+\paragraph{Line~13} ‘clones’ \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}.
+
+A similar approach has to be taken for all attributes of a mutable type that will be returned by a method. The sample uses a collection, for other mutable types the details on how to create a copy or to make it immutable will differ.
+
+If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not. 
+
+\subsection{Arguments}\label{Arguments}
+Same as for a return type, the types for the formal parameters of a method should always be the most general type (interface or class) possible, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.
+
+A method must declare that it will modify an argument value. This is important because otherwise it could be called with an immutable implementation, what would cause an exception. Conversely, this also means that a method that does not specify this will not change any of the arguments, and that it would also be safe to call a method with a mutable object – safe for the caller.
+
+But when the called method stores the provided reference in the instance, this may call for trouble:
+\begin{lstlisting}
+public final class MyClass
+{
+    private List<String> m_Attribute;
+    
+    public MyClass( final List<String> attribute )
+    {
+        // AVOID!!
+        m_Attribute = attribute;
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+
+If the caller holds a reference to the argument object, it can still modify it – and change the internal state of the \lstinline|MyClass| instance at the same time.
+
+Therefore you should create a copy for the argument:
+\begin{lstlisting}
+…
+m_Attribute = new ArrayList( attribute );
+…
+\end{lstlisting}
+If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
+
+Or you do it like this\footnote{And do not forget the null check!}
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+    
+    public MyClass( final List<String> attribute )
+    {
+        m_Attribute.addAll( attribute );
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
@@ -1065,18 +1194,6 @@ Basically it is not bad if a method returns a mutable type, but it can get nasty
 
 \begin{lstlisting}
 \end{lstlisting}
-5.9. 
-The formal parameter of a method should always be defined with the most general type that still matches its function. This depends on how the argument is processed by the method. So it is possible to use CharSequence instead of String, List or even Collection instead of ArrayList or Vector, and Map instead of HashMap or Hashtable.1
-It is preferred that a method returns an interface instead of the implementing class. So it should return List instead of LinkedList (or even better Collection), Map instead of Hashtable, and so on.
-In case a collection is returned, it should be considered to return an array instead, especially if the returned set is not meant to be modified. This increases the type safety again.
-Next the returned values should be either immutable or copies of the internal objects if it is not explicitly intended to return a reference to the internal object. A comment about the nature of the return value is always useful.
-As stated above, a collection can be returned as an array. If it is to large for that, or for a map, the collection can be made immutable by calling one of
-    • java.util.Collections.immutableList()
-    • java.util.Collections.immutableSet() or
-    • java.util.Collections.immutableMap()
-with it.
-If the objects inside the collection are mutable themselves, it should be considered to clone them. The same yields for single mutable objects.
-Methods should neither define returns values from the type Object, nor should they define arguments of that type. Instead it should be considered to define an interface that can be used instead. We are aware of the fact that this may not be possible always.
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming:
@@ -1976,7 +2093,29 @@ externalMethodWritingToPrintStream( tempStream );
 \end{lstlisting}}
 
 
-\item{}
+\item{This is about the usage of “\verb#++#” and “\verb#--#”, because they have both a prefix and postfix notation.
+
+The prefix notation will change the value first and returns the new value, while the postfix version will return the current value and change it afterwards. So the usage of prefix or postfix notation depends from the context.
+
+In case where the return value is not used immediately, it is strongly recommended to use the prefix notation always. This is especially true in \lstinline|for| loops.
+
+Examples:
+\begin{lstlisting}
+// DISCOURAGED
+for( int i = 0; i < max; i++ )
+{
+    …
+}
+
+// RECOMMENDED
+for( int i = 0; i < max; ++i )
+{
+    …
+}
+\end{lstlisting}
+
+Confessed, this is an \textit{early} optimisation (to avoid “premature”), and most implementations of the Java compiler will translate the postfix version into the same binary code as for the prefix version if the return value is not used\footnote{If not the javac, probably the JIT will do.}. But developing the habit to prefer the prefix notation have no costs, and it may spare some cycles when using other languages than Java, or when the compiler does not optimise.}
+
 
 \item{}
 

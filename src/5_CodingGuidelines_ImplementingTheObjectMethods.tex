@@ -213,7 +213,7 @@ If your class is not \lstinline|final|, the method \lstinline|toString()| should
 \subsection{clone()}\label{sec:Clone}
 Per \autocite{ORACLE_DOC_OBJECT:clone}, the method \lstinline|java.lang.Object::clone| returns a copy of the current object.
 
-Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPITON_CLASS} when called.
+Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS} when called.
 
 When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, and then you need to override the method \lstinline|clone()|.
 

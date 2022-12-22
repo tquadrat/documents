@@ -935,8 +935,9 @@ final var names = customers.stream()
     .toArray( String []::new );
 \end{lstlisting}
 
-\subsection{return Statements}
+\subsection{“return” Statements}
 A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \tqfullvref{sec:ReturningValues}!
+
 Example:
 \begin{lstlisting}[numbers=left]
 // Usually obsolete
@@ -946,7 +947,11 @@ return;
 return myDisk.size();
 
 // MAY BE OK
-return (m_Size > 0 ? m_Size : m_DefaultSize); 
+return (m_Size > 0) ? m_Size : m_DefaultSize; 
+
+// BETTER
+final var retValue = (m_Size > 0) ? m_Size : m_DefaultSize;
+return retValue;
 
 // AVOID!!!
 return( retValue );
@@ -955,7 +960,7 @@ return( retValue );
 return retValue; 
 \end{lstlisting}
 
-\subsection{if, if-else, if-else-if-else Statements}\label{sec:IfStatements}
+\subsection{“if”, “if-else”, “if-else~if-else” Statements}\label{sec:IfStatements}
 The chapters \tqfullref{sec:Parenthesis}, \tqfullref{sec:BlankSpaces}, and \tqfullref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
 
 The base forms for this class of statements are the following ones:
@@ -988,15 +993,15 @@ else
 }
 \end{lstlisting}
 
-In case there are more conditions to check, but a switch statement cannot be used due to the data types involved or the logic for the conditions, use the form in line 15.
+In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use the form in line 15.
 
-The only occasion where an if statement does not need the curly braces (“{}”) is when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
+The only occasion where an \lstinline|if| statement does not need the curly braces (“{}”) is when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
 
 \begin{lstlisting}
 if( <condition> ) <singleStatement>;
 \end{lstlisting}
 
-In any other case the curly brace are mandatory, to avoid the following error-prone forms:
+In any other case the curly braces are mandatory, to avoid the following error-prone forms:
 
 \begin{lstlisting}[numbers=left]
 // AVOID! MISSING CURLY BRACES {}!
@@ -1013,10 +1018,10 @@ else
 Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
 
 
-\subsection{switch Statements}\label{sec:SwitchStatements}
+\subsection{“switch” Statements}\label{sec:SwitchStatements}
 Beginning with the first preview in Java~12, an alternative syntax for \lstinline|switch| was introduced, so that we have now two (in fact, three) different forms of that construct.
 
-\subsubsection{The traditional Form of switch}
+\subsubsection{The traditional Form of “switch”}
 Originally, a \lstinline|switch| statement in Java looked like this:
 \begin{lstlisting}[numbers=left]
 switch( <selector> )
@@ -1069,7 +1074,7 @@ ColorSelector: switch( colorIndex )
 
 The break in the default case is redundant, but it prevents a fall-through error if later another case is added – although it should be assured that the default case is always the last case in the switch statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.
 
-\subsubsection{The new Form of switch}
+\subsubsection{The new Form of “switch”}
 The alternative syntax for \lstinline|switch| comes in two flavours and looks like this:
 
 \begin{lstlisting}[numbers=left]
@@ -1156,14 +1161,14 @@ Same as for \lstinline|default|, \lstinline|case null| can be followed by a stat
 
 And an expression can also be always a \lstinline|throw|.
 
-\subsubsection{General Rules for switch}
+\subsubsection{General Rules for “switch”}
 Every \lstinline|switch| statement should include a \lstinline|default| case, even when the cases are exhaustive.
 
 If really all values are covered, the \lstinline|default| should throw an exception about an unknown value.\footnote{Refer to chapter \tqfullref{sec:UnsupportedEnumError} for a sample.}
 
 Syntactically, the use of curly braces in the cases is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.
 
-\subsection{for Statements}
+\subsection{“for” Statements}
 A \lstinline|for| statement should have one of the following forms:
 
 \begin{lstlisting}[numbers=left]
@@ -1220,7 +1225,7 @@ for( <initialization>; <condition>; <update> );
 
 When using the comma operator in the initialization or update clause of a \lstinline|for| statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|-loop (for the initialization clause) or at the end of the loop (for the update clause).
 
-\subsection{while Statements}\label{sec:WhileStatements}
+\subsection{“while” Statements}\label{sec:WhileStatements}
 A \lstinline|while| statement should have one of the following forms:
 \begin{lstlisting}[numbers=left]
 while( <condition> ) <singleStatement>
@@ -1246,7 +1251,7 @@ LoopLabel: while( proceed )
 }   //  LoopLabel:
 \end{lstlisting}
 
-\subsection{do-while Statements}
+\subsection{“do-while” Statements}
 A \lstinline|do-while| statement should look like below:
 \begin{lstlisting}
 do
@@ -1256,7 +1261,7 @@ do
 while( <condition> );
 \end{lstlisting}
 
-\subsection{try-catch Statements}
+\subsection{“try-catch” Statements}
 Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
 
 \subsubsection{The simple Form}
@@ -1272,7 +1277,7 @@ catch( <ExceptionClass> e )
 }
 \end{lstlisting}
 
-\subsubsection{try-with-resources}
+\subsubsection{“try-with-resources”}
 A \lstinline|try-with-resources| allows to allocate resources that will be automatically released when the \lstinline|try| block is left. Something similar could be achieved also by adding a \lstinline|finally| block, but \lstinline|try-with-resources| is easier and more secure.
 
 If looks like this:
@@ -1306,7 +1311,7 @@ try
 
 A \lstinline|catch| block is optional for \lstinline|try-with-resources|.
 
-\subsubsection{General Rules for try-catch}
+\subsubsection{General Rules for “try-catch”}
 In case the \lstinline|try| block can issue more than one exception type, these can be combined into one \lstinline|catch| block, like this:
 \begin{lstlisting}
 …
@@ -1377,7 +1382,7 @@ An \textit{empty} \lstinline|catch| block is unacceptable under all circumstance
 
 An empty \lstinline|finally| block is completely obsolete and must be removed.
 
-\subsection{Labels and break Statements}\label{sec:LabelsAndBreakStatements}
+\subsection{Labels and “break” Statements}\label{sec:LabelsAndBreakStatements}
 In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, but they can be placed anywhere in a code block.
 
 The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \tqfullref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}

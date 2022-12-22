@@ -1173,7 +1173,7 @@ m_Attribute = new ArrayList( attribute );
 \end{lstlisting}
 If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
 
-Or you do it like this\footnote{And do not forget the null check!}
+Or you can do it like this\footnote{And do not forget the null check!}:
 \begin{lstlisting}
 public final class MyClass
 {
@@ -1185,14 +1185,6 @@ public final class MyClass
     }   //  MyClass()
 }
 //  classMyClass
-\end{lstlisting}
-
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{lstlisting}
 \end{lstlisting}
 
 \section{Swap Logic Errors for Compiler Errors}
@@ -1401,10 +1393,6 @@ So the recommendation is: do not always rely on conventions! Whenever possible, 
 \begin{lstlisting}
 \end{lstlisting}
 
-\section{Types of Arguments and Return Values}\label{sec:TypeOfArgumentsAndReturnValues}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
 \section{Compiler Warnings and Errors}\label{sec:CompilerWarningsAndErrors}
 It is not allowed to commit any code that emits warnings or even errors on a compiler run to the SCCS. It is also not allowed to switch off any compiler warning globally.
 
@@ -1440,17 +1428,123 @@ public final Map<K,V> clone()
 
 As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
 
-\section{Returning Values}\label{sec:ReturningValues}
+\section{Terminating a Method and returning Values}\label{sec:ReturningValues}
+A method will have only \textit{one single regular} exit point, and that is (after) its last line! Irregular or \textit{exceptional} exit points are always exceptions that will be thrown as the result of an error condition.
+
+This means that a method, that does not return something, does not have a \lstinline|return| statement.
+
+If there is a \lstinline|return| statement in a method, it is \textit{always} the last statement of the method.
+
+\begin{lstlisting}
+// AVOID!!!
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    if( a == 0 ) return 1;
+    if( a == 1 ) return 1;
+    return a * myMethod( a – 1 );
+}   //  myMethod()
+\end{lstlisting}
+
+As already said in chapter \tqfullvref{sec:NamesForLocalVariables}, the name of the local variable that holds the return value is always \lstinline|retValue|; only when the method returns an attribute, the field name could be used instead. And it is also not necessary to assign \lstinline|this| to \lstinline|retValue| for method chaining. 
+
+Then the recommended code would be:
+\begin{lstlisting}
+// RECOMMENDED
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    final var retValue = (a > 1) ? myMethod( a – 1L) : 1L;
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+
+// Still OK
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    var retValue = 1L;
+    if( a > 1 ) retValue = myMethod( a – 1 );
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+
+It is much easier to grasp what a method is doing when the program flow is always from top to bottom, and if there are not any side exits (other than the ‘emergency exits’, marked by a \lstinline|throw| statement when issuing an exception.
+
+This will supported by always using the same name for the return value – just that \lstinline|retValue|.
+
 \section{-------------------------------------------- Proceed from here!}
-\lipsum[5]
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+A return statement is always the last statement of a method – and there are never ever more than one return statement in a method:
+ if the method does not return a field. Returning an expression or a field is also acceptable. If in doubt, prefer assigning the expression's value to retValue and return that. Try to make the structure of your program match the intent.
+
+Example:
+\begin{lstlisting}
+// AVOID!!
+boolean retValue;
+if( <booleanExpression> )
+{
+    retValue = true;
+}
+else
+{
+    retValue = false;
+}
+return retValue;
+\end{lstlisting}
+should instead be written as
+\begin{lstlisting}
+// RECOMMENDED
+boolean retValue = <booleanExpression>;
+return retValue;
+
+// Still Ok
+return <booleanExpression>;
+\end{lstlisting}
 
 \subsection{Lambda Results}\label{sec:LambdaResults}
-\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
 \lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsection{“case” Results}\label{sec:CaseResults}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{The Ternary Operator “?”}\label{sec:TheTernaryOperator}
 \section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
 \lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\section{The "switch" Statement}\label{sec:TheSwitchStatement}
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+\ref{sec:SwitchStatements}
+
+\begin{lstlisting}
+\end{lstlisting}
 
 \section{Encapsulation}
 \section{-------------------------------------------- Proceed from here!}
@@ -2114,12 +2208,70 @@ for( int i = 0; i < max; ++i )
 }
 \end{lstlisting}
 
-Confessed, this is an \textit{early} optimisation (to avoid “premature”), and most implementations of the Java compiler will translate the postfix version into the same binary code as for the prefix version if the return value is not used\footnote{If not the javac, probably the JIT will do.}. But developing the habit to prefer the prefix notation have no costs, and it may spare some cycles when using other languages than Java, or when the compiler does not optimise.}
+Confessed, this is an \textit{early} optimisation (to avoid “premature”), and most implementations of the Java compiler will translate the postfix version into the same binary code as for the prefix version if the return value is not used\footnote{If not the javac, probably the JIT will do.}. But developing the habit to prefer the prefix notation have no costs, and it may spare some cycles when using other languages than Java, or when the compiler does not optimise.}\label{item:PrefixVsPostfix}
 
+\item{Avoid setting several variables to the same value in a single statement. It is hard to read.
 
-\item{}
+Example:
+\begin{lstlisting}
+// AVOID!
+fooBar.fChar = barFoo.lChar = 'c'; 
+\end{lstlisting}
+Avoid to use the assignment operator in a place where it can be easily confused with the equality operator. If you really do not see another option, make sure that it cannot be confused.
 
-\item{}
+Example:
+\begin{lstlisting}
+// AVOID!
+boolean flag;
+while( flag = !isEmpty() ) { … }
+\end{lstlisting}
+should be written as
+\begin{lstlisting}
+boolean flag;
+while( (flag = !isEmpty()) == true ) { … }
+\end{lstlisting}
+if it is really necessary to have the assignment at this place.
+
+As Java do not allow other than boolean expression for conditions, something like
+\begin{lstlisting}
+// DOES NOT WORK!
+while( c++ = --d ) { … }
+\end{lstlisting}
+is not possible. But a common pattern is
+\begin{lstlisting}
+BufferedReader reader = …
+String line = "";
+while( (line = reader.readLine()) != null ) { … }
+\end{lstlisting}
+Do not use embedded assignments in an attempt to improve run-time performance. This is the job of the compiler. 
+
+Example: 
+\begin{lstlisting}
+// AVOID!
+d = (a = b + c) + r;        
+\end{lstlisting}
+should be written as 
+\begin{lstlisting}
+a = b + c;
+d = a + r;}
+\end{lstlisting}}
+
+\item{It is generally a good idea to use parentheses liberally in expressions involving mixed operators to avoid operator precedence problems. Even if the operator precedence seems clear to you, it might not be to others – you should not assume that other programmers know the precedence rules as good as you do.
+\begin{lstlisting}
+// AVOID!
+if( a == b && c == d ) { … }
+
+// BETTER
+if( (a == b) && (c == d) ) { … }
+\end{lstlisting}
+
+If an expression containing a binary operator appears before the “\verb#?#” in the ternary “\verb#?:#” operator, it should be parenthesized.
+ 
+Example:
+\begin{lstlisting}
+(x >= 0) ? x : -x;
+\end{lstlisting}
+}
 
 \item{}
 
@@ -2316,6 +2468,30 @@ You should embed only small fragments of an XML document into the Java source; l
 
 \subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
 Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
+
+\section{The Reason why Prefix Notation should be preferred over Postfix Notation}
+At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \verb#++# and \verb#--#. As a C++ method, the prefix implementation may look like this:
+\begin{lstlisting}[language=C++]
+int prefixIncrement( int& n )
+{
+    n = n + 1;
+    return n;
+}
+\end{lstlisting}
+and the postfix version would look like this:
+\begin{lstlisting}[language=C++]
+int postfixIncrement( int& n )
+{
+    int oldValue = n;
+    n = n + 1;
+    return oldValue;
+}
+\end{lstlisting}
+So the postfix version has an additional stack operation that is not necessary if the return value is discarded anyway. This saves only nanoseconds for a single operation, but used in a loop, and in an application server environment, these nanos will sum up to minutes over time.
+
+I confess that there are other possible locations where one can save more CPU cycles, and I also know the advice not to begin too early with optimisations (to “avoid premature optimisation”). My opinion is that this is not an optimisation but a best practice, and that every cycle counts – especially if it is that easy to achieve.
+
+As said also already, most Java compilers (and not only these) will optimise the particular code, but different Java compilers optimises this pattern differently (meaning some even do not touch it – for example that one for the LEGO® Mindstorms Controller~…), and even the runtime optimisation will treat it differently, so just from this point of view I would recommend this simple change of one's personal habits.
 
 \section{Examples}\label{sec:Examples}
 

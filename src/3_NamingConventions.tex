@@ -217,15 +217,28 @@ catch( final IOException e )
 
 For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
 
-Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute:
+Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute, or \lstinline|this|:
 \begin{lstlisting}
 // OK
 public final int getValue() { return m_Value; }
 
+// AVOID!! Use 'retValue' instead of 'i'!!
+public final int signum( double d )
+{
+    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+    return i;
+}   //  signum()
+
+// ACCEPTABLE (BARELY)
+public final int signum( double d )
+{
+    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+}   //  signum()
+
 // RECOMMENDED
 public final int signum( double d )
 {
-    var retValue = 0;
+    final var retValue = 0;
     if( d < 0.0 )
     {
         retValue = -1
@@ -238,19 +251,15 @@ public final int signum( double d )
     return retValue;
 }   //  signum()
 
-// ACCEPTABLE
 public final int signum( double d )
 {
-    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-}   //  signum()
+    final var retValue = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
 
-// AVOID!! Use 'retValue' instead of 'i'!!
-public final int signum( double d )
-{
-    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-    return i;
+    return retValue;
 }   //  signum()
 \end{lstlisting}
+
+In the same way, \lstinline|result| is reserved as the return value for lambdas (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case| blocks (see chapter \tqfullvref{sec:CaseResults}). \lstinline|result| should not be used in any other context.
 
 A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
 
@@ -283,8 +292,8 @@ public final String retrieveMessage( final String string,
     final String... strings )
 {
     final MessageProvider myMessageProvider = getMessageProvider();
-    final String s = myMessageProvider.getMessage( string );
-    final var retValue = String.format( s, strings );
+    final String myString = myMessageProvider.getMessage( string );
+    final var retValue = String.format( myString, strings );
     return retValue;
 }
 \end{lstlisting}
@@ -324,10 +333,11 @@ public final ResultData loadData( Connection connection, … )
 
 Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way.}
 
-Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value – refer chapter \tqfullvref{sec:LambdaResults} for the details.
+Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value, but \lstinline|result| – refer chapter \tqfullvref{sec:LambdaResults} for the details.
 
 \section{Parameters}
 The names for formal parameters of methods and constructors are different from those for lambdas.
+
 \subsection{Names for formal Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
 The names for the formal parameters of a method or a constructors follow the same rules as for local variables. Especially they do \textit{not} have any prefix.
 

@@ -12,7 +12,21 @@ From a magazine dealing with software development tools, I found the following s
 “If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.”
 \end{quotation}
 
-Coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it more readable. Obviously, “readability” is a relative term, depending from one's habit. So some people are more familiar with the Kernighan-Ritchie (K\&R) style
+Coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it more readable: Reading code is more important than writing code.
+
+Code is read much more often than it is written. Further, when writing code, you usually have the whole context in your head, and take your time; when reading code, you are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that’s useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
+
+We are specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.
+
+But code readability should not depend on IDEs. Code is often written and read within an IDE, so it’s tempting to rely heavily on code analysis features of IDEs. For type declarations, why not just use \lstinline|var| everywhere, since one can always point at a variable to determine its type?
+
+There are two reasons. The first is that code is often read outside an IDE. Code appears in many places where IDE facilities aren’t available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.
+
+The second reason is that even when one is reading code within an IDE, explicit actions are often necessary to query the IDE for further information about a variable. For instance, to query the type of a variable declared using \lstinline|var|, one might have to hover the pointer over the variable and wait for a popup. This might take only a moment, but it disrupts the flow of reading.
+
+Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.
+
+Obviously, “readability” is a relative term, depending from one's habit. So some people are more familiar with the Kernighan-Ritchie (K\&R) style
 
 \begin{lstlisting}
 public void method (){
@@ -36,9 +50,9 @@ public void method()
 
 Both styles will work, but they look different. So as a lot of other guardrails from a code conventions document, too, this is a matter of taste (but refer to chapter \tqfullvref{sec:IndentationStyle}).
 
-Nevertheless, the main purpose of those guidelines is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
+But as conformity suppports readability, a main purpose of those guidelines is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
 
-But there are more practical reasons to enforce these guidelins as \textit{rules} – more or less strict – on the source: they make it easier …
+So the practical reasons to enforce these guidelines as \textit{rules} – more or less strict – on the source are: they make it easier …
 \begin{itemize}[nosep]
 \item … to understand the code
 \item … to navigate inside the code
@@ -52,6 +66,8 @@ It can make it also easier to use automated tools on the source code.
 All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90\% – and nearly no source is maintained by its original author or even a single programmer for its whole lifetime.
 
 The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary or at least useful to me.
+
+Another source was “Local Variable Type Inference – \textit{Style Guidelines}” \autocite{Marks:LocalVariableTypeInference}.
 
 \section{About this Document}
 The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next it covers the naming of the program elements before I discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding guidelines.
@@ -137,7 +153,7 @@ I did this because the “Zen of Python” is a \textit{nearly} generic coding g
 
 Ok, some of the statements may need an explanation and/or some samples, and I hope that this document will give it to you.
 
-But to get your Coding Guardrails for Java in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…).}
+But to get your “Coding Guardrails for Java” in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…).}
 \begin{enumerate}[nosep]
 \item Beautiful is better than ugly.
 \item Explicit is better than implicit, and verbosity is your friend.\label{lst:ZoP:ExplicitVsImplicit}

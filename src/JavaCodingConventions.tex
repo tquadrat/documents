@@ -89,7 +89,7 @@ literate=
 \newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
 \newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page \pageref{#1}}
 
-\dedication{For Rasa Kuodienė: She deserved better … \newline\newline\includegraphics[height=15cm]{Rasa} \newline*1969-07-13 †2022-12-21}
+\dedication{For Rasa Kuodienė: She deserved better~… in life and in death \newline\newline\includegraphics[height=14cm]{Rasa} \newline*1969-07-13 †2022-12-21}
 
 \begin{document}
 \isodate
@@ -1211,6 +1211,369 @@ The best thing about compiler errors is, that they usually show up during develo
 
 See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
 
+\section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
+Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language, it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser.
+
+There is a certain amount of controversy over this feature. Some welcome the concision it enables; others fear that it deprives readers of important type information, impairing readability. And both groups are right, to some extent. It can make code more readable by eliminating redundant information, and it can also make code less readable by eliding useful information. Another group worries that it will be overused, resulting in more bad Java code being written. This is also true, but it’s also likely to result in more good Java code being written. Like all features, it must be used with judgment. There’s no blanket rule for when it should and shouldn’t be used. 
+
+Local variable declarations do not exist in isolation; the surrounding code can affect or even overwhelm the effects of using \lstinline|var|. The goal of this chapter is to examine the impact that surrounding code has on \lstinline|var| declarations, to explain some of the tradeoffs, and to provide guidelines for the effective use of \lstinline|var|.\footnote{This chapter is basically a summary of the article “Local Variable Type Inference – Style Guidelines”, published by Stuart~W.~Marks in March 2018\autocite{Marks:LocalVariableTypeInference}.}
+
+\subsection{Principles}
+The guidelines below are based on a few principles.
+
+\begin{enumerate}
+\item[P1.]{Reading code is more important than writing code.
+
+Code is read much more often than it is written. Further, when writing code, you usually have the whole context in your head, and take your time; when reading code, you are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that is useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
+
+You should be specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.}
+
+\item[P2.]{Code should be clear from local reasoning.
+
+The reader should be able to look at a \lstinline|var| declaration, along with uses of the declared variable, and understand almost immediately what is going on. Ideally, the code should be readily understandable using only the context from a snippet or a patch. If understanding a \lstinline|var| declaration requires the reader to look at several locations around the code, it might not be a good situation in which to use \lstinline|var|. Then again, it might indicate a problem with the code itself.}
+
+\item[P3.]{Code readability shouldn’t depend on IDEs.
+
+Code is often written and read within an IDE, so it’s tempting to rely heavily on the code analysis features of IDEs. For type declarations, why not just use \lstinline|var| everywhere, since one can always point at a variable to determine its type?
+
+The main reason is that code is often read outside an IDE. Code appears in many places where IDE facilities are not available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.
+
+Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.}
+
+\item[P4.]{Explicit types are a tradeoff.
+
+Java has historically required local variable declarations to include the type explicitly. While explicit types can be very helpful, they are sometimes not very important, and are sometimes just in the way. Requiring an explicit type can add clutter that crowds out useful information.
+
+Omitting an explicit type can reduce clutter, but only if its omission does not impair understandability. The type is not the only way to convey information to the reader. Other means include the variable's name and the initialiser expression. You should take all the available channels into account when determining whether it is appropriate to mute one of these channels.}
+\end{enumerate}
+
+\subsection{Guidelines}
+\begin{enumerate}
+\item[G1.]{Choose variable names that provide useful information.
+
+This is good practice in general, but it is much more important in the context of \lstinline|var|. In a \lstinline|var| declaration, information about the meaning and use of the variable can be conveyed using the variable's name. Replacing an explicit type with \lstinline|var| should often be accompanied by improving the variable name.
+
+For example:
+
+\begin{lstlisting}
+// BAD
+final List<Customer> x = dbConnection.executeQuery( query );
+
+// BETTER
+final var customerList = dbConnection.executeQuery( query );
+\end{lstlisting}
+
+In this case, a useless variable name has been replaced with a name that is evocative of the type of the variable, which is now implicit in the var declaration.
+
+Encoding the variable's type in its name, taken to its logical conclusion, results in “Hungarian Notation”. Just as with explicit types, this is sometimes helpful, and sometimes just clutter. In this example the name \lstinline|customerList| implies that a \lstinline|List| is being returned. That might not be significant. Instead of the exact type, it’s sometimes better for a variable’s name to express the role or the nature of the variable, such as \lstinline|customers|:
+
+\begin{lstlisting}
+// BAD
+try( final Stream<Customer> result = dbConnection.executeQuery( query ) ) 
+{
+    return result.map( … )
+        .filter( … )
+        .findAny();
+}
+
+// BETTER
+try( final var customers = dbConnection.executeQuery( query ) ) 
+{
+    final var retValue = customers.map( … )
+        .filter( … )
+        .findAny();
+    return retValue;
+}
+\end{lstlisting}}
+
+\item[G2.]{Minimize the scope of local variables.
+
+Limiting the scope of local variables is good practice in general. This practice is described in “Effective Java (3\textsuperscript{rd} Edition)”\autocite{Bloch:EffectiveJava}, Item~57. It applies with extra force if \lstinline|var| is in use.
+
+In the following example, the \lstinline|add()| method clearly adds the special item as the last list element, so it’s processed last, as expected.
+
+\begin{lstlisting}
+final var items = new ArrayList<Item>( … );
+items.add( MUST_BE_PROCESSED_LAST );
+for( final var item : items ) { … }
+\end{lstlisting}
+
+Now suppose that in order to remove duplicate items, you modify this code to use a \lstinline|HashSet| instead of an \lstinline|ArrayList|, like below:
+
+\begin{lstlisting}
+final var items = new HashSet<Item>( … );
+items.add( MUST_BE_PROCESSED_LAST );
+for( fnial var item : items ) { … }
+\end{lstlisting}
+
+Your code now has a bug, since sets do not have a defined iteration order. However, it is likely that you will fix this bug immediately, as the uses of the \lstinline|items| variable are adjacent to its declaration.
+
+Now suppose that this code is part of a large method, with a correspondingly large scope for the \lstinline|items| variable:
+
+\begin{lstlisting}
+final var items = new HashSet<Item>( … );
+
+// … 100 lines of code …
+
+items.add( MUST_BE_PROCESSED_LAST );
+for( final var item : items ) { … }
+\end{lstlisting}
+
+The impact of changing from an \lstinline|ArrayList| to a \lstinline|HashSet| is no longer readily apparent, since \lstinline|items| is used so far away from its declaration. It seems likely that this bug could survive for much longer.
+
+If \lstinline|items| had been declared explicitly as \lstinline|List<String>|, changing the initialiser would also require changing the type to \lstinline|Set<String>|. This \textit{might} prompt you to inspect the rest of the method for code that would be impacted by such a change (then again, it might not). Use of \lstinline|var| would remove this prompting, possibly increasing the risk of a bug being introduced in code like this.
+
+This might seem like an argument against using \lstinline|var|, but it really is not. The initial example that uses \lstinline|var| is perfectly fine. The problem only occurs when the variable's scope is large. Instead of simply avoiding \lstinline|var| in these cases, you should change the code to reduce the scope of the local variables, and only then declare them with \lstinline|var|.}
+
+\item[G3.]{Consider \lstinline|var| when the initialiser provides sufficient information to the reader.
+
+Local variables are often initialised with constructors. The name of the class being constructed is often repeated as the explicit type on the left-hand side. If the type name is long, use of \lstinline|var| provides concision without loss of information:
+
+\begin{lstlisting}
+// ACCEPTABLE
+final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+// BETTER
+final var outputStream = new ByteArrayOutputStream();
+\end{lstlisting}
+
+It is also reasonable to use \lstinline|var| in cases where the initialiser is a method call, such as a \lstinline|static| factory method, instead of a constructor, and when its name contains enough type information:
+
+\begin{lstlisting}
+// ACCEPTABLE
+final BufferedReader reader = Files.newBufferedReader( … );
+final List<String> stringList = List.of("a", "b", "c");
+
+// BETTER
+final var reader = Files.newBufferedReader(...);
+final var stringList = List.of("a", "b", "c");
+\end{lstlisting}
+
+In these cases, the methods names strongly imply a particular return type, which is then used for inferring the type of the variable.}
+
+\item[G4.]{Use \lstinline|var| to break up chained or nested expressions with local variables.
+
+Consider code that takes a collection of strings and finds the string that occurs most often. This might look like the following:
+
+\begin{lstlisting}
+return strings.stream()
+    .collect( groupingBy( s -> s, counting() ) )
+    .entrySet()
+    .stream()
+    .max( Map.Entry.comparingByValue() )
+    .map( Map.Entry::getKey );
+\end{lstlisting}
+
+This code is correct, but it is potentially confusing, as it looks like a single stream pipeline. In fact, it’s a short stream, followed by a second stream over the result of the first stream, followed by a mapping of the \lstinline|Optional| result of the second stream. The most readable way to express this code would have been as two or three statements; first group entries into a map, then reduce over that map, then extract the key from the result (if present), as shown below:
+
+\begin{lstlisting}
+// BETTER READABLE
+final Map<String, Long> freqMap = strings.stream()
+    .collect(groupingBy( s -> s, counting() ) );
+final Optional<Map.Entry<String,Long>> maxEntryOpt = freqMap.entrySet()
+    .stream()
+    .max( Map.Entry.comparingByValue() );
+return maxEntryOpt.map( Map.Entry::getKey );
+\end{lstlisting}
+
+But you probably resisted doing that because writing the types of the intermediate variables seemed too burdensome, so instead they distorted the control flow. Using \lstinline|var| here allows you to express the code more naturally without paying the high price of explicitly declaring the types of the intermediate variables:
+
+\begin{lstlisting}
+// EVEN BETTER READABLE
+final var freqMap = strings.stream()
+    .collect( groupingBy( s -> s, counting() ) );
+final var maxEntryOpt = freqMap.entrySet()
+    .stream()
+    .max( Map.Entry.comparingByValue() );
+final var retValue = maxEntryOpt.map( Map.Entry::getKey );
+return retValue;
+\end{lstlisting}
+
+You might legitimately prefer the first snippet with its single long chain of method calls. However, in some cases it is better to break up long method chains. Using \lstinline|var| for these cases is a viable approach, whereas using full declarations of the intermediate variables as in the second snippet makes it an unpalatable alternative. As with many other situations, the correct use of \lstinline|var| might involve both taking something out (explicit types) and adding something back (better variable names, better structuring of code).}
+
+\subsection{-------------------------------------------- Proceed from here!}
+\item[G5.]{Don’t worry too much about “programming to the interface” with local variables.
+
+A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
+
+\begin{lstlisting}
+// ORIGINAL
+List<String> list = new ArrayList<>();
+If var is used, however, the concrete type is inferred instead of the interface:
+
+// Inferred type of list is ArrayList<String>
+var list = new ArrayList<String>();
+\end{lstlisting}
+
+It must be reiterated here that var can only be used for local variables. It cannot be used to infer field types, method parameter types, and method return types. The principle of “programming to the interface” is still as important as ever in those contexts.
+
+The main issue is that code that uses the variable can form dependencies on the concrete implementation. If the variable’s initialiser were to change in the future, this might cause its inferred type to change, causing errors or bugs to occur in subsequent code that uses the variable.
+
+If, as recommended in guideline G2, the scope of the local variable is small, the risks from “leakage” of the concrete implementation that can impact the subsequent code are limited. If the variable is used only in code that’s a few lines away, it should be easy to avoid problems or to mitigate them if they arise.
+
+In this particular case, ArrayList only contains a couple of methods that aren’t on List, namely ensureCapacity and trimToSize. These methods don’t affect the contents of the list, so calls to them don’t affect the correctness of the program. This further reduces the impact of the inferred type being a concrete implementation rather than an interface.}
+\item[G6.]{Take care when using var with diamond or generic methods.
+
+Both var and the “diamond” feature allow you to omit explicit type information when it can be derived from information already present. Can you use both in the same declaration?
+
+Consider the following:
+
+\begin{lstlisting}
+PriorityQueue<Item> itemQueue = new PriorityQueue<Item>();
+\end{lstlisting}
+This can be rewritten using either diamond or var, without losing type information:
+
+\begin{lstlisting}
+// OK: both declare variables of type PriorityQueue<Item>
+PriorityQueue<Item> itemQueue = new PriorityQueue<>();
+var itemQueue = new PriorityQueue<Item>();
+\end{lstlisting}
+
+It is legal to use both var and diamond, but the inferred type will change:
+
+\begin{lstlisting}
+// DANGEROUS: infers as PriorityQueue<Object>
+var itemQueue = new PriorityQueue<>();
+\end{lstlisting}
+
+For its inference, diamond can use the target type (typically, the left-hand side of a declaration) or the types of constructor arguments. If neither is present, it falls back to the broadest applicable type, which is often Object. This is usually not what was intended.
+
+Generic methods have employed type inference so successfully that it’s quite rare for programmers to provide explicit type arguments. Inference for generic methods relies on the target type if there are no actual method arguments that provide sufficient type information. In a var declaration, there is no target type, so a similar issue can occur as with diamond. For example,
+
+\begin{lstlisting}
+// DANGEROUS: infers as List<Object>
+var list = List.of();
+\end{lstlisting}
+
+With both diamond and generic methods, additional type information can be provided by actual arguments to the constructor or method, allowing the intended type to be inferred. Thus,
+
+\begin{lstlisting}
+// OK: itemQueue infers as PriorityQueue<String>
+Comparator<String> comp = ... ;
+var itemQueue = new PriorityQueue<>(comp);
+
+// OK: infers as List<BigInteger>
+var list = List.of(BigInteger.ZERO);
+\end{lstlisting}
+
+If you decide to use var with diamond or a generic method, you should ensure that method or constructor arguments provide enough type information so that the inferred type matches your intent. Otherwise, avoid using both var with diamond or a generic method in the same declaration.}
+\item[G7.]{Take care when using var with literals.
+Primitive literals can be used as initialisers for var declarations. It’s unlikely that using var in these cases will provide much advantage, as the type names are generally short. However, var is sometimes useful, for example, to align variable names.
+
+There is no issue with boolean, character, long, and string literals. The type inferred from these literals is precise, and so the meaning of var is unambiguous:
+
+\begin{lstlisting}
+// ORIGINAL
+boolean ready = true;
+char ch = '\ufffd';
+long sum = 0L;
+String label = "wombat";
+
+// GOOD
+var ready = true;
+var ch    = '\ufffd';
+var sum   = 0L;
+var label = "wombat";
+\end{lstlisting}
+
+Particular care should be taken when the initialiser is a numeric value, especially an integer literal. With an explicit type on the left-hand side, the numeric value may be silently widened or narrowed to types other than int. With var, the value will be inferred as an int, which may be unintended.
+
+\begin{lstlisting}
+// ORIGINAL
+byte flags = 0;
+short mask = 0x7fff;
+long base = 17;
+
+// DANGEROUS: all infer as int
+var flags = 0;
+var mask = 0x7fff;
+var base = 17;
+\end{lstlisting}
+
+Floating point literals are mostly unambiguous:
+
+\begin{lstlisting}
+// ORIGINAL
+float f = 1.0f;
+double d = 2.0;
+
+// GOOD
+var f = 1.0f;
+var d = 2.0;
+\end{lstlisting}
+
+Note that float literals can be widened silently to double. It is somewhat obtuse to initialise a double variable using an explicit float literal such as 3.0f, however, cases may arise where a double variable is initialised from a float field. Caution with var is advised here:
+
+\begin{lstlisting}
+// ORIGINAL
+static final float INITIAL = 3.0f;
+...
+double temp = INITIAL;
+
+// DANGEROUS: now infers as float
+var temp = INITIAL;
+\end{lstlisting}
+
+(Indeed, this example violates guideline G3, because there isn’t enough information in the initialiser for a reader to see the inferred type.)}
+\end{enumerate}
+
+\subsection{Examples}
+This section contains some examples of where var can be used to greatest benefit.
+
+The following code removes at most max matching entries from a Map. Wildcarded type bounds are used for improving the flexibility of the method, resulting in considerable verbosity. Unfortunately, this requires the type of the Iterator to be a nested wildcard, making its declaration more verbose. This declaration is so long that the header of the for-loop no longer fits on a single line, making the code even harder to read.
+
+\begin{lstlisting}
+// ORIGINAL
+void removeMatches(Map<? extends String, ? extends Number> map, int max) {
+    for (Iterator<? extends Map.Entry<? extends String, ? extends Number>> iterator =
+             map.entrySet().iterator(); iterator.hasNext();) {
+        Map.Entry<? extends String, ? extends Number> entry = iterator.next();
+        if (max > 0 && matches(entry)) {
+            iterator.remove();
+            max--;
+        }
+    }
+}
+\end{lstlisting}
+Use of var here removes the noisy type declarations for the local variables. Having explicit types for the Iterator and Map.Entry locals in this kind of loop is largely unnecessary. This also allows the for-loop control to fit on a single line, further improving readability.
+
+\begin{lstlisting}
+// GOOD
+void removeMatches(Map<? extends String, ? extends Number> map, int max) {
+    for (var iterator = map.entrySet().iterator(); iterator.hasNext();) {
+        var entry = iterator.next();
+        if (max > 0 && matches(entry)) {
+            iterator.remove();
+            max--;
+        }
+    }
+}
+\end{lstlisting}
+
+Consider code that reads a single line of text from a socket using the try-with-resources statement. The networking and I/O APIs use an object wrapping idiom. Each intermediate object must be declared as a resource variable so that it will be closed properly if an error occurs while opening a subsequent wrapper. The conventional code for this requires the class name to be repeated on the left and right sides of the variable declaration, resulting in a lot of clutter:
+
+\begin{lstlisting}
+// ORIGINAL
+try (InputStream is = socket.getInputStream();
+     InputStreamReader isr = new InputStreamReader(is, charsetName);
+     BufferedReader buf = new BufferedReader(isr)) {
+    return buf.readLine();
+}
+\end{lstlisting}
+Using var reduces the noise considerably:
+
+\begin{lstlisting}
+// GOOD
+try (var inputStream = socket.getInputStream();
+     var reader = new InputStreamReader(inputStream, charsetName);
+     var bufReader = new BufferedReader(reader)) {
+    return bufReader.readLine();
+}
+\end{lstlisting}
+
+Conclusion
+Using var for declarations can improve code by reducing clutter, thereby letting more important information stand out. On the other hand, applying var indiscriminately can make things worse. Used properly, var can help improve good code, making it shorter and clearer without compromising understandability.
+
 \section{Access to Properties}
 Encapsulation is an important design principle for classes. This means that the internal state of an object can be manipulated only in a well defined manner, through the methods. Consequently, it may not be possible to modify the attributes  directly, by a direct assignment.
 
@@ -1552,16 +1915,18 @@ public final class MyClass
 \end{lstlisting}
 The lambda cannot use the name \lstinline|retValue| for its return value, because that is already defined in the surrounding method\footnote{And even if it is not (yet) defined, the lambda should not use it anyway, as it may collide with future code modifications.}. Instead, lambdas use the name \lstinline|result| for their return values.
 
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\begin{lstlisting}
-\end{lstlisting}
-
 \subsection{“case” Results}\label{sec:CaseResults}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
 \lipsum[5]
 
 \begin{lstlisting}
@@ -1571,6 +1936,25 @@ The lambda cannot use the name \lstinline|retValue| for its return value, becaus
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+\section{Programming to the Interface}\label{sec:ProgrammingToTheInterface}
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{Cymerman:SmarterJavaDevelopment}
+\autocite{Fejer:ProgramToInterfaces}
+\autocite{Pavlutin:ProgrammingToInterface}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
 \lipsum[5]
 
 \begin{lstlisting}
@@ -1972,7 +2356,7 @@ You can configure both Eclipse and IntelliJ IDEA to report the access to a stati
 
 \item{In general, static imports are preferred over using the class name as prefix for references to static class members, either to class methods or to constants.}
 
-\item{Try to initialize local variables where they are declared. The only reason not to initialize a variable where it's declared is if the initial value depends on some computation occurring first.}
+\item{Try to initialise local variables where they are declared. The only reason not to initialise a variable where it's declared is if the initial value depends on some computation occurring first.}
 
 \item{Avoid the multi-line initialisation for fields; use a constructor instead:
 \begin{lstlisting}

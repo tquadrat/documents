@@ -101,360 +101,24 @@ literate=
 \maketitle
 \tableofcontents
 
-\chapter{Introduction}\label{sec:Introduction}
-To get your “Coding Guardrails for Java” in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…}
-\begin{enumerate}[nosep]
-\item{Beautiful is better than ugly.}\label{lst:ZoP:BeautifulVsUgly}
-\item{Explicit is better than implicit, and verbosity is your friend.}\label{lst:ZoP:ExplicitVsImplicit}
-\item{Do not repeat yourself.}\label{lst:ZoP:DRY}
-\item{Simple is better than complex.}\label{lst:ZoP:SimpleVsComplex}
-\item{Complex is better than complicated.}\label{lst:ZoP:ComplexVsComplicated}
-\item{Flat is better than nested.}\label{lst:ZoP:FlatVsNested}
-\item{Sparse is better than dense.}\label{lst:ZoP:SparseVsDense}
-\item{Readability counts.}\label{lst:ZoP:Readablity}
-\item{Special cases aren't special enough to break the rules~…}\label{lst:ZoP:SpecialCases}
-\item{…~although practicality beats purity.}\label{lst:ZoP:Practicality}
-\item{Errors should never pass silently and Exceptions may never be swallowed~…}\label{lst:ZoP:ErrorsMayNeverBeSwallowed}
-\item{…~unless explicitly silenced.}\label{lst:ZoP:ErrorsAreSilenced}
-\item{In the face of ambiguity, refuse the temptation to guess.}\label{lst:ZoP:DontGuess}
-\item{There should be one – and preferably only one – obvious way to do it~…}\label{lst:ZoP:OneWay}
-\item{…~although that way may not be obvious at first.}
-\item{Now is better than never~…}\label{lst:ZoP:Now}
-\item{…~although never is often better than \textit{right now}.}\label{lst:ZoP:RightNow}
-\item{If the implementation is hard to explain, it's a bad idea.}\label{lst:ZoP:BadIdea}
-\item{If the implementation is easy to explain, it may be a good idea.}\label{lst:ZoP:GoodIdea}
-\item{Without the unit test, it is not complete.}\label{lst:ZoP:NotCompleteWithoutTest}
-\item{Think about your future self and add a comment.}\label{lst:ZoP:FutureSelf}
-\item{Always do it right in the first place!}\label{lst:ZoP:BasicRule}
-\item{Have Fun!}\label{lst:ZoP:HaveFun}
-\end{enumerate}
-
-\section{The Goals}
-The main goal of coding conventions in general is to help you writing better code.
-
-So what is good code?
-
-\paragraph{Good Code} does not have bugs and is running fast, without wasting necessary resources.
-
-“Does not have bugs” also means that the code is doing what it is intended to do. We all know that it is nearly impossible to produce completely bug free code, for several reasons. An important reason is that already the specification, used as the base for the implementation, was faulty. So the code is doing what it should do according to the specification, but it is not doing what it is meant to do~…
-
-However, we should not forget that there is still the possibility for \textit{real} bugs.
-
-And often you see the situation that your code is getting slower and slower, or is eating up more CPU cycles and/or memory than available. That may be due to higher data volumes or more users or lots of other reasons.
-
-But as a result, you will have to modify your code – although, in most cases, it will be someone else who have to dig into your code. Or you are the unlucky one who needs to revise someone else's code.
-
-So what you want is code that helps you with being modified – you want to have \textit{maintainable code}.
-
-\paragraph{Maintainable Code} supports its modification in various ways.
+\chapter{Introduction}
+\begin{quotation}
+“Everybody can write code that can be read by a computer,
+but only good developers will write code that can be read by humans.”
+Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code}\autocite{Fowler:Refactoring}
+\end{quotation}
 
 From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know it, I would appreciate if you would share it with me.}
 
 \begin{quotation}
-“If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.” \\
-\autocite{UnknownSource1}
+“If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.”
 \end{quotation}
-
-Maintainability has a lot of facets, and I will discuss several of them in the run of this document. But before you can even think of modifying the code – either for fixing a bug, optimising the memory consumption, or adding new functionality – you need to identify the location.  
-
-For that you have to read the already existing code, and of course, you have to understand what you are reading. So a crucial quality of maintainable code is that it is easy to read and \textit{basically} understandable\footnote{Ok, the requirement should be ‘easy to understand’, but that is a relative term. If something is ‘easily’ understandable depends from the experience level of the reader, and here we talk not only about their coding experience, but also about their familiarity with the problem domain. And you cannot always code for the rookies}.
-
-No matter whether your code will meet all the other criteria that would make it maintainable: if it is not readable, it is not really maintainable. 
-
-\paragraph{Readable Code} can be easily consumed by a human.
-
-\begin{quotation}
-“Everybody can write code that can be read by a computer,
-but only good developers will write code that can be read by humans.”\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
-Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code}\autocite{Fowler:Refactoring}
-\end{quotation}
-
-Reading code is more important than writing code.\autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
-
-Code is read much more often than it is written. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that is useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
-
-You should be specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.
-
-And from my experience I found that verbosity is your friend!\footnote{Refer to the “Coding Guardrails”, bullet point \ref{lst:ZoP:ExplicitVsImplicit}.}
-
-Several guidelines and recommendations in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that verbosity – but as said: that's not generally bad!
-
-But if you are afraid of the typing work, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Average values for a trained typist are around 200 CPM, peak values are at 500 to 900 CPM.}
-
-Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
-
-Also, modern IDEs do a lot of the typing, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
-
-Code readability shouldn’t depend on IDEs.\autocite{Marks:LocalVariableTypeInference:NoIDEDependency}
-
-Code is often written and read within an IDE, so it is tempting to rely heavily on the code analysis features of IDEs. Unfortunately, code is at least as often read \textit{outside} an IDE. It appears in many places where IDE facilities are not available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.
-
-Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.
-
-\subsection{Conclusion}
-To summarize from above, the goal for these coding conventions is to help you to write~…
-\begin{itemize}[nosep]
-\item …~good,~…
-\item …~maintainable,~…
-\item …~readable~…
-\end{itemize}
-…~Java source code.
-
-As a side effect, all source code looks familiar to all members of the team. That conformity supports readability, but such a common look also identifies the source code as written by the team, as its trademark.
-
-\section{About this Document}
-This document was compiled using \TeX/\LaTeX\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}.
-
-\subsection{The Document Structure}
-This document itself consists of four major parts, aside of this \nameref{sec:Introduction} and the \nameref{sec:Appendices} (containing additional information, references and examples).
-
-\paragraph{\nameref{sec:FormattingTheSourceCode}} deals with proper formatting of the Java source files additional files that are part of your project.
-
-\paragraph{\nameref{sec:NamingConventions}} covers the naming of the program elements (modules, packages, classes, methods, fields, local variables, formal parameters).
-
-\paragraph{\nameref{sec:WritingProperComments}} discusses some guidelines for writing proper comments.
-
-\paragraph{\nameref{sec:CodingGuidelines}} is the biggest part and provides guidelines on how to use various language features, based on best practices.
-
-\subsection{Sample Code}
-The code samples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guideline or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing.
-
-The source code samples in chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implements all recommendations.
-
-All the rules, guidelines and recommendations in this document assume, that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
-
-\subsection{References}
-Instead of adding URLs directly into the document, I provided them in the “Bibliography” section. In the text, you will find references to it like this: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}. If you read the electronic version of the document, the reference is clickable and brings you to the respective entry. There you can click on the URL.
-
-This allows me to update the URLs on one single location if they changed. 
-
-\section{History and Implementation}
-Around the year~2000 I was asked to compile a set of coding guardrails for a team of developers that had been new to Java (and most were new to programming, too). That was the very first version of this document, based on the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} and the way I wrote Java code at that time.
-
-Later versions were created for other developer teams, and several software projects had been delivered successfully regarding these coding conventions.
-
-Some of the code from these projects is still alive, proving the initial statement that coding conventions do help to create maintainable software.
-
-I wrote a lot of code using the rules, guidelines and recommendations from this document (and its predecessors, of course), including some libraries that I published on GitHub. Some of the code from these libraries is mentioned in chapter \tqfullref{sec:CodingGuidelines}, starting on page~\pageref{sec:CodingGuidelines}, I also added some stuff as examples in chapter \tqfullref{sec:Examples} in the “\nameref{sec:Appendices}” chapter. If you are interested in the whole package, you should have a look to \autocite{TQUADRAT_ORG}.
-
-\section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
-Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
-
-Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
-
-In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{I added the ellipsis.} for this document:
-\begin{itemize}[nosep]
-\item Beautiful is better than ugly.
-\item Explicit is better than implicit.
-\item Simple is better than complex.
-\item Complex is better than complicated.
-\item Flat is better than nested.
-\item Sparse is better than dense.
-\item Readability counts.
-\item Special cases aren't special enough to break the rules~…
-\item …~although practicality beats purity.
-\item Errors should never pass silently~…
-\item …~unless explicitly silenced.
-\item In the face of ambiguity, refuse the temptation to guess.
-\item There should be one – and preferably only one – obvious way to do it~…
-\item …~although that way may not be obvious at first unless you're Dutch.
-\item Now is better than never~…
-\item …~although never is often better than \textit{right now}.
-\item If the implementation is hard to explain, it's a bad idea.
-\item If the implementation is easy to explain, it may be a good idea.
-\item Namespaces are one honking great idea – let's do more of those!
-\end{itemize}
-
-Only the last one regarding “Namespaces” does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module”~…).
-
-A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL,~…) code (more precise, your comments) according to coding conventions similar to those defined here.
-
-A sample for code conventions for JavaScript can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
-
-Coding conventions for C\# are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation}, another source can be found on GitHub\autocite{Taranov:CsharpCodingStandards}.
-
-The number of documents dealing with coding standards, naming conventions and style guides for C++ is close to indefinite. A starting point could be the ISO page\autocite{ISO:CppCodingStandards} or Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
-
-\section{Code Generators}
-Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}.}
-
-Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this means all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
-
-Since Java~6 there is an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case still Java~5 is used as the source code version, you should consider to create your own \lstinline|@Generated| annotation along the lines given by that existing in Java~6 and later.}
-
-\section{Coding for Sustaining}\label{sec:CodingForSustaining}
-And what to do with “legacy” code that has to be fixed, amended or extended? 
-
-Most probably that code will not follow \textit{these} coding conventions (if any at all~…), and it is rarely a good idea to reformat or completely rewrite the existing source code just to align it with the current recommendations and guidelines. Instead a fix should be limited to that area in the source code that is broken.
-
-But if possible, your fix should incorporate the standards defined by this document. Be creative how to implement these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments\footnote{Even when there are no other JavaDoc comments in the whole file~…}, if missing. Or if a new field has to be added to a class, add the “\verb#m_#” prefix to its name (see chapter \tqfullref{sec:Fields}).
-
-Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
-
-In this context, see also chapter \tqfullvref{sec:MaintenanceComments}.
-
-\section{Tool Support}\label{sec:ToolSupport}
-Several of the rules, guardrails and recommendations in this document can be implemented through the configuration of the programming enviroment that is used, especially those from chapter \tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
-
-The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
-
-\section{How to use this Document?}\label{sec:HowToUseThisDocument}
-First, you can use this document as is! It should work for you, as its predecessors already worked for a bunch of project teams.
-
-But you can also shape it closer to your particular needs, if you want! As said, you find the sources for this document on GitHub. Clone the repository on GitHub \autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}, replace the examples and the references to my libraries by some that fits better to your project and/or your company, then adjust the other stuff accordingly.
-
-In particular, for your project, you should elaborate on the following topics:
-\begin{itemize}
-\item{Chapters \tqfullvref{sec:Projects}, \tqfullvref{sec:Modules}, \tqfullvref{sec:Packages} and \tqfullvref{sec:LibraryFiles}\\
-In no particular order:
-    \begin{itemize}
-    \item{Specify the name of your project.}
-    \item{Specify a format for the names of the library file(s) produced by your project.}
-    \item{Specify the names for the modules and packages of your project.}
-    \end{itemize}}
-
-\item{Chapters \tqfullvref{sec:Logging} and \tqfullvref{sec:LoggerConfiguration}:
-    \begin{itemize}
-    \item{Specify the type of the logging framework you use in your product – if any – or if you want to code against SLF4J (or if you do not want to log at all).}
-    \item{Specify the names of the loggers.}
-    \item{Specify the format for the log messages, in particular for the log levels \verb#DEBUG# and \verb#TRACE# (or \verb#FINE#, \verb#FINER# and \verb#FINEST#, if you are using JDK~Logging).}
-    \item{Provide a (default) logging configuration.}
-    \item{Optionally, you may remove all references to the logging frameworks and APIs that you do \textit{not} use in your project.}
-    \end{itemize}}
-    
-\item{Chapter \tqfullvref{sec:TheNamingDictionary}:
-    \begin{itemize}
-    \item{Add verbs that are specific to your project, remove obsolete/unwanted ones.}
-    \item{Adjust the description for verbs where appropriate.}
-    \item{Do the same for the class name suffixes.}
-    \item{Add a Glossary that explains special terms used in the context of your project (the “Domain Specific Terminology”).}
-    \end{itemize}}
-
-\item{Chapter \tqfullvref{sec:IDEConfiguration}:
-    \begin{itemize}
-    \item{Remove the configuration setting samples for the IDEs that you are not using.}
-    \item{Adjust the configuration setting sample according to the changes you made elsewhere.}
-    \item{Add matching configuration setting samples for additional IDEs used in your environment.}
-    \end{itemize}}
-
-\item{Provide code snippets for recurring patterns that are specific to your project.}
-
-\item{Remove this chapter \tqfullref{sec:HowToUseThisDocument} and the chapter \tqfullref{sec:HowToImplement}.}
-
-\end{itemize}
-
-\section{How to implement these ‘Coding Conventions’ in your Project?}\label{sec:HowToImplement}
-First any coding conventions are better than none! So if your team is already adhering to some coding conventions, the first hurdle had been taken already.
-
-Adjust this document that it will incorporate the already accepted guidelines and recommendations; this may require that you remove conflicting recommendations and guidelines – don't care, just do it!
-
-The biggest blocker in this case could be that too much code needs to be modified to match with the coding conventions, meaning tedious work no one likes to do. In this regard, you should also have a look to the chapter \tqfullvref{sec:CodingForSustaining}.
-
-But the most simple case is a new team starting over with a new project from scratch. Just present the document as is~…
-
-Experienced programmers know about the benefits of having detailed guard\-rails they can follow – in particular when they know that the other team members will also follow the same guardrails.
-
-Nevertheless, you may have one or the other hacker in your team that complains that this kind of guardrails are suffocating their creativity.
-
-Perhaps this helps: I was always interested in fotography, and therefore I attended some classes about the topic. There the question was raised what are bad pictures, good pictures and exceptionally artistic pictures, and the professor explained it like this: Fotography has a whole bunch of rules on how to compose a good picture, and you do not even need to know one of these rules to distinguish a bad shot from a good fotography: the bad ones will break the rules.
-
-But the really artistic pictures always break \textit{one} or \textit{the other} rule, but \textit{with intention}. The fotographer's creativity is to choose the rule to break and how – but this first means that they have to know each of the rules and how to follow them (usually referred to as ‘knowing the craft’), and second, that there is a visible intention.
-
-But in most cases the client just wants to get only good pictures.
-
-Same in software development: only few clients pay for a piece of art; instead they expect good craftsmanship.
-
-If this explanation does not help, and you are in the proper position: replace the hacker.
-
-\section{About the Author}
-My name is Thomas Thrien, I was born and raised in Germany, still live there, so my primary language is German, not English. You may notice that one or the other time when you read this text: although I have to speak English most of time on the job, I to often fall back to Denglish~…
-
-I am in the IT business since 1982 now, mainly in roles dealing with support, field service, and sustaining, but over the years I also did some development work, and even some IT consulting. I did the ground work with my fingers on the keyboard as well as leading teams of various size, even running whole departments.
-
-But in support and sustaining, you are mainly on the “receiving end” of the development process, suffering from the output of development teams that had never heard about the basics, or don't care about them. This experience was my main motivation to compile this document, and to keep it up to date.
- 
-If you have questions or comments regarding this document, please send me an email to \href{mailto:thomas.thrien@tquadrat.org}{thomas.thrien@tquadrat.org}. Or leave it at \url{https://tquadrat.github.io/}.
-
-\section{The Basic Rule}\label{sec:TheBasicRule}
-One rule should be followed before any other rule or recommendation given in this document, that one listed as number~\ref{lst:ZoP:BasicRule} in the nutshell version of the “Coding Guardrails for Java”:\footnote{And it does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
-
-\begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
-\end{center}
-
-Experiences with lots of programming projects have shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug as fast as possible, not adding missing comments or reformatting the code~…} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
-
-\textit{And this is exactly what we want to avoid!} 
-
-This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code~… – treat a PoC in the same way as product code.\footnote{I was inclined to add “There is nothing like a \textit{disposable prototype}.” to the nutshell version of the “Coding Guardrails for Java”~…}
-
-Of course you can interpret this also as “Don't make mistakes”, but we all now that humans make mistakes, and that it is unavoidable that our code will contain one or the other bug. So it means that you should \textit{do your best} to avoid mistakes, and the rules, guidelines and recommendation from this document will help you with that.
-
-So again:
-
-\begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
-\end{center}
-
-But the most important rule is that with the number~\ref{lst:ZoP:HaveFun}:
-
-\begin{center}
-\begin{huge}
-\fbox{\textbf{Have fun!}}
-\end{huge}
-\end{center}
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-
-One rule should be followed before any other recommendation or guideline given in this document, that one listed as number~\ref{lst:ZoP:BasicRule} above:\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
-
-\begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
-\end{center}
-
-of course immediately followed by that with number~\ref{lst:ZoP:HaveFun}: Have Fun!
-
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it more readable: Reading code is more important than writing code.
 
+Code is read much more often than it is written. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that is useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
+
+I am specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program. 
 
 But code readability should not depend on IDEs. Code is often written and read within an IDE, so it’s tempting to rely heavily on code analysis features of IDEs. For type declarations, why not just use \lstinline|var| everywhere, since one can always point at a variable to determine its type?
 
@@ -507,6 +171,138 @@ The base of the coding conventions presented in this document are the “Code Co
 
 Another source was “Local Variable Type Inference – \textit{Style Guidelines}” \autocite{Marks:LocalVariableTypeInference}.
 
+\section{About this Document}
+The document itself consists of four major parts: first we want to talk about proper formatting of the source files, next it covers the naming of the program elements before I discuss some guidelines for writing proper comments. The final chapter before the appendices will cover general coding guidelines.
+
+The code samples in this document should underline some particular aspect or demonstrate a single rule or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other rules or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, or the names are not really meaningful. In addition, some rules, guidelines or recommendations are first used in the samples \textit{after} being introduced.
+
+For source code samples that obey all rules, follow all guardrails and implements all recommendations, refer to chapter \tqfullvref{sec:Examples}.
+
+All the rules, guidelines and recommendations in this document assume, that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
+
+If you have questions or comments regarding this document, please send me an email to \href{mailto:thomas.thrien@tquadrat.org}{thomas.thrien@tquadrat.org}. Or leave it at \url{https://tquadrat.github.io/}.
+
+\section{History and Implementation}
+I compiled a first version of this document around the year 2000, based on the way I wrote Java code at that time. I was asked to do so for a team of developers that had been new to Java (and to programming …).
+
+Later versions were created for other developer teams, and several software products had been created successfully following these coding conventions – proving my initial statement that coding conventions help to create maintainable software. Some of the code written by the various teams is still running, after 20~years now, another code is live since 12~years now.
+
+I wrote some libraries that supports some of the rules, guardrails and recommendations, in particalur those mentioned in chapter \tqfullref{sec:CodingRules}, starting on page~\pageref{sec:CodingRules}. If interested, have a look to \autocite{TQUADRAT_ORG}.
+
+\section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
+Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
+
+Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
+
+In this sense, I would like to steal the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{The numbering was added by me; I also added the ellipsis.} for this document:
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit.
+\item Simple is better than complex.
+\item Complex is better than complicated.
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.
+\item Special cases aren't special enough to break the rules …
+\item … although practicality beats purity.
+\item Errors should never pass silently …
+\item … unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it …
+\item … although that way may not be obvious at first unless you're Dutch.
+\item Now is better than never …
+\item … although never is often better than \textit{right now}.\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Namespaces are one honking great idea – let's do more of those!\label{lst:ZoP:Namespaces}
+\end{enumerate}
+Only number~\ref{lst:ZoP:Namespaces} does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module” …).
+
+A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL, …) code (more precise, your comments) according to coding conventions similar to those defined here.
+
+But no matter what programming language is used: The \textit{Basic Rule} as defined in chapter \tqfullref{sec:TheBasicRule} below will be applicable to each!
+
+A sample for code conventions for JavaScript can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
+
+In chapter \tqfullvref{sec:FormattingSQLInsideJava} we have added some suggestions on how to format SQL statements when added as literals into a Java program.
+
+\section{Code Generators}
+Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}.}
+
+Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this means all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
+
+Since Java~6 there is an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case still Java~5 is used as the source code version, it should be considered to create an own \lstinline|@Generated| annotation along the lines given by that existing in Java~6 and later.}
+
+\section{Programming for Sustaining}
+And what to do with “legacy” code that has to be fixed?
+
+Most probably that code will not follow these coding conventions (if any at all …), and it is rarely a good idea to reformat or rewrite it completely just to align it with the conventions. Instead a fix should be limited to the area that is broken.
+
+But if possible, the fix should incorporate the standards defined by this document. Be creative how to implement the these standards. So if a method has to be reimplemented completely, format it as described here and add the appropriate JavaDoc comments, if missing. Or if a new field has to be added to a class, add the “\verb#m_#” prefix to its name (see chapter \tqfullref{sec:Fields}).
+
+Obviously, completely new interfaces and classes should be implemented fully compliant to this conventions.
+
+In this context, see also chapter \tqfullvref{sec:MaintenanceComments}.
+
+\section{Tool Support}
+Several of the rules, guardrails and recommendations in this document can be implemented through the configuration of the programming enviroment that is used, especially those from chapter \tqfullref{sec:FormattingTheSourceCode} that deals with the formatting of the source code.
+
+The chapter \tqfullref{sec:IDEConfiguration} provides some configuration samples for Eclipse and JetBrains IntelliJ IDEA.
+
+\section{The Basic Rule}\label{sec:TheBasicRule}
+In the chapter \tqfullref{sec:OtherProgrammingLanguages}, I quoted the “Zen of Python” and I refer to that set of rules several times in this document.
+
+I did this because the “Zen of Python” is a \textit{nearly} generic coding guideline in a nutshell, valid for most, if not all programming languages.
+
+Ok, some of the statements may need an explanation and/or some samples, and I hope that this document will give it to you.
+
+But to get your “Coding Guardrails for Java” in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…).}
+\begin{enumerate}[nosep]
+\item Beautiful is better than ugly.
+\item Explicit is better than implicit, and verbosity is your friend.\label{lst:ZoP:ExplicitVsImplicit}
+\item Simple is better than complex.\label{lst:ZoP:SimpleVsComplex}
+\item Complex is better than complicated.\label{lst:ZoP:ComplexVsComplicated}
+\item Flat is better than nested.
+\item Sparse is better than dense.
+\item Readability counts.\label{lst:ZoP:Readablity}
+\item Special cases aren't special enough to break the rules~…\label{lst:ZoP:SpecialCases}
+\item …~although practicality beats purity.\label{lst:ZoP:Practicality}
+\item Errors should never pass silently and Exceptions may never be swallowed~…
+\item …~unless explicitly silenced.
+\item In the face of ambiguity, refuse the temptation to guess.
+\item There should be one – and preferably only one – obvious way to do\\ it~…
+\item …~although that way may not be obvious at first.
+\item Now is better than never~…\label{lst:ZoP:Now}
+\item …~although never is often better than \textit{right now}.\label{lst:ZoP:RightNow}
+\item If the implementation is hard to explain, it's a bad idea.
+\item If the implementation is easy to explain, it may be a good idea.
+\item Think about your future self and add a comment.
+\item Always do it right in the first place!\label{lst:BR:BasicRule}
+\item Have Fun!
+\end{enumerate}
+
+One rule should be followed before any other rule or recommendation given in this document, that one listed as number \ref{lst:BR:BasicRule} above:\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
+
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
+
+Experiences with lots of programming projects has shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug, not adding missing comments~…} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
+
+\textit{And this is exactly what we want to avoid!} 
+
+This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code~…
+
+Of course you can interpret it also as “Don't make mistakes”, but we all now that humans make mistakes, and that it is unavoidable that our code will contain one or the other bug. So it means that you should \textit{do your best} to avoid mistakes, and the rules, guidelines and recommendation from this document will help you with that.
+
+So again:
+
+\begin{center}
+\begin{huge}
+\fbox{\textbf{Always do it right in the first place!}}
+\end{huge}
+\end{center}
 
 \chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
 This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter \tqfullvref{sec:WritingProperComments}.
@@ -2024,7 +1820,7 @@ If the package is annotated\footnote{I recommend to used the \lstinline|@API| an
 
 How to define the name of the package (\lstinline|<packagename>|) is covered in chapter \tqfullvref{sec:Packages}.
 
-\chapter{Naming Conventions}\label{sec:NamingConventions}
+\chapter{Naming Conventions}
 Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
 
 \section{General Accords}
@@ -3772,7 +3568,7 @@ If the code has to be modified, no matter if due to regular maintenance, bug fix
 
 But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS used to manage the code.
 
-\chapter{Coding Guidelines}\label{sec:CodingGuidelines}
+\chapter{Coding Guidelines}\label{sec:CodingRules}
 These guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
 
 As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython, PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}? If not, here are they again: “\ref{lst:ZoP:SpecialCases}~Special cases aren't special enough to break the rules~…” and “\ref{lst:ZoP:Practicality}~…~although practicality beats purity”.}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22\autocite{WIKIPEDIA:Catch22}.}
@@ -6106,7 +5902,7 @@ A similar approach has to be taken for all attributes of a mutable type that wil
 
 If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not. 
 
-\subsection{Arguments}\label{sec:Arguments}
+\subsection{Arguments}\label{Arguments}
 Same as for a return type, the types for the formal parameters of a method should always be the most general type (interface or class) possible, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.
 
 A method must declare that it will modify an argument value. This is important because otherwise it could be called with an immutable implementation, what would cause an exception. Conversely, this also means that a method that does not specify this will not change any of the arguments, and that it would also be safe to call a method with a mutable object – safe for the caller.
@@ -8217,7 +8013,55 @@ Example:
 
 
 
-\chapter{Appendices}\label{sec:Appendices}
+\chapter{Summary}\label{sec:Summary}
+Several rules and recommendation in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that.
+
+But from my experience I found that verbosity is your friend!
+
+And if you are afraid of the typing work: as I said already earlier (see chapter \tqref{sec:LengthOfNamesAndUseOfAbbreviations}), you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!
+
+Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
+
+\section{How to use this Document?}
+First, you can use this document as is! It should work for you, as its predecessors already worked for a bunch of project teams.
+
+But you can also shape it closer to your particular needs, if you want! Replace the examples and the references to my libraries by some that fits better to your project and/or your company.
+
+In particular, for your project, you should elaborate on the following topics:
+\begin{itemize}
+\item{Chapters \tqfullvref{sec:Projects}, \tqfullvref{sec:Modules}, \tqfullvref{sec:Packages} and \tqfullvref{sec:LibraryFiles}\\
+In no particular order:
+    \begin{itemize}
+    \item{Specify the name your project.}
+    \item{Specify format for the names of the library file(s) produced by your project.}
+    \item{Specify the names for the modules and packages of your project.}
+    \end{itemize}}
+
+\item{Chapters \tqfullvref{sec:Logging} and \tqfullvref{sec:LoggerConfiguration}:
+    \begin{itemize}
+    \item{Specify the type of the logging framework you use in your product – if any – or if you want to code against SLF4J (or if you do not want to log at all).}
+    \item{Specify the names of the loggers.}
+    \item{Specify the format for the log messages, in particular for the log levels \verb#DEBUG# and \verb#TRACE# (or \verb#FINE#, \verb#FINER# and \verb#FINEST#, if you are using JDK~Logging).}
+    \item{Provide a (default) logging configuration.}
+    \item{Optionally, you may remove all references to the logging frameworks and APIs that you do not use in your project.}
+    \end{itemize}}
+    
+\item{Chapter \tqfullvref{sec:TheNamingDictionary}:
+    \begin{itemize}
+    \item{Add verbs that are specific to your project, remove obsolete/unwanted ones.}
+    \item{Adjust the description for verbs where appropriate.}
+    \item{Do the same for the class name suffixes.}
+    \item{Add a Glossary that explains special terms used in the context of your project (the “Domain Specific Terminology”).}
+    \end{itemize}}
+
+\item{Provide code snippets for recurring patterns that are specific to your project.}
+
+\item{Remove this chapter \tqfullref{sec:Summary}.}
+\end{itemize}
+
+This document was compiled using \TeX/\LaTeX\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \href{https://www.xm1math.net/texmaker/download.html}{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on  \href{https://github.com/tquadrat/documents}{GitHub}. Clone the repository and startover!
+
+\chapter{Appendices}
 
 \section{The Naming Dictionary}\label{sec:TheNamingDictionary}
 The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.

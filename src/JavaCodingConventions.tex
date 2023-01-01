@@ -8,6 +8,7 @@
 \usepackage[manualmark]{scrlayer-scrpage}
 %\usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
+%\usepackage{siunitx}
 %\usepackage{amsmath}
 %\usepackage{amsfonts}
 %\usepackage{amssymb}
@@ -88,6 +89,7 @@ literate=
 \newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”} on page \pageref{#1}}
 \newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
 \newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page \pageref{#1}}
+\newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
 
 \dedication{For Rasa Kuodienė: She deserved better~… in life and in death \newline\newline\includegraphics[height=14cm]{Rasa} \newline*1969-07-13 †2022-12-21}
 
@@ -102,31 +104,31 @@ literate=
 \tableofcontents
 
 \chapter{Introduction}\label{sec:Introduction}
-To get your “Coding Guardrails for Java” in a nutshell, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…}
-\begin{enumerate}[nosep]
-\item{Beautiful is better than ugly.}\label{lst:ZoP:BeautifulVsUgly}
-\item{Explicit is better than implicit, and verbosity is your friend.}\label{lst:ZoP:ExplicitVsImplicit}
-\item{Do not repeat yourself.}\label{lst:ZoP:DRY}
-\item{Simple is better than complex.}\label{lst:ZoP:SimpleVsComplex}
-\item{Complex is better than complicated.}\label{lst:ZoP:ComplexVsComplicated}
-\item{Flat is better than nested.}\label{lst:ZoP:FlatVsNested}
-\item{Sparse is better than dense.}\label{lst:ZoP:SparseVsDense}
-\item{Readability counts.}\label{lst:ZoP:Readablity}
-\item{Special cases aren't special enough to break the rules~…}\label{lst:ZoP:SpecialCases}
-\item{…~although practicality beats purity.}\label{lst:ZoP:Practicality}
-\item{Errors should never pass silently and Exceptions may never be swallowed~…}\label{lst:ZoP:ErrorsMayNeverBeSwallowed}
-\item{…~unless explicitly silenced.}\label{lst:ZoP:ErrorsAreSilenced}
-\item{In the face of ambiguity, refuse the temptation to guess.}\label{lst:ZoP:DontGuess}
-\item{There should be one – and preferably only one – obvious way to do it~…}\label{lst:ZoP:OneWay}
-\item{…~although that way may not be obvious at first.}
-\item{Now is better than never~…}\label{lst:ZoP:Now}
-\item{…~although never is often better than \textit{right now}.}\label{lst:ZoP:RightNow}
-\item{If the implementation is hard to explain, it's a bad idea.}\label{lst:ZoP:BadIdea}
-\item{If the implementation is easy to explain, it may be a good idea.}\label{lst:ZoP:GoodIdea}
-\item{Without the unit test, it is not complete.}\label{lst:ZoP:NotCompleteWithoutTest}
-\item{Think about your future self and add a comment.}\label{lst:ZoP:FutureSelf}
-\item{Always do it right in the first place!}\label{lst:ZoP:BasicRule}
-\item{Have Fun!}\label{lst:ZoP:HaveFun}
+To get your “Coding Guardrails for Java in a Nutshell”, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…}
+\begin{enumerate}[nosep]\label{lst:NutshellGuardrails}
+	\item{Beautiful is better than ugly.}\label{lst:ZoP:BeautifulVsUgly}
+	\item{Explicit is better than implicit, and verbosity is your friend.}\label{lst:ZoP:ExplicitVsImplicit}
+	\item{Do not repeat yourself.}\label{lst:ZoP:DRY}
+	\item{Simple is better than complex.}\label{lst:ZoP:SimpleVsComplex}
+	\item{Complex is better than complicated.}\label{lst:ZoP:ComplexVsComplicated}
+	\item{Flat is better than nested.}\label{lst:ZoP:FlatVsNested}
+	\item{Sparse is better than dense.}\label{lst:ZoP:SparseVsDense}
+	\item{Readability counts.}\label{lst:ZoP:Readablity}
+	\item{Special cases aren't special enough to break the rules~…}\label{lst:ZoP:SpecialCases}
+	\item{…~although practicality beats purity.}\label{lst:ZoP:Practicality}
+	\item{Errors should never pass silently and Exceptions may never be swallowed~…}\label{lst:ZoP:ErrorsMayNeverBeSwallowed}
+	\item{…~unless explicitly silenced.}\label{lst:ZoP:ErrorsAreSilenced}
+	\item{In the face of ambiguity, refuse the temptation to guess.}\label{lst:ZoP:DontGuess}
+	\item{There should be one – and preferably only one – obvious way to do it~…}\label{lst:ZoP:OneWay}
+	\item{…~although that way may not be obvious at first.}
+	\item{Now is better than never~…}\label{lst:ZoP:Now}
+	\item{…~although never is often better than \textit{right now}.}\label{lst:ZoP:RightNow}
+	\item{If the implementation is hard to explain, it's a bad idea.}\label{lst:ZoP:BadIdea}
+	\item{If the implementation is easy to explain, it may be a good idea.}\label{lst:ZoP:GoodIdea}
+	\item{Without the unit test, it is not complete.}\label{lst:ZoP:NotCompleteWithoutTest}
+	\item{Think about your future self and add a comment.}\label{lst:ZoP:FutureSelf}
+	\item{Always do it right in the first place!}\label{lst:ZoP:BasicRule}
+	\item{Have Fun!}\label{lst:ZoP:HaveFun}
 \end{enumerate}
 
 \section{The Goals}
@@ -164,8 +166,13 @@ No matter whether your code will meet all the other criteria that would make it 
 \paragraph{Readable Code} can be easily consumed by a human.
 
 \begin{quotation}
-“Everybody can write code that can be read by a computer,
-but only good developers will write code that can be read by humans.”\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
+“[…], programs must be written for people to read, and only incidentally for machines to execute.”\\
+Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
+\autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
+\end{quotation}
+
+\begin{quotation}
+“Everybody can write code that can be read by a computer, but only good developers will write code that can be read by humans.”\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
 Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code}\autocite{Fowler:Refactoring}
 \end{quotation}
 
@@ -194,9 +201,9 @@ Code should be self-revealing. It should be understandable on its face, without 
 \subsection{Conclusion}
 To summarize from above, the goal for these coding conventions is to help you to write~…
 \begin{itemize}[nosep]
-\item …~good,~…
-\item …~maintainable,~…
-\item …~readable~…
+	\item …~good,~…
+	\item …~maintainable,~…
+	\item …~readable~…
 \end{itemize}
 …~Java source code.
 
@@ -242,27 +249,28 @@ Of course coding conventions like those described with this document are not onl
 
 Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
 
-In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{I added the ellipsis.} for this document:
+In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{I added the ellipsis.} and used it for this document:
+
 \begin{itemize}[nosep]
-\item Beautiful is better than ugly.
-\item Explicit is better than implicit.
-\item Simple is better than complex.
-\item Complex is better than complicated.
-\item Flat is better than nested.
-\item Sparse is better than dense.
-\item Readability counts.
-\item Special cases aren't special enough to break the rules~…
-\item …~although practicality beats purity.
-\item Errors should never pass silently~…
-\item …~unless explicitly silenced.
-\item In the face of ambiguity, refuse the temptation to guess.
-\item There should be one – and preferably only one – obvious way to do it~…
-\item …~although that way may not be obvious at first unless you're Dutch.
-\item Now is better than never~…
-\item …~although never is often better than \textit{right now}.
-\item If the implementation is hard to explain, it's a bad idea.
-\item If the implementation is easy to explain, it may be a good idea.
-\item Namespaces are one honking great idea – let's do more of those!
+	\item Beautiful is better than ugly.
+	\item Explicit is better than implicit.
+	\item Simple is better than complex.
+	\item Complex is better than complicated.
+	\item Flat is better than nested.
+	\item Sparse is better than dense.
+	\item Readability counts.
+	\item Special cases aren't special enough to break the rules~…
+	\item …~although practicality beats purity.
+	\item Errors should never pass silently~…
+	\item …~unless explicitly silenced.
+	\item In the face of ambiguity, refuse the temptation to guess.
+	\item There should be one – and preferably only one – obvious way to do it~…
+	\item …~although that way may not be obvious at first unless you're Dutch.
+	\item Now is better than never~…
+	\item …~although never is often better than \textit{right now}.
+	\item If the implementation is hard to explain, it's a bad idea.
+	\item If the implementation is easy to explain, it may be a good idea.
+	\item Namespaces are one honking great idea – let's do more of those!
 \end{itemize}
 
 Only the last one regarding “Namespaces” does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module”~…).
@@ -305,41 +313,41 @@ But you can also shape it closer to your particular needs, if you want! As said,
 
 In particular, for your project, you should elaborate on the following topics:
 \begin{itemize}
-\item{Chapters \tqfullvref{sec:Projects}, \tqfullvref{sec:Modules}, \tqfullvref{sec:Packages} and \tqfullvref{sec:LibraryFiles}\\
-In no particular order:
-    \begin{itemize}
-    \item{Specify the name of your project.}
-    \item{Specify a format for the names of the library file(s) produced by your project.}
-    \item{Specify the names for the modules and packages of your project.}
-    \end{itemize}}
-
-\item{Chapters \tqfullvref{sec:Logging} and \tqfullvref{sec:LoggerConfiguration}:
-    \begin{itemize}
-    \item{Specify the type of the logging framework you use in your product – if any – or if you want to code against SLF4J (or if you do not want to log at all).}
-    \item{Specify the names of the loggers.}
-    \item{Specify the format for the log messages, in particular for the log levels \verb#DEBUG# and \verb#TRACE# (or \verb#FINE#, \verb#FINER# and \verb#FINEST#, if you are using JDK~Logging).}
-    \item{Provide a (default) logging configuration.}
-    \item{Optionally, you may remove all references to the logging frameworks and APIs that you do \textit{not} use in your project.}
-    \end{itemize}}
-    
-\item{Chapter \tqfullvref{sec:TheNamingDictionary}:
-    \begin{itemize}
-    \item{Add verbs that are specific to your project, remove obsolete/unwanted ones.}
-    \item{Adjust the description for verbs where appropriate.}
-    \item{Do the same for the class name suffixes.}
-    \item{Add a Glossary that explains special terms used in the context of your project (the “Domain Specific Terminology”).}
-    \end{itemize}}
-
-\item{Chapter \tqfullvref{sec:IDEConfiguration}:
-    \begin{itemize}
-    \item{Remove the configuration setting samples for the IDEs that you are not using.}
-    \item{Adjust the configuration setting sample according to the changes you made elsewhere.}
-    \item{Add matching configuration setting samples for additional IDEs used in your environment.}
-    \end{itemize}}
-
-\item{Provide code snippets for recurring patterns that are specific to your project.}
-
-\item{Remove this chapter \tqfullref{sec:HowToUseThisDocument} and the chapter \tqfullref{sec:HowToImplement}.}
+	\item{Chapters \tqfullvref{sec:Projects}, \tqfullvref{sec:Modules}, \tqfullvref{sec:Packages} and \tqfullvref{sec:LibraryFiles}\\
+	In no particular order:
+	    \begin{itemize}
+		    \item{Specify the name of your project.}
+		    \item{Specify a format for the names of the library file(s) produced by your project.}
+		    \item{Specify the names for the modules and packages of your project.}
+	    \end{itemize}}
+	
+	\item{Chapters \tqfullvref{sec:Logging} and \tqfullvref{sec:LoggerConfiguration}:
+	    \begin{itemize}
+		    \item{Specify the type of the logging framework you use in your product – if any – or if you want to code against SLF4J (or if you do not want to log at all).}
+		    \item{Specify the names of the loggers.}
+		    \item{Specify the format for the log messages, in particular for the log levels \verb#DEBUG# and \verb#TRACE# (or \verb#FINE#, \verb#FINER# and \verb#FINEST#, if you are using JDK~Logging).}
+		    \item{Provide a (default) logging configuration.}
+		    \item{Optionally, you may remove all references to the logging frameworks and APIs that you do \textit{not} use in your project.}
+	    \end{itemize}}
+	    
+	\item{Chapter \tqfullvref{sec:TheNamingDictionary}:
+	    \begin{itemize}
+		    \item{Add verbs that are specific to your project, remove obsolete/unwanted ones.}
+		    \item{Adjust the description for verbs where appropriate.}
+		    \item{Do the same for the class name suffixes.}
+		    \item{Add a Glossary that explains special terms used in the context of your project (the “Domain Specific Terminology”).}
+	    \end{itemize}}
+	
+	\item{Chapter \tqfullvref{sec:IDEConfiguration}:
+	    \begin{itemize}
+		    \item{Remove the configuration setting samples for the IDEs that you are not using.}
+		    \item{Adjust the configuration setting sample according to the changes you made elsewhere.}
+		    \item{Add matching configuration setting samples for additional IDEs used in your environment.}
+	    \end{itemize}}
+	
+	\item{Provide code snippets for recurring patterns that are specific to your project.}
+	
+	\item{Remove this chapter \tqfullref{sec:HowToUseThisDocument} and the chapter \tqfullref{sec:HowToImplement}.}
 
 \end{itemize}
 
@@ -379,9 +387,9 @@ If you have questions or comments regarding this document, please send me an ema
 One rule should be followed before any other rule or recommendation given in this document, that one listed as number~\ref{lst:ZoP:BasicRule} in the nutshell version of the “Coding Guardrails for Java”:\footnote{And it does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
 
 \begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
+	\begin{huge}
+		\fbox{\textbf{Always do it right in the first place!}}
+	\end{huge}
 \end{center}
 
 Experiences with lots of programming projects have shown that programmers seldom touch their code again, once it is written.\footnote{Usually, they will return to the code only when it is broken – and then they want to fix the bug as fast as possible, not adding missing comments or reformatting the code~…} As a result, missing comments will never be added, shady programming patterns would not be fixed – with the consequence that in case of a bug the maintainer is lost in a poorly documented chaos of badly formatted source code.
@@ -395,128 +403,335 @@ Of course you can interpret this also as “Don't make mistakes”, but we all n
 So again:
 
 \begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
+	\begin{huge}
+		\fbox{\textbf{Always do it right in the first place!}}
+	\end{huge}
 \end{center}
 
 But the most important rule is that with the number~\ref{lst:ZoP:HaveFun}:
 
 \begin{center}
-\begin{huge}
-\fbox{\textbf{Have fun!}}
-\end{huge}
+	\begin{huge}
+		\fbox{\textbf{Have fun!}}
+	\end{huge}
 \end{center}
 
 %------------------------------------------------------------------------------
-\hrulefill\newpage 
 
-One rule should be followed before any other recommendation or guideline given in this document, that one listed as number~\ref{lst:ZoP:BasicRule} above:\footnote{And that does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
+\chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
+As said already coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it better readable.
 
-\begin{center}
-\begin{huge}
-\fbox{\textbf{Always do it right in the first place!}}
-\end{huge}
-\end{center}
+In this regard, a source file is like any other text document, it benefits from having a clear structure, and that structure is supported by the formatting of the text.
 
-of course immediately followed by that with number~\ref{lst:ZoP:HaveFun}: Have Fun!
+An article may have sections with headlines in bold face, the paragraphs are separated by blank lines and the first lines of them are indented by 0.3~cm, and there are rule about line length and hyphenation.
 
+This chapter deals with the proper formatting of source files and their structure with the goal to get readable \textit{documents}.
 
+\begin{quotation}
+“[…], we want to establish the idea that a computer language is not just a way of getting a computer to perform operations but rather that it is a novel formal medium for expressing ideas
+about methodology.”\\
+Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
+\autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
+\end{quotation}
+
+\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
+	\item{The structure of the program text must support the flow of reading.
+	
+	As said in the \ngref, number~\ref{lst:ZoP:Readablity}: “Readability counts”.}
+	
+	\item{The formatting of the program text has to be consistent.
+	
+	Permanent changes in the way things are written will confuse the reader.}
+	
+	\item{Navigation through the source file should be easy.
+	
+	When loaded inside an IDE, navigating inside a Java source file is easy: click on the name of the respective program element and the cursor is moved to the corresponding line in the file.
+	
+	But when using a plain text editor, the search function is often the only tool you have. A consistent structure with headlines and a defined order would help here, too.}
+	
+	\item{It does not harm when the source code also looks beautiful.
+	
+	Number~\ref{lst:ZoP:BeautifulVsUgly} from the \ngref~ is also about the visual appearance of the source code. We can discuss how useful ASCII art in a source file is, but not that it can contribute to the beauty of the program text.}
 \end{enumerate}
 
+\section{Indentation}\label{sec:Indentation}
+Indentation, together with empty lines, is the most important tool to structure any source code.
 
+\subsection{Indentation Style}\label{sec:IndentationStyle}
+For most programming languages, the indentation of code blocks increases the readability – for others, like Python\autocite{W3SCHOOLS:PythonIndentation}, the indentation is even part of the syntax rules.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it more readable: Reading code is more important than writing code.
-
-
-But code readability should not depend on IDEs. Code is often written and read within an IDE, so it’s tempting to rely heavily on code analysis features of IDEs. For type declarations, why not just use \lstinline|var| everywhere, since one can always point at a variable to determine its type?
-
-There are two reasons. The first is that code is often read outside an IDE. Code appears in many places where IDE facilities aren’t available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.
-
-The second reason is that even when one is reading code within an IDE, explicit actions are often necessary to query the IDE for further information about a variable. For instance, to query the type of a variable declared using \lstinline|var|, one might have to hover the pointer over the variable and wait for a popup. This might take only a moment, but it disrupts the flow of reading.
-
-Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.
-
-Obviously, “readability” is a relative term, depending from one's habit. So some people are more familiar with the Kernighan-Ritchie (K\&R) style
+Obviously, “readability” is a relative term, depending from one's habits. So some people are more familiar with the Kernighan-Ritchie (K\&R) indentation style
 
 \begin{lstlisting}
-public void method (){
+public final void myMethod (){
     if (flag) {
         …
     }
-}
+}   //  myMethod()
 \end{lstlisting}
 
-as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally part of code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
 
 \begin{lstlisting}
-public void method()
+public final void myMethod()
 {
     if( flag )
     {
     	…
     }
-}
+}   //  myMethod()
 \end{lstlisting}
 
-Both styles will work, but they look different. So as a lot of other guardrails from a code conventions document, too, this is a matter of taste (but refer to chapter \tqfullvref{sec:IndentationStyle}).
+Both styles will work, but they look different. So as a lot of other guidelines from a code conventions document, too, this is a matter of taste. But as conformity suppports readability, a main purpose of these guidelines is to ensure that all source code looks similar, and we have to determine the style to use.
 
-But as conformity suppports readability, a main purpose of those guidelines is to ensure that all source code looks familiar to all members of the team. As a side effect, such a look identifies source code as written by the team, as its trademark.
+I prefer the so-called GNU or BSD style and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block than the Kernighan-Ritchie style. It demands to have the opening and closing curly braces on a line of their own, like this:
 
-So the practical reasons to enforce these guidelines as \textit{rules} – more or less strict – on the source are: they make it easier …
+\begin{lstlisting}
+public final class MyClass
+{
+    public final void myMethod()
+    {
+        if( flag )
+        {
+            /* do something */
+        }
+        
+        for( final var i = 0; i < max; ++i )
+        {
+            /* do something else */
+        } 
+    }   //  myMethod()
+}   //  class MyClass
+\end{lstlisting}
+
+\subsection{Indentation Size}\label{sec:IndentationSize}
+Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore it is recommended that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20).
+
+When you write code \textit{snippets} for a publication (for an article, as part of a program documentation, or for an answer on StackOverflow\autocite{STACKOVERFLOW}~…), sometimes using a base indentation unit of two spaces would be better, as it spares some room. But reformatting existing code for this use case is in most cases not worth the effort.
+
+\subsection{Indentation Character}\label{sec:IndentationCharacter}
+As said, you should use four \textit{blanks}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from what is said by the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
+
+Usually both, the indentation character and the indentation base unit can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
+
+\section{Line Length}\label{sec:LineLength}
+Several sources (including the original Sun Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:LineLength}) recommend to avoid code lines longer than 80~characters, because they were not handled well by many terminals and tools.
+
+This had been true at the time those documents were written\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} were published in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.
+
+\textbf{Note:} Sample code for use in documentation, articles or alike should have a limited line length – generally not more than 70~characters.
+
+Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComments}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
+
+\subsubsection{Wrapping Lines}\label{sec:WrappingLines}
+As we have an unlimited line length, it will not happen that an expression does not fit on a single line, you will break it only to improve the readability. You should follow these general principles:
 \begin{itemize}[nosep]
-\item … to understand the code
-\item … to navigate inside the code
-\item … to detect bugs
-\item … to fix these bugs
-\item … and to amend and enhance the code.
+\item{Only one statement per line!}
+\item{Break after a comma.}
+\item{Break before an operator.}
+\item{Break before a dot.}
+\item{Break after an opening parenthesis and before a closing one.}
+\item{Prefer higher-level breaks to lower-level breaks.}
+\item{Align the new line with the beginning of the expression at the same level on the previous line.}
+\item{If the above rules lead to confusing code or to code that's squished up against the right margin, consider to break up the code into multiple parts, by introducing additional temporary variables.}
 \end{itemize}
 
-It can make it also easier to use automated tools on the source code.
+Here are some examples of breaking method calls:
+\begin{lstlisting}[numbers=left]
+//  USUAL
+final var result = myMethod( longExpression1, longExpression2, 
+    longExpression3, longExpression4, longExpression5 );
+        
+//  SINGLE LINE FOR EACH ARGUMENT
+myProcedure
+( 
+    longExpression1,
+    longExpression2,
+    longExpression3,
+    longExpression4, // some comment
+    longExpression5
+);
 
-All this is important because most of the lifetime cost of a piece of software is going into maintenance – some sources say 80 to 90\% – and nearly no source is maintained by its original author or even a single programmer for its whole lifetime.
+final var result = myMethod
+    ( 
+        longExpression1,
+        longExpression2,
+        longExpression3,
+        longExpression4, // some comment
+        longExpression5
+    );
 
-The base of the coding conventions presented in this document are the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} we have already mentioned above, but with some changes and enhancements that seemed necessary or at least useful to me.
+//  OTHER VARIANTS
+final var result = myMethod( longExpression1,
+    someMethod( longExpression2,
+        longExpression3 ) );
 
-Another source was “Local Variable Type Inference – \textit{Style Guidelines}” \autocite{Marks:LocalVariableTypeInference}.
+final var result = myMethod1( longExpression1,
+    someMethod( longExpression2,
+        longExpression3 ),
+    longExpression4,
+    otherMethod( longExpression5 ) );
+\end{lstlisting}
+
+Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument.
+
+Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
+\begin{lstlisting}[numbers=left]
+// PREFERRED
+final var longName1 = longName2 * (longName3 + longName4 - longName5)
+    + 4 * longname6;
+           
+longName1 = longName2 * (longName3 + longName4 - longName5)
+    + 4 * longname6;
+           
+// AVOID!!!           
+longName1 = longName2 * (longName3 + longName4
+                       - longName5) + 4 * longname6;
+\end{lstlisting}
+
+Then we have a few examples for the indentation on long method declarations. First the conventional case.  Next, a \lstinline|throws| clause that will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
 
 
-\chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
-This chapter deals with the proper formatting of Java source code. The formatting of comments is covered in chapter \tqfullvref{sec:WritingProperComments}.
+The second would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final one uses a single line for each argument.
 
-I start the chapter with a description of the general structure of a source file, then I give some general conventions before I cover the formatting of single elements of the code.
+\begin{lstlisting}[numbers=left]
+//  CONVENTIONAL INDENTATION
+public final void myMethod( final int anArg, final Object anotherArg,
+    final String yetAnotherArg, final Object andStillAnother )
+{
+    …
+}   //  myMethod()
+
+private final synchronized void horkingLongMethodName( final int arg,
+   final Object anotherArg, final String yetAnotherArg, 
+   final Object andStillAnotherArg )
+{
+    …
+}   //  horkingLongMethodName()
+
+public final void myMethod( final int anArg, final Object anotherArg,
+    final String yetAnotherArg, final Object andStillAnother,
+    final Instant andTheFinalArg ) throws IllegalArgumentException
+{
+    …
+}   //  myMethod()
+
+//  ADDITIONAL INDENTATION BECAUSE OF THE throws CLAUSE
+public final void myMethod( final int anArg, final Object anotherArg,
+        final String yetAnotherArg, final Object andStillAnother )
+    throws IllegalArgumentException, IOException
+{
+    …
+}   //  myMethod()
+
+// SINGLE LINE FOR EACH ARGUMENT
+private static final synchronized anotherHorkingLongMethodLine
+(
+    final int anArg,
+    final Object anotherArg,  // a comment …
+    final String yetAnotherArg,
+    final Object andStillAnother
+)
+{
+    …
+}   //  anotherHorkingLongMethodLine()
+
+private static synchronized anotherHorkingLongMethodLineThrows
+(
+    int anArg,
+    Object anotherArg,
+    @MyAnnotation String yetAnotherArg,
+    Object andStillAnother
+) throws IllegalArgumentException, IOException
+{
+    …
+}   //  anotherHorkingLongMethodLineThrows()
+\end{lstlisting}
+
+For a method declaration, a comment for a formal argument (like in line~34) is usually obsolete, as the description for the parameters is a mandatory part of the documentation comments (see chapter \tqfullvref{sec:MethodComment} for the details).
+
+But you should think about having each formal argument in a line of it own if you have annotations on parameters, as shown in line~46. Especially when the annotation will have its own arguments.
+
+Here are the acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \tqfullvref{sec:TheTernaryOperator}.}:
+\begin{lstlisting}[numbers=left]
+alpha = (aLongBooleanExpression) ? beta : gamma;
+alpha = (aLongBooleanExpression) ? beta
+                                 : gamma;
+alpha = (aLongBooleanExpression)
+    ? beta
+    : gamma;
+
+final var alpha = (aLongBooleanExpression) ? beta : gamma;
+final var alpha = (aLongBooleanExpression) ? beta
+                                           : gamma;
+final var alpha = (aLongBooleanExpression)
+    ? beta
+    : gamma;
+\end{lstlisting}
+
+And finally a bad sample for a statement that should be broken into multiple statements; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
+
+\begin{lstlisting}[numbers=left]
+/**
+ *  <p>{@summary This method calculates the date of Easter Sunday 
+ *  for the given year.} The year has to be in the range from 1583 
+ *  to 3900 (included).</p>
+ *  <p>The resulting date is for the Gregorian calendar.</p>
+ *  <p>The algorithm itself is not the original one published by Carl
+ *  Friedrich Gauß first in 1800 (corrected version in 1816), but
+ *  that one published by Heiner Lichtenberg in 1997.
+ *
+ *  @thanks Carl Friedrich Gauß
+ *  @thanks Heiner Lichtenberg  
+ *
+ *  @param  year    The year for which the date of Easter Sunday is 
+ *      wanted for.
+ *  @return The date of Easter Sunday in the given year.
+ *  
+ *  @see <a href="https://de.wikipedia.org/wiki/Gau%C3%9Fsche_Osterformel">Gaußsche Osterformel</a>
+ */
+public static final LocalDate calcEasterDate( final Year year )
+{
+    //---* Check the arguments *-------------------------------------    
+    if( requireNonNullArgument( year, "year" ).isBefore( Year.of( 1583 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years greater than or equal to 1583" );
+    }
+    if( year.isAfter( Year.of( 3900 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years less than or equal to 3900" );
+    }
+
+    /*
+     * Initialise the return value with the last day of February and 
+     * add the calculated number of days.
+     */
+    final var retValue = LocalDate.of( year.getValue(), MARCH, 1 )
+        .minusDays( 1 )
+        .plusDays( (21 + ((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) - (((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) + (year.getValue() % 19) / 11) / 29) + (7 - ((21 + ((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) - (((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) + (year.getValue() % 19) / 11) / 29) - (7 - (year.getValue() + year.getValue() / 4 + (2 - (3 * (year.getValue() / 100) + 3) % 4)) % 7)) % 7) );
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  calcEasterDate()
+\end{lstlisting}
+
+Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with “breaking up the code into multiple parts by introducing additional temporary variables”.
+
+%------------------------------------------------------------------------------
 
 \section{Java Source File Structure}
-A file with Java source code consists of sections that should be separated by blank lines and a comment identifying each section.
+Source files with more than 2000~lines are cumbersome and should be avoided.\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
 
-Files longer than 2000~lines are cumbersome and should be avoided.\footnote{There are some well known scenarios where it is difficult to adhere with this limit. The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but we have seen more than one real life application where database tables had more than that number of columns. I do not think that this is a good design anyway, but if our new Java class has to reflect the legacy data model, it has to have that number of attributes.}
+The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class the reflected the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes.
+
+
+Java source code files have a 
+
+
+
+
+A file with Java source code consists of sections that should be separated by blank lines and a comment identifying each section.
 
 Each Java source file contains a single \lstinline|public| class or interface. When \lstinline|private| top-level classes and interfaces are associated with a \lstinline|public| class, they can be put into the same source file as the \lstinline|public| class, although this is not recommended.\footnote{Usually, it should be considered to have these classes or interfaces as \textit{inner} classes/interfaces} In such a case, the \lstinline|public| class should be the first class or interface in the file.
 
@@ -528,6 +743,45 @@ The sections of a Java source file have the following ordering:
 \item{Class and interface declarations}
 \item{Closing comment}
 \end{enumerate}
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Beginning Comments}\label{sec:BeginningComments}
 All source files have to start with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS:BeginningComments}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
@@ -913,152 +1167,6 @@ at the end of the source file is helpful to detect whether a source file was cor
 I confess that this kind of error has got very unlikely with modern hard-drives, but it can still happen when sending around sources over the net.
 
 \section{Indentation}
-Indentation, together with empty lines, is the most important tool to structure any source code.
-
-\subsection{Indentation Style}\label{sec:IndentationStyle}
-I prefer the so-called GNU or BSD style and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block. It demands to have the opening and closing curly braces on a line of their own, like this:
-
-\begin{lstlisting}
-public class MyClass
-{
-    public void method()
-    {
-        if( flag )
-        {
-            /* do something */
-        }
-        
-        for( final var i = 0; i < max; ++i )
-        {
-            /* do something else */
-        } 
-    }   //  method()
-}   //  class MyClass
-\end{lstlisting}
-
-\subsection{Indentation Size}
-Four (4) spaces should be used as the unit of indentation. Tabs are \textit{not} allowed.\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS}; the Sun Coding Convention do not explicitly specify whether to use blanks or tabs.} Usually this can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
-
-\subsection{Line Length}\label{sec:LineLength}
-Some sources (including the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}) recommend to avoid lines longer than 80 characters, because they were not handled well by many terminals and tools.
-
-This had been true at the time those documents were written, but today's  graphical screens are much wider (sometimes even 200 characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.
-
-\textbf{Note:} Sample code for use in documentation should have a limited line length – generally not more than 70 characters.
-
-Different to that, comment lines are limited to 80 characters – or more precise, they have to end at column 80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComments}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
-
-\subsubsection{Wrapping Lines}\label{sec:WrappingLines}
-When an expression does not fit on a single line, break it according to these general principles:
-\begin{itemize}[nosep]
-\item{Break after a comma.}
-\item{Break before an operator.}
-\item{Prefer higher-level breaks to lower-level breaks.}
-\item{Align the new line with the beginning of the expression at the same level on the previous line.}
-\item{If the above rules lead to confusing code or to code that's squished up against the right margin, just indent 8 (eight) spaces instead.}
-\end{itemize}
-
-Here are some examples of breaking method calls:
-\begin{lstlisting}[numbers=left]
-// USUAL
-someMethod( longExpression1, longExpression2, longExpression3,
-    longExpression4, longExpression5 );
-        
-// SINGLE LINE FOR EACH ARGUMENT
-someMethod
-( 
-    longExpression1,
-    longExpression2,
-    longExpression3,
-    longExpression4, // some comment
-    longExpression5
-);
-
-// LONG EXPRESSIONS
-var = someMethod1( longExpression1,
-        someMethod2( longExpression2,
-                longExpression3 ) );
-\end{lstlisting}
-
-Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument.
-
-Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
-\begin{lstlisting}[numbers=left]
-// PREFER
-longName1 = longName2 * (longName3 + longName4 - longName5)
-           + 4 * longname6;
-           
-// AVOID!!!           
-longName1 = longName2 * (longName3 + longName4
-                       - longName5) + 4 * longname6;
-\end{lstlisting}
-
-Then we have three examples of indenting method declarations. The first is the conventional case. The second would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final one uses a single line for each argument.
-
-A throws clause will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
-\begin{lstlisting}[numbers=left]
-// CONVENTIONAL INDENTATION
-public void someMethod( int anArg, Object anotherArg,
-    String yetAnotherArg, Object andStillAnother )
-{
-    …
-}
-
-public void otherMethod( int anArg, Object anotherArg,
-    	String yetAnotherArg, Object andStillAnother )
-    throws IllegalArgumentException, IOException
-{
-    …
-}
-
-// INDENT 8 SPACES TO AVOID VERY DEEP INDENTS
-private static synchronized void horkingLongMethodName( int anArg,
-        Object anotherArg, String yetAnotherArg,
-        Object andStillAnother )
-{
-    …
-}
-
-private static synchronized void horkingLongMethodThrows( int anArg,
-        Object anotherArg, String yetAnotherArg,
-        Object andStillAnother ) throws IllegalArgumentException
-{
-    …
-}
-
-// SINGLE LINE FOR EACH ARGUMENT
-private static synchronized anotherHorkingLongMethodLine
-(
-    int anArg,
-    Object anotherArg,
-    String yetAnotherArg,
-    Object andStillAnother
-)
-{
-    …
-}
-
-private static synchronized anotherHorkingLongMethodLineThrows
-(
-    int anArg,
-    Object anotherArg,
-    String yetAnotherArg,
-    Object andStillAnother
-) throws IllegalArgumentException, IOException
-{
-    …
-}
-\end{lstlisting}
-
-Here are three acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \tqfullvref{sec:TheTernaryOperator}.}:
-\begin{lstlisting}[numbers=left]
-alpha = (aLongBooleanExpression) ? beta : gamma;
-alpha = (aLongBooleanExpression) ? beta
-                                 : gamma;
-alpha = (aLongBooleanExpression)
-        ? beta
-        : gamma;
-\end{lstlisting}
 
 \section{Declarations}
 This chapter deals with the formatting of declarations. See also chapter \tqfullvref{sec:WrappingLines} for informations on how to wrap long declarations.
@@ -3380,7 +3488,8 @@ else
 \end{lstlisting}
 
 You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
-\begin{lstlisting}[numbers=left,caption={Gauss's Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}}]
+
+\begin{lstlisting}[numbers=left,caption={Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}},label={listing:GaussEaster}]
 /**
  *  <p>{@summary This method calculates the date of Easter Sunday 
  *  for the given year.} The year has to be in the range from 1583 
@@ -3451,7 +3560,7 @@ public static final LocalDate calcEasterDate( final Year year )
      * Initialise the return value with the last day of February and 
      * add the calculated number of days.
      */
-    final var retValue = LocalDate.of( y, MARCH, 1 )
+    final var retValue = LocalDate.of( x, MARCH, 1 )
         .minusDays( 1 )
         .plusDays( os );
 

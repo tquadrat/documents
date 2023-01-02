@@ -515,6 +515,145 @@ As said, you should use four \textit{blanks}; do \textit{not} use tabs (\lstinli
 
 Usually both, the indentation character and the indentation base unit can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
+%------------------------------------------------------------------------------
+
+\section{White Space}
+This chapter deals with the white space other than the indentation blanks.
+
+\subsection{Blank Lines}\label{sec:BlankLines}
+Blank lines improve readability by setting off sections of code that are logically related.
+If not separated by an explicit comment, a blank line should always be used in the following circumstances:
+\begin{itemize}
+\item{Between parts of a class declaration\footnote{Although this would hurt the guidelines for commenting as set in chapter \tqfullref{sec:StructuringComments}}}
+\item{Between class and interface definitions}
+\item{Between methods}
+\item{Before a block or single-line comment}
+\item{Between logical sections inside a method to improve readability}
+\item{To group some code lines logically}
+\end{itemize}
+
+More than one blank line should be avoided, but if it seems feasible for a particular purpose, feel free to use ASCII art to express the separation of parts in the source file.
+
+This is different from what the Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:BlankLines} stated.
+
+\subsection{Parenthesis}\label{sec:Parenthesis}
+Parenthesis are of course no whitespace characters – in the opposite, they are important syntax elements. But they trigger the use of whitespace, in particular blank spaces, and therefore, they are mentioned in this chapter.
+
+We distinguish between arithmetical parenthesis and parameter parenthesis; the first is used in (mathematical or logical) expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
+
+The Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:BlankSpaces} does not make this distinction, and it handles them differently (in the same way as arithmetical parenthesis).
+
+\paragraph{Arithmetical Parenthesis}
+An opening arithmetical parenthesis is always \textit{preceded} by a blank or another opening parenthesis and \textit{never} followed by a blank. A closing arithmetical parenthesis is \textit{never preceded} by a blank, but \textit{always followed} either by another closing parenthesis, a blank, or a newline (or a semicolon, in case the statement ends).
+
+\paragraph{Parameter Parenthesis}\label{sec:ParameterParenthesis}
+An opening parameter parenthesis is \textit{never preceded} by a blank and \textit{ever followed} by one, while a closing parameter parenthesis is \textit{always preceded} by a blank. The only exception is for empty arguments lists where the opening parenthesis is immediately followed by the closing parenthesis.
+
+Of course this is also valid for the declaration of methods and constructors.
+
+Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like they are functions.\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside their 'argument list'.}
+
+This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
+
+\begin{lstlisting}[numbers=left]
+final int v = (a + b) * 5;
+final double d = sin( (a + b) / c );
+
+System.out.println( "Finished!" );
+set( get() );
+System.out.println( sin( ((a + b) * (c + 4) + c)) / d ) );
+if( a < b ) c = (d + e) / sin( f );
+while( ((line = reader.readLine()) != null) && (++i < capacity) )
+    processLine( line );
+\end{lstlisting}
+
+A special case are parenthesis used with a cast:
+\begin{lstlisting}
+final Object o = "Text";
+final var s = (String) o;
+\end{lstlisting}
+Here an opening parenthesis is never followed by a blank, and a closing one is never preceded by a blank.
+
+\subsection{Blank Spaces}\label{sec:BlankSpaces}
+In addition to what was said already, blank spaces should be used in the following circumstances:
+\begin{itemize}
+\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
+
+Examples:
+\begin{lstlisting}[numbers=left]
+while( true )
+{
+    …
+}
+
+for( int i = 0; i < 10; ++i ) { … }
+
+try
+{
+    …
+}
+catch( Exception e )
+{
+    e.printStackTrace();
+}
+
+if( list.isEmpty() ) { … }
+\end{lstlisting}}
+\item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
+
+Examples:
+\begin{lstlisting}[numbers=left]
+Map<String,String> map = new HashMap<String,String>();
+Map<String,String> map = new HashMap<>(); // using the diamond operator
+map.put( key, value );
+\end{lstlisting}}
+\item{All binary operators except “.” has to be separated from their operands by spaces. Blank spaces should never separate unary operators such as unary minus, increment (“++”), and decrement (“--”) from their operands.
+
+Example:
+\begin{lstlisting}[numbers=left]
+a += c + d;
+a = (a + b) / (c * d);
+
+while( d-- > s++ )
+{
+    ++n;
+}
+
+printSize( "size is " + foo + "\n" );
+\end{lstlisting}}
+\item{The expressions in a \lstinline|for| statement has to be separated by blank spaces after the semicolon.
+
+Example:
+\begin{lstlisting}
+for( expr1; expr2; expr3 )
+{
+    …
+}
+\end{lstlisting}
+
+For an extended for loop, blank spaces has to be placed around the colon, too:
+\begin{lstlisting}[numbers=left]
+for( String s : stringArray ) System.out.println( s );
+\end{lstlisting}}
+\item{For ternary statements, the question mark (“?”) and the colon (“:”) has to be surrounded by blank spaces:
+
+Example:
+\begin{lstlisting}
+int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
+\end{lstlisting}
+
+In this sample, some parentheses would be helpful, too.}
+\item{Casts should be followed by a blank space. 
+
+Examples:
+\begin{lstlisting}
+method( (byte) aNum, (Object) x);
+method( (int) (cp + 5), ((int) (i + 3)) + 1 );
+\end{lstlisting}}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
 \section{Line Length}\label{sec:LineLength}
 Several sources (including the original Sun Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:LineLength}) recommend to avoid code lines longer than 80~characters, because they were not handled well by many terminals and tools.
 
@@ -522,11 +661,11 @@ This had been true at the time those documents were written\footnote{The “Code
 
 \textbf{Note:} Sample code for use in documentation, articles or alike should have a limited line length – generally not more than 70~characters.
 
-Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComments}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
+Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
 As we have an unlimited line length, it will not happen that an expression does not fit on a single line, you will break it only to improve the readability. You should follow these general principles:
-\begin{itemize}[nosep]
+\begin{itemize}
 \item{Only one statement per line!}
 \item{Break after a comma.}
 \item{Break before an operator.}
@@ -721,71 +860,24 @@ Even proper breaking of the term in line~37 will not help much to understand wha
 %------------------------------------------------------------------------------
 
 \section{Java Source File Structure}
-Source files with more than 2000~lines are cumbersome and should be avoided.\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
+Source files with more than 2000~lines are cumbersome to handle and should be avoided.\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
 
 The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class the reflected the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes.
 
-
-Java source code files have a 
-
-
-
-
-A file with Java source code consists of sections that should be separated by blank lines and a comment identifying each section.
-
-Each Java source file contains a single \lstinline|public| class or interface. When \lstinline|private| top-level classes and interfaces are associated with a \lstinline|public| class, they can be put into the same source file as the \lstinline|public| class, although this is not recommended.\footnote{Usually, it should be considered to have these classes or interfaces as \textit{inner} classes/interfaces} In such a case, the \lstinline|public| class should be the first class or interface in the file.
-
-The sections of a Java source file have the following ordering:
-
+Java source code files basically have five parts, in the given order:
 \begin{enumerate}[nosep]
-\item{Beginning comments}
-\item{Package and import statements}
-\item{Class and interface declarations}
-\item{Closing comment}
+\item{\nameref{sec:BeginningComment}}
+\item{\nameref{sec:PackageStatement}}
+\item{\nameref{sec:ImportStatements}}
+\item{\nameref{sec:ClassAndInterfaceDeclarations}}
+\item{\nameref{sec:ClosingComment}}
 \end{enumerate}
 
+\subsection{Beginning Comment}\label{sec:BeginningComment}
+All source files of a project – not only the Java sources – have to start with a comment that gives the copyright notice and the license information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
 
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Beginning Comments}\label{sec:BeginningComments}
-All source files have to start with a c-style comment that gives the copyright notice and the license information:\footnote{This is different from \autocite{SUN_CODE_CONVENTIONS:BeginningComments}; the Sun coding conventions recommend to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
-\begin{lstlisting}[numbers=left,caption={Beginning Comment}]
+For a Java source file, that comment looks like this:
+\begin{lstlisting}[numbers=left,caption={Beginning Comment Java}]
 /*
  * ==================================================================
  * Copyright © <Year> <Copyright Notice>
@@ -794,22 +886,46 @@ All source files have to start with a c-style comment that gives the copyright n
  * <License Notice>
  */
 \end{lstlisting}
- 
-\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts.\footnote{The special character \copyright is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.}
 
-The lines with the equals signs (“===”) will end at column 80; refer to chapter \tqfullvref{sec:LineLength}.
+A resource file has the following form: 
+\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment Resource}]
+#
+# ===================================================================
+# Copyright © <Year> <Copyright Notice>
+# ===================================================================
+#
+# <License Notice>
+#
+\end{lstlisting}
+
+Or for an XML file\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|; here it is not starting on line~1.}:
+\begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment XML}]
+<!--
+=====================================================================
+ Copyright © <Year> <Copyright Notice>
+=====================================================================
+
+ <License Notice>
+-->
+\end{lstlisting}
+
+\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \copyright~ is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
+
+The lines with the equals signs (“===”) will end at column~80; refer to chapter \tqfullvref{sec:LineLength}.\footnote{Keep in mind that in this document the line length is set to 70~columns.}
 
 No other information should be added to this comment block.
 
-\subsection{Package and Import Statements}
+\subsection{Package Statement}\label{sec:PackageStatement}
+The first non-comment line of a Java source file is the \lstinline|package| statement. According to the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:UnnamedPackages}, it is optional (resulting in an ‘unnamed’ or default package), but this is never used for production code. So you will have a \lstinline|package| statement in each and every Java source file.
 
-The first non-comment line of a Java source file is the \lstinline|package| statement\footnote{Production code will never use the default package, so there will be always a \lstinline|package| statement in every source file.}.
+For the names of packages, see chapter \tqfullvref{sec:Packages}.
 
-After that, usually several \lstinline|import| statements will follow. For example:
+\subsection{Import Statements}\label{sec:ImportStatements}
+Next, usually several \lstinline|import| statements will follow\footnote{Only very basic code will not import other stuff that that from \lstinline|java.lang|; a sample for that are marker interfaces.}. 
+
+For example:
 
 \begin{lstlisting}
-package java.awt;
-
 import static java.lang.String.format;
 import static java.lang.System.out;
 …
@@ -819,8 +935,9 @@ import java.io.InputStream;
 …
 \end{lstlisting}
 
-Static imports has to be placed before imports for classes. Inside these blocks, the imports should be ordered alphabetically. Wildcard imports like
+Static imports (for methods and constants) have to be placed before the imports for classes. Inside these blocks, the imports should be ordered alphabetically.
 
+Wildcard imports like
 \begin{lstlisting}
 import static java.lang.String.*;
 …
@@ -828,16 +945,19 @@ import static java.lang.String.*;
 import java.util.*;
 …
 \end{lstlisting}
-
 are not allowed.
 
-For the names of packages, see chapter \tqfullvref{sec:Packages}.
-
-Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
+Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this is properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
 
 At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
 
 \subsection{Class and Interface Declarations}\label{sec:ClassAndInterfaceDeclarations}
+Each Java source file contains at least one class declaration; in most cases, it is just one.
+
+Only one of these classes can be \lstinline|public|, the others have to be package-local (meaning the modifiers \lstinline|private| and \lstinline|protected| are not allowed). Nevertheless, having more than one class in a single source file is not recommended. But if you have more than one class in source file, the \lstinline|public| one should be the first entry, all others are sorted alphabetically by their names.
+
+If you need classes or interfaces that are closer related to a top-level class, you should consider to define these as \textit{inner} classes or interfaces. Inner classes can be \lstinline|public|, \lstinline|private| or \lstinline|protected|. An inner class is part of the top level class, but when defined as \lstinline|static|, it can be used independent from the enclosing class.
+
 At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. We have
 
 \begin{itemize}[nosep]
@@ -848,10 +968,10 @@ At least since Java~5, there are not only classes and interfaces that are declar
 \item{annotations (keyword \lstinline|@interface|)}
 \end{itemize}
 
-Each of these allows different parts in their declaration; the following tables describe the various parts and the order that they should appear in the files. Each part has a header comment, and inside each part, the elements are ordered alphabetically.
+Each of these allows different sections in their declarations; the following tables describe the various sections and the order they should appear in. Each section has a header comment, and inside each section, the elements are ordered alphabetically.
 
 \subsubsection{Class}
-A skeleton for a Java class may look like this:
+A skeleton for a Java \lstinline|class| may look like this:
 
 \begin{lstlisting}[numbers=left,caption={Class Skeleton}]
 public class MyClass 
@@ -891,7 +1011,7 @@ public class MyClass
  
 \begin{filecontents}{ClassParts.tbl}
   \begin{longtable}{|l|X|}
-  \caption{Parts of a class declaration} \\
+  \caption{Parts of a \lstinline|class| declaration} \\
   \hline 
   Part & Description \\ 
   \hline
@@ -905,7 +1025,7 @@ public class MyClass
   \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
   \endfoot
   \endlastfoot
-  Inner Classes (optional) & Given the class defines inner classes or interfaces, either \lstinline|private| or \lstinline|public|, they will come first. Internally, they will follow the same rules as their containing classes. \\ 
+  Inner Classes (optional) & Given the class defines inner classes or interfaces, either \lstinline|private| or \lstinline|public|, they will come first. Internally, they will follow the same rules as a top-level class. \\ 
   \hline 
   Constants (optional) & This part takes all constants defined by this class (meaning \lstinline|public final| and \lstinline|public static final| fields). All values for the constants are known at compile time, otherwise you should place the respective field to the \textit{Static Initialisations} part. \\ 
   \hline 
@@ -926,7 +1046,7 @@ public class MyClass
 \LTXtable{\linewidth}{ClassParts.tbl}
 
 \subsubsection{Interface}
-A skeleton for an interface may look like this:
+A skeleton for an \lstinline|interface| may look like this:
 
 \begin{lstlisting}[numbers=left,caption={Interface Skeleton}]
 public interface MyInterface 
@@ -952,7 +1072,7 @@ public interface MyInterface
  
 \begin{filecontents}{InterfaceParts.tbl}
   \begin{longtable}{|l|X|}
-  \caption{Parts of an interface declaration} \\
+  \caption{Parts of an \lstinline|interface| declaration} \\
   \hline 
   Part & Description \\ 
   \hline
@@ -977,7 +1097,7 @@ public interface MyInterface
 \LTXtable{\linewidth}{InterfaceParts.tbl}
 
 \subsubsection{enum}
-An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a enum class may look like this:
+An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| class may look like this:
 
 \begin{lstlisting}[numbers=left,caption={enum Skeleton}]
 public enum MyEnum 
@@ -1018,7 +1138,7 @@ public enum MyEnum
  
 \begin{filecontents}{EnumParts.tbl}
   \begin{longtable}{|l|X|}
-  \caption{Parts of an enum declaration} \\
+  \caption{Parts of an \lstinline|enum| declaration} \\
   \hline 
   Part & Description \\ 
   \hline
@@ -1051,7 +1171,7 @@ public enum MyEnum
 \LTXtable{\linewidth}{EnumParts.tbl}
 
 \subsubsection{Record}
-Records had been introduced to Java with version~14. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and has only the most fundamental methods such as constructors and accessors.\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}
+Records had been introduced to Java with version~14\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carriers” classes that contain data not meant to be altered and usually has only the most fundamental methods such as constructors and accessors.
 
 A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
@@ -1088,7 +1208,7 @@ public record MyRecord( ... )
  
 \begin{filecontents}{RecordParts.tbl}
   \begin{longtable}{|l|X|}
-  \caption{Parts of a record declaration} \\
+  \caption{Parts of a \lstinline|record| declaration} \\
   \hline 
   Part & Description \\ 
   \hline
@@ -1119,7 +1239,7 @@ public record MyRecord( ... )
 \LTXtable{\linewidth}{RecordParts.tbl}
 
 \subsubsection{Annotation}
-Annotations had been introduced with Java~5.\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces} A skeleton for an annotation interface may look like this:
+Annotations had been introduced with Java~5\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces}. A skeleton for an annotation interface may look like this:
 
 \begin{lstlisting}[numbers=left,caption={Annotation Skeleton}]
 public @interface MyAnnotation 
@@ -1149,15 +1269,15 @@ public @interface MyAnnotation
   \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
   \endfoot
   \endlastfoot
-  Attributes (optional) & Here go the attributes for the annotation, if any. \\ 
+  Attributes (optional) & The attributes for the annotation go here, if any. \\ 
   \hline 
  \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{AnnotationParts.tbl}
 
-\subsection{Closing Comment}
-A closing comment like
-\begin{lstlisting}[numbers=left, caption={Closing Comment}]
+\subsection{Closing Comment}\label{sec:ClosingComment}
+A closing comment like this, for a Java source file,
+\begin{lstlisting}[numbers=left, caption={Closing Comment Java}]
 /*
  *  End of File
  */
@@ -1166,28 +1286,43 @@ at the end of the source file is helpful to detect whether a source file was cor
 
 I confess that this kind of error has got very unlikely with modern hard-drives, but it can still happen when sending around sources over the net.
 
-\section{Indentation}
-
-\section{Declarations}
-This chapter deals with the formatting of declarations. See also chapter \tqfullvref{sec:WrappingLines} for informations on how to wrap long declarations.
-
-\subsection{Multiple Declarations per Line}
-It is strongly encouraged to have only one declaration per line, as it is also comforting to add comments to the declaration. In other words, 
-\begin{lstlisting}
-int level; // indentation level
-int size;  // size of table
+For a resource file, the closing comment has the following form: 
+\begin{lstlisting}[numbers=left,language=,caption={Closing Comment Resource}]
+#
+# End of File
+#
 \end{lstlisting}
 
-is preferred over
+And for an XML file:
+\begin{lstlisting}[numbers=left,language=XML,caption={Closing Comment XML}]
+<!--
+End of File
+-->
+\end{lstlisting}
 
+%------------------------------------------------------------------------------
+
+\section{Declarations}
+This chapter describes how to format declarations of various. See chapter \tqfullvref{sec:WrappingLines} for informations on how to break up the lines for long declarations.
+
+\subsection{Multiple Declarations per Line}
+For local variables, it is possible to have multiple declarations in one single line\footnote{The compiler does also not complain when you do this for fields, but there it is even more worse.}:
 \begin{lstlisting}
 // AVOID!!!
 int level, size;
 \end{lstlisting}
 
+It is strongly encouraged to have only one declaration per line, as it is also comforting to add some comments to the declaration. In other words, 
+\begin{lstlisting}
+int level; // indentation level
+int size;  // size of table
+\end{lstlisting}
+
+is preferred over the sample above.
+
 Do not put different types on the same line, despite the compiler does not complain about it. Example:
 \begin{lstlisting}
-// WRONG!!!!
+// REALLY BAD!!!
 int foo, fooarray [];
 \end{lstlisting}
 
@@ -1202,23 +1337,20 @@ and not
 \begin{lstlisting}
 // AVOID!!!
 int foo [];
-// AVOID!!!
 String bar [];
-// AVOID!!!
 java.awt.Button buttons [];
 \end{lstlisting}
-This is the same way as an array would be declared as the return value for a method:
+This is the same way as an array has to be declared as the return value for a method:
 \begin{lstlisting}
-public final static String [] getTexts()
-{
-    return m_Texts;
-}	//	getTexts()
+public final static String [] getTexts() { return m_Texts; }
 \end{lstlisting}
 
 \subsection{Placement of Declarations}
-You should put declarations where there are needed; usually this means that it should be waited with the declaration of variables until their first use.\footnote{In this aspect, my point of view is completely contradicting to that of the authors of \autocite{SUN_CODE_CONVENTIONS}.}
+You should put declarations for local variables where there are needed; usually this means that it should be waited with the declaration of variables until their first use, in particular when you need the result of an calculation for the initialisation. The Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Placement} recommends to put the declaration only to the beginning of a block.
 
-This is true even for variables inside a loop:
+For small blocks (this also means small method bodies), there is not much difference. Nevertheless, I find the Sun Code Conventions recommendation impractical, and I cannot follow the reasoning for that recommendation\footnote{To wait until first use “[…] can confuse the unwary programmer and hamper code portability within the scope”.}.
+
+Some samples:
 \begin{lstlisting}
 for( var i = 0; i < limit; ++i )
 {
@@ -1226,13 +1358,12 @@ for( var i = 0; i < limit; ++i )
     …
 }
 \end{lstlisting}
-
-Only the repeated initialisation of a variable inside a loop should be avoided, when possible:
+You declare the local variable even inside a loop; only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when possible:
 \begin{lstlisting}[numbers=left]
 // AVOID!
 for( var i = 0; i < limit; ++i )
 {
-    final var a = new VeryComplexType();
+    final var a = new VeryComplexImmutableType();
     …
 }
 \end{lstlisting}
@@ -1244,7 +1375,7 @@ public class MyClass
 {
     int count;
 
-    public void method()
+    public void myMethod()
     {
         if( condition )
         {
@@ -1252,10 +1383,53 @@ public class MyClass
             // more code
         }
         // more code
-    }
+    }   //  myMethod()
 }   //  class MyClass
 \end{lstlisting}
 There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \tqfullvref{sec:Fields}) would make such a situation unlikely.
+
+
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Class and Interface Declarations}
 When coding Java classes and interfaces, the following formatting rules has to be followed:
@@ -1306,128 +1480,6 @@ class Sample extends Object implements Comparable<Sample>
 \end{lstlisting}
 
 The comments at the end of the methods make it easier to navigate inside long source files, especially when scrolling upwards.
-
-\section{White Space}
-This chapter deals with the white space other than the indentation blanks.
-
-\subsection{Blank Lines}\label{sec:BlankLines}
-Blank lines improve readability by setting off sections of code that are logically related.
-If not separated by an explicit comment, two blank lines should always be used in the following circumstances:
-\begin{itemize}
-\item{Between sections of a source file\footnote{Although this would hurt the rules for commenting as set in chapter \tqfullref{sec:StructuringComments}}}
-\item{Between class and interface definitions}
-\end{itemize}
-
-One blank line should always be used in the following circumstances:
-\begin{itemize}
-\item{Between methods}
-\item{Before a block or single-line comment}
-\item{Between logical sections inside a method to improve readability}
-\item{To group some code lines logically}
-\end{itemize}
-More than one blank line should be avoided, except for the case mentioned above.
-
-\subsection{Parenthesis}\label{sec:Parenthesis}
-We distinguish between arithmetical parenthesis and parameter parenthesis; the first is used in expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
-
-\paragraph{Arithmetical Parenthesis}–
-An opening arithmetical parenthesis is always preceded by a blank or another opening parenthesis and never followed by a blank, a closing one is never preceded by a blank, but always followed either by another closing parenthesis, a blank, or a newline (or a semicolon, in case the statement ends).
-
-\paragraph{Parameter Parenthesis}\label{sec:ParameterParenthesis}–
-An opening parameter parenthesis is never preceded by a blank and ever followed by one, while a closing one is always preceded by one. The only exception is for empty arguments lists where the opening parenthesis is immediately followed by the closing parenthesis.
-
-Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like functions (see also chapter \tqfullref{sec:BlankLines}).\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside there 'argument list'.}
-
-This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
-
-\begin{lstlisting}[numbers=left]
-int v = (a + b) * 5;
-double d = sin( (a + b) / c );
-System.out.println( "Finished!" );
-set( get() );
-System.out.println( sin( ((a + b) * (c + 4) + c)) / d ) );
-if( a < b ) c = (d + e) / sin( f );
-while( ((line = reader.readLine()) != null) && (++i < capacity) )
-    processLine( line );
-\end{lstlisting}
-
-\subsection{Blank Spaces}\label{sec:BlankSpaces}
-Additionally, blank spaces should be used in the following circumstances:
-\begin{itemize}
-\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
-
-Examples:
-\begin{lstlisting}[numbers=left]
-while( true )
-{
-    …
-}
-
-for( int i = 0; i < 10; ++i ) { … }
-
-try
-{
-    …
-}
-catch( Exception e )
-{
-    e.printStackTrace();
-}
-
-if( list.isEmpty() ) { … }
-\end{lstlisting}}
-\item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
-
-Examples:
-\begin{lstlisting}[numbers=left]
-Map<String,String> map = new HashMap<String,String>();
-Map<String,String> map = new HashMap<>(); // using the diamond operator
-map.put( key, value );
-\end{lstlisting}}
-\item{All binary operators except “.” has to be separated from their operands by spaces. Blank spaces should never separate unary operators such as unary minus, increment (“++”), and decrement (“--”) from their operands.
-
-Example:
-\begin{lstlisting}[numbers=left]
-a += c + d;
-a = (a + b) / (c * d);
-
-while( d-- > s++ )
-{
-    ++n;
-}
-
-printSize( "size is " + foo + "\n" );
-\end{lstlisting}}
-\item{The expressions in a \lstinline|for| statement has to be separated by blank spaces after the semicolon.
-
-Example:
-\begin{lstlisting}
-for( expr1; expr2; expr3 )
-{
-    …
-}
-\end{lstlisting}
-
-For an extended for loop, blank spaces has to be placed around the colon, too:
-\begin{lstlisting}[numbers=left]
-for( String s : stringArray ) System.out.println( s );
-\end{lstlisting}}
-\item{For ternary statements, the question mark (“?”) and the colon (“:”) has to be surrounded by blank spaces:
-
-Example:
-\begin{lstlisting}
-int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
-\end{lstlisting}
-
-In this sample, some parentheses would be helpful, too.}
-\item{Casts should be followed by a blank space. 
-
-Examples:
-\begin{lstlisting}
-method( (byte) aNum, (Object) x);
-method( (int) (cp + 5), ((int) (i + 3)) + 1 );
-\end{lstlisting}}
-\end{itemize}
 
 \section{Statements}
 Now we will have a look on how to format statements.
@@ -2179,6 +2231,8 @@ Avoid “test” as the part of the name of packages, classes, interfaces and me
 
 \subsection{Names forced by 3\textsuperscript{rd} Party Components}
 Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
+
+\section{Files}\label{sec:FileNames}
 
 \section{Modules}\label{sec:Modules}
 A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.

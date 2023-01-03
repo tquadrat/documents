@@ -85,10 +85,10 @@ literate=
 \makeindex
 
 %---* New Commands *-----------------------------------------------------------
-\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”}}
-\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1} \nameref*{#1}”} on page \pageref{#1}}
+\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”}}
+\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”} on page~\pageref{#1}}
 \newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
-\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page \pageref{#1}}
+\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page~\pageref{#1}}
 \newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
 
 \dedication{For Rasa Kuodienė: She deserved better~… in life and in death \newline\newline\includegraphics[height=14cm]{Rasa} \newline*1969-07-13 †2022-12-21}
@@ -1369,6 +1369,247 @@ for( var i = 0; i < limit; ++i )
 \end{lstlisting}
 In this case, line~4 should be moved before the loop header (line~2).
 
+\subsection{Class and Interface Declarations}
+When coding Java classes and interfaces, you should follow the guidlines below:
+\begin{itemize}
+\item{No space between a method or constructor name and the opening parenthesis “(” starting its formal parameters list. Basically the parenthesis in the declaration are “paramater parenthesis” and should be treated along the same lines as for method and constructors calls; refer to chapter “\nameref{sec:ParameterParenthesis}” on page~\pageref{sec:ParameterParenthesis}.
+
+Example:
+\begin{lstlisting}
+// WRONG!!
+public abstract void myMethod (final int param);
+
+// CORRECT
+public abstract void myMethod( final int param );
+\end{lstlisting}}
+
+\item{If using generics, no space between the name of the declared class or interface and the opening “\textless”, and no blanks between the angle brackets, only around the keywords \lstinline|super| and \lstinline|extends|. Same when using the class or interface later.
+
+Example:
+\begin{lstlisting}
+// WRONG
+public interface MyInterface < T >
+{ 
+    … 
+}
+//  interface MyInterface
+
+public OtherInterface < T, R > extends Function < T, R >, MyInterface < T >
+{
+    …
+    
+    public < U super T > U myMethod( final T arg );
+}
+//  interface OtherInterface
+
+public MyClass implements otherInterface < Instant, String >
+{
+    …
+}
+//  class MyClass
+
+// CORRECT
+public interface MyInterface<T>
+{ 
+    … 
+}
+//  interface MyInterface
+
+public OtherInterface<T,R> extends Function<T,R>, MyInterface<T>
+{
+    …
+    
+    public <U super T> U myMethod( final T arg );
+}
+//  interface OtherInterface
+
+public MyClass implements otherInterface<Instant,String>
+{
+    …
+}
+//  class MyClass
+\end{lstlisting}}
+
+\item{An opening curly brace “\{” appears at a line by itself on the same indentation level as the declaration statement; anything afterwards will be indented with one additional level.
+
+The corresponding closing curly brace “\}” starts a new line, indented to match its corresponding opening statement. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.
+
+Example:\footnote{I omitted the structuring comments here; refer to chapters \tqfullvref{sec:ClassAndInterfaceDeclarations} and \tqfullvref{sec:StructuringComments}. And the bad sample is \textit{really} bad!}
+\begin{lstlisting}
+// AVOID!!
+public final class MyClass {
+public static InnerClass {
+public final String innerMethod {
+return Instant.now(); } }
+public static final void main( final String... args ) {
+System.out.println( new InnerClass().innerMethod() ); } }
+
+// RECOMMENDED
+public final class MyClass 
+{
+    public static InnerClass 
+    {
+        public final String innerMethod 
+        {
+            return Instant.now(); 
+        }   //  innerMethod()
+    }
+    //  class InnerClass
+    
+    public static final void main( final String... args ) 
+    {
+        System.out.println( new InnerClass().innerMethod() ); 
+    }   // main()
+}
+//  class MyClass    
+\end{lstlisting}
+Both versions compile properly, can be executed and will return the same result ~…}
+
+\item{Inner classes, constants, attributes, constructors, methods, they all are separated from each other by a  single blank line (see chapter \tqfullref{sec:BlankLines}.}
+\end{itemize}
+
+\subsection{Method Declarations}
+When coding Java classes and interfaces, you should follow the guidlines below:
+\begin{itemize}
+\item{The opening curly brace “\{” for the method body appears at a line by itself with the same indentation as the declaration statement and the corresponding closing curly brace “\}” starts a new line, indented to match its opening statement; in case of a method or constructor declaration, it is followed by a comment with the name of the method or the constructor.
+
+Everything inside the method body is indented one more level.
+
+That looks like this:
+\begin{lstlisting}
+public static final void main( final String... args ) 
+{
+    // Do something …
+}   // main()
+\end{lstlisting}}
+
+\item{All methods are separated by a blank line (see chapter \tqfullref{sec:BlankLines}.}
+
+\item{Short methods may be written in one single line. In this case, “one single line” means exactly that: \textit{one single} line! Any line break requires the full form as for the sample in line~10.
+
+An example:
+\begin{lstlisting}[numbers=left]
+// A SHORT METHOD
+    int getIVar1() { return ivar1; }
+    
+// AVOID!!! Not a short method!
+String composeKey( String component1, String component2,
+    String component3 ) { return component1 + component2 
+        + component3; }
+        
+// CORRECT
+String composeKey( String component1, String component2, 
+    String component3 )
+{
+    final var retValue = component1 + component2 + component3;
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  composeKey()
+\end{lstlisting}
+
+For a short method, you obviously do not add its name as a comment to the closing curly brace.}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
+\section{Statements}
+This chapter deals with the formatting of the various types of statements.
+
+\subsection{Simple Statements}
+Each line may contain at most one single statement. Or, the other way round, each (simple) statement has to be written to its own line.
+
+Example:
+\begin{lstlisting}
+// AVOID!!!
+++argv; --argc;
+
+// CORRECT
+++argv;
+--argc;
+\end{lstlisting}
+
+\subsection{Compound Statements}\label{sec:CompoundStatements}
+Compound statements are statements that contain lists of statements enclosed in curly braces \lstinline|{ <statement, … > }|. A compound statement (also called a “code block“ or “block statement”) typically appears as the body of another statement, such as the \lstinline|if| or \lstinline|for| statement, but it may appear also separatly\footnote{In Java, a block also indicates a scope; a local variable lives only in the scope it was declared in, and all scopes contained in that one.}.
+
+The block's opening curly brace “\{” appears alone at a line by itself with the same indentation as the statement it belongs to and the corresponding closing curly brace “\}” is placed at a new line with the same indentation. All code inside such a block is indented on level more than the curly braces.
+
+Large compound statements (long code blocks) should be marked with a label and get an end comment. See the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen} for some additional details. 
+
+For examples refer in particular to the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatements}, \tqfullref{sec:ForStatements}, and \tqfullref{sec:WhileStatements}.
+
+\subsection{Method Chaining}
+Some APIs are designed to allow “method chaining”; you may find this in particular on implementations of the “builder” pattern, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} (obviously not a builder), an example for a builder class would be the class \lstinline|java.time.format.DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}.
+
+A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory to use chaining.
+
+The example below will be explained in detail in chapter \tqref{sec:LocalVariableTypeInference}:
+\begin{lstlisting}
+return strings.stream()
+    .collect( groupingBy( s -> s, counting() ) ) // returns Map
+    .entrySet() 
+    .stream()
+    .max( Map.Entry.comparingByValue() ) // returns Optional
+    .map( Map.Entry::getKey );
+\end{lstlisting}
+
+As shown in the sample above, method chaining allows you to write
+
+\begin{lstlisting}
+writer.append( "Caption\t: " ).append( value );
+\end{lstlisting}
+
+instead of
+
+\begin{lstlisting}
+writer.append( "Caption\t: " );
+writer.append( value );
+\end{lstlisting}
+
+The formatting rules are as follows:
+\begin{itemize}
+\item{If the “chain” does not fit completely into a single line, each method call has to be written into a single line of its own.
+
+In fact, it is recommended to do this all the time:
+\begin{lstlisting}
+// Acceptable
+writer.append( "Caption\t: " ).append( value );
+
+// RECOMMENDED
+writer.append( "Caption\t: " )
+    .append( value );
+\end{lstlisting}}
+
+\item{The dot has to be written in front of the method's name.}
+
+\item{The methods will be indented regularly.}
+\end{itemize}
+
+The streams that had been introduced with Java~8 will be formatted in the same way:
+\begin{lstlisting}
+final var names = customers.stream()
+    .filter( c -> c.getCountry().equals( GERMANY )
+    .filter( c -> c.getTurnover() > limit )
+    .map( Customer::getName )
+    .sorted()
+    .toArray( String []::new );
+\end{lstlisting}
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+
+
 Absolutely avoid local declarations that hide declarations at higher levels. For example, do not declare a variable with the same name as a field:
 \begin{lstlisting}
 public class MyClass
@@ -1390,115 +1631,6 @@ There are a settings for both Eclipse preferences and IntelliJ~IDEA that trigger
 
 
 
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Class and Interface Declarations}
-When coding Java classes and interfaces, the following formatting rules has to be followed:
-\begin{itemize}
-\item{No space between a method or constructor name and the parenthesis “(” starting its formal parameters list.}
-\item{If using generics, no space between the name of the class or interface and the opening “<”.}
-\item{An open curly brace “{” appears at a line by itself with the same indentation as the declaration statement.}
-\item{A closing curly brace “}” starts a new line, indented to match its corresponding opening statement; in case of a method or constructor declaration, it is followed by a comment with the name of the method. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.}
-\item{Inner classes, constants, attributes, constructors, methods, they all are separated by a blank line (see chapter \tqfullref{sec:BlankLines}.}
-\item{Short methods may be written in one single line. In this case, “one single line” means exactly that: \textit{one single} line! Any line break requires the full form as for the sample “composeCorrectKey()” below (line 28).}
-\end{itemize}
-An example:
-\begin{lstlisting}[numbers=left]
-class Sample extends Object implements Comparable<Sample>
-{
-    int ivar1;
-    
-    int ivar2;
-    
-    Sample( int i, int j ) 
-    {
-        ivar1 = i;
-        ivar2 = j;
-        …
-    }  //  Sample()
-    
-    void method()
-    {
-        …
-    }  //  method()
-    
-    // SHORT METHOD
-    int getIVar1() { return ivar1; }
-    
-    // AVOID!!! Not a short method!
-    String composeWrongKey( String component1, String component2,
-                            String component3 ) { return component1
-        + component2 + component3; }
-        
-    // Correct
-    String composeCorrectKey( String component1, String component2,
-                              String component3 )
-    {
-        return component1 + component2 + component3;
-    }   //  composeCorrectKey()
-}
-//  class Sample
-\end{lstlisting}
-
-The comments at the end of the methods make it easier to navigate inside long source files, especially when scrolling upwards.
-
-\section{Statements}
-Now we will have a look on how to format statements.
-
-\subsection{Simple Statements}
-Each line should contain at most one statement. Or, the other way round, each (simple) statement has to be written to its own line.
-
-Example:
-\begin{lstlisting}
-// CORRECT
-++argv;
---argc;
-
-// AVOID!!!
---argv; --argc;
-\end{lstlisting}
-
-\subsection{Compound Statements}\label{sec:CompoundStatements}
-Compound statements are statements that contain lists of statements enclosed in curly braces “{ statements }”. See the following sections for examples.
 
 Here some general rules first:
 \begin{itemize}
@@ -1549,61 +1681,31 @@ for( String s : strings )
 
 // DISCOURAGED!!!
 for( String s : strings ) if( a < b ) c = d;
-\end{lstlisting}
-
-See also the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatements}, and \tqfullref{sec:WhileStatements}.}
-
-\item{Long compound statements (long code blocks) should get an end comment. See chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}.} 
+\end{lstlisting}}
 \end{itemize}
 
-\subsection{“Chaining”}
-The interface for some classes allow to chain methods. If it is especially designed to allow this, it is referred to as the “Builder pattern”. Examples for this are \lstinline|java.lang.StringBuffer|, \lstinline|java.lang.StringBuilder|, and since Java~5, also \lstinline|java.io.Writer| and the classes derived from that class.
 
-“Chaining” would allow to write
 
-\begin{lstlisting}
-writer.append( "Caption\t: " ).append( value );
-\end{lstlisting}
 
-instead of
 
-\begin{lstlisting}
-writer.append( "Caption\t: " );
-writer.append( value );
-\end{lstlisting}
 
-The formatting rules are as follows:
-\begin{itemize}
-\item{If the “chain” does not fit completely into a single line, each method call has to be written into a single line of its own (as in line 4 below}
-\item{The dot has to be written in front of the method's name}
-\item{The methods will be indented regularly}
-\end{itemize}
 
-Some samples:
-\begin{lstlisting}[numbers=left]
-// Acceptable
-writer.append( "Caption\t: " ).append( value );
 
-// RECOMMENDED
-writer.append( "Caption\t: " )
-    .append( value );
-    
-// WRONG: The dot is trailing!
-writer.append( "Caption\t: " ).
-    append( value );
-\end{lstlisting}
 
-Java~8 introduced Streams and those will be formatted in the same way.
 
-Example:
-\begin{lstlisting}[numbers=left]
-final var names = customers.stream()
-    .filter( c -> c.getCountry().equals( GERMANY )
-    .filter( c -> c.getTurnover() > limit )
-    .map( Customer::getName )
-    .sorted()
-    .toArray( String []::new );
-\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{“return” Statements}
 A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \tqfullvref{sec:ReturningValues}!
@@ -1838,7 +1940,7 @@ If really all values are covered, the \lstinline|default| should throw an except
 
 Syntactically, the use of curly braces in the cases is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.
 
-\subsection{“for” Statements}
+\subsection{“for” Statements}\label{sec:ForStatements}
 A \lstinline|for| statement should have one of the following forms:
 
 \begin{lstlisting}[numbers=left]
@@ -1931,7 +2033,7 @@ do
 while( <condition> );
 \end{lstlisting}
 
-\subsection{“try-catch” Statements}
+\subsection{“try-catch” and “try-catch-finally” Statements}
 Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
 
 \subsubsection{The simple Form}
@@ -2051,6 +2153,8 @@ finally
 An \textit{empty} \lstinline|catch| block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqfullvref{sec:SingleLineComments} about empty blocks and comments.
 
 An empty \lstinline|finally| block is completely obsolete and must be removed.
+
+\subsection{“synchronized” Statements}\label{sec:SynchronizedStatements}
 
 \subsection{Labels and “break” Statements}\label{sec:LabelsAndBreakStatements}
 In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, but they can be placed anywhere in a code block.

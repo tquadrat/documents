@@ -1595,6 +1595,113 @@ final var names = customers.stream()
     .toArray( String []::new );
 \end{lstlisting}
 
+\subsection{“return” and “yield” Statements}
+The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield| statement has to be the last statement of a \lstinline|case| block; refer to the chapter \ref{sec:ReturningValues} for more details on this.
+
+When \lstinline|return| is always the last statement of a method, it means that the simple form
+\begin{lstlisting}
+return;
+\end{lstlisting}
+is obsolete. Same for the simple form of the \lstinline|yield| statement:
+\begin{lstlisting}
+yield;
+\end{lstlisting}
+
+The use of parentheses with the \lstinline|return| or \lstinline|yield| statement is not required unless they make the return value more obvious in some way.
+
+The recommended forms are shown in lines~15 and 23, below:
+\begin{lstlisting}[numbers=left]
+public final String myMethod( final InputType inputType, final String... input )
+{
+    InputSwitch: final var retValue = switch( inputType )
+    {
+        case null -> throw new NullArgumentException( "inputType" );
+        case FILE -> 
+        {
+            var result = stream( input )
+                .filter( String::isBlank )
+                .filter( s -> !s.startsWith( " " )
+                .collect( joining( "\n" );
+            result = result.length() > 80
+                ? abbreviate( result, 80 )
+                : result;
+            yield result;    
+        }
+        case REGULAR -> abbreviate( input [0], 80 );
+        case UNKNOWN -> "Unknown input";
+        default -> throw new UnsupportedEnumError( inputType );
+    }   //  InputSwitch:
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+
+\subsection{“if”, “if-else”, “if-else~if-else” Statements}\label{sec:IfStatements}
+
+The base forms for the \lstinline|if| statement are the following ones:
+\begin{lstlisting}[numbers=left]
+if( <condition> )
+{
+    <statements>;
+}
+
+if( <condition>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+\end{lstlisting}
+
+In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use the form in line 15.
+
+The only occasion where an \lstinline|if| statement does not need the curly braces (“{}”) is when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
+
+\begin{lstlisting}
+if( <condition> ) <singleStatement>;
+\end{lstlisting}
+
+In any other case the curly braces are mandatory, to avoid the following error-prone forms:
+
+\begin{lstlisting}[numbers=left]
+// AVOID! MISSING CURLY BRACES {}!
+if( <condition> )
+    <statement>;
+
+// AVOID!!! EVEN WORSE THAN ABOVE!!    
+if( <condition> )
+    <statement>;
+else
+    <statement>;
+\end{lstlisting}
+
+Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
+
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -1683,6 +1790,7 @@ for( String s : strings )
 for( String s : strings ) if( a < b ) c = d;
 \end{lstlisting}}
 \end{itemize}
+%------------------------------------------------------------------------------
 
 
 
@@ -1706,88 +1814,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-
-\subsection{“return” Statements}
-A \lstinline|return| statement with a value should not use parentheses unless they make the return value more obvious in some way. Please see also chapter \tqfullvref{sec:ReturningValues}!
-
-Example:
-\begin{lstlisting}[numbers=left]
-// Usually obsolete
-return;
-
-// NOT RECOMMENDED
-return myDisk.size();
-
-// MAY BE OK
-return (m_Size > 0) ? m_Size : m_DefaultSize; 
-
-// BETTER
-final var retValue = (m_Size > 0) ? m_Size : m_DefaultSize;
-return retValue;
-
-// AVOID!!!
-return( retValue );
-
-// RECOMMENDED; usually the only valid form 
-return retValue; 
-\end{lstlisting}
-
-\subsection{“if”, “if-else”, “if-else~if-else” Statements}\label{sec:IfStatements}
-The chapters \tqfullref{sec:Parenthesis}, \tqfullref{sec:BlankSpaces}, and \tqfullref{sec:CompoundStatements} covered already some aspects of the \lstinline|if-else| class of statements that may be repeated here again.
-
-The base forms for this class of statements are the following ones:
-\begin{lstlisting}[numbers=left]
-if( <condition> )
-{
-    <statements>;
-}
-
-if( <condition>)
-{
-    <statements>;
-}
-else
-{
-    <statements>;
-}
-
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-else
-{
-    <statements>;
-}
-\end{lstlisting}
-
-In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use the form in line 15.
-
-The only occasion where an \lstinline|if| statement does not need the curly braces (“{}”) is when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
-
-\begin{lstlisting}
-if( <condition> ) <singleStatement>;
-\end{lstlisting}
-
-In any other case the curly braces are mandatory, to avoid the following error-prone forms:
-
-\begin{lstlisting}[numbers=left]
-// AVOID! MISSING CURLY BRACES {}!
-if( <condition> )
-    <statement>;
-
-// AVOID!!! EVEN WORSE THAN ABOVE!!    
-if( <condition> )
-    <statement>;
-else
-    <statement>;
-\end{lstlisting}
-
-Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
 
 
 \subsection{“switch” Statements}\label{sec:SwitchStatements}

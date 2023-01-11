@@ -1950,12 +1950,73 @@ for( final var s : texts ) if( !s.empty() )
 \end{lstlisting}
 The samples in lines~6 and 7 are not correct according to this rule, because the \lstinline|if| statement is not a simple statement..
 
+If you use an iterator with your \lstinline|for| loop, it should look like this:
+\begin{lstlisting}
+for( final var i = source.iterator(); i.hasNext(); )
+{
+    …
+}
+\end{lstlisting}
+
 An empty \lstinline|for|-loop (one in which all the work is done in the initialization, condition, and update clauses) should have the following form:\footnote{An \textit{enhanced} \lstinline|for|-loop without body does not make that much sense (that mentioned above is a classical \lstinline|for|-loop). It may be possible to write an implementation of \lstinline|java.lang.Iterable| with an iterator that does something as a side effect of \lstinline|hasNext()| or \lstinline|next()|, but this would break the contract of the interface \lstinline|java.lang.Iterator|.}
 \begin{lstlisting}
 for( <initialization>; <condition>; <update> );
 \end{lstlisting}
 
 When using the comma operator in the initialization or update clause of a \lstinline|for| statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|-loop (for the initialization clause) or at the end of the loop (for the update clause).
+
+An example:
+\begin{lstlisting}
+for( var i = 0, j = target.length; i < source.length && j >= 0; ++i, j++ )
+{
+    target [j] = source [i];
+}
+
+var proceed = true;
+var i = source.iterator();
+for( var j = 0; proceed; )
+{
+    target [j++] = i.next();
+    proceed = i.hasNext() && j < target.length;
+}
+\end{lstlisting}
+
+\subsection{“while” Statements}\label{sec:WhileStatements}
+A \lstinline|while| statement should have one of the following forms:
+\begin{lstlisting}[numbers=left]
+while( <condition> ) <singleStatement>
+
+while( <condition> )
+{
+    <statements>;
+}
+\end{lstlisting}
+
+Again, the curly braces can only be omitted in case there is only a single statement, written on the same line than the \lstinline|while| statement that has to be executed in the loop.
+
+An empty \lstinline|while|-loop\footnote{An empty \lstinline|while|-loop usually makes no sense as the compiler optimises it away. Only when the condition causes side effects, it will be executed. But such an implementation is difficult to understand and should be avoided.} should have the following form: 
+\begin{lstlisting}
+while( <condition> );
+\end{lstlisting}
+
+Longer \lstinline|while|-loops should use a label:
+\begin{lstlisting}
+LoopLabel: while( proceed )
+{
+    // Lots of code lines here …
+}   //  LoopLabel:
+\end{lstlisting}
+
+\subsection{“do-while” Statements}
+A \lstinline|do-while| statement should look like below:
+\begin{lstlisting}
+do
+{
+    <statements>;
+}
+while( <condition> );
+\end{lstlisting}
+
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -2069,42 +2130,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-
-\subsection{“while” Statements}\label{sec:WhileStatements}
-A \lstinline|while| statement should have one of the following forms:
-\begin{lstlisting}[numbers=left]
-while( <condition> ) <singleStatement>
-
-while( <condition> )
-{
-    <statements>;
-}
-\end{lstlisting}
-
-Again, the curly braces can only be omitted in case there is only a single statement, written on the same line than the \lstinline|while| statement, that has to be executed in the loop.
-
-An empty \lstinline|while|-loop\footnote{An empty \lstinline|while|-loop usually makes no sense as the compiler optimises it away. Only when the condition causes side effects, it will be executed. But such an implementation is difficult to understand and should be avoided.} should have the following form: 
-\begin{lstlisting}
-while( <condition> );
-\end{lstlisting}
-
-Longer \lstinline|while|-loops should use a label:
-\begin{lstlisting}
-LoopLabel: while( proceed )
-{
-    // Lots of code lines here …
-}   //  LoopLabel:
-\end{lstlisting}
-
-\subsection{“do-while” Statements}
-A \lstinline|do-while| statement should look like below:
-\begin{lstlisting}
-do
-{
-    <statements>;
-}
-while( <condition> );
-\end{lstlisting}
 
 \subsection{“try-catch” and “try-catch-finally” Statements}
 Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).

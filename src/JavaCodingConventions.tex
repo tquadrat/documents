@@ -6,7 +6,7 @@
 \usepackage{scrhack}
 \usepackage{graphicx} 
 \usepackage[manualmark]{scrlayer-scrpage}
-%\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
 %\usepackage{siunitx}
 %\usepackage{amsmath}
@@ -2139,6 +2139,8 @@ try
 
 One or more \lstinline|catch| blocks are optional for \lstinline|try-with-resources|, as well as a \lstinline|finally| block.
 
+The chapter \tqfullvref{sec:TryWithResources} handles \lstinline|try-with-resources| further.
+
 \subsubsection{General formatting Rules for ‘try-catch’}
 \begin{itemize}
 \item{The curly braces (“\{\}”) around the \lstinline|try|, the \lstinline|catch| and \lstinline|finally| blocks are requested by the Java syntax; their placement follows the rules for any other code block.}
@@ -2216,6 +2218,323 @@ finally
 
 %------------------------------------------------------------------------------
 
+\subsection{‘synchronized’ Statements}\label{sec:SynchronizedStatements}
+A \lstinline|synchronized| statement acquires a mutual-exclusion lock on behalf of the executing thread, executes a block, then releases the lock. While the executing thread owns the lock, no other thread may acquire the lock\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} – meaning no other thread can enter the block and execute the code in there.
+
+This may look like this:
+\begin{lstlisting}
+synchronized( <expression> )
+{
+    <statements>
+}
+\end{lstlisting}
+The curly braces (“\{\}”) are requested by the Java syntax; their placement follows the rules for any other code block. A single-line \lstinline|synchronized| is therefore not possible.
+
+The Java Language Specification says, that the type of \verb#<expression># has to be a reference type\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized}. That means that
+\begin{lstlisting}
+// DOES NOT WORK!!
+final int i = 5;
+synchronized( i )
+{
+    …
+}
+\end{lstlisting}
+will not work\footnote{In fact, it will cause an error at compile time.}. Unfortunately, the compliler will not complain about something like this:
+\begin{lstlisting}
+// DO NOT DO THIS!!
+final StringBuilder sb = new StringBuilder();
+synchronized( sb )
+{
+    …
+}
+
+final String s = null;
+synchronized( s )
+{
+    …
+}
+\end{lstlisting}
+Ok, for the second one, you get a \lstinline|NullPointerException| at runtime, but it may take a lot of time before you spot the error in the first one. Even worse to debug would be this pattern, although it could be handy under some circumstances:
+\begin{lstlisting}
+// TRY TO AVOID
+synchronized( provideLockObject() )
+{
+    …
+}
+
+\end{lstlisting}
+In this case you have to rely on the method \lstinline|provideLockObject()| to return the proper guard object.
+
+Therefore the rule set by this code conventions is that \verb#<expression># has to be a \lstinline|final| attribute of a reference type, a constant reference\footnote{A \lstinline|final| class variable of a reference type.}, \lstinline|this| or the \lstinline|class| object. In case the respective field exist only to provide a monitor, it should be named as ‘\verb#Guard#’.
+\begin{lstlisting}[numbers=left]
+public final MyClass
+{
+    private final List<String> m_StringList = new ArrayList<>();
+    private static final Object m_MyClassGuard = new Object();
+    
+    public final void myMethod()
+    {
+        synchronized( m_StringList )
+        {
+            …
+        }
+
+        synchronized( m_MyClassGuard )
+        {
+            …
+        }
+
+        synchronized( MyClass.class )
+        {
+            …
+        }
+
+        synchronized( this )
+        {
+            …
+        }
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+Of course, a method with that many \lstinline|synchronized| blocks does not make any sense~…
+
+The chapter \tqfullvref{sec:MultiThreading} discusses this topic further.
+
+%------------------------------------------------------------------------------
+
+\subsection{Labels and ‘break’ Statements}\label{sec:LabelsAndBreakStatements}
+In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, and therefore, they will be assigned mostly to \lstinline|switch|, \lstinline|for|, \lstinline|while| and \lstinline|do-while| statements, but they can be placed before any code block.
+
+The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \tqfullref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
+
+I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. If assigned, the label should be used also as the end comment for a code block, as described in chapter \tqfullref{sec:TrailingOrEndOfLineComments} and chapter \tqfullref{sec:CommentsWhen}.
+
+Some samples:
+\begin{lstlisting}[numbers=left]
+// BAD!!!
+for( var line = 0; line < maxLines; ++line )
+{
+    for( var column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break; // What??
+        …
+    }
+
+    processLine( field [line] );
+}
+
+// RECOMMENDED
+LineLoop: for( var line = 0; line < maxLines; ++line )
+{
+    ColumnLoop: for( var column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break ColumnLoop;
+        …
+    } //  ColumnLoop:
+    processLine( field [line] );
+} // LineLoop:
+
+// RECOMMENDED
+FilterLoop: while( input.hasNext() )
+{
+    final var value = input.next();
+    if( !value.isValid() ) continue FilterLoop; // Skip invalid
+    …
+} // FilterLoop:
+
+// RECOMMENDED
+DirectionSwitch: switch( direction )
+{
+    case LEFT: goLeft(); 
+    	break DirectionSwitch;
+    	
+    case RIGHT: goRight(); 
+    	break DirectionSwitch;
+    	
+    default:
+        throw new IllegalArgumentException( direction.toString() );
+} //  DirectionSwitch:
+\end{lstlisting}
+
+The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 43. The colon at the end of the label name is mandatory for this kind of comment.
+
+%------------------------------------------------------------------------------
+
+\section{Special Files}
+Beside the files that contain the Java source code itself (with the extension \verb#.java#), a project can contain several other files. Two (types) of these files are discussed here – interestingly, both have the \verb#.java# extension without being really valid Java source files.
+
+\subsection{The Module Definition}\label{sec:ModuleDefinition}
+Modules have been introduced to Java with version~9, as a result of the Jigsaw project\autocite{OPENJDK:ProjectJigsaw}. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
+
+Basically, a \verb#module-info.java# file will look like this:
+\begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
+/*
+ * ==================================================================
+ * Copyright © <Year> <Copyright Notice>
+ * ==================================================================
+ *
+ * <License Notice>
+ */
+ 
+/**
+ *  <module description>
+ */ 
+module <modulename> 
+{
+    requires <name_of_required_module_1>;
+    requires <name_of_required_module_2>;
+
+    requires transitive <name_of_required_module_3>;
+
+    exports <name_of_exported_package_1>;
+    exports <name_of_exported_package_2> to <name_of_target_module_1>;
+
+    opens <name_of_opened_package_1>;
+    opens <name_of_opened_package_1> to <name_of_target_module_1>, <name_of_target_module_2>;
+
+    uses <name_of_provider_interface>;
+    provides <name_of_provider_interface> with <name_of_provider_implementation>;
+}
+//  module <modulename>
+
+/*
+ *  End of File
+ */
+\end{lstlisting}
+How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}.
+
+The \verb#<module description># will be discussed in chapter \tqfullvref{sec:ModuleComment}.
+
+\subsection{The Package Documentation}\label{sec:PackageDocumentation}
+Different from the module, there is no special source file that defines a package in Java. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|.
+
+Nevertheless there is a need for package-level documentation, and it is even possible to set annotations to packages.
+
+For the documentation of a package, originally a file named \verb#package.html# was used, placed into the package folder. Although this still works, you should use the new \verb#package-info.java# file instead, because only this allows annotations on package level; it looks like this:
+
+\begin{lstlisting}[numbers=left, caption={package-info.java}]
+/*
+ * ==================================================================
+ * Copyright © <Year> <Copyright Notice>
+ * ==================================================================
+ *
+ * <License Notice>
+ */
+ 
+/**
+ *  <package description>
+ */
+@<AnAnnotation> 
+package <packagename>;
+
+import <AnAnnotation>
+
+/*
+ *  End of File
+ */
+\end{lstlisting}
+
+The \verb#<package description># is a standard JavaDoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
+
+If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
+
+The chapter \tqfullvref{sec:Packages} discusses how to define the name of the package (\verb#<packagename>#).
+
+%------------------------------------------------------------------------------
+
+\chapter{Naming Conventions}\label{sec:NamingConventions}
+While the primary goal of the formatting rules is to make it easier to \textit{read} the source code, are the naming conventions targeted to make a program easier to \textit{understand}.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The selected name for a program element has to be meaningful.
+
+But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{p:MeaningfulNames}
+
+\item{Names, in particular those for methods, provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+
+This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
+
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}
+
+\item{The naming has to be consistent.
+
+This is particularly important for the names of local variables and for the formal parameters of a method or a constructor; it means that the same thing should always get the same name.}
+
+\item{Correct spelling is not an unnecessary luxury.
+
+Names should be spelled correctly, as typos are disturbing and interfere with the readability. Not to mention that they are quite often ugly.}
+
+\item{Upper and lower case also have a meaning.
+
+Names for different program elements use upper and lower case characters in different ways.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\section{General Accords}
+The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Specification \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
+
+But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may be syntactically correct and do look good in some sample code (like in the sample listings in this document~…), but they are definitely invalid for real code (even for quick-shot proof-of-concept code) – of course mainly because they are not meaningful! And the first rule about the naming of program elements is to use \textit{meaningful names}. 
+
+%------------------------------------------------------------------------------
+
+\subsection{Language}
+The identifier names have to be taken from English language, and with correct spelling. I am conscious about the fact that there are differences between British and American English (at least between these two~…) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names. Consult a dictionary if in doubt of spelling and/or meaning for a word you want to use as a name.
+
+The reason to use English is that this is the common language for most international teams.
+
+But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distingiush just by the language used if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|, and an account owner is an \lstinline|AccountOwner|; in writing, this looks good, but in oral communications, misunderstandings are easy.}
+
+%------------------------------------------------------------------------------
+
+\subsection{UPPERCASE, lowercase, CamelCase}
+Use \textit{CamelCase}, starting with a capital letter, for the identifiers of all kinds of classes: \lstinline|String|, \lstinline|LocalDateTime|, \lstinline|AccountOwner|,~…
+
+For the identifiers of local variables, methods and formal parameters, use \textit{camelCase} starting with a lowercase character: \lstinline|i|, \lstinline|proceed|, \lstinline|isValid|, \lstinline|lastOwner|, \lstinline|indexOfLastRecord|,~…
+
+Fields (attributes or properties) are a bit special\footnote{see chapter \tqfullref{sec:Fields}}: their identifiers are prefixed with “\verb#m_#”, followed by the concrete name in \textit{CamelCase} (with a leading capital letter): \lstinline|m_IsValid|, \lstinline|m_Name|, \lstinline|m_IndexOfLastRecord|,~…
+
+For the identifiers of packages and modules, all lowercase is preferred, although this is not mandatory: \lstinline|java.lang|, \lstinline|org.tquadrat.foundation|,~… – Nevertheless, you should avoid a package name starting with a capital letter, as this could be mixed up easily with a class name.
+
+The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands to use all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29~…}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}. Samples for constants are: \lstinline|EOF|, \lstinline|EMPTY_STRING|, \lstinline|XML_ATTRIBUTE_LastAccessed|,~…
+
+Examples for an \lstinline|enum| named \lstinline|LightStatus| could be \lstinline|LIGHT_STATUS_Unknown|, \lstinline|LIGHT_STATUS_Off|, \lstinline|LIGHT_STATUS_On| and so on.
+
+Details are discussed in the chapters about the respective code elements.
+
+%------------------------------------------------------------------------------
+
+\subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
+In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \ref{p:MeaningfulNames}
+
+The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
+
+This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
+
+If you think you will be more productive when using short names (because you can type them faster~…), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
+
+But of course Java programs do have a maximum length for identifiers\footnote{The Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.”\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}, but the compiled code may not exceed a given length.}, although it is higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
+
+%------------------------------------------------------------------------------
+
+\subsection{‘Special’ Characters}
+Java allows to compose an identifier from all Unicode letters and digits, plus the underscore “\verb#_#” and the dollar symbol “\verb#$#”. This, too, is a reason for using English only for the names and identifiers: usually, you can limit yourself to the ASCII character set, and for the rest, avoid dollars and underscores in identifiers; the only exceptions are underscores for the names of constants and \lstinline|enum| values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). 
+
+%------------------------------------------------------------------------------
+
+\subsection{‘\textit{test}’ as Part of Names}
+Avoid “\verb#test#” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names forced by 3\textsuperscript{rd} Party Components}
+Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following the naming conventions imposed by this document. This is even made easier as those external names are usually used as Strings in the program.
+
+Most Java libraries follow with their namings the naming conventions given in chapter~9 of the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}, so usually you should not get in trouble here.
+
+But if you encounter a library with significantly deviating namings, you should hide such a library behind a facade\footnote{Refer to \autocite{Gamma:DesignPatterns}}.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -2230,6 +2549,12 @@ finally
 
 \begin{lstlisting}[numbers=left]
 \end{lstlisting}
+
+
+
+Additionally, names provide 
+
+able by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
 
 
 
@@ -2332,189 +2657,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-\subsection{‘synchronized’ Statements}\label{sec:SynchronizedStatements}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\subsection{Labels and ‘break’ Statements}\label{sec:LabelsAndBreakStatements}
-In Java, labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, but they can be placed anywhere in a code block.
-
-The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \tqfullref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
-
-I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. The label can also be used as the end comment for a code block, as described in chapter \tqfullref{sec:TrailingOrEndOfLineComments} and chapter \tqfullref{sec:CommentsWhen}.
-
-Some samples:
-\begin{lstlisting}[numbers=left]
-// BAD!!!
-for( var line = 0; line < maxLines; ++line )
-{
-    for( var column = 0; column < maxColumns; ++column )
-    {
-        if( !isValid( field [line] [column] ) break; // What??
-        …
-    }
-
-    processLine( field [line] );
-}
-
-// RECOMMENDED
-LineLoop: for( var line = 0; line < maxLines; ++line )
-{
-    ColumnLoop: for( var column = 0; column < maxColumns; ++column )
-    {
-        if( !isValid( field [line] [column] ) break ColumnLoop;
-        …
-    } //  ColumnLoop:
-    processLine( field [line] );
-} // LineLoop:
-
-// RECOMMENDED
-FilterLoop: while( input.hasNext() )
-{
-    final var value = input.next();
-    if( !value.isValid() ) continue FilterLoop; // Skip invalid
-    …
-} // FilterLoop:
-
-// RECOMMENDED
-DirectionSwitch: switch( direction )
-{
-    case LEFT: goLeft(); break DirectionSwitch;
-    case RIGHT: goRight(); break DirectionSwitch;
-    default:
-        throw new IllegalArgumentException( direction.toString() );
-} //  DirectionSwitch:
-\end{lstlisting}
-
-The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 39. The colon at the end of the label name is mandatory for this kind of comment.
-
-\section{Special Files}
-Beside the files that contain the Java source code (with the extension \verb#.java#), a project can contain several other files.
-
-\subsection{The Module Definition}\label{sec:ModuleDefinition}
-Modules have been introduced to Java with version 9, as a result of the Jigsaw project. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
-
-Basically, a \verb#module-info.java# file will look like this:
-\begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
-/*
- * ==================================================================
- * Copyright © <Year> <Copyright Notice>
- * ==================================================================
- *
- * <License Notice>
- */
- 
-/**
- *  <module description>
- */ 
-module <modulename> 
-{
-    requires <name_of_required_module_1>;
-    requires <name_of_required_module_2>;
-
-    requires transitive <name_of_required_module_3>;
-
-    exports <name_of_exported_package_1>;
-    exports <name_of_exported_package_2> to <name_of_target_module_1>;
-
-    opens <name_of_opened_package_1>;
-    opens <name_of_opened_package_1> to <name_of_target_module_1>, <name_of_target_module_2>;
-
-    uses <name_of_provider_interface>;
-    provides <name_of_provider_interface> with <name_of_provider_implementation>;
-}
-//  module <modulename>
-
-/*
- *  End of File
- */
-\end{lstlisting}
-How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}.
-
-The \verb#<module description># will be discussed in chapter \tqfullvref{sec:ModuleComment}.
-
-\subsection{The Package Documentation}\label{sec:PackageDocumentation}
-Different from the module, there is no special source file that defines a package in Java. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|.
-
-Nevertheless there is a need for package-level documentation, and it is even possible to set annotations to packages.
-
-For the documentation of a package, originally a file named \verb#package.html# was used, placed into the package folder. Although this still works, you should use the new \verb#package-info.java# file instead, because only this allows annotations on package level; it looks like this:
-
-\begin{lstlisting}[numbers=left, caption={package-info.java}]
-/*
- * ==================================================================
- * Copyright © <Year> <Copyright Notice>
- * ==================================================================
- *
- * <License Notice>
- */
- 
-/**
- *  <package description>
- */
-@<AnAnnotation> 
-package <packagename>;
-
-import <AnAnnotation>
-
-/*
- *  End of File
- */
-\end{lstlisting}
-
-The \verb#<package description># is a standard JavaDoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
-
-If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
-
-How to define the name of the package (\lstinline|<packagename>|) is covered in chapter \tqfullvref{sec:Packages}.
-
-\chapter{Naming Conventions}\label{sec:NamingConventions}
-Naming conventions make programs more understandable by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
-
-\section{General Accords}
-The first rule about the naming of program elements is to use \textit{meaningful names}. But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required.\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).} So we want to enhance this rule as we say that the name of a program element has to be meaningful for as many people as possible – even outside the current problem domain.
-
-Additionally, names provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers. So we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform write operations instead, that means this implicit contract is broken; at least, it requires an elaborate comment explaining why it \textit{writes}.
-
-But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.
-
-The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Speficication \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
-
-But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may look good in some sample code (like in the sample listings in this document), but they are definitely invalid for real code!
-
-\subsection{Language}
-The identifier names has to be taken from English language, and with correct spelling.\footnote{I am conscious about the fact that there are differences between British and American English (at least between these two~…) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names.} Consult a dictionary if in doubt of spelling and/or meaning.
-
-The reason to use English is that this is the common language for most international teams.
-
-But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distungiush just by the language if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|; in writing, this looks good, but in oral communications, misunderstandings are easy. }
-
-\subsection{UPPERCASE, lowercase, CamelCase}
-Use CamelCase, starting with a capital letter, for the identifiers of all kinds of classes. For fields, local variables, and methods, use camelCase (starting with a lowercase character). For packages and modules, all lowercase is preferred, although not mandatory.
-
-The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29~…}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
-
-Details are again discussed in the chapter about the respective code elements.
-
-\subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
-One aspect of abbreviations has been discussed already above. In general, avoid abbreviations and acronyms if those are not \textit{very well known}.
-
-The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
-
-This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
-
-If you think you will be more productive when using short names (because you can type them faster~…), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
-
-But of course Java programs do have a maximum length for identifiers\footnote{Although the Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.” (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers})}, although it is with 64k higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
-
-\subsection{Special Characters}
-Avoid special characters and punctuations in identifiers; the only exception are underscores for constants (see chapter \tqfullvref{sec:Constants}) and for the “m\_” prefix for fields (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). This, too, is a reason for using English for the names and identifiers: usually, you can limit yourself to the ASCII character set.
-
-\subsection{‘\textit{test}’ as Part of Names}
-Avoid “test” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
-
-\subsection{Names forced by 3\textsuperscript{rd} Party Components}
-Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following these naming conventions. This is even made easier as those external names are usually used as Strings in the program.
 
 \section{Files}\label{sec:FileNames}
 
@@ -8240,6 +8382,10 @@ See \ref{sec:Logging}, and there the part about warnings! Keeping track about fa
 \lipsum[1]
 
 \section{Deprecation of Elements}\label{sec:DeprecationOfElements}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\section{Multi-Threading and Synchronisation}\label{sec:MultiThreading}
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 

@@ -2720,6 +2720,363 @@ Both approaches do have their merits and pitfalls, and at the end of days both w
 In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
 
 %------------------------------------------------------------------------------
+
+\section{Local Variables}\label{sec:NamesForLocalVariables}
+The identifiers for local variables have to be in mixed case, with a lowercase first letter. Internal words start with capital letters\footnote{see chapter \tqvref{sec:CaseOfNames}}. The names should contain neither the underscore (“\verb#_#”) nor the dollar sign (“\verb#$#”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
+
+Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, yet not really recommended.
+
+In case the first part of the variable name has to be an acronym, it will be written with all lower case:
+\begin{lstlisting}
+String htmlHeader; // OK
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+String hTMLHeader; // AVOID!
+\end{lstlisting}
+
+Single-letter variable names should be avoided except for temporary “throwaway” variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for| loop:
+\begin{lstlisting}
+for( var i = 0; i < max; ++i )
+{
+    …
+}
+\end{lstlisting}
+
+\lstinline|e| is the common name for the exception in a \lstinline|catch| block:
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final IOException e )
+{
+    //---* Handle the exception *------------------------------------
+    …
+}    
+\end{lstlisting}
+
+For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
+
+Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute or \lstinline|this|:
+\begin{lstlisting}
+// OK
+public final int getValue() { return m_Value; }
+
+// AVOID!! Use 'retValue' instead of 'i'!!
+public final int signum( double d )
+{
+    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+    
+    //---* Done *----------------------------------------------------
+    return i;
+}   //  signum()
+
+// ACCEPTABLE (BARELY)
+public final int signum( double d )
+{
+    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+}   //  signum()
+
+// RECOMMENDED
+public final int signum( double d )
+{
+    final var retValue = 0;
+    if( d < 0.0 )
+    {
+        retValue = -1
+    }
+    else
+    {
+        retValue = 1;
+    }
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  signum()
+
+public final int signum( double d )
+{
+    final var retValue = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  signum()
+\end{lstlisting}
+
+In the same way, \lstinline|result| is reserved as the return value for lambdas (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case| blocks (see chapter \tqfullvref{sec:CaseResults}). The name \lstinline|result| should not be used for a local variable in any other context.
+
+A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
+
+Do not use the names \lstinline|in|, \lstinline|out|, and \lstinline|err| for your local variables. Although these names are not reserved words, they should be treated as such, as that allows to import the default streams from the class \lstinline|java.lang.System|\autocite{ORACLE_DOC_SYSTEM_CLASS} statically.
+
+Usually you would use the singular form for a variable name, but for collections or arrays, the plural form can be perfectly correct:
+\begin{lstlisting}
+final Collection<Component> values = m_Components.values();
+for( final Component value : values )
+{
+    …
+}    
+\end{lstlisting}
+
+Using the class name (with a lower case first letter, of course) for a variable is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “\verb#my#” or “\verb#the#” has to be avoided.
+\begin{lstlisting}
+// RECOMMENDED
+public final String retrieveMessage( final String messageKey, 
+    final String... additionalInfo )
+{
+    final MessageProvider messageProvider = getMessageProvider();
+    final String rawMessage = 
+        messageProvider.getMessage( messageKey );
+    final var retValue = String.format( rawMessage, additionalInfo );
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  retrieveMessage()
+
+// AVOID!!!! Don't use "my" or "the" prefix!!!
+public final String retrieveMessage( final String string, 
+    final String... strings )
+{
+    final MessageProvider theMessageProvider = getMessageProvider();
+    final String myString = theMessageProvider.getMessage( string );
+    final var retValue = String.format( myString, strings );
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  retrieveMessage()
+\end{lstlisting}
+
+Sometimes it is also a good idea to use the class name of the type as a suffix or prefix for the name, especially if the current block declares more than one variable of that type. In such a case, the rest of the name could be used to indicate how variables belong together.
+\begin{lstlisting}
+// RECOMMENDED
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent clientAgent = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// AVOID!!!! Don't use "my..." prefix!!! And don't abbreviate!
+public final ResultData callSpecialService()
+{
+    SpecialClientAgent myCA = obtainClientAgent();
+    …
+}   //  callSpecialService()
+
+// RECOMMENDED
+public final ResultData loadData( Connection connection, … )
+{
+    …
+    final Statement customerStatement = …
+    final Statement orderStatement = …
+
+    …
+
+    final ResultSet customerResultSet = customerStatement.execute();
+    …
+
+    final ResultSet orderResultSet = orderStatement.execute();
+    …
+}   //  loadData()
+\end{lstlisting}
+
+Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way – refer to chapter \ref{sec:LocalVariableTypeInference}.}
+
+Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value, but \lstinline|result| – refer to chapter \tqfullvref{sec:LambdaResults} for the details.
+
+%------------------------------------------------------------------------------
+
+\section{Parameters}
+The identifiers for the formal parameters of methods and constructors are different from those for lambdas.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for formal Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
+The names for the formal parameters of a method or a constructors follow the same rules as those for local variables. Especially they do \textit{not} have any prefix.
+
+The parameter that is used to initialise a field should have the same name as that field, but without the “\verb#m_#” prefix:
+\begin{lstlisting}
+public final class MyClass
+{
+    private String m_Name;
+    
+    public MyClass( final String name )
+    {
+        m_Name = name;
+    }   // MyClass()
+    
+    public final void setName( final String name )
+    {
+        m_Name = name;
+    }   //  setName()
+}
+//  class MyClass
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
+A typical lambda in Java looks like this:
+\begin{lstlisting}
+Predicate<String> filter = s -> !s.contains( "invalid" );
+\end{lstlisting}
+\lstinline|s| is the parameter of that lambda, and that these parameters have just single letter names is common practice. As lambdas are usually quite short, this works sufficiently in most cases. In addition the meaning of the parameters is well explained through the documentation of the functional interface that is implemented by the lambda.
+
+But if in doubt, you can use longer names with more meaningful names for the parameters of a lambda. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context:
+\begin{lstlisting}
+// WILL NOT WORK AT ALL!!
+final var s = "invalid";
+Predicate<String> filter = s -> !s.contains( s ); // Hä?
+
+// Still not good …
+final var s = "invalid";
+Predicate<String> filter = p -> !p.contains( s );
+
+// Better …
+final var s = "invalid";
+Predicate<String> filter = toCheck -> !toCheck.contains( s );
+
+// Recommended
+final var criterion = "invalid";
+Predicate<String> filter = s -> !s.contains( criterion );
+\end{lstlisting}
+
+It does not make much difference if you number the parameters, of if you use different names fo them:
+\begin{lstlisting}
+BiPredicate<String,String> filter = (s1,s2) -> s1.contains( s2 );
+BiPredicate<String,String> filter = (a,b) -> a.contains( b );
+\end{lstlisting}
+
+Nevertheless, an accepted rule of thumb is to use different names if the parameters cannot be exchanged by each other (as in the sample above), while numbering the parameters is used when the parameters are interchangeable, like in an implementation of \lstinline|java.util.Comparator|\autocite{ORACLE_DOC_COMPARATOR_INTERFACE}:
+\begin{lstlisting}
+Comparator<String> comparator = (s1,s2) -> s1.compareToIgnoreCase( s2 );
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{Fields}\label{sec:Fields}
+The identifier for a field (or for an ‘attribute’ or a ‘property’) has to be prefixed with “\verb#m_#”; the first letter after the underscore has to be a capital letter:
+\begin{lstlisting}
+private String m_AString;
+private boolean m_IsValid;
+private String m_HTMLHeader;
+private MessageProvider m_MessageProvider;
+\end{lstlisting}
+This ensures that the names of local variables and formal parameters of methods or constructors will be always distinct from those of fields, and therefore neither local variables nor parameters can collide with or hide fields. Another consequence is that it is not necessary to use \lstinline|this.| when accessing a field.
+
+Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of fields.
+
+Please be aware that a bean property name does not carry the prefix. So the getters for the samples above are
+\begin{lstlisting}[numbers=left]
+public final String getAString() { return m_AString; }
+public final boolean getIsValid() { return m_IsValid; }
+/* Alternatively: */ public final boolean isValid() { return m_IsValid; }
+public final String getHTMLHeader() { return m_HTMLHeader; }
+public final MessageProvider getMessageProvider() { return m_MessageProvider; }
+\end{lstlisting}
+
+Regarding the alternative getter in line~3 refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3_2}.
+
+Eclipse knows a configuration setting for this prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “\verb#m_#” makes sure that the generation of getters and setters will work as expected.
+
+For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
+
+%------------------------------------------------------------------------------
+
+\section{Constants}\label{sec:Constants}
+Constants in Java are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+
+Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
+
+Some samples for valid constants:
+\begin{lstlisting}
+public static final double PI = 3.1415;
+public static final int ANSWER_TO_ALL_QUESTIONS = 42;
+public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
+public static final String [] EMPTY_STRING_ARRAY = new String [0];
+\end{lstlisting}
+Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
+
+The field \lstinline|PATTERN| below is not a constant in the sense of this definition, and therefore it goes to the “Static Initialisations” part:
+\begin{lstlisting}[numbers=left]
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+public static final Pattern PATTERN = Pattern.compile( ".*" );
+
+// Better:
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+public static final Pattern PATTERN;
+
+static
+{
+    try
+    {
+        PATTERN = Pattern.compile( ".*" );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+
+// Even better:
+    /*-----------*\
+====** Constants **==================================================
+    \*-----------*/
+public static final String PATTERN_SOURCE = ".*";
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+private static final Pattern m_Pattern;
+
+static
+{
+    try
+    {
+        m_Pattern = Pattern.compile( PATTERN_SOURCE );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+\end{lstlisting}
+No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialisations”.
+
+\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:Fields} for their naming.
+
+Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
+\begin{lstlisting}[numbers=left]
+// AVOID!! Make it private!
+public static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// AVOID!! Make it private!
+public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
+\end{lstlisting}
+
+If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used anymore.}
+
+In case you have a constant value (a magic number, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number or a message string~…), use the naming pattern for constants. 
+
+Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
+\begin{lstlisting}
+public final static String PERSON_COL_FirstName = "first_name";
+public final static String PERSON_COL_LastName = "last_name";
+public final static String PERSON_COL_MaidenName = "maiden_name";
+public final static String PERSON_COL_Title = "title";
+…
+\end{lstlisting}
+The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”, \verb#PERSON_COL# in this case.
+
+%------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
@@ -2840,325 +3197,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-
-\section{Local Variables}\label{sec:NamesForLocalVariables}
-The identifier names for local variables are in mixed case, with a lowercase first letter. Internal words start with capital letters. The names should not contain underscore (“\_”) or dollar sign (“\$”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
-
-Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended.
-
-In case the first part of the variable name has to be an acronym, it will be written with all lower case:
-\begin{lstlisting}
-String htmlHeader; // OK
-\end{lstlisting}
-instead of
-\begin{lstlisting}
-String hTMLHeader; // AVOID!
-\end{lstlisting}
-
-Also one-character variable names should be avoided except for temporary “throwaway” variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for| loop:
-\begin{lstlisting}
-for( var i = 0; i < max; ++i )
-{
-    …
-}
-\end{lstlisting}
-
-\lstinline|e| is the common name for the exception in a \lstinline|catch| block:
-\begin{lstlisting}
-try
-{
-    …
-}
-catch( final IOException e )
-{
-    //---* Handle the exception *------------------------------------
-    …
-}    
-\end{lstlisting}
-
-For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
-
-Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute, or \lstinline|this|:
-\begin{lstlisting}
-// OK
-public final int getValue() { return m_Value; }
-
-// AVOID!! Use 'retValue' instead of 'i'!!
-public final int signum( double d )
-{
-    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-    return i;
-}   //  signum()
-
-// ACCEPTABLE (BARELY)
-public final int signum( double d )
-{
-    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-}   //  signum()
-
-// RECOMMENDED
-public final int signum( double d )
-{
-    final var retValue = 0;
-    if( d < 0.0 )
-    {
-        retValue = -1
-    }
-    else
-    {
-        retValue = 1;
-    }
-
-    return retValue;
-}   //  signum()
-
-public final int signum( double d )
-{
-    final var retValue = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-
-    return retValue;
-}   //  signum()
-\end{lstlisting}
-
-In the same way, \lstinline|result| is reserved as the return value for lambdas (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case| blocks (see chapter \tqfullvref{sec:CaseResults}). \lstinline|result| should not be used in any other context.
-
-A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
-
-Do not use the names \lstinline|in|, \lstinline|out|, and \lstinline|err|. Although these are not reserved words, they should be treated as such, as it would allow to statically import the default streams from the class \lstinline|java.lang.System|.
-
-Usually you would use the singular form for a variable name, but for collections or arrays, the plural form can be perfectly correct:
-\begin{lstlisting}
-final Collection<Component> values = m_Components.values();
-for( final Component value : values )
-{
-    …
-}    
-\end{lstlisting}
-
-Using the class name (with a lower case first letter, of course) for a variable is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “my” has to be avoided.
-\begin{lstlisting}
-// RECOMMENDED
-public final String retrieveMessage( final String messageKey, 
-    final String... additionalInfo )
-{
-    final MessageProvider messageProvider = getMessageProvider();
-    final String rawMessage = 
-        messageProvider.getMessage( messageKey );
-    final var retValue = String.format( rawMessage, additionalInfo );
-    return retValue;
-}   //  retrieveMessage()
-
-// AVOID!!!! Don't use "my..." prefix!!!
-public final String retrieveMessage( final String string, 
-    final String... strings )
-{
-    final MessageProvider myMessageProvider = getMessageProvider();
-    final String myString = myMessageProvider.getMessage( string );
-    final var retValue = String.format( myString, strings );
-    return retValue;
-}
-\end{lstlisting}
-
-Sometimes it is also a good idea to use the class name of the type as a suffix or prefix for the name, especially if the current block declares more than one variable of that type. In such a case, the rest of the name could be used to indicate how variables belong together.
-\begin{lstlisting}
-// RECOMMENDED
-public final ResultData callSpecialService()
-{
-    SpecialClientAgent clientAgent = obtainClientAgent();
-    …
-}   //  callSpecialService()
-
-// AVOID!!!! Don't use "my..." prefix!!! And don't abbreviate!
-public final ResultData callSpecialService()
-{
-    SpecialClientAgent myCA = obtainClientAgent();
-    …
-}   //  callSpecialService()
-
-// RECOMMENDED
-public final ResultData loadData( Connection connection, … )
-{
-    …
-    final Statement customerStatement = …
-    final Statement orderStatement = …
-
-    …
-
-    final ResultSet customerResultSet = customerStatement.execute();
-    …
-
-    final ResultSet orderResultSet = orderStatement.execute();
-    …
-}   //  loadData()
-\end{lstlisting}
-
-Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way.}
-
-Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value, but \lstinline|result| – refer chapter \tqfullvref{sec:LambdaResults} for the details.
-
-\section{Parameters}
-The names for formal parameters of methods and constructors are different from those for lambdas.
-
-\subsection{Names for formal Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
-The names for the formal parameters of a method or a constructors follow the same rules as for local variables. Especially they do \textit{not} have any prefix.
-
-The parameters that are used to initialise a field should have the same name as that field, but without the “m\_” prefix:
-\begin{lstlisting}
-public final class MyClass
-{
-    private String m_Name;
-    
-    public MyClass( final String name )
-    {
-        m_Name = name;
-    }   // MyClass()
-    
-    public final void setName( final String name )
-    {
-        m_Name = name;
-    }   //  setName()
-}
-//  class MyClass
-\end{lstlisting}
-
-\subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
-A typical lambda in Java looks like this:
-\begin{lstlisting}
-Predicate<String> filter = s -> !s.contains( "invalid" );
-\end{lstlisting}
-\lstinline|s| is the parameter of that lambda, and that these parameters have just single character names is common practice. As lambdas are usually quite short, this works sufficiently in most cases. In addition the meaning of the parameters is well explained through the documentation of the functional interface that is implemented by the lambda.
-
-But if in doubt, you can use longer names with more meaningful names for the parameters of a lambda. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context:
-\begin{lstlisting}
-// WILL NOT WORK AT ALL!!
-final var s = "invalid";
-Predicate<String> filter = s -> !s.contains( s ); // Hä?
-
-// Still not good …
-final var s = "invalid";
-Predicate<String> filter = p -> !p.contains( s );
-
-// Better …
-final var s = "invalid";
-Predicate<String> filter = toCheck -> !toCheck.contains( s );
-
-// Recommended
-final var criterion = "invalid";
-Predicate<String> filter = s -> !s.contains( criterion );
-\end{lstlisting}
-
-It does not make much difference if you number the parameters, of if you use different names fo them:
-\begin{lstlisting}
-BiPredicate<String,String> filter = (s1,s2) -> s1.contains( s2 );
-BiPredicate<String,String> filter = (a,b) -> a.contains( b );
-\end{lstlisting}
-
-Nevertheless, an accepted rule of thumb is to use different names if the parameters cannot be exchanged by each other (as in the sample above), while numbering the parameters is used when the parameters are interchangeable, like in an implementation of \lstinline|java.util.Comparator|:
-\begin{lstlisting}
-Comparator<String> comparator = (s1,s2) -> s1.compareToIgnoreCase( s2 );
-\end{lstlisting}
-
-\section{Fields}\label{sec:Fields}
-The name for fields (also referred to as ‘attributes’ or ‘properties’) are prefixed with “m\_”; the first letter after the underscore has to be a capital letter:
-\begin{lstlisting}
-private String m_AString;
-private boolean m_IsValid;
-private String m_HTMLHeader;
-private MessageProvider m_MessageProvider;
-\end{lstlisting}
-This warrants that the names of local variables and formal parameters of methods or constructors will be always distinct from those of fields, and therefore neither local variables nor parameters can collide with or hide fields. Another consequence is that it is not necessary to use \lstinline|this.| when accessing a field.
-
-Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of fields.
-
-Please be aware that a bean property name does not carry the prefix. So the getters for the samples above are
-\begin{lstlisting}[numbers=left]
-public final String getAString() { return m_AString; }
-public final boolean getIsValid() { return m_IsValid; }
-/* Alternatively: */ public final boolean isValid() { return m_IsValid; }
-public final String getHTMLHeader() { return m_HTMLHeader; }
-public final MessageProvider getMessageProvider() { return m_MessageProvider; }
-\end{lstlisting}
-Regarding the alternative getter in line~3 refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3_2}.
-
-Eclipse knows a configuration setting for this prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “m\_” makes sure that the generation of getters and setters will work as expected.
-
-For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
-
-\section{Constants}\label{sec:Constants}
-Constants are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores (‘\_’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
-
-Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
-
-Some samples for valid constants:
-\begin{lstlisting}
-public static final double PI = 3.1415;
-public static final int ANSWER_TO_ALL_QUESTIONS = 42;
-public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
-public static final String [] EMPTY_STRING_ARRAY = new String [0];
-\end{lstlisting}
-Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
-
-The field \lstinline|PATTERN| below is not a constant in the sense of this definition:
-\begin{lstlisting}[numbers=left]
-public static final Pattern PATTERN = Pattern.compile( ".*" );
-
-// Better:
-public static final Pattern PATTERN;
-
-static
-{
-    try
-    {
-        PATTERN = Pattern.compile( ".*" );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw new ExceptionInInitializerError( e );
-    }    
-}
-
-// Even better:
-public static final String PATTERN_SOURCE = ".*";
-…
-private static final Pattern m_Pattern;
-
-static
-{
-    try
-    {
-        m_Pattern = Pattern.compile( PATTERN_SOURCE );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw (ExceptionInInitializerError) new ExceptionInInitializerError( "Compilation of '%s' failed".formatted( PATTERN_SOURCE ).initCause( e );
-    }    
-}
-\end{lstlisting}
-No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialization”.
-
-\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:Fields} for their naming.
-
-Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
-\begin{lstlisting}[numbers=left]
-// AVOID!! Make it private!
-public static final Map<String,File> m_Files = new TreeMap<String,File>();
-
-// AVOID!! Make it private!
-public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
-
-// AVOID!! Make it private!
-public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
-\end{lstlisting}
-
-If you wonder why the lines~5 and 8 belongs to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used anymore.}
-
-Sometimes you may have classes or groups of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved to help with the readability of the code if this is reflected in the names. For the column names of the table \verb#PERSON#, the constants may be defined as shown here:
-\begin{lstlisting}
-public final static String PERSON_COL_FirstName = "first_name";
-public final static String PERSON_COL_LastName = "last_name";
-…
-\end{lstlisting}
-The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”.
 
 \section{enum Values}\label{sec:EnumValues}
 When the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores (“\_”).

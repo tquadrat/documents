@@ -2456,7 +2456,7 @@ But “meaningful” is a relative term, depending from context and experience. 
 
 This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
 
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{p:NamesAsConctract}
 
 \item{The naming has to be consistent.
 
@@ -2489,7 +2489,7 @@ But even if you are working in an environment where English is a foreign languag
 
 %------------------------------------------------------------------------------
 
-\subsection{UPPERCASE, lowercase, CamelCase}
+\subsection{UPPERCASE, lowercase, CamelCase}\label{sec:CaseOfNames}
 Use \textit{CamelCase}, starting with a capital letter, for the identifiers of all kinds of classes: \lstinline|String|, \lstinline|LocalDateTime|, \lstinline|AccountOwner|,~…
 
 For the identifiers of local variables, methods and formal parameters, use \textit{camelCase} starting with a lowercase character: \lstinline|i|, \lstinline|proceed|, \lstinline|isValid|, \lstinline|lastOwner|, \lstinline|indexOfLastRecord|,~…
@@ -2535,6 +2535,189 @@ Most Java programs do not exist in a vacuum, they have links to other components
 Most Java libraries follow with their namings the naming conventions given in chapter~9 of the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}, so usually you should not get in trouble here.
 
 But if you encounter a library with significantly deviating namings, you should hide such a library behind a facade\footnote{Refer to \autocite{Gamma:DesignPatterns}}.
+
+%------------------------------------------------------------------------------
+
+\section{Files}\label{sec:FileNames}
+The names for the files containing Java source code are determined by the names of the (\lstinline|public|) class such file defines: the file name has to be the name of that class with the extension \verb#.java#. It is recommended to name the source code files for non-\lstinline|public| (package-private) classes in the same way.
+
+The path for the file is determined by the package the class resides in.
+
+Some examples:
+
+\begin{tabular}{|l|l|}
+\hline 
+\textbf{Java Class} & \textbf{Fully qualified Filename} \\ 
+\hline 
+\lstinline|java.lang.String| & \verb#<srcroot>/java/lang/String.java# \\ 
+\lstinline|javax.xml.XMLConstants| & \verb#<srcroot>/javax/xml/XMLConstants.java# \\ 
+\lstinline|org.junit.Test| & \verb#<srcroot>/org/junit/Test.java# \\ 
+\hline 
+\end{tabular}
+
+For the naming of classes, refer to chapter \tqref{sec:Classes}, for the naming of packages, see chapter \tqref{sec:Packages}.
+
+%------------------------------------------------------------------------------
+
+\section{Modules}\label{sec:Modules}
+A module is defined in the file \verb#module-info.java# that is located in the root of the source tree for that module; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
+
+Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
+
+So the names for modules will follow basically the same rules as those for packages.
+
+%------------------------------------------------------------------------------
+
+\section{Packages}\label{sec:Packages}
+According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs) (like e.g. “\verb#com#”, “\verb#net#” or “\verb#org#”)\footnote{There exist some more TLDs that are not country codes, but these are quite unlikely to be used in a package name. But of course, if you own a domain under one of these top-level domains, you can use its name as well.}, or one of the two-letter codes identifying countries as specified in ISO~Standard~3166,~1981.\autocite{SUN_CODE_CONVENTIONS:NamingConventions}
+
+Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
+
+Subsequent components of the package name vary according to an organization's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Valid samples are:
+\begin{itemize}[nosep]
+\item\verb#org.tquadrat#
+\item\verb#com.ibm#
+\item\verb#com.sun#
+\item\verb#de.jug#
+\item\verb#uk.gov.hmrc#
+\item\verb#name.thrien.thomas#
+\end{itemize}
+
+Of course \textit{you} should use \textit{your} domain name! Those from the samples are already used by the respective companies or organisations (or persons).
+
+Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
+
+Next, a package name is also a folder name: the file with the source code for the class \lstinline|com.foo.bar.internal.MyImpl| is located in the folder \verb#com/foo/bar/internal# in the source code directory tree\footnote{see also chapter \tqvref{sec:FileNames}}.
+
+Finally the package name should reflect somehow the function of that package.
+
+%------------------------------------------------------------------------------
+
+\subsection{The Packages ‘\lstinline|internal|’ and ‘\lstinline|spi|’}
+The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers, and it is not exported.
+
+If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
+
+For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}. The important message here is, that a package with name \verb#internal# is never be exported, and that the exports for a package with name \verb#spi# can be restricted to some named modules.
+
+%------------------------------------------------------------------------------
+
+\section{Classes}\label{sec:Classes}
+In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|)\footnote{refer to chapter \tqvref{sec:CaseOfNames}}. Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
+
+According to the Java syntax specification, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)!\footnote{Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner classes and anynomous classes, as well as for the classes that will be generared for lambdas.}
+
+You should also avoid numerical characters in class names.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
+The term ‘real’ class means that this Java class is declared with the keyword \lstinline|class|. Records and enum classes are also Java classes, to some extent even interfaces and annotations, but you use a different keyword when you declare them.
+
+Some parts of a class name will indicate a special position of that class in the class hierarchy: the suffix ‘\verb#Impl#’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface or an \lstinline|abstract| class named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|.}.
+
+‘\verb#Adapter#’ as the suffix is similar, but here the methods are usually empty, as it is assumed that only a some of the methods of the interface are used by a particular implementation; various samples for this could be found in the Swing packages. According to this coding conventions, an \lstinline|Adapter| class is always \lstinline|abstract| even when it does not contain any \lstinline|abstract| methods.
+
+A suffix ‘\verb#Base#’ indicates that the class has to be extended; usually that class is \lstinline|abstract|. It may or may not implement a specific interface.
+
+Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘\verb#Error#’ and ‘\verb#Exception#’ for error and exception classes. Others are ‘\verb#Visitor#’ and ‘\verb#Listener#’ for the implementations of the respective patterns, ‘\verb#DAO#’, or ‘\verb#Entity#’. A more complete list can be found in chapter \tqfullvref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
+An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
+
+According to the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}, the name of an interface should be basically a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput| and \lstinline|java.io.DataOutput|; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE} and \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}.
+
+Some coding conventions (particularly in the Windows realm) require the prefix ‘\verb#I#’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
+An enum is a special class that will be declared with the keyword \lstinline|enum|.
+
+The name of enum class should be somehow the category of the enumerated entities, but plurals should be avoided; so it should read \lstinline|Type| and not \lstinline|Types|, and \lstinline|DayOfWeek| and not \lstinline|DaysOfWeek|.
+
+Although an enum class can implement an interface, this should not be reflected in the name. This means that \lstinline|TypeImpl| would be an invalid name for an enum class.
+
+For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
+Basically, a record class is like a ‘real’ Java class, and should be named in the same ways. So it can implement an interface, like a regular class, meaning that the suffix ‘\verb#Impl#’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘\verb#Base#’ is not permitted, as well as any other suffix indicating a class that should or can be extended.
+
+Also a record class should not be named ‘\verb#Record#’.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Annotations}\label{sec:NamesForAnnotations}
+Annotations are a special type of an interface, distinguished by the “\verb#@#” as the first character of their name. The remaining part of the name is determined by the rules for regular interfaces. Samples for valid names are \lstinline|@Text|, \lstinline|@Translation|, \lstinline|@Generated|\footnote{see \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}, or \lstinline|@Deprecated|\footnote{see \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}.
+
+%------------------------------------------------------------------------------
+
+\section{Constructors}\label{sec:NamesForConstructors}
+The name of a constructor is the name of the class it belongs to.
+
+%------------------------------------------------------------------------------
+
+\section{Methods}\label{sec:NamesForMethods}
+A method name has to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized\footnote{see chapter \tqvref{sec:CaseOfNames}}.
+
+The name of a method needs to describe what that method does; that is that contract between developer and maintainer mentioned in \ref{p:NamesAsConctract}
+
+That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| are syntactically correct, but are discouraged or even invalid\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as \textit{a place holder for a meaningful method name}, and definitely \textit{not} as an example for the naming of a method.}.
+
+Chapter \tqref{sec:TheNamingDictionary} beginning on page \pageref{sec:TheNamingDictionary} contains “\nameref{sec:TheNamingDictionary}” for method names; that is a list of verbs together with their implicit contract. It is highly recommended to consult this list when searching a name for a new method.
+
+Using digits in method names is acceptable were it makes sense; so using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, but not really recommended. If you have different versions of a method, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method name.
+
+Regarding to “Data Objects” there are two different schools: one supports the JavaBean\footnote{see \autocite{ORACLE_DOC_JAVABEANS}} approach, using explicit getter and setter methods:
+\begin{lstlisting}[numbers=left,caption={JavaBean}]
+class JavaBeanDO
+{
+    private Object m_Attribute;
+
+    public final Object getAttribute() { return m_Attribute; }
+
+    public final void setAttribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }   //  setAttribute()
+}
+//  class JavaBeanDO
+\end{lstlisting}
+
+The other one is in favour of the Property concept, using two methods with the attribute name, but with different signatures as implicit getter and setter methods (here usually named as 'accessor' and 'mutator'):\footnote{I use the term \textit{POJO} (“Plain Old Java Object”) here only to distinguish this approach from a JavaBean; usually, POJOs do not make any assumption about the naming of their methods. This means that a real POJO can have getters and setters, too.}
+
+\begin{lstlisting}[numbers=left,caption={POJO}]
+public class PropertyDO
+{
+    private Object m_Attribute;
+
+    public final Object attribute() { return m_Attribute; }
+
+    public final void attribute( final Object value )
+    {
+        if( isNull( value ) ) 
+        {
+            throw new NullArgumentException( "value" );
+        }
+        m_Attribute = value;
+    }	//	attribute()
+}
+//  class PropertyDO
+\end{lstlisting}
+
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches.
+
+In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -2657,142 +2840,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-
-\section{Files}\label{sec:FileNames}
-
-\section{Modules}\label{sec:Modules}
-A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
-
-Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
-
-So the names for modules will follow basically the same rules as those for packages.
-
-\section{Packages}\label{sec:Packages}
-According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs), currently “\verb#biz#”, “\verb#com#”, “\verb#edu#”, “\verb#gov#”, “\verb#int#”, “\verb#mil#”, “\verb#net#”, “\verb#org#”, or one of the two-letter codes identifying countries as specified in ISO Standard 3166, 1981.\footnote{There exist some more TLDs, but these are quite unlikely to be used in a package name. But of course, if you own a domain under this top-level domain, you can use that as well.}
-
-Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
-
-Subsequent components of the package name vary according to an organization's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
-
-Valid samples are:
-\begin{itemize}[nosep]
-\item\verb#org.tquadrat#
-\item\verb#com.ibm#
-\item\verb#com.sun#
-\item\verb#de.jug#
-\item\verb#uk.gov.hmrc#
-\end{itemize}
-
-Of course you should use your domain name! Those from the samples are already used by the respective companies or organisations (or persons).
-
-Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
-
-Next, a package name is also a folder name: the file with the source code for the class \lstinline|com.foo.bar.internal.MyImpl| is located in the folder \verb#com/foo/bar/internal# in the source code directory tree.
-
-Finally the package name should reflect somehow the function of that package.
-
-\subsection{The Packages ‘\lstinline|internal|’ and ‘\lstinline|spi|’}
-The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the non-public package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers.
-
-If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
-
-For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}.
-
-\section{Classes}\label{sec:Classes}
-In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|). Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
-
-According to the Java syntax specification, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)!\footnote{Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner classes and anynomous classes, as well as for the classes that will be generared for lambdas.}
-
-You should also avoid numerical characters in class names.
-
-\subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
-The term ‘real’ class means that this class is declared with the keyword \lstinline|class|. Record and enum classes are also Java classes, to some extent even interfaces and annotations, but you use a different keyword when you declare them.
-
-Some parts of a class name will indicate a special position of that class in the class hierarchy. So the suffix ‘Impl’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|.}.
-
-‘Adapter’ as the suffix is similar, but here the methods are usually empty, as it is assumed that only a few of the methods of the interface are really required; various samples for this could be found in the Swing packages.
-
-A suffix ‘Base’ indicates that the class has to be extended; usually that class is \lstinline|abstract|.
-
-Other suffixes indicate special usage of the class. Well known and obvious are the suffixes ‘Error’ and ‘Exception’ for error and exception classes. Others are ‘Visitor’, and ‘Listener’ for the implementations of the respective patterns, ‘DAO’, or ‘Entity’. A more complete list can be found in chapter \tqfullvref{sec:SuffixesForClassNames} in the appendices. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
-
-\subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
-An interface declares the public API for an object that represents a \textit{real world entity}, and it should be named according to that entity.
-
-According to the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}, the name of an interface should be basically a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput| and \lstinline|java.io.DataOutput|; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE} and \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}.
-
-Some coding conventions (particularly in the Windows realm) require the prefix ‘I’ for interfaces, but it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
-
-\subsection{Names for enum Classes}\label{sec:NamesForEnumClasses}
-An enum is a special class that will be declared with the keyword \lstinline|enum|.
-
-The name of enum class should be somehow the category of the enumerated entities, but plurals should be avoided; so it should read \lstinline|Type| and not \lstinline|Types|, and \lstinline|DayOfWeek| and not \lstinline|DaysOfWeek|.
-
-Although an enum class can implement an interface, this should not be reflected in the name. This means that \lstinline|TypeImpl| would be an invalid name for an enum class.
-
-For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
-
-\subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
-A record class can implement an interface, like a regular class, so that the suffix ‘Impl’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘Base’ is not permitted, as well as any other suffix indicating a class that should be extended.
-
-Also a record class should not be named ‘Record’.
-
-\subsection{Names for Annotations}\label{sec:NamesForAnnotations}
-Annotations are a special type of an interface, distinguished by the “@” as the first character of their name. The remaining part of the name is determined by the rules for regular interfaces. Samples for valid names are \lstinline|@Text|, \lstinline|@Translation|, \lstinline|@Generated|\footnote{see \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}, or \lstinline|@Deprecated|\footnote{see \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}.
-
-\section{Methods}\label{sec:NamesForMethods}
-Method names have to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized.
-
-The name of a method has to describe what is does; a name like \lstinline|myMethod()| or \lstinline|doSomething()| are discouraged\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as a place holder for a meaningful method name, and definitely \textit{not} as an example for the naming of a method.}.
-
-Chapter \tqref{sec:TheNamingDictionary} beginning on page \pageref{sec:TheNamingDictionary} contains the “Naming Directory” for method names; that is a list of verbs together with their implicit contract. It is highly recommended to refer to this list when searching a name for a new method.
-
-Using digits in method names is acceptable were it makes sense; so using the digit '4' as replacement for the word “for”, and '2' for the word “to” is acceptable, but not really recommended. Remember that digits are not allowed as first characters of a method name.
-
-Regarding to “Data Objects” there are two different schools: one supports the JavaBean\footnote{see \autocite{ORACLE_DOC_JAVABEANS}} approach, using explicit getter and setter methods:
-\begin{lstlisting}[numbers=left,caption={JavaBean}]
-class JavaBeanDO
-{
-    private Object m_Attribute;
-
-    public final Object getAttribute() { return m_Attribute; }
-
-    public final void setAttribute( final Object value )
-    {
-        if( isNull( value ) ) 
-        {
-            throw new NullArgumentException( "value" );
-        }
-        m_Attribute = value;
-    }   //  setAttribute()
-}
-//  class JavaBeanDO
-\end{lstlisting}
-
-The other one is in favour of the Property concept, using two methods with the attribute name, but with different signatures as implicit getter and setter methods (here usually named as 'accessor' and 'mutator'):\footnote{I use the term \textit{POJO} (“Plain Old Java Object”) here only to distinguish this approach from a JavaBean; usually, POJOs do not make any assumption about the naming of their methods. This means that a real POJO can have getters and setters, too.}
-
-\begin{lstlisting}[numbers=left,caption={POJO}]
-public class PropertyDO
-{
-    private Object m_Attribute;
-
-    public final Object attribute() { return m_Attribute; }
-
-    public final void attribute( final Object value )
-    {
-        if( isNull( value ) ) 
-        {
-            throw new NullArgumentException( "value" );
-        }
-        m_Attribute = value;
-    }	//	attribute()
-}
-//  class PropertyDO
-\end{lstlisting}
-
-Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches.
-
-In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
 
 \section{Local Variables}\label{sec:NamesForLocalVariables}
 The identifier names for local variables are in mixed case, with a lowercase first letter. Internal words start with capital letters. The names should not contain underscore (“\_”) or dollar sign (“\$”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.

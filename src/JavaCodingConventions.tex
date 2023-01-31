@@ -3157,167 +3157,67 @@ I recommend to name the project after the module.
 Usually, the library files of a project are named after the project, appended by a version number and/or a release date. They have to be valid file names.
 
 %------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-
-
-Additionally, names provide 
-
-able by making them easier to read. They can also give information about the function of the identifier – for example, whether it's a constant, package, or class – which can be helpful in understanding the code.
-
-
-
-Absolutely avoid local declarations that hide declarations at higher levels. For example, do not declare a variable with the same name as a field:
-\begin{lstlisting}
-public class MyClass
-{
-    int count;
-
-    public void myMethod()
-    {
-        if( condition )
-        {
-            int count = 0; // AVOID!
-            // more code
-        }
-        // more code
-    }   //  myMethod()
-}   //  class MyClass
-\end{lstlisting}
-There are a settings for both Eclipse preferences and IntelliJ~IDEA that triggers a warning or even an error in such cases. In addition, the rules for the naming of fields (refer to chapter \tqfullvref{sec:Fields}) would make such a situation unlikely.
-
-
-
-
-Here some general rules first:
-\begin{itemize}
-\item{The enclosed statements has be indented one more level than the compound statement.}
-\item{The opening brace should be at a line of itself, indented to the same level as the compound statement.
-Accordingly, the closing brace should begin a line and be indented to the beginning of the compound statement. The exception are short methods where all is one line (refer to chapter \tqfullvref{sec:ClassAndInterfaceDeclarations})}.
-\item{Braces are used around all statements (meaning even if there is just one) when they are part of a control structure, such as a \lstinline|if-else| or \lstinline|for| statement. This makes it easier to add statements without accidentally introducing bugs due to forgetting to add braces.
-
-The only exception from this rule is when a single statement is written on the same line as the compound statement itself.
-
-Examples:
-
-\begin{lstlisting}[numbers=left]
-// Ok
-if( a < b ) c = d;
-
-// AVOID!!!
-if( a < b ) c = d; else e = f;
-if( a < b )
-    c = d;
-if( a < b )
-    c = d;
-else
-    e = f;
-
-// RECOMMENDED
-if( a < b )
-{
-    c = d;
-}
-else
-{
-    e = f;
-}
-
-// Ok
-for( String s : strings ) ++i;
-
-// AVOID!!!!
-for( String s : strings )
-    ++i;
-
-// RECOMMENDED
-for( String s : strings )
-{
-    ++i;
-}
-
-// DISCOURAGED!!!
-for( String s : strings ) if( a < b ) c = d;
-\end{lstlisting}}
-\end{itemize}
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
-In addition, Java also provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Comments have to support the readability of source code.
 
-So Java source code can generally have three kinds of comments:
-\begin{itemize}[nosep]
-\item{documentation comments}
-\item{implementation comments}
-\item{maintenance comments}
-\end{itemize}
-In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “\verb#/**…*/#” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation. Obviously, \textit{implementation comment}s are the other comments, that are not externalized and published.
+They do this by structuring the source code into sections and by providing hints on how to interpret the code.}
 
-\textit{Maintenance comments} are technically a special form of implementation comments, but as the have a special function, they are covered separately (see chapter \tqfullvref{sec:MaintenanceComments}).
+\item{Comments should be used to give an overview on the code and to provide additional information that is not readily available in the code itself.
 
-Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
+They should contain only information that is relevant for reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class.
 
-Comments should be used to give overviews of code and provide additional information that is not readily available in the code itself. Comments should contain only information that is relevant to reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class.
+The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date. In general, any comments that are likely to get out of date as the code evolves should be avoided.}
 
-Discussion of non-trivial or non-obvious design decisions is appropriate, but avoid duplicating information that is present in (and clear from) the code. It is too easy for redundant comments to get out of date. In general, avoid any comments that are likely to get out of date as the code evolves.
+\item{For Java source code, comments are part of or the source for the external documentation of that code.
 
-The frequency of comments reflects poor quality of code. Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
+The Java Development Kit (JKD) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
+
+\item{The frequency of comments reflects poor quality of code.
+
+Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
 
 One often heard advice is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But clearer to whom?
 
 With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
 
-Obviously, the advice: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema and equally bad, so writing proper comments remains a complex art, but it follows some rules, and for the rest, we will give some advice. Refer to chapter \tqfullvref{sec:CommentsWhen} where this is discussed further.
+Obviously, the advice: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema – and equally bad! This means that writing proper comments remains a complex art, but it follows some rules, and for the rest, this document will give some advice: refer to chapter \tqfullvref{sec:CommentsWhen} where this is discussed further.}
 
-In general:
-\begin{itemize}
-\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
-\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
-\item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information).}
-\item{Comments should be in full sentence and using a clear language.}
-\item{Finally: all comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.}}
+\item{Comments should be in full sentence and using a clear language.
+
+All comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstanding.}
+\end{enumerate}
+
+Java source code can generally have three kinds of comments:
+\begin{itemize}[nosep]
+\item{documentation comments}
+\item{implementation comments}
+\item{maintenance comments}
 \end{itemize}
 
+In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “\verb#/**…*/#” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation by the JavaDoc tool. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
+
+Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
+
+\textit{Maintenance comments} are technically a special form of implementation comments, but as they have a special function, they are covered separately in chapter \tqfullvref{sec:MaintenanceComments}.
+
+Some general rules are:
+\begin{itemize}
+\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
+
+\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
+
+\item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information). See also chapter \tqfullvref{sec:LineLength}.}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
 \section{Documentation Comments}\label{sec:DocumentationComments}
-It is a well known fact that most programmers are poor technical writers. That's the reason why programmers rarely write the public documentation for their product.
+It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their product.
 
 But that is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code to extract the information from it that is necessary for the documentation.\footnote{In addition, the technical writers often do not have (write) access to the source code and are therefore not able to add the documentation comments.}
 
@@ -3331,7 +3231,7 @@ Documentation comments describe Java modules, packages, classes\footnote{All typ
 
 \begin{lstlisting}
 /**
- *  The Example class provides …
+ *  The {@code Example} class provides …
  */
 public class Example
 {
@@ -3364,16 +3264,18 @@ public class Example
 }   //  class Example
 \end{lstlisting}
 
-The first line of the documentation comments (“/**”) for top level classes is not indented; subsequent lines for the documentation comment have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4 spaces for the first documentation comment line and 5 spaces thereafter (this is congruent for inner classes).
+The first line of the documentation comments (“\verb#/**#”) for top level classes is not indented; subsequent lines for the documentation comment have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4~spaces for the first documentation comment line and 5~spaces thereafter (this is congruent for inner classes).
 
 If you need to give information about a class, interface, variable, or method that isn't appropriate for the public documentation, use an implementation comment immediately after the declaration. For example, internal details about the implementation of a class should go in such an implementation block comment following the class statement, not in the class documentation comment.
 
 Documentation comments should not be positioned inside a method or constructor definition block, because Java associates documentation comments with the first declaration after the comment.
 
-\subsection{Structure and Contents}\label{sec:StructureAndContents}
-Latest since the introduction of Java~9, the JavaDoc tool produces (more or less) correct HTML~5 documents from the JavaDoc comments in the source code. Therefore it is strongly recommended to use correct HTML~5 syntax inside the documentation comments itself. This means that tags has to be closed properly, empty tags like \lstinline|<br>| and \lstinline|<img>| are not closed, and so on.
+%------------------------------------------------------------------------------
 
-If the comment has more than one single paragraph, use the \lstinline|<p>| tag; do not use the \lstinline|<br>| tag:
+\subsection{Structure and Contents}\label{sec:StructureAndContents}
+Latest since the introduction of Java~9, the JavaDoc tool produces (more or less) correct HTML~5 documents from the JavaDoc comments in the source code. Therefore it is strongly recommended to use correct HTML~5 syntax inside the documentation comments itself. This means that tags has to be closed properly, empty tags like \verb#<br># and \verb#<img># are not closed, and so on.
+
+If the comment has more than one single paragraph, use the \verb#<p># tag; do not use the \verb#<br># tag:
 
 \begin{lstlisting}
 /**
@@ -3390,7 +3292,7 @@ If the comment has more than one single paragraph, use the \lstinline|<p>| tag; 
  */
 \end{lstlisting}
 
-The first sentence of each JavaDoc comment is taken to be placed on an overview. Per default, that sentence is defined as everything from the beginning until the first full stop followed by a blank (“. ”) or other whitespace, or the first not-inline HTML tag.
+The first sentence of each JavaDoc comment is taken to be placed on an overview. Per default, that sentence is defined as everything from the beginning until the first full stop followed by a blank (“\verb#. #”) or other whitespace, or the first not-inline HTML tag.
 
 This means that a comment like this
 
@@ -3403,7 +3305,7 @@ This means that a comment like this
  */
 \end{lstlisting}
 
-may cause some strange output\footnote{Writing the comment like that (with the \lstinline|<b>…</b>| tag) should be avoided anyway.}. Java~10 introduced the JavaDoc tag \nameref{sec:TagSummary} to address issues like this; it allows the programmer to explicitly specify what portion of the JavaDoc comment appears in the overview rather than relying on JavaDoc's default behaviour to determine the summary portion of the comment. Refer to \autocite{ORACLE_DOC_JAVADOC_TAG,DZONE_JAVADOC_SUMMARY} for the details and additional samples.
+may cause some strange output (writing the comment like that – with the \verb#<b>…</b># tag – should be avoided anyway). Java~10 introduced the JavaDoc tag \nameref{sec:TagSummary} to address issues like this; it allows the programmer to explicitly specify what portion of the JavaDoc comment appears in the overview rather than relying on JavaDoc's default behaviour to determine the summary portion of the comment. Refer to \autocite{ORACLE_DOC_JAVADOC_TAG,DZONE_JAVADOC_SUMMARY} for the details and additional samples.
 
 The \nameref{sec:TagSummary} tag has to be used always when a documentation comment has more than one sentence:
 
@@ -3448,11 +3350,11 @@ The \nameref{sec:TagSummary} tag has to be used always when a documentation comm
  */
 \end{lstlisting}
 
-The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \lstinline|<h#>|, with \# being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \lstinline|<h1>| and \lstinline|<h2>| are already used by JavaDoc itself; that means that you should only use \lstinline|<h3>| to \lstinline|<h6>| in the documentation comments.\footnote{In the overview comment (refer to chapter \ref{sec:OverviewComment}), you can make use of the all the \lstinline|<h#>| tags to structure that comment.}
+The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \verb|<h#>|, with \verb|#| being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \verb#<h1># and \verb#<h2># are already used by JavaDoc itself; that means that you should only use \verb#<h3># to \verb#<h6># in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewComment}), you can make use of the all the \verb|<h#>| tags to structure that comment.
 
-When a class, method, constant, field is mentioned the first time in a documentation comment, its documentation should be linked, using the \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
+When a class, method, constant, field is mentioned the first time in a documentation comment, the documentation for that element should be linked, using the \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
 
-Each \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tag has to placed into a line of its own.
+Each \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tag has to be placed into a line of its own.
 
 Some examples:
 \begin{lstlisting}
@@ -3480,6 +3382,50 @@ The names of classes, methods, constant, fields, parameters etc. as well as \lst
 Each comment, including each text for a \nameref{sec:TagParam}, \nameref{sec:TagReturn}, and \nameref{sec:TagThrows} tag, ends with a full stop.
 
 The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the JavaDoc tool.
+
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{The Overview Comment}\label{sec:OverviewComment}
 When the JavaDoc tool is called with the option \verb#-overview <filename># (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}), an ‘Overview’ comment is  added to the generated documentation. \verb#<filename># is the (fully-qualified)  filename of a valid HTML~5 document (The recommended name is \verb#overview.html#) containing general information about the project.

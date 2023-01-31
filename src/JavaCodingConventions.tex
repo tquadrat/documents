@@ -2984,7 +2984,7 @@ For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where
 %------------------------------------------------------------------------------
 
 \section{Constants}\label{sec:Constants}
-Constants in Java are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+Constants in Java are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
 
 Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
 
@@ -3062,7 +3062,7 @@ public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
 public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
 \end{lstlisting}
 
-If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used anymore.}
+If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
 
 In case you have a constant value (a magic number, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number or a message string~…), use the naming pattern for constants. 
 
@@ -3075,6 +3075,86 @@ public final static String PERSON_COL_Title = "title";
 …
 \end{lstlisting}
 The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”, \verb#PERSON_COL# in this case.
+
+%------------------------------------------------------------------------------
+
+\section{enum Values}\label{sec:EnumValues}
+When the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But because enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores~(“\verb#_#”).
+
+Basically, this works fine, but when using \lstinline|static| imports, you may get name clashes for common terms that can be used in different contexts. So it will make sense to add a prefix to the name of an enum, similar to what we did with the categories or groups for regular constants (see \hyperref[sec:Constants]{above}). This may look like this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_LEFT,
+    DIR_RIGHT;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_CENTER,
+    ALIGN_LEFT,
+    ALIGN_RIGHT;
+}   //  enum Alignment
+\end{lstlisting}
+Using the prefix would allow now to use the values with static imports of their classes; otherwise, they have to be used with their class names as prefix.
+
+Alternatively, you can use this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_Left,
+    DIR_Right;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_Center,
+    ALIGN_Left,
+    ALIGN_Right;
+}   //  enum Alignment
+\end{lstlisting}
+Again the camelCased suffix is the “name” itself, while the “proper” typed prefix is just the category. This is the recommended approach if the suffix consists of multiple words that otherwise require additional underscores.
+
+%------------------------------------------------------------------------------
+
+\section{Type Arguments}\label{sec:TypeVariables}
+Type arguments belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
+\begin{lstlisting}
+public interface Function<T,R> { … }
+\end{lstlisting}
+\verb#T# and \verb#R# are the type arguments.
+
+It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
+
+Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: 
+\begin{lstlisting}
+public interface Map<Key,Value> { … }
+\end{lstlisting}
+is absolutely valid, although not common.
+
+Even numbers as part of the name are possible and sometimes helpful:
+\begin{lstlisting}
+// OK
+public interface Operation<T,U,V,R> { … }
+
+// BETTER in this case
+public interface Operation<T1,T2,T3,R> { … }
+\end{lstlisting}
+ 
+
+But because the type arguments denotes classes, their names have to start with a capital letter.
+
+%------------------------------------------------------------------------------
+
+\section{Projects}\label{sec:Projects}
+You can name your project however you want, although some IDEs have some constraints about the exact format.
+
+I recommend to name the project after the module.
+
+%------------------------------------------------------------------------------
+
+\section{Library Files}\label{sec:LibraryFiles}
+Usually, the library files of a project are named after the project, appended by a version number and/or a release date. They have to be valid file names.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -3197,67 +3277,6 @@ for( String s : strings ) if( a < b ) c = d;
 
 
 
-
-\section{enum Values}\label{sec:EnumValues}
-When the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores (“\_”).
-
-Basically, this works fine, but when using \lstinline|static| imports, you may get name clashes for common terms that can be used in different contexts. So it will make sense to add a prefix to the name of an enum, similar to what we did with the categories or groups for regular constants. This may look like this:
-\begin{lstlisting}
-enum Direction
-{
-    DIR_LEFT,
-    DIR_RIGHT;
-}   //  enum Direction
-
-enum Alignment
-{
-    ALIGN_CENTER,
-    ALIGN_LEFT,
-    ALIGN_RIGHT;
-}   //  enum Alignment
-\end{lstlisting}
-Using the prefix would allow now to use the values with static imports of their classes; otherwise, they have to be used with their class names as prefix.
-
-Alternatively, you can use this:
-\begin{lstlisting}
-enum Direction
-{
-    DIR_Left,
-    DIR_Right;
-}   //  enum Direction
-
-enum Alignment
-{
-    ALIGN_Center,
-    ALIGN_Left,
-    ALIGN_Right;
-}   //  enum Alignment
-\end{lstlisting}
-Again the camelCased suffix is the “name” itself, while the “proper” typed prefix is just the category. This is recommended if the suffix consists of multiple words that otherwise require additional underscores.
-
-\section{Type Arguments}\label{sec:TypeVariables}
-Type arguments belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
-\begin{lstlisting}
-public interface Function<T,R> {…}
-\end{lstlisting}
-\lstinline|T| and \lstinline|R| are the type arguments.
-
-It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
-
-Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: \begin{lstlisting}
-public interface Map<Key,Value> {…}
-\end{lstlisting}
-is absolutely valid, although not common. 
-
-But because the type arguments denotes classes, their names have to start with a capital letter.
-
-\section{Projects}\label{sec:Projects}
-You can name your project however you want, although some IDEs have some constraints about the exact format.
-
-I recommend to name the project after the module.
-
-\section{Library Files}\label{sec:LibraryFiles}
-Usually, the library files of a project are named after the project, appended by a version number and/or a release date. They have to be valid file names.
 
 \chapter{Writing proper Comments}\label{sec:WritingProperComments}
 Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.

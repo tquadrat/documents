@@ -3385,6 +3385,135 @@ The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACL
 
 %------------------------------------------------------------------------------
 
+\subsubsection{The Overview Comment}\label{sec:OverviewComment}
+When the JavaDoc tool is called with the option \verb#-overview <filename># (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}), an ‘Overview’ comment is  added to the generated documentation. \verb#<filename># is the (fully-qualified)  filename of a valid HTML~5 document (The recommended name is \verb#overview.html#) containing general information about the project.
+
+You can put nearly everything here, from the project's history to manual on how to use the program or library, but you should not reproduce information that is given in the module, package, or class documentation comments.
+
+Several JavaDoc tags can be also used in the overview comment; for details refer to the chapter "Where Tags Can Be Used" in \autocite{ORACLE_DOC_JAVADOC_TAG}.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘module’ Comment}\label{sec:ModuleComment}
+The \verb#<module description># (refer to chapter \tqfullref{sec:ModuleDefinition}) describes the current module, its dependencies and what it provides. See the JavaDoc tags \nameref{sec:TagProvides} and \nameref{sec:TagUses} for details.
+
+If the project has just one module, the module comment can replace the overview comment.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘package’ Comment}\label{sec:PackageComment}
+Each and every Java package has to have a file named \verb#package-info.java#; the structure of that file was already discussed in chapter \tqfullvref{sec:PackageDocumentation}.
+
+The \verb#<package description># provides information about the package. So it describes the purpose of the classes in this package. It lists conventions that are common for all contained classes, it should specify their prerequisites.
+
+If the package defines a single API, it can describe the usage of that API, too. 
+
+The package comment can list the authors of the code, using the \nameref{sec:TagAuthor} tag\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})}, the version with the \nameref{sec:TagVersion} tag, when the package was created or with which version it was integrated with the \nameref{sec:TagSince} tag, and other things.
+
+It should not repeat details that are written already in the documentation of a class in that package, instead it should reference that class documentation. If those details are  important for the whole package, it should be considered to move them from the class comment to the package description and place a reference into the class documentation instead.
+
+The package comment for the main package of a project can replace the overview comment (if not the module comment is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘class’ Comment}\label{sec:ClassComment}
+The documentation comment for a class, an interface, an enum, a record or an annotation (the ‘class comment’) describes that class, its purpose and its usage. If the class is not \lstinline|final|, the comment should provide some hints what the mount points\footnote{Another term for “mount point” is “extension point”, but I do not like this expression as we do not always “extend” a class on these points. Most often we replace existing behaviour to customise the class to our needs.} are and how to utilise them.
+
+Then the class comment should list the authors of the class, using the \nameref{sec:TagAuthor}\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})} tag, the class version (using the \nameref{sec:TagVersion} tag), and when the class was added to the project with the \nameref{sec:TagSince} tag, although this can be omitted if this information is already given within the package.
+
+In case of a parametrised type (a ‘generic’), it contains a \nameref{sec:TagParam} tag for each formal parameter.
+
+Here a real life sample for an interface:
+\begin{lstlisting}
+/**
+ *  <p>{@summary This is the basic interface for any kind of DAO 
+ *  (Data Access Object).} It is based on sample code from the book 
+ *  &quot;Java Persistence with Hibernate&quot;.</p>
+ *
+ *  @param  <T> The entity type for the DAO.
+ *  @param  <I> The type of the entity id.
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version <version information>
+ *  @since 1.2.3
+ */
+public interface GenericDAO<T,I>
+{
+    …
+}   //  interface GenericDAO
+\end{lstlisting}
+
+The \verb#<version information># should be a reference to the version in the SCCS; if you are using Subversion, that line would look like this:
+\begin{lstlisting}
+/**
+ …
+ *  @version $Id:$
+ …
+ */
+\end{lstlisting}
+
+I also recommend to use the custom tags provided by the “Foundation JavaDoc” project\autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC} (see chapter \tqfullvref{sec:CustomTagsForJavaDoc}); then the same class documentation comment would look this:
+\begin{lstlisting}
+/**
+ *  This is the basic interface for any kind of DAO (Data Access
+ *  Object).
+ * 
+ *  @inspired &quot;Java Persistence with Hibernate&quot;
+ *
+ *  @param  <T> The entity type for the DAO.
+ *  @param  <I> The type of the entity id.
+ *
+ *  @extauthor Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version $Id:$
+ *  @since 1.2.3
+ *
+ *  @UMLGraph.link
+ */
+public interface GenericDAO<T,I>
+{
+    …
+}   //  interface GenericDAO
+\end{lstlisting}
+The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{sec:TagAuthor} tag, and the tag \nameref{sec:TagUMLGraph} places an UML diagram for the current class to the generated documentation. 
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Field Comment}\label{sec:FieldComment}
+Attributes/properties, constants and enum values are all summarised under ‘field’ here.
+
+Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
+\begin{lstlisting}
+/**
+ *  Refer to
+ *  {@link #getValue()}.
+ */
+private final Value m_Value;
+
+// AVOID!!
+/**
+ *  @see #getOtherValue()}.
+ */
+private final Value m_OtherValue;
+\end{lstlisting}
+
+If there is no getter method for a field, or it is not \lstinline|private|, a proper description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
+
+It is always a good idea to describe the valid values for the field, its default value, and if \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields – in particular because there should never be any non-\lstinline|final| non-\lstinline|private| fields at all.
+
+For a serialisable class, the fields that will be serialised should be tagged with \nameref{sec:TagSerial} and the appropriate description.
+
+Constants (\lstinline|public static final| fields) that are initialised with a literal have to use the \nameref{sec:TagValue} tag in there description. Also \lstinline|private static final| or \lstinline|protected static final| fields that are initialised with a literal should use the \nameref{sec:TagValue}.
+
+This looks like this:
+\begin{lstlisting}
+/**
+ *  The vested system property for the file encoding used by the JVM:
+ *  {@value}.
+ */
+public static final String PROPERTY_FILE_ENCODING = "file.encoding";
+\end{lstlisting}
+
+The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -3426,128 +3555,6 @@ The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACL
 
 
 
-
-\subsubsection{The Overview Comment}\label{sec:OverviewComment}
-When the JavaDoc tool is called with the option \verb#-overview <filename># (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}), an ‘Overview’ comment is  added to the generated documentation. \verb#<filename># is the (fully-qualified)  filename of a valid HTML~5 document (The recommended name is \verb#overview.html#) containing general information about the project.
-
-You can put nearly everything here, from the project's history to manual on how to use the program or library, but you should not reproduce information that is given in the module, package, or class documentation comments.
-
-Several JavaDoc tags can be also used in the overview comment; for details refer to the chapter "Where Tags Can Be Used" in \autocite{ORACLE_DOC_JAVADOC_TAG}.
-
-\subsubsection{The module Comment}\label{sec:ModuleComment}
-The \verb#<module description># (refer to chapter \tqfullref{sec:ModuleDefinition}) describes the current module, its dependencies and what it provides. See the JavaDoc tags \nameref{sec:TagProvides} and \nameref{sec:TagUses} for details.
-
-If the project has just one module, the module comment can replace the overview comment.
-
-\subsubsection{The package Comment}\label{sec:PackageComment}
-Each and every Java package has to have a file named \verb#package-info.java#; the structure of that file was already discussed in chapter \tqfullvref{sec:PackageDocumentation}.
-
-The \verb#<package description># provides information about the package. So it describes the purpose of the classes in this package. It lists conventions that are common for all contained classes, it should specify their prerequisites.
-
-If the package defines a single API, it can describe the usage of that API, too. 
-
-The package comment can list the authors of the code, using the \nameref{sec:TagAuthor} tag\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})}, the version with the \nameref{sec:TagVersion} tag, when the package was created or with which version it was integrated with the \nameref{sec:TagSince} tag, and other things.
-
-It should not repeat details that are written already in the documentation of a class in that package, instead it should reference that class documentation. If those details are  important for the whole package, it should be considered to move them from the class comment to the package description and place a reference into the class documentation instead.
-
-The package comment for the main package of a project can replace the overview comment (if not the module comment is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
-
-\subsubsection{The class Comment}\label{sec:ClassComment}
-The documentation comment for a class, an interface, an enum, a record or an annotation (the ‘class comment’) describes that class, its purpose and its usage. If the class is not \lstinline|final|, the comment should provide some hints what the mount points\footnote{Another term for “mount point” is “extension point”, but I do not like this expression as we do not always “extend” a class on these points. Most often we replace existing behaviour to customise the class to our needs.} are and how to utilise them.
-
-Then the class comment should list the authors of the class, using the \nameref{sec:TagAuthor} tag, the class version (using the \nameref{sec:TagVersion} tag), and when the class was added to the project with the \nameref{sec:TagSince} tag\footnote{Although this can be omitted if this information is already given within the package.}.
-
-In case of a parametrised type (a ‘generic’), it contains a \nameref{sec:TagParam} tag for each formal parameter.
-
-Here a real life sample for an interface:
-\begin{lstlisting}
-/**
- *  This is the basic interface for any kind of DAO (Data Access
- *  Object). It is based on sample code from the book &quot;Java
- *  Persistence with Hibernate&quot;.
- *
- *  @param  <T> The entity type for the DAO.
- *  @param  <I> The type of the entity id.
- *
- *  @author Thomas Thrien - thomas.thrien@pega.com
- *  @version <version information>
- *  @since 1.2.3
- */
-public interface GenericDAO<T,I>
-{
-    …
-}   //  interface GenericDAO
-\end{lstlisting}
-
-The \verb#<version information># should be a reference to the version in the SCCS; if you are using Subversion, that line would look like this:
-\begin{lstlisting}
-/**
- …
- *  @version $Id:$
- …
- */
-\end{lstlisting}
-
-I also recommend to use the custom tags provided by the “Foundation JavaDoc” project\autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC} (see chapter \tqfullvref{sec:CustomTagsForJavaDoc}); then the same class documentation comment would look this:
-\begin{lstlisting}
-/**
- *  This is the basic interface for any kind of DAO (Data Access
- *  Object).
- * 
- *  @inspired &quot;Java Persistence with Hibernate&quot;.
- *
- *  @param  <T> The entity type for the DAO.
- *  @param  <I> The type of the entity id.
- *
- *  @extauthor Thomas Thrien - thomas.thrien@pega.com
- *  @version $Id:$
- *  @since 1.2.3
- *
- *  @UMLGraph.link
- */
-public interface GenericDAO<T,I>
-{
-    …
-}   //  interface GenericDAO
-\end{lstlisting}
-The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{sec:TagAuthor} tag, and the tag \nameref{sec:TagUMLGraph} places an UML diagram for the current class to the generated documentation.
-
-\subsubsection{The Field Comment}\label{sec:FieldComment}
-Attributes/properties, constants and enum values are all summarised under ‘fields’ here.
-
-Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
-\begin{lstlisting}
-/**
- *  Refer to
- *  {@link #getValue()}.
- */
-private final Value m_Value;
-
-// AVOID!!
-/**
- *  @see #getOtherValue()}.
- */
-private final Value m_OtherValue;
-\end{lstlisting}
-
-If there is no getter method for a field, or it is not \lstinline|private|, a description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
-
-It is always a good idea to describe the valid values for the field, its default value, and if \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields.
-
-For a serialisable class, the fields that will be serialised should be tagged with \nameref{sec:TagSerial} and the appropriate description.
-
-Constants (\lstinline|public static final| fields) that are initialised with a literal have to use the \nameref{sec:TagValue} tag in there description. Also \lstinline|private static final| or \lstinline|protected static final| fields that are initialised with a literal should use the \nameref{sec:TagValue}.
-
-This looks like this:
-\begin{lstlisting}
-/**
- *  The vested system property for the file encoding used by the JVM:
- *  {@value}.
- */
-public static final String PROPERTY_FILE_ENCODING = "file.encoding";
-\end{lstlisting}
-
-The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
 
 \subsubsection{The Method Comment}\label{sec:MethodComment}
 The documentation comment for a method describes its usage and its function within the class, together with its arguments, the return value, and any exception it may throw.

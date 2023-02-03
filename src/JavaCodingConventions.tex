@@ -3498,7 +3498,7 @@ private final Value m_OtherValue;
 
 If there is no getter method for a field, or it is not \lstinline|private|, a proper description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
 
-It is always a good idea to describe the valid values for the field, its default value, and if \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields – in particular because there should never be any non-\lstinline|final| non-\lstinline|private| fields at all.
+It is always a good idea to describe the valid values for the field, its default value, and whether \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields – in particular because there should never be any non-\lstinline|final| non-\lstinline|private| fields at all.
 
 For a serialisable class, the fields that will be serialised should be tagged with \nameref{sec:TagSerial} and the appropriate description.
 

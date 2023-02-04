@@ -375,7 +375,7 @@ Same in software development: only few clients pay for a piece of art; instead t
 If this explanation does not help, and you are in the proper position: replace the hacker.
 
 \section{About the Author}
-My name is Thomas Thrien, I was born and raised in Germany, still live there, so my primary language is German, not English. You may notice that one or the other time when you read this text: although I have to speak English most of time on the job, I to often fall back to Denglish~…
+My name is Thomas Thrien, I was born and raised in Germany, still live there, so my primary language is German, not English. You may notice that one or the other time when you read this text: although I have to speak English most of time on the job, I too often fall back to Denglish~…
 
 I am in the IT business since 1982 now, mainly in roles dealing with support, field service, and sustaining, but over the years I also did some development work, and even some IT consulting. I did the ground work with my fingers on the keyboard as well as leading teams of various size, even running whole departments.
 
@@ -3474,7 +3474,66 @@ public interface GenericDAO<T,I>
     …
 }   //  interface GenericDAO
 \end{lstlisting}
-The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{sec:TagAuthor} tag, and the tag \nameref{sec:TagUMLGraph} places an UML diagram for the current class to the generated documentation. 
+The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{sec:TagAuthor} tag, and the tag \nameref{sec:TagUMLGraph} places an UML diagram for the current class to the generated documentation.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘record’ Comment}\label{sec:RecordComment}
+The class comment for a \lstinline|record| is a bit special as it has to incorporate the documentation for the fields of the record as well as for the arguments for the constructor (as both are the same).
+
+The declaration for a \lstinline|record| may look like this:
+\begin{lstlisting}[numbers=left,caption={A tupel class}]
+/**
+ *  <p>{@summary A tupel.} The first entry, usually referred to as 
+ *  the &quot;key&quot; identifies the object, the second one is the
+ *  &quot;value&quot;.</p>
+ *  <p>The sort order is determined only through the keys, therefore
+ *  {@link #compareTo(Tupel)}
+ *  is not consistent with
+ *  {@link #equals(Object)}.</p>
+ *
+ *  @param  <K> The type of the key.
+ *  @param  <V> The type of the value.
+ *
+ *  @param  key The key of the tupel; can be {@code null}.
+ *  @param  value   The value of the tupel; can be {@code null}.
+ *
+ *  @extauthor Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version $Id:$
+ *  @since 1.2.3
+ *
+ *  @UMLGraph.link
+ */
+public record Tupel<K extends Comparable<K>,V>( K key, V value ) implements Comparable<Tupel<K,V>
+{
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc} 
+     */
+    @Override
+    public final int compareTo( final Tupel<K,V> o )
+    {
+        final var retValue = Comparator.comparing( Tupel<K,V>::key )
+            .compare( this, o ); 
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  compareTo()
+}
+//  record Tupel
+\end{lstlisting}
+
+Although not explicitly declared, \lstinline|Tupel| has~…
+\begin{itemize}[nosep]
+\item{…~a constructor “\lstinline|Tupel( final K key, final V value )|”}
+\item{…~two attributes “\lstinline|private final K key|” and “\lstinline|private final V value|}
+\item{…~the two accessor methods “\lstinline|K key()|” and “\lstinline|V value()|”}
+\item{…~and implementations for “\lstinline|equals()|”, “\lstinline|hashCode()|” and “\lstinline|toString()|”}
+\end{itemize}
+
+The documentation for these elements is generated either based on the arguments for the \nameref{sec:TagParam} tags (see lines~13 and 14) or from standard texts.
 
 %------------------------------------------------------------------------------
 
@@ -3516,45 +3575,6 @@ public static final String PROPERTY_FILE_ENCODING = "file.encoding";
 The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
 
 %------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \subsubsection{The Method Comment}\label{sec:MethodComment}
 The documentation comment for a method describes its usage and its function within the class, together with its arguments, the return value, and any exception it may throw.
@@ -3563,7 +3583,7 @@ For each method parameter there have to be a \nameref{sec:TagParam} tag that des
 
 It is not enough to only give the type of the parameter in the comment; in fact, this is obsolete as it can be easily taken from the method's signature.
 
-Usually, the return value (given the method is not of type \lstinline|void|) will be described in the comment for the \nameref{sec:TagReturn} tag; the tag is mandatory, and with some text, even if the return value is described already in the method description itself. The description for the return value should provide the possible values and there meanings, whether \lstinline|null| is a valid return value, and so on. 
+Usually, the return value (given the method is not of type \lstinline|void|) will be described in the comment for the \nameref{sec:TagReturn} tag; the tag is mandatory, and with some text, even if the return value is described already in the method description itself. The description for the return value should provide the possible values and their meanings, whether \lstinline|null| is a valid return value, and so on. 
 
 In particular, the comment for the \nameref{sec:TagReturn} tag has to describe which return values indicate special or error conditions.
 
@@ -3571,11 +3591,11 @@ It is obsolete to give the type of the return value here; it can already be seen
 
 Next there has to be a \nameref{sec:TagThrows} tag for each checked exception that may be thrown by the method, describing the condition that may trigger that exception. It is also possible to add \nameref{sec:TagThrows} clauses for unchecked exceptions, but not required. Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} for additional details on exception handling.
 
-A method that implements an interface method or that overrides a method from a base class be commented with the \nameref{sec:TagInheritDoc} tag instead of writing a full comment. The tag can be combined with additional text, too.
+A method that implements an interface method or that overrides a method from a base class may be commented with the \nameref{sec:TagInheritDoc} tag instead of writing a full comment. The tag can be combined with additional text, too.
 
-The documentation comment for a non-\lstinline|final| \lstinline|public| or \lstinline|protected| method has to provide detailed information when and how it has to be overwritten; especially if the overriding method has to call the super implementation and when:\footnote{Usually you should avoid the requirement for calling the super implementation, but that is not always appropriate or possible; refer to chapter \tqref{sec:NonFinalMethods} about some more details.}.
+The documentation comment for a non-\lstinline|final| \lstinline|public| or \lstinline|protected| method has to provide detailed information when and how it has to be overwritten; especially if the overriding method has to call the super implementation and when. Usually you should avoid the requirement for calling the super implementation, but that is not always appropriate or possible; refer to chapter \tqfullvref{sec:NonFinalMethods} about some more details regarding this topic.
 
-A comment for that case may look like this:\footnote{The tag @note is a custom tag; refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc}}
+A comment for that case may look like this:\footnote{The tag @note is a custom tag; refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc}.}
 \begin{lstlisting}
 /**
  *  …
@@ -3614,13 +3634,15 @@ If such a method has a dummy or default return value, there has to be an appropr
  
 Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected.
 
+%------------------------------------------------------------------------------
+
 \subsubsection{The Constructor Comment}\label{sec:ConstructorComment}
 Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
 
-For an empty default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
+For an (empty) default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
 \begin{lstlisting}
 /**
- *  Creates a new {@code MyClass} instance object.
+ *  Creates a new instance of {@code MyClass}.
  */
 public MyClass() { /* Does nothing */ }
 \end{lstlisting}
@@ -3631,24 +3653,26 @@ or
  */
 private MyClass() { /* Does nothing */ }
 \end{lstlisting}
-with the first alternative being the preferred one; in fact, this comment can be used for every constructor, not only for the default ones.
+with the first alternative being the preferred one, because this comment can be used for every constructor, not only for the default ones.
 
-Of course, these comments do not say very much, but the constructor is also not doing that much, and what it does is very obvious. But if it has side effects, these should be described properly.
+Of course, this comment do not say very much, but the constructor of a class is also not doing that much, and what it does is very obvious. But if the constructor has side effects, these should be described properly.
 
-A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The \lstinline|Error| class is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The class for the \lstinline|Error| used in the \lstinline|throw| is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
 \begin{lstlisting}
 /**
  *  No instance is allowed for class {@code MyUtilityClass}.
  */
 private MyUtilityClass() 
 { 
-    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class); 
+    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class ); 
 }   // MyUtilityClass()
 \end{lstlisting}
 
 If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
 
 Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
+
+%------------------------------------------------------------------------------
 
 \subsection{The JavaDoc Tags}\label{sec:JavaDocTags}
 The next two chapters describe the tags that should be used in your documentation comments where appropriate.
@@ -3679,20 +3703,26 @@ One general rule for all JavaDoc tags: Do not insert line breaks between the par
  */
 \end{lstlisting}
 
+%------------------------------------------------------------------------------
+
 \subsubsection{The Standard Doclet Tags}
 Most of the contents of this chapter was taken from the document “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG}. 
 
-In the context of the JavaDoc tool, the interpretation of the content of a documentation comment is done by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet|\footnote{Refer to \autocite{ORACLE_DOC_DOCLET_INTERFACE}.} interface that is used to process the comment. Other implementation may accept the same syntax as the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet|\autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}), or they may support an alternate syntax. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
+The output of the JavaDoc tool is determined by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet|\footnote{Refer to \autocite{ORACLE_DOC_DOCLET_INTERFACE}.} that is specified on the command line for \verb#javadoc#. The \lstinline|Doclet| implementation is also responsible for the interpretation of the content of a documentation comment.
+
+If no explicit \lstinline|Doclet| class is specified, the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet|\autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}) is used; it understands the JavaDoc tags described below, and it provides an API for additional tags.
+
+Alternative implementations for the \lstinline|Doclet| interface may accept the same syntax as the standard doclet, they may handle the tags completely different or they can ignore them completely. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
 
 \paragraph{\lstinline|@author|}\label{sec:TagAuthor} Usage: \lstinline|@author <name-text>|
 
-The tag adds an “Author” entry with the specified name text to the generated documents when the \verb#-author# option is used. A documentation comment can contain multiple \lstinline|@author| tags. Use the \nameref{sec:TagExtAuthor} tag instead.
+The tag adds an “Author” entry with the specified name text to the generated documents when the \verb#-author# option is specified on the command line. A documentation comment can contain multiple \lstinline|@author| tags. Consider to use the alternative \nameref{sec:TagExtAuthor} tag instead.
 
 \paragraph{\lstinline|@code|}\label{sec:TagCode}  Usage: \lstinline|{@code <text>}|
 
 This is equivalent to \lstinline|<code>{@literal text}</code>|.
 
-It displays text in the code font without interpreting the text as HTML markup or nested JavaDoc tags. This enables you to use regular angle brackets (< and >) instead of the HTML entities (\&lt; and \&gt;) in documentation comments, such as in parameter types (<Object>), inequalities (3 < 4), or arrows (->).
+It displays text in the code font without interpreting the text as HTML markup or nested JavaDoc tags. This enables you to use regular angle brackets (“\textless” and “\textgreater”) instead of the HTML entities (\verb#&lt;# and \verb#&gt;#) in documentation comments, such as in parameter types (\verb#<Object>#), inequalities ($3 < 4$), or arrows (-\textgreater).
 
 If you want the same functionality without the code font, then use the \nameref{sec:TagLiteral} tag. 
 
@@ -3789,16 +3819,18 @@ When used with the argument \verb|<module.package.class#field>| in any documenta
  */
 public final String evalScript( String script ) { … }
 \end{lstlisting}
-The argument \verb|<module.package.class#field>| takes a form similar to that of the \nameref{sec:TagLink}, the \nameref{sec:TagLinkplain}, or the \nameref{sec:TagSee} tag argument, except that the member must be a \lstinline|static final| field.
+The argument \verb|<module.package.class#field>| takes a form similar to that of the \nameref{sec:TagLink}, the \nameref{sec:TagLinkplain}, or the \nameref{sec:TagSee} tag argument, except that the member always must be a \lstinline|static final| field.
 
 \paragraph{\lstinline|@version|}\label{sec:TagVersion}  Usage: \lstinline|@version <version-text>|
 
-Adds a “Version” subheading with the specified \verb#<version-text># value to the generated documents when the \verb#-version# option is used. This tag is intended to hold the current release number of the software that this code is part of, as opposed to the \nameref{sec:TagSince} tag, which holds the release number where this code was introduced. The \verb#<version-text># value has no special internal structure.
+Adds a “Version” subheading with the specified \verb#<version-text># value to the generated documents when the \verb#-version# option is specified on the command line. This tag is intended to hold the current release number of the software that this code is part of, as opposed to the \nameref{sec:TagSince} tag, which holds the release number where this code was introduced. The \verb#<version-text># value has no special internal structure.
+
+%------------------------------------------------------------------------------
 
 \subsubsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
-You can define your own JavaDoc tags; simple tags can be defined on the commandline for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
+You can define your own JavaDoc tags; simple tags can be defined on the command line for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
 
-I created a set of custom tags that I use regularly, and that I also recommend for your documentation comment. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
 
 \paragraph{\lstinline|@anchor|}\label{sec:TagAnchor}  Usage: \lstinline|{@anchor #<anchor-name> <text>}|
 
@@ -3806,11 +3838,11 @@ This tag allows to add an HTML anchor to the generated documentation, where \ver
 
 \paragraph{\lstinline|@extauthor|}\label{sec:TagExtAuthor}  Usage: \lstinline|@extauthor <name-text> - <email-address>|
 
-This is a replacement for the \nameref{sec:TagAuthor} tag that renders the given email address as \verb#mailto:# link in the generated documentation. It does not regard the \verb#-author# option\footnote{This is valid for version 0.1.0 of the library; it may have changed for a later version}. 
+This is a replacement for the \nameref{sec:TagAuthor} tag that renders the given email address as a \verb#mailto:# link in the generated documentation. It does not regard the option \verb#-author# on the command line\footnote{This is valid for version 0.1.0 of the library; it may have changed for a later version.}. 
 
 \paragraph{\lstinline|@href|}\label{sec:TagHref}  Usage: \lstinline|{@href <url> <text>}| or \lstinline|{@href <url>}|
 
-With this tag, an HTML hyperlink can be added to the generated documentation; if will place inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \verb#<url># is the target URL, while \verb#<text># is the clickable text. If the latter is omitted, the URL itself will be used instead.
+With this tag, an HTML hyperlink can be added to the generated documentation; it will be placed inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \verb#<url># is the target URL, while \verb#<text># is the clickable text. If the latter is omitted, the URL itself will be used instead.
 
 \paragraph{\lstinline|@inspired|}\label{sec:TagInspired}  Usage: \lstinline|@inspired <text>|
 
@@ -3834,9 +3866,10 @@ Same as for the \nameref{sec:TagExtAuthor} and the \nameref{sec:TagModified} tag
 
 This adds an UML graph for the current class to the generated documentation.
 
+%------------------------------------------------------------------------------
 
 \section{Implementation Comment Formats}
-A source code file can have four styles of implementation comments:
+A Java source code file can have four styles of implementation comments that are described in detail in the following chapters:
 \begin{itemize}[nosep]
 \item{structuring comments}
 \item{block comments}
@@ -3844,9 +3877,11 @@ A source code file can have four styles of implementation comments:
 \item{trailing or end-of-line comments}
 \end{itemize}
 
+%------------------------------------------------------------------------------
+
 \subsection{Structuring Comments}\label{sec:StructuringComments}
 Structuring comments are the most simple comments: they are used to separate the parts of a class (as defined in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left,stepnumber=3,firstnumber=2]
     /*------------------*\
 ====** Enum Declaration **===========================================
     \*------------------*/
@@ -3870,14 +3905,16 @@ Structuring comments are the most simple comments: they are used to separate the
     \*---------*/
 \end{lstlisting}
 
-with the lines ending at column 80 (the samples here are too short).
+with the lines ending at column~80 (the samples here are shorter, to avoid a line break).
 
 If a class or interface does not have a particular part, the assigned structuring comment must be omitted.
 
-I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert.}. Refer to chapter \tqfullvref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
+I recommend to create “Building Blocks” with these comments. Eclipse provides the Snippet facility for this purpose\footnote{Storing the comments as code templates is not recommended as a template would be reformatted on insert, having some funny effects on the ASCII art.}. Refer to chapter \tqfullvref{sec:SnippetStructuringComments} for the snippet code for the structuring comments.
+
+%------------------------------------------------------------------------------
 
 \subsection{Block Comments}\label{sec:BlockComments}
-Block comments are used to provide detailed descriptions of files, methods, data structures and algorithms – meaning that the text of the comment is longer than just one line. Block comments may be used at the beginning of each block after the opening brace. They can also be used in other places, such as within methods. Block comments inside a function or method should be indented to the same level as the code they describe. 
+Block comments are used to provide detailed descriptions of files, methods, data structures and algorithms – meaning that the text of the comment is longer than just one single line. Block comments may be used at the beginning of each block after the opening brace. They can also be used in other places, such as within methods. Block comments inside a function or method should be indented to the same level as the code they describe.
 
 A block comment should be preceded by a blank line to set it apart from the rest of the code. If the block comment does not directly refer to the code line immediately after it, it should be followed by another blank line.
 
@@ -3920,14 +3957,16 @@ Some samples:
      * … and the closing tag should be on a line of its own. */
 \end{lstlisting}
  
+%------------------------------------------------------------------------------
+ 
 \subsection{Single-Line Comments}\label{sec:SingleLineComments}
 Short comments can appear on a single line; they will be indented also to the level of the code that follows. Usually it should be written in the form of a headline:
 \begin{lstlisting}
 //---* Handle the condition *----------------------------------------
 \end{lstlisting}
-with the dashes ending on column 80.\footnote{A quick reminder: the sample code in this document uses a line length of 70, so the dashes in the comment line above ends an column 70.}
+with the dashes ending on column~80.\footnote{A quick reminder: the sample code in this document uses a line length of 70, so the dashes in the comment line above ends an column~70.}
 
-If a comment cannot be written in a single line, it should have the block comment format (see chapter \tqref{sec:BlockComments}). A single-line comment should be separated from the preceding code by a blank line. Only when the preceding line contains only the opening curly brace as in the \lstinline|if-then-else| sample below (lines~3 and 8). 
+If a comment cannot be written in a single line, it should have the block comment format (see chapter \tqref{sec:BlockComments}). A single-line comment should be separated from the preceding code by a blank line. Only when the preceding line contains only the opening curly brace as in the \lstinline|if-then-else| sample below (lines~3 and 8), this blank line should be omitted. 
 
 Here are some examples of single-line comments in Java code:
 \begin{lstlisting}[numbers=left]
@@ -3957,7 +3996,7 @@ public interface Marker
 public class Extension extends Base
 { /* No implementation */ }
 
-private Constructor() { /* Does nothing */ }
+private Constructor() { /* Just exists */ }
 
 public void adapterMethod() { /* Does nothing */ }
 
@@ -3975,7 +4014,7 @@ public final void method()
 }   // method()
 \end{lstlisting}
 
-And finally, there are the “class termination comments” that repeats the name of the class after the last curly brace:
+And finally, there are the “class termination comments” that repeats the name of the class after the closing curly brace of the class definition:
 \begin{lstlisting}
 public final class MyClass
 {
@@ -3994,8 +4033,50 @@ public final interface MyInterface
     …
 }
 //  interface MyInterface
-
 \end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Trailing or End-Of-Line Comments}\label{sec:TrailingOrEndOfLineComments}
 Very short comments can appear on the same line as the code they describe, but should be shifted right far enough to separate them from the statements. If more than one short comment appears in a chunk of code, they should all be indented to the same tab setting.

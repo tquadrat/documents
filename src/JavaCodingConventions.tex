@@ -3992,9 +3992,11 @@ Another form of the single line comment is the empty block comment:
 \begin{lstlisting}
 public interface Marker
 { /* No methods */ }
+//  interface Marker
 
 public class Extension extends Base
 { /* No implementation */ }
+//  class Extension
 
 private Constructor() { /* Just exists */ }
 
@@ -4014,7 +4016,7 @@ public final void method()
 }   // method()
 \end{lstlisting}
 
-And finally, there are the “class termination comments” that repeats the name of the class after the closing curly brace of the class definition:
+And finally, there are the “class termination comments” that repeats the name of the class after the closing curly brace of the class definition, as you may have noticed already in several other examples:
 \begin{lstlisting}
 public final class MyClass
 {
@@ -4037,75 +4039,36 @@ public final interface MyInterface
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Trailing or End-Of-Line Comments}\label{sec:TrailingOrEndOfLineComments}
-Very short comments can appear on the same line as the code they describe, but should be shifted right far enough to separate them from the statements. If more than one short comment appears in a chunk of code, they should all be indented to the same tab setting.
+Very short comments can appear on the same line as the code they describe, but should be shifted right far enough to separate them from the statements – and then that comment should still end at or before column~80. If more than one short comment appears in a chunk of code, they should all be indented to the same tab setting.
 
-Here's an example of a trailing comment in Java code:
+Here's an example of a trailing comment in Java source code:\footnote{Of course that can be written easier as “\lstinline!final var retValue = (a == 2) || isPrime( a );!”, but then it would be difficult to place the comments as shown. Again, another form of comment would be still possible …}
 \begin{lstlisting}
+final boolean retValue;
 if( a == 2 )
 {
-    return TRUE;            /* special case */
+    retValue = true;            /* special case */
 }
 else
 {
-    return isPrime( a );    /* works only for odd a */
+    retValue = isPrime( a );    /* never true for even a */
 }
 \end{lstlisting}
 
 But it is more common to use “\verb#//#” instead of “\verb#/*…*/#” for these trailing comments:
 \begin{lstlisting}
+final boolean retValue;
 if( a == 2 )
 {
-    return TRUE;            // special case
+    retValue = true;            // special case
 }
 else
 {
-    return isPrime( a );    // works only for odd a
+    retValue = isPrime( a );    // never true for even a
 }
 \end{lstlisting}
 
-You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
+You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqfullvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
 
 \begin{lstlisting}[numbers=left,caption={Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}},label={listing:GaussEaster}]
 /**
@@ -4187,7 +4150,24 @@ public static final LocalDate calcEasterDate( final Year year )
 }   //  calcEasterDate()
 \end{lstlisting}
 
-As you can see, for this use case it is acceptable to continue a long comment in the following line (see lines~31 and 32, for example) without using a block comment.
+As you can see, for this use case it is acceptable to continue a long comment in the following line (see lines~31 and 32, for example) without using a block comment. But writing
+\begin{lstlisting}[numbers=left,firstnumber=30]
+    …
+    final int d;  /* The seed for the first full moon in spring (der Keim 
+        für den ersten Vollmond im Frühling) */
+    final int r:  /* The calendar adjustment (die kalendarische
+        Korrekturgröße) */
+    final int og; // The Easter limit (die Ostergrenze)
+    final int sz; // The first Sunday in March (der erste Sonntag im März)
+    final int oe; /* The distance of Easter Sunday from the Easter limit
+        – Easter distance in days (die Entfernung des Ostersonntags von 
+        der Ostergrenze – Osterentfernung in Tagen) */
+    final int os; /* The date of Easter Sunday as a March date with 
+        March 32 as April 1 etc. (das Datum des Ostersonntags als 
+        Märzdatum – 32. März = 1. April usw.) */
+    …    
+\end{lstlisting}
+can be considered also as valid. But in general, so long trailing comments should be avoided.
 
 Another use case for these kind of comments is to provide information about the arguments of a method call; usually, you should avoid method signatures where this is required (the formal parameter of the method should be sufficient to explain the argument), but sometimes it makes still sense:
 \begin{lstlisting}
@@ -4198,8 +4178,9 @@ drawCircle(
 );
 …
 \end{lstlisting}
+Again, you should avoid lengthy comments, but if really required, you can break the lines as shown above.
 
-The end comment for a method is also of this type:
+The end comment for a method is also of this type; I used lots of these in the sample code already:
 \begin{lstlisting}
 public final void method()
 {
@@ -4215,6 +4196,8 @@ Also a long code block\footnote{But if it seems really necessary to add such a c
     …
 } //  End of result calculation
 \end{lstlisting}
+
+But if the comment should only mark begin and end of the code block, without providing further information, you should consider to use a label, as explained below.
 
 The end comments for the bodies of \lstinline|for|, \lstinline|while|, \lstinline|switch| and even \lstinline|if-then-else| blocks are a special case, as those blocks should be introduced by a label, and this label should be repeated as the end comment:
 \begin{lstlisting}
@@ -4250,7 +4233,7 @@ else
 \end{lstlisting}
 Note the colon at the end of each of the comments!
 
-Do not use the introducing code line for the end comment! That code line may change at some point in time and then the end comment does not have a corresponding starting line anymore.\footnote{This also means that you should be careful with removing or changing labels in the code.}
+Do not use the introducing code line for the end comment, although you can find this pattern in many books and even in real world code! That introducing code line may change at some point in time and then the end comment does not have a corresponding starting line anymore.\footnote{This also means that you should be careful with removing or changing labels in the code.}
 
 Avoid this:
 \begin{lstlisting}
@@ -4286,13 +4269,20 @@ else
 }    
 \end{lstlisting}
 
+%------------------------------------------------------------------------------
+
 \section{Maintenance Comments}\label{sec:MaintenanceComments}
 It is very likely that source code will be changed more than once during its lifetime. Bugs will be fixed, functionality is added or removed, refactorings will be applied, or the code will be migrated to other platforms or different versions of the programming language, the underlying libraries, the connected systems and/or the operating system.
 
 There is a practice that all the changes made in the code will be commented in the code. These comments are usually referred to as “Maintenance Comments”.
 
-This may look like this:
+This may look like this:\footnote{The abbreviation “FSP” stands for “Field Service Patch” …}
 \begin{lstlisting}
+…
+//<<BEGIN FSP-0815 – applied by Mirabel Madrigal
+<Additional Code>
+…
+//>>END FSP-0815
 …
 //<<BEGIN FSP-4711 – applied by Micky Mouse
 //<Old Code>
@@ -4301,9 +4291,21 @@ This may look like this:
 <New Code>
 …
 //>>END FSP-4711
+…
+//<<BEGIN FSP-4917 – applied by Donald Duck
+//<Old Code>
+//…
+//>>
+<Unmodified Code>
+…
+//<<
+<New Code>
+…
+//>>END FSP-4917
+…
 \end{lstlisting}
 
-It has proved that this is not a good practice at all, and a really bad practice if dealing with code that is managed by an SCCS.
+Also it looks good at a first glance, it has proved that this is not a good practice at all, and a really bad practice if dealing with code that is managed by an SCCS.
 
 First, this practice causes problems for the compare tools coming with the SCCS – at least it will make it more difficult to read the comparison results from those tools.\footnote{Most comparison tools will recognise the out-commenting of the old code as a change and the new code as additional code instead of the replacement for the old code. This is at least confusing when a code revisions are made on the fix.} And the main function of those comments – documenting the changes – is much better served by the SCCS tools themselves.
 
@@ -4324,6 +4326,7 @@ Old code will be removed and not commented out, or just replaced by the new code
 When using the suggested annotation from chapter \tqref{sec:PatchIdentification}, this could look like this:
 \begin{lstlisting}
 …
+@BUG( id = "BUG-0815", comment = "Superseded by BUG-4711" )
 @BUG( id = "BUG-4711", comment = "No end criterion for loop" )
 @BUG( id = "BUG-4712", comment = "Exception was swallowed" )
 public final void myMethod()
@@ -4345,6 +4348,51 @@ public final void myMethod()
 }   //  myMethod()
 …
 \end{lstlisting}
+
+The relevant details about the fix/change/enhancement can now be found in the SCCS and/or in your Bug Tracking system, referenced through the id of the annotation.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Special Comments}
 The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:SpecialComments} suggests some special comments: \verb#XXX# in a comment flags something that is bogus but works. \verb#FIXME# flags something that is bogus and broken (and has to be fixed very soon).

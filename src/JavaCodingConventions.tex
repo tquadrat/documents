@@ -4353,6 +4353,50 @@ The relevant details about the fix/change/enhancement can now be found in the SC
 
 %------------------------------------------------------------------------------
 
+\section{Special Comments}
+The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:SpecialComments} suggests some special comments: \verb#XXX# in a comment flags something that is bogus but works. \verb#FIXME# flags something that is bogus and broken (and has to be fixed very soon).
+
+Eclipse knows a setting that allows to externalise such comments into a task list:\\ \verb#Window|Preferences|General|Editors|Structured Text Editors|Task Tags#.
+
+It also adds \verb#TODO# to that list, for something that still needs to be implemented.
+
+%------------------------------------------------------------------------------
+
+\section{Commenting out Code}
+Sometimes you want to ‘comment out’ code that should (no longer) be compiled and/or executed, instead of removing it completely.
+
+First, your production code should not contain any code that is commented out. Nevertheless, it is helpful that you have this option.
+
+Use the “//” delimiter to comment out a complete line, only a partial line, or a whole bunch of consecutive lines of code.
+
+Example:
+\begin{lstlisting}
+if( foo > 1 )
+{
+    //---* Do a double-flip *----------------------------------------
+    …
+}
+else
+{
+    return false;          // Explain why here.
+}
+//if( bar > 1 )
+//{
+//    //---* Do a triple-flip *--------------------------------------
+//    …
+//}
+//else
+//{
+//    return false;
+//}
+\end{lstlisting}
+
+To use a block comment (“\verb#/*…*/#”) for commenting out sections of code is not a good idea, although you do not have to type that much: you cannot have a block comment inside a block comment.
+
+The easiest way to comment out a selected code block this way in Eclipse is to use “\verb#Source|Toggle Comment#” from the menu or the short key “\verb#CTRL+/#”\footnote{On a German keyboard, it is “7” instead of “/”.}.
+
+In IntelliJ IDEA, it is the menu command “\verb#Code|Comment with Line Comment#” or the short key “\verb#CTRL+/#”\footnote{On a German keyboard, it is “÷” on the numeric keypad instead of “/”.}.
+
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
@@ -4393,44 +4437,6 @@ The relevant details about the fix/change/enhancement can now be found in the SC
 
 
 
-
-\section{Special Comments}
-The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:SpecialComments} suggests some special comments: \verb#XXX# in a comment flags something that is bogus but works. \verb#FIXME# flags something that is bogus and broken (and has to be fixed very soon).
-
-Eclipse knows a setting that allows to externalise such comments into a task list:\\ \verb#Window|Preferences|General|Editors|Structured Text Editors|Task Tags#.
-
-It also adds \verb#TODO# to that list, for something that still needs to be implemented.
-
-\section{Commenting out Code}
-Use the “//” delimiter to comment out a complete line, only a partial line, or a whole bunch of consecutive lines of code.
-
-Example:
-\begin{lstlisting}
-if( foo > 1 )
-{
-    //---* Do a double-flip *----------------------------------------
-    …
-}
-else
-{
-    return false;          // Explain why here.
-}
-//if( bar > 1 )
-//{
-//    //---* Do a triple-flip *--------------------------------------
-//    …
-//}
-//else
-//{
-//    return false;
-//}
-\end{lstlisting}
-
-To use a block comment (“\verb#/*…*/#”) for commenting out sections of code is not a good idea, although you do not have to type that much: you cannot have a block comment inside a block comment.
-
-The easiest way to comment out a selected code block this way in Eclipse is to use \verb#Source|Toggle Comment# from the menu or the short key \verb#CTRL+/#\footnote{On a German keyboard, it is “7” instead of “/”.}.
-
-In IntelliJ IDEA, it is the menu command \verb#Code|Comment with Line Comment# or the short key \verb#CTRL+/#\footnote{On a German keyboard, it is “÷” on the numeric keypad instead of “/”.}.
 
 \section{Comments when?}\label{sec:CommentsWhen}
 To repeat what was already said at the beginning of the chapter \tqfullref{sec:WritingProperComments}: The frequency of comments reflects poor quality of code, but code can be “under-commented” or “over-commented”. This means that there is a “frequency band” for comments that has to be hit for good quality code.
@@ -4541,6 +4547,39 @@ Second, having a list of \lstinline|Value| objects declared as \lstinline|List<O
 \item{With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.}
 \item{tbc}
 \end{itemize}
+
+%------------------------------------------------------------------------------
+
+\subsection{Comments vs. Annotations}\label{CommentVsAnnotations}
+Sometimes a comment can be replaced or enhanced by an annotation. Obvious examples are the
+\lstinline|@Override|\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION} and the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotations, and to some extent, also the \lstinline|@FunctionalInterface|\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} annotation.
+
+Other annotations from the Java Runtime library that could (and should) be used this way are (the list is not exhaustive):
+\begin{itemize}[nosep]
+\item{\lstinline|@Generated|\autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
+\item{\lstinline|@Native|\autocite{ORACLE_DOC_NATIVE_ANNOTATION}}
+\item{\lstinline|@Serial|\autocite{ORACLE_DOC_SERIAL_ANNOTATION}}
+\end{itemize}
+
+The \lstinline|@API|\autocite{APIGUARDIAN:API} annotation can be seen as a comment replacement, too. Refer to chapter \tqfullvref{sec:APIAnnotation} to learn more about this annotation and its usage.
+
+My Foundation library will have some more samples:
+\begin{itemize}[nosep]
+\item{\lstinline|@BUG|\autocite{TQUADRAT_ORG_FOUNDATION_BUG}}
+\item{\lstinline|@ClassVersion|\autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
+\item{\lstinline|@MountPoint|\autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}}
+\item{\lstinline|@PlaygroundClass|\autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
+\item{\lstinline|@ProgramClass|\autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
+\item{\lstinline|@UtilityClass|\autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
+\end{itemize}
+
+Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper| or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
+
+To some extent is even the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a “replacement” for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that ‘wrong’ piece of code.
+
+Of course using an annotation instead of a comment can help to spare typing, but the greatest advantage of annotations over comments is that you can easily write tools that helps you with checking the source code in accordance with the annotations. Or someone else has already created those tools.
+
+%------------------------------------------------------------------------------
 
 \section{Updating Comments}
 If the code has to be modified, no matter if due to regular maintenance, bug fixing or a migration, all related comments has to be updated accordingly. There is no value in keeping “historical comments”, although mentioning the old algorithm when the former implementation has been replaced completely might be useful in some cases.
@@ -7969,6 +8008,8 @@ Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \ls
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
 \lipsum[1]
 
 \begin{lstlisting}

@@ -384,7 +384,7 @@ But in support and sustaining, you are mainly on the “receiving end” of the 
 If you have questions or comments regarding this document, please send me an email to \href{mailto:thomas.thrien@tquadrat.org}{thomas.thrien@tquadrat.org}. Or leave it at \url{https://tquadrat.github.io/}.
 
 \section{The Basic Rule}\label{sec:TheBasicRule}
-One rule should be followed before any other rule or recommendation given in this document, that one listed as number~\ref{lst:ZoP:BasicRule} in the nutshell version of the “Coding Guardrails for Java”:\footnote{And it does not contradict with numbers~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
+One rule should be followed before any other rule or recommendation given in this document, that one listed as bullet point~\ref{lst:ZoP:BasicRule} in the nutshell version of the \hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java”}:\footnote{And it does not contradict with bullet points~\ref{lst:ZoP:Now} and \ref{lst:ZoP:RightNow}!}
 
 \begin{center}
 	\begin{huge}
@@ -396,7 +396,7 @@ Experiences with lots of programming projects have shown that programmers seldom
 
 \textit{And this is exactly what we want to avoid!} 
 
-This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code~… – treat a PoC in the same way as product code.\footnote{I was inclined to add “There is nothing like a \textit{disposable prototype}.” to the nutshell version of the “Coding Guardrails for Java”~…}
+This means there is never ever any excuse for omitting comments, using ‘temporary’ names or doing other ‘funny’ things. And we all know about all the quick and dirty PoCs that made it into a product without significant changes to the code~… – treat a PoC in the same way as product code.\footnote{I was inclined to add “There is nothing like a \textit{disposable prototype}.” to the \ngref~…}
 
 Of course you can interpret this also as “Don't make mistakes”, but we all now that humans make mistakes, and that it is unavoidable that our code will contain one or the other bug. So it means that you should \textit{do your best} to avoid mistakes, and the rules, guidelines and recommendation from this document will help you with that.
 
@@ -408,7 +408,7 @@ So again:
 	\end{huge}
 \end{center}
 
-But the most important rule is that with the number~\ref{lst:ZoP:HaveFun}:
+But the most important rule from the \ngref{} is that with the bullet point number~\ref{lst:ZoP:HaveFun}:
 
 \begin{center}
 	\begin{huge}
@@ -438,7 +438,7 @@ Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Program
 \begin{enumerate}[label=P\arabic*.]
 	\item{The structure of the program text must support the flow of reading.
 	
-	As said in the \ngref, number~\ref{lst:ZoP:Readablity}: “Readability counts”.}
+	As said in the \ngref, bullet point~\ref{lst:ZoP:Readablity}: “Readability counts”.}
 	
 	\item{The formatting of the program text has to be consistent.
 	
@@ -452,7 +452,7 @@ Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Program
 	
 	\item{It does not harm when the source code also looks beautiful.
 	
-	Number~\ref{lst:ZoP:BeautifulVsUgly} from the \ngref~ is also about the visual appearance of the source code. We can discuss how useful ASCII art in a source file is, but not that it can contribute to the beauty of the program text.}
+	Bullet point~\ref{lst:ZoP:BeautifulVsUgly} from the \ngref~ is also about the visual appearance of the source code. We can discuss how useful ASCII art in a source file is, but not that it can contribute to the beauty of the program text.}
 \end{enumerate}
 
 \section{Indentation}\label{sec:Indentation}
@@ -4397,6 +4397,238 @@ The easiest way to comment out a selected code block this way in Eclipse is to u
 
 In IntelliJ IDEA, it is the menu command “\verb#Code|Comment with Line Comment#” or the short key “\verb#CTRL+/#”\footnote{On a German keyboard, it is “÷” on the numeric keypad instead of “/”.}.
 
+\section{Comments when?}\label{sec:CommentsWhen}
+To repeat what was already said at the beginning of this chapter \tqfullref{sec:WritingProperComments}: The frequency of comments reflects the quality of the source code, but it can be “under-commented” or “over-commented”. This means that there is a “frequency band” for comments that has to be hit for \textit{good} quality code.
+
+The advice “When you feel compelled to add a comment, consider rewriting the code to make it clearer” raises the question for whom the code has to made clearer, because the experts and the rookies are completely distinct audiences, with different needs in regard of comments in the source code.
+
+Same with that other advice (“Even if you think, a comment might not be necessary, add it nevertheless”): it is the other extrema, and equally bad.
+
+That leads us (again) to the conclusion, that writing good comments to source code is a complex art.
+
+This means that this document cannot give you a complete rule set here, just some guidance.
+
+That documentation comments are required everywhere possible, and how to write them was already covered in the chapter \tqfullvref{sec:DocumentationComments}, thus we focus here on the implementation comments.
+
+\begin{enumerate}[label=P\arabic*.]
+\item{When something looks like a mistake, write a comment.
+
+This could be an empty code block, an exception that is not handled, a fall-through in \lstinline|switch| branch, or an assignment where a comparison is expected. Here the comment should make it clear that this “mistake” is also intentional.}
+
+\item{When you break a rule, write a comment.
+
+The \ngref{} say in bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality}: “\textit{Special cases aren't special enough to break the rules although practicality beats purity}”. You will encounter lots of occasions in your daily work where this seems to fit – according to your opinion! Others may think differently about that, but a comment at least tells them why you wrote the codes as you did.
+
+And by the way: “practicality” does not mean “laziness in typing".}
+
+\item{Don't let them guess, tell them the solution.
+
+In bullet point~\ref{lst:ZoP:DontGuess} of the \ngref{} you are advised not to guess – that's an advice also for the readers of the code. Add a comment when you think that something can be interpreted in different ways.}
+
+\item{Describe the short-cuts.
+
+Assume the following case: you have to parse a string with some input data, and you know from the specification, that this input data has a determined content when the string a specified length, and that this length will never be possible for other contents.
+
+In that case, you can skip the parse process after you determined the length of the string and just set the result. But you should add some lengthy comment to your code that explains that ‘magic’.
+
+And you will have this kind of ‘short-cut’ also in less esoteric cases: in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, I request that the arguments to methods needs to be validated before they are used. But when the method is \lstinline|private|, all the callers to that method are well known and under your control. Therefore you may have checked the arguments already on the caller and can omit the check in the method itself. Or you delegated the validation to another method – in both cases, add a comment.}
+
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Empty Code Blocks are forbidden}
+That means that the sequence “\verb#{}#” may not occur anywhere in your source code. If there is really no code in a block, there have to be at least a comment, just to show that this is intentional. For a \lstinline|catch| block, there should be a good (at least some) explanation, why it is empty (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
+
+Some samples:
+\begin{lstlisting}
+//---* Skip input stream until then end *----------------------------
+while( input.read() != EOF ) { /* empty */ }
+
+// Better
+//---* Skip input stream until then end *----------------------------
+while( input.read() != EOF );
+\end{lstlisting}
+\begin{lstlisting}
+//---* Spent CPU cycles on counting *--------------------------------
+for( var i = 0; i < maxValue; ++i ) { /* empty */ }
+
+// Better
+//---* Spent CPU cycles on counting *--------------------------------
+for( var i = 0; i < maxValue; ++i );
+\end{lstlisting}
+In this case it is likely that the compiler will optimise the loop, just be removing it, because the code does nothing useful.
+\begin{lstlisting}
+InputStream input = null; // null if file cannot be opened 
+try
+{
+    input = new FileInputStream( "myFile" );
+}
+catch( final FileNotFoundException ignored ) { /* Deliberately ignored */ }
+
+// Better
+final InputStream input; // null if file cannot be opened
+try
+{
+    input = new FileInputStream( "myFile" );
+}
+catch( final FileNotFoundException ignored ) 
+{ 
+    input = null;
+}
+\end{lstlisting}
+\begin{lstlisting}
+public MyClass() { /* Just exists */ }
+\end{lstlisting}
+\begin{lstlisting}
+public interface MyInterface { /* No methods */ }
+\end{lstlisting}
+\begin{lstlisting}
+@MountPoint
+public Data customAction( final Data data ) { /* Does nothing */ }
+\end{lstlisting}
+
+The usage of the annotation \lstinline|@MountPoint|\autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT} is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}, a sample implementation can be found in chapter \tqvref{sec:MountPoint}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Description of the used Algorithm}
+A short description of the algorithm that was implemented by the current source code is always helpful; even just mentioning its name can make a difference when hunting a bug. But in case the implementation changes, such a comment needs to be adjusted as well.
+
+The same is valid for the pattern that you implement with your code, although this belongs more often into the documentation comments.
+
+%------------------------------------------------------------------------------
+
+\subsection{Broken Rules}
+Whenever you hurt or ignore one of the rules, guidelines, or recommendations from this document, it is worth a comment; same when you use a short-cut.
+
+Some examples:
+\begin{lstlisting}
+value = 7.0 / a; // a != 0.0 was already checked above
+
+o.execute(); // o != null was checked in foo.bar( o )
+
+/*
+ * bar.getQ() will never return null, so an explicit check on
+ * null for q was omitted
+ */
+q = bar.getQ();
+q.execute();
+\end{lstlisting}
+In all these samples, arguments or values are not checked for \lstinline|null| or zero, \textit{because this was already done elsewhere} – and not necessarily just one line above the current location. The comment tells a maintenance engineer that the check was made – at least in the initial version of the code – and that the root cause for the problem might be elsewhere (perhaps because someone eliminated that other location or at least the value check there).
+
+Non-obvious class casts can be seen as a short-cut or a broken rule, but they should be always explained with a comment, in order to document that you knew what you did:
+\begin{lstlisting}
+private final void valueProcessor( List<Object> values )
+{
+    …
+    Value value;
+    for( Object o : values )
+    {
+        /*
+         * We know that values can only contain Value objects;
+         * otherwise this method would not have been called to
+         * process the list.
+         */
+        value = (Value) o;
+        …
+}
+\end{lstlisting}
+This makes sense here because a check like
+\begin{lstlisting}
+if( o instanceof Value ) value = (Value) o;
+\end{lstlisting}
+is relatively expensive – especially if the contract for this \lstinline|private| method is that it is called only with lists containing \lstinline|Value| objects so that the check would not be positive only in very, very, very rare cases. And finally: what else can be done in cases where the object is not of the right type than throwing a ClassCastException? That's the same that is done by the code above in such a case, too.
+
+First, the version
+\begin{lstlisting}
+if( o instanceof Value value )
+{
+    …
+}
+\end{lstlisting}
+might be clearer, but it is not less expensive.
+
+Second, having a list of \lstinline|Value| objects declared as a \lstinline|List<Object>| is bad design anyway – or legacy code (and still bad design).
+
+A fall-through in a \lstinline|switch| is another broken rule and needs a comment, as said already in chapter \tqfullvref{sec:SwitchStatements}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Swallowed Exceptions}
+The \ngref{} says in bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} that errors may not be ignored and that exceptions may not be swallowed; this is most often done by an empty \lstinline|catch| block.
+
+But people forget that \lstinline|catch| blocks like those below will also swallow the exception, although it does not look like that:
+\begin{lstlisting}[numbers=left]
+…
+catch{ final Exception e }
+{
+    e.printStackTrace();
+}    
+
+…
+catch{ final IOException e }
+{
+    m_Logger.atError()
+        .withThrowable( e )
+        .log( "Opening the file failed" );
+}
+
+…
+catch( final NumberFormatException e )
+{
+    m_LastError = e;
+}       
+\end{lstlisting}
+All this might be intended, but at a first glance it looks like a mistake. This mean that a comment is mandatory each time an exception is swallowed, no matter if silently or not, meaning the exception is logged somewhere. If the program is continued after an exception was caught, write a comment (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
+
+Also when you catch \lstinline|java.lang.Error| or a child class of it, or \lstinline|java.lang.Throwable|, you should provide a comment why you are doing that (and why you think it is allowed in your special case~…).
+
+%------------------------------------------------------------------------------
+
+\subsection{Suppressed Warnings}
+With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Comments vs. Annotations}\label{CommentVsAnnotations}
+Sometimes a comment can be replaced or enhanced by an annotation. Obvious examples are the
+\lstinline|@Override|\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION} and the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotations, and to some extent, also the \lstinline|@FunctionalInterface|\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} annotation.
+
+Other annotations from the Java Runtime library that could (and should) be used this way are (the list is not exhaustive):
+\begin{itemize}[nosep]
+\item{\lstinline|@Generated|\autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
+\item{\lstinline|@Native|\autocite{ORACLE_DOC_NATIVE_ANNOTATION}}
+\item{\lstinline|@Serial|\autocite{ORACLE_DOC_SERIAL_ANNOTATION}}
+\end{itemize}
+
+The \lstinline|@API|\autocite{APIGUARDIAN:API} annotation can be seen as a comment replacement, too. Refer to chapter \tqfullvref{sec:APIAnnotation} to learn more about this annotation and its usage.
+
+My Foundation library will have some more samples:
+\begin{itemize}[nosep]
+\item{\lstinline|@BUG|\autocite{TQUADRAT_ORG_FOUNDATION_BUG}}
+\item{\lstinline|@ClassVersion|\autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
+\item{\lstinline|@MountPoint|\autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}}
+\item{\lstinline|@PlaygroundClass|\autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
+\item{\lstinline|@ProgramClass|\autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
+\item{\lstinline|@UtilityClass|\autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
+\end{itemize}
+
+Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper| or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
+
+To some extent is even the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a “replacement” for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that ‘wrong’ piece of code.
+
+Of course using an annotation instead of a comment can help to spare typing, but the greatest advantage of annotations over comments is that you can easily write tools that helps you with checking the source code in accordance with the annotations. Or someone else has already created those tools.
+
+%------------------------------------------------------------------------------
+
+\section{Updating Comments}
+When the source code is modified, no matter if due to regular maintenance, bug fixing or a migration, all related comments has to be updated accordingly. That is mandatory!
+
+There is no value in keeping “historical comments”, although mentioning the old algorithm when the former implementation has been replaced completely might be useful in some cases.
+
+But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS in place that is used to manage the code.
+
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
@@ -4437,154 +4669,6 @@ In IntelliJ IDEA, it is the menu command “\verb#Code|Comment with Line Comment
 
 
 
-
-\section{Comments when?}\label{sec:CommentsWhen}
-To repeat what was already said at the beginning of the chapter \tqfullref{sec:WritingProperComments}: The frequency of comments reflects poor quality of code, but code can be “under-commented” or “over-commented”. This means that there is a “frequency band” for comments that has to be hit for good quality code.
-
-The advice “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” raises the question for whom the code has to made clearer, because the experts and the rookies are completely distinct audiences, with different needs in regard of comments in the source code.
-
-Same with that other advice (“Even if you don't think, a comment might be necessary, add it nevertheless”): it is the other extrema, and equally bad.
-
-That leads us (again) to the conclusion, that writing good comments to source code is a complex art.
-
-This means that this document cannot give you a complete rule set here, just some guidance.
-
-That documentation comments are required everywhere possible, and how to write them was already covered in chapter \tqfullvref{sec:DocumentationComments}, thus we focus here on the implementation comments.
-
-\begin{itemize}
-\item{No empty blocks are allowed (means that “\{\}” may not occur in the code). If there is really no code in a block, there have to be least a comment, just to show that this is deliberate. For \lstinline|catch| blocks, there should be a good (at least some) explanation, why it is empty (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
-
-Some samples:
-\begin{lstlisting}
-//---* Skip input stream until then end *----------------------------
-while( input.read() != EOF ) { /* empty */ }
-// Better
-while( input.read() != EOF );
-
-//---* Spent CPU cycles on counting *--------------------------------
-for( var i = 0; i < maxValue; ++i ) { /* empty */ }
-// Better
-for( var i = 0; i < maxValue; ++i );
-
-
-InputStream input = null; // null if cannot open file
-try
-{
-    input = new FileInputStream( "myFile" );
-}
-catch( final FileNotFoundException ignored ) { /* Deliberately ignored */ }
-// Better
-InputStream input; // null if cannot open file
-try
-{
-    input = new FileInputStream( "myFile" );
-}
-catch( final FileNotFoundException ignored ) 
-{ 
-    input = null;
-}
-
-@MountPoint
-public Data customAction( final Data data ) { /* Does nothing */ }
-
-public MyClass() { /* Just exists */ }
-
-public interface MyInterface { /* No methods */ }
-\end{lstlisting}
-
-The annotation \lstinline|@MountPoint| is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}, a sample implementation can be found in chapter \tqvref{sec:MountPoint}.}
-\item{A short description of the algorithm that was implemented by the current code is always helpful; even just mentioning its name can make a difference when hunting a bug. But in case the implementation changes, such a comment needs to be adjusted as well.}
-\item{Whenever you hurt or ignore one of the rules, guidelines, or recommendations from this document, it is worth a comment:
-\begin{lstlisting}
-value = 7.0 / a; // a != 0.0 was already checked above
-
-o.execute(); // o != null was checked in foo.bar( o )
-
-/*
- * bar.getQ() will never return null, so an explicit check on
- * null for q was omitted
- */
-q = bar.getQ();
-q.execute();}
-\end{lstlisting}
-In all these samples, arguments or values are not checked for \lstinline|null| or zero, \textit{because this was already done elsewhere} – and not necessarily just one line above the current location. The comment tells a maintenance engineer that the check was made – at least in the initial version of the code – and that the root cause for the problem might be elsewhere (perhaps because someone eliminated that other location or at least the value check there).}
-\item{A comment is mandatory each time an exception is swallowed, no matter if silently or not, meaning the exception is logged somewhere. If the program is continued after an exception was caught, write a comment (see also chapter \tqfullref{sec:GeneralExceptionHandling}).}
-\item{As said already in chapter \tqfullvref{sec:SwitchStatements}, a comment is required on a case fall-through.}
-\item{Non-obvious class casts should be explained with a comment, in order to document that the programmer knew what they did:
-\begin{lstlisting}
-private final void valueProcessor( List<Object> values )
-{
-    …
-    Value value;
-    for( Object o : values )
-    {
-        /*
-         * We know that values can only contain Value objects;
-         * otherwise this method would not have been called to
-         * process the list.
-         */
-        value = (Value) o;
-        …
-}
-\end{lstlisting}
-This makes sense here because a check like
-\begin{lstlisting}
-if( o instanceof Value ) value = (Value) o;
-\end{lstlisting}
-is relatively expensive – especially if the contract for this \lstinline|private| method is that it is called only with lists containing \lstinline|Value| objects so that the check would not be positive only in very, very, very rare cases. And finally: what else can be done in cases where the object is not of the right type than throwing a ClassCastException? That's the same that is done by the code above in such a case, too.
-
-First, the version
-\begin{lstlisting}
-if( o instanceof Value value )
-{
-    …
-}
-\end{lstlisting}
-might be clearer, but it is not less expensive.
-
-Second, having a list of \lstinline|Value| objects declared as \lstinline|List<Object>| is bad design – or legacy code.}
-\item{In some sources you will find the recommendation to add a comment at the end of a long compound statement; this was already discussed in chapter \tqfullref{sec:SingleLineComments}.}
-\item{With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.}
-\item{tbc}
-\end{itemize}
-
-%------------------------------------------------------------------------------
-
-\subsection{Comments vs. Annotations}\label{CommentVsAnnotations}
-Sometimes a comment can be replaced or enhanced by an annotation. Obvious examples are the
-\lstinline|@Override|\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION} and the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotations, and to some extent, also the \lstinline|@FunctionalInterface|\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} annotation.
-
-Other annotations from the Java Runtime library that could (and should) be used this way are (the list is not exhaustive):
-\begin{itemize}[nosep]
-\item{\lstinline|@Generated|\autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
-\item{\lstinline|@Native|\autocite{ORACLE_DOC_NATIVE_ANNOTATION}}
-\item{\lstinline|@Serial|\autocite{ORACLE_DOC_SERIAL_ANNOTATION}}
-\end{itemize}
-
-The \lstinline|@API|\autocite{APIGUARDIAN:API} annotation can be seen as a comment replacement, too. Refer to chapter \tqfullvref{sec:APIAnnotation} to learn more about this annotation and its usage.
-
-My Foundation library will have some more samples:
-\begin{itemize}[nosep]
-\item{\lstinline|@BUG|\autocite{TQUADRAT_ORG_FOUNDATION_BUG}}
-\item{\lstinline|@ClassVersion|\autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
-\item{\lstinline|@MountPoint|\autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}}
-\item{\lstinline|@PlaygroundClass|\autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
-\item{\lstinline|@ProgramClass|\autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
-\item{\lstinline|@UtilityClass|\autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
-\end{itemize}
-
-Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper| or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
-
-To some extent is even the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a “replacement” for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that ‘wrong’ piece of code.
-
-Of course using an annotation instead of a comment can help to spare typing, but the greatest advantage of annotations over comments is that you can easily write tools that helps you with checking the source code in accordance with the annotations. Or someone else has already created those tools.
-
-%------------------------------------------------------------------------------
-
-\section{Updating Comments}
-If the code has to be modified, no matter if due to regular maintenance, bug fixing or a migration, all related comments has to be updated accordingly. There is no value in keeping “historical comments”, although mentioning the old algorithm when the former implementation has been replaced completely might be useful in some cases.
-
-But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS used to manage the code.
 
 \chapter{Coding Guidelines}\label{sec:CodingGuidelines}
 These guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.

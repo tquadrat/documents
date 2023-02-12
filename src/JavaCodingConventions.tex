@@ -4630,6 +4630,274 @@ There is no value in keeping “historical comments”, although mentioning the 
 But keeping the outdated code as a comment is definitely not useful, in particular not when there is an SCCS in place that is used to manage the code.
 
 %------------------------------------------------------------------------------
+
+\chapter{Coding Guidelines}\label{sec:CodingGuidelines}
+These coding guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
+
+But as myself, you may have issues to accept something as a “best practice” just because some guru told so. That's a good approach! First because what's a “best practice” today can be an “anti-pattern” tomorrow, and not just because some fashion trends have changed, but also because some new technology was introduced, or – happens all too often! – someone unmasked a false guru.
+
+Another reason is that too often the explanations are missing why the “best practice” is better the alternatives. I have tried to give that explanations when I describe a best practice, but sometimes I just quote one of the gurus of our business and their explanations.
+
+Coding standards are something different; a standard means to do the same thing always in the same way, and that is definitely an \textit{undoubted best practice}. Nevertheless there could be better ways to do that thing – in that case, change the standard\footnote{And I would appreciate if you update me accordingly so that I can modify this document.}
+
+But as always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the \ngref? If not, here are they again: “\ref{lst:ZoP:SpecialCases}~Special cases aren't special enough to break the rules~…” and “\ref{lst:ZoP:Practicality}~…~although practicality beats purity”.}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22\autocite{WIKIPEDIA:Catch22}.}
+
+One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
+
+And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{Knuth:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the \ngref, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.
+
+But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendations on when to apply comments to your code.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Types of Products}\label{sec:TypesOfProducts}
+Some of the coding guidelines below are different for the type of product or project you are working on. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms ‘Framework’ and ‘Server’ on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}, and a \textit{Server} is a \textit{Standalone Application} (what else could a server be?).}:
+\begin{itemize}[nosep]
+\item{Function Libraries}
+\item{Feature Libraries}
+\item{Tools}
+\item{Standalone Applications}
+\item{Server-based Applications}
+\item{Extensions}
+\end{itemize}
+The individual types cannot be clearly distinguished one from another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation really fits for \textit{your project}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{Function Library}\label{sec:FunctionLibrary}
+A function library is a collection of functions (often organised in utility classes – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes. A function library does not have a state or requires an initialisation or configuration.
+
+Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}, or Google Guava\autocite{GOOGLE_GUAVA}.
+
+My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
+
+%------------------------------------------------------------------------------
+
+\paragraph{Feature Library}\label{sec:FeatureLibrary}
+A feature library adds a service or a complex functionality to your application. Quite often that functionality runs in its own thread(s) and is accessed like an external service, it has its own configuration and initialisation.
+
+Some of these libraries can even be started standalone, in a server mode.
+
+Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H2_DATABASE}, ActiveMQ\autocite{APACHE_ACTIVEMQ}, Jetty\autocite{ECLIPSE_JETTY}, or Hibernate\autocite{HIBERNATE_ORM}.
+
+In the gray area here I would place JUnit\autocite{JUNIT5} and Log4j\autocite{APACHE_LOG4J}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{Tool}\label{sec:Tool}
+A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, instead it takes all input data somehow from the command line. Perhaps it may even work as a filter\autocite{WIKIPEDIA:Filter}, reading from standard input and writing to standard output.
+
+Programs like \verb#ls# or \verb#grep# belongs to this type, although these are usually not provided as Java programs, although there are implementations written in Java.
+
+Gray area candidates are \verb#awk# and also \verb#sed# (again usually provided as Java programs, but available in versions written in Java), jAlbum\autocite{JALBUM}, but even \verb#javac#, the Java compiler, or \verb#javadoc#, the documentation tool for Java.
+
+%------------------------------------------------------------------------------
+
+\paragraph{Standalone Application}\label{sec:StandaloneApplication}
+A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE} or a web container like Tomcat\autocite{APACHE_TOMCAT}.
+
+A gray area candidate is jAlbum that I already mentioned as a tool, above, others are 
+the H2 Database Engine, ActiveMQ or Jetty in their standalone/server mode.
+
+%------------------------------------------------------------------------------
+
+\paragraph{Server-based Application}\label{sec:ServerbasedApplication}
+Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}, Jetty\autocite{ECLIPSE_JETTY} or any of the appservers mentioned before.
+
+In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be utilised by the application.
+
+Other samples are Maillets for James\autocite{APACHE_JAMES} or the customisations (“mods”) for Minecraft\autocite{MINECRAFT} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions).
+
+%------------------------------------------------------------------------------
+
+\paragraph{Extension}\label{sec:Extension}
+An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN} plugins.
+
+Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\autocite{APACHE_OPENOFFICE} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\autocite{LIBREOFFICE}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
+
+%------------------------------------------------------------------------------
+
+\section{Error Handling}\label{sec:ErrorHandling}
+A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Errors should never pass silently and Exceptions may never be swallowed.
+
+You may have read this already right at the beginning of this document; it is bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} of the \ngref.
+
+The first part implies that you need to check for error conditions, the second part means that you may not throw away error notifications (in Java, these are mainly the Exception).}
+
+\item{Error handling must not obscure the essentials.
+
+When you write the code that checks for an error condition or handles an error condition, come to the point fast, otherwise the readability of the code suffers.}
+
+\item{Fail fast.
+
+Place all your error checks to the beginning of a method, and do not hesitate to abort a function when an error condition is detected.}
+
+\item{Ensure that errors will be reported in an understandable manner.
+
+The error message “An error occurred, the program was aborted” is not really helpful when investigating the root cause of a problem with your program. Confessed, showing a pop-up window with the error message “\verb#Exception java.lang.ArithmeticException: / by zero#”, followed by a stack trace, is in a similar way not very useful for the average end user (and may even cause a security risk), but that's where logging was invented for.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{The Basics}
+Basically, in a Java program we have to deal with only a very limited set of possible error categories:
+\begin{enumerate}[nosep]
+\item{An exception is thrown by an operation triggered by our code.}
+\item{An operation returns an error state.}
+\item{The result of an operation is an unexpected or an unwanted value.}
+\item{A method in our code is called with an invalid argument.}
+\item{Input data is invalid or corrupted.}
+\item{A command line argument is invalid.}
+\item{An external resource is not or no longer available.}
+\end{enumerate}
+
+Of course, all those categories are possible triggers for an exception in Java. This means that we can quite simply generalise the response to an error: \textit{in case of an error condition, throw an exception}!
+
+Consequently, we can also simplify \textit{error} handling to \textit{exception} handling. And there are only a few options on how to respond to an exception:
+\begin{itemize}
+\item{Throw an exception and make it an S.E.P.\footnote{S.E.P~=~Someone Else's Problem (refer to \autocite{ADAMS_HITCHHIKERS_GUIDE}).} – particularly suitable (no irony!) for libraries.}
+\item{Perform an alternate operation or provide a default value.}
+\item{Retry/repeat the operation.}
+\item{Abort the current operation – either the current thread or the whole program.}
+\end{itemize}
+
+As said, throwing an exception will always work, but at some point exceptions need to be handled in some way.
+
+The other alternatives are feasible only in some special contexts:
+\begin{itemize}
+\item{Repeating or retrying a failed operation depends on the kind of operation, and not that much on the type of the product. This also should not be done indefinitely; at some point, it gets useless to repeat or retry a constantly failing operation.}
+
+\item{Same for an alternate operation that will be executed in case of an error: if it fails, too, abort the operation.}
+
+\item{Providing a default value demands that this default value makes sense in the current context. It should be obvious that this is not always the case.}
+
+\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
+
+A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
+\end{itemize}
+
+Only these four options do exist for handling an exception! This means that afterwards either the error condition is fixed, or it persists.
+
+I bet that you now ask yourself why the actions below are missing from my list above:
+\begin{itemize}
+\item{Log an error message.}
+\item{Write an error message to the console, a message window or status bar.}
+\item{Display an error dialog.}
+\end{itemize}
+
+That is because \textit{\textbf{none of these are handling the error}}! Of course you should log an error, of course you should inform the user about an error condition. But none of these actions will change the state of the system!\footnote{The only exception would be an error handling window allowing the user to abort the operation or to ignore the error condition.}
+
+Far too often you find code like this:
+\begin{lstlisting}
+…
+try
+{
+    writeStatusToBillingSystem( invoice );
+}
+catch( final TimeOutException e )
+{
+    m_Logger.error( e );
+}
+invoice.markAsPaid();
+…
+\end{lstlisting}
+
+Looks good, right?
+
+Really?
+
+You mark the invoice as paid, despite the writing to the billing system failed?
+
+You think that this cannot happen, because you have logged the exception?
+
+I think that the accountants are no longer your friend when they find out that this piece of code was written by you~…
+
+The chapters \tqfullvref{sec:ThrowingExceptions} and \tqfullvref{sec:GeneralExceptionHandling} discuss throwing and handling exception. More about reporting the various error conditions can be found in chapter \tqfullvref{sec:ReportingErrors} and the chapter \tqfullvref{sec:Logging} deals with logging in particular.
+
+%------------------------------------------------------------------------------
+
+\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
+Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
+
+For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}, or – more precise – from one of the child classes of \lstinline|Throwable|:
+\begin{itemize}[nosep]
+\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}}
+\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}}
+\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}}
+\end{itemize}
+
+The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
+
+Exception classes that extend \lstinline|java.lang.Exception| are so-called \textit{checked} exceptions; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException| is a direct subclass of \lstinline|java.lang.Exception| and the superclass of all \textit{runtime} exceptions – declaring these is not mandatory.
+
+While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception| instance, it is assumed that instances of the class \lstinline|java.lang.Error| and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
+
+The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception| or \lstinline|java.lang.RuntimeException| is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS} in case a divisor is 0 (zero)\footnote{The proper exception class would be \lstinline|java.lang.ArithmeticException|\autocite{ORACLE_DOC_ARITHMETICEXCEPTION_CLASS}.}.
+
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|, \lstinline|RuntimeException|, or \lstinline|Error|, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable| directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
+
+When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
+\begin{lstlisting}
+protected final void doGet( HttpServletRequest request, HttpServletResponse response )
+    throws ServletException, IOException
+{
+    …
+    try
+    {
+        …
+    }
+    catch( final TimeOutException e )
+    {
+        throw new ServletException( e );
+    }
+
+    …
+}  //  doGet()
+\end{lstlisting}
+
+When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax.\footnote{In this regard, the sample above is bad, because it does not provide such an explanation.} These text have to be in English language, for the same reason why the names and the comments are in English.
+
+Of course, messages that will be presented to the end user in a UI have to be localised, but the UI should not display the raw exception message anyway at all.
+
+Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
+
+Some of these exception classes will allow a workaround that allows you to still provide both, cause and message, with them, like below:\footnote{Unfortunately, \lstinline|ExceptionInInitializerError| does not belong to this group of exception classes.}: 
+\begin{lstlisting}
+static
+{
+    try
+    {
+        …    
+    }
+    catch( final Exception e )
+    {
+        throw new DumpException( "Message" )
+            .initCause( e );    
+    }
+}
+\end{lstlisting}
+
+For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE:initCause}.
+
+Unfortunately, you have to test whether the exception that you have to deal with allows this workaround. And you should add this test to the unit tests for your code, to protect you from changes coming with new versions.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
@@ -4669,205 +4937,6 @@ But keeping the outdated code as a comment is definitely not useful, in particul
 
 
 
-
-\chapter{Coding Guidelines}\label{sec:CodingGuidelines}
-These guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
-
-As always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython, PYTHON_ORG_MAILING_LIST:ThePythonWay} that I quoted in chapter \tqvref{sec:OtherProgrammingLanguages}? If not, here are they again: “\ref{lst:ZoP:SpecialCases}~Special cases aren't special enough to break the rules~…” and “\ref{lst:ZoP:Practicality}~…~although practicality beats purity”.}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22\autocite{WIKIPEDIA:Catch22}.}
-
-One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
-
-And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{Knuth:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the “Zen of Python”, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.\footnote{Yes, I know: for a document about Java Coding Conventions, there is an astonishing amount of references to Python~…}
-
-But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendations on when to apply comments to your code.
-
-\subsubsection{Types of Products}\label{sec:TypesOfProducts}
-Some of the coding guidelines below are different for the type of product or project you are working on. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms ‘Framework’ and ‘Server’ on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}, and a \textit{Server} is a \textit{Standalone Application} (what else could a server be?).}:
-\begin{itemize}[nosep]
-\item{Function Libraries}
-\item{Feature Libraries}
-\item{Tools}
-\item{Standalone Applications}
-\item{Server-based Applications}
-\item{Extensions}
-\end{itemize}
-The individual types cannot be clearly distinguished one from another, there are some overlappings and gray areas. So when applying a guideline, you still have to use your judgement which implementation really fits for \textit{your project}.
-
-\paragraph{Function Library}\label{sec:FunctionLibrary}
-A function library is a collection of functions (often organised in utility classes – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes. A function library does not have a state or requires an initialisation or configuration.
-
-Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}, or Google Guava\autocite{GOOGLE_GUAVA}.
-
-My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
-
-\paragraph{Feature Library}\label{sec:FeatureLibrary}
-A feature library adds a service or a complex functionality to your application. Quite often that functionality runs in its own thread(s) and is accessed like an external service, it has its own configuration and initialisation.
-
-Sometimes these libraries can even be started standalone.
-
-Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H2_DATABASE}, ActiveMQ\autocite{APACHE_ACTIVEMQ}, Jetty\autocite{ECLIPSE_JETTY}, or Hibernate\autocite{HIBERNATE_ORM}.
-
-In the gray area here I would place JUnit\autocite{JUNIT5} and Log4j\autocite{APACHE_LOG4J}.
-
-\paragraph{Tool}\label{sec:Tool}
-A tool in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line, and it will not have a UI, but takes all input data somehow from the command line. Perhaps it may even work as a filter\autocite{WIKIPEDIA:Filter}, reading from standard input and writing to standard output.
-
-Programs like \verb#ls# or \verb#grep# belongs to this type, although they are of course not written in Java.
-
-Gray area candidates are \verb#awk# and also \verb#sed#, but even \verb#javac#, the Java compiler, or \verb#javadoc#.
-
-\paragraph{Standalone Application}\label{sec:StandaloneApplication}
-A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are a text editor, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE} or a web container like Tomcat\autocite{APACHE_TOMCAT}.
-
-\paragraph{Server-based Application}\label{sec:ServerbasedApplication}
-Server-based applications are applicationn that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT} or any of the appservers mentioned before.
-
-In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be used by the application.
-
-Other samples are Maillets for James\autocite{APACHE_JAMES} or the customisations (“mods”) for Minecraft\autocite{MINECRAFT} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions).
-
-\paragraph{Extension}\label{sec:Extension}
-An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN} plugins.
-
-\section{Error Handling}\label{sec:ErrorHandling}
-A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
-
-Basically, we have to deal with only a very limited set of possible error categories:
-\begin{enumerate}[nosep]
-\item{An exception is thrown by an operation triggered by our code.}
-\item{An operation returns an error state.}
-\item{The result of an operation is an unexpected or an unwanted value.}
-\item{A method is called with an invalid argument.}
-\item{Input data is invalid or corrupted.}
-\item{A command line argument is invalid.}
-\item{An external resource is not or no longer available.}
-\end{enumerate}
-
-Of course, all those categories are possible triggers for an exception in Java. This means that we can quite simply generalise the response to an error: \textit{in case of an error condition, throw an exception}!
-
-Consequently, we can also simplify \textit{error} handling to \textit{exception} handling. And there are only a few options on how to respond to an exception:
-\begin{itemize}
-\item{Throw an exception and make it an S.E.P.\footnote{S.E.P~=~Someone Else's Problem (refer to \autocite{ADAMS_HITCHHIKERS_GUIDE}).} – particularly suitable (no irony!) for libraries.}
-\item{Perform an alternate operation or provide a default value.}
-\item{Retry/repeat the operation.}
-\item{Abort the current operation – either the current thread or the whole program.}
-\end{itemize}
-
-As said, throwing an exception will always work, but at some point exceptions need to be handled in some way.
-
-The other alternatives are feasible only in some special contexts:
-\begin{itemize}
-\item{Repeating or retrying a failed operation depends on the kind of operation, and not that much on the type of the product. This also should not be done indefinitely; at some point, it gets useless to repeat or retry a constantly failing operation.}
-
-\item{Same for an alternate operation that will be executed in case of an error.}
-
-\item{Providing a default value demands that this default value makes sense in the current context. It should be obvious that this is not always the case.}
-
-\item{To abort a Java program (in fact, to abort the JVM that executes that Java program), you call the method \lstinline|java.lang.System::exit|\autocite{ORACLE_DOC_SYSTEM:exit} with a negative integer as the argument. But this is only acceptable for a tool and, with some limitations, for a standalone application. Libraries, extensions and especially server-based applications are not allowed to call \lstinline|System.exit()|! Never!
-
-A thread will be aborted automatically when an exception is thrown and not caught. If this thread is the last non-deamon thread, the JVM will go down, too. So usually the best thing to abort the current operation is to throw an \lstinline|Error| – for the details, refer to chapter \tqref{sec:GeneralExceptionHandling}.}
-\end{itemize}
-
-Only these four options do exist for handling an exception! This means that afterwards the error condition is fixed, or that it persists.
-
-I bet that you now ask yourself why the actions below are missing from my list above:
-\begin{itemize}
-\item{Log an error message.}
-\item{Write an error message to the console, a message window or status bar.}
-\item{Display an error dialog.}
-\end{itemize}
-
-That is because \textit{none of these are handling the error}! Of course you should log an error, of course you should inform the user about an error condition. But none of these actions will change the state of the system!
-
-Far too often you find code like this:
-\begin{lstlisting}
-…
-try
-{
-    writeStatusToBillingSystem( invoice );
-}
-catch( final TimeOutException e )
-{
-    m_Logger.error( e );
-}
-invoice.markAsPaid();
-…
-\end{lstlisting}
-
-Looks good, right?
-
-Really?
-
-You mark the invoice as paid, despite the writing to the billing system failed?
-
-You think that this cannot happen, because you have logged the exception?
-
-I think that the accountants are no longer your friend when they find out that this piece of code was written by you~…
-
-The chapters \tqvref{sec:ThrowingExceptions} and \tqvref{sec:GeneralExceptionHandling} discuss throwing and handling exception. More about reporting the various error conditions can be found in chapter \tqvref{sec:ReportingErrors} and the chapter \tqvref{sec:Logging} deals with logging in particular.
-
-\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
-Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
-
-For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}, or – more precise – from one of the child classes of \lstinline|Throwable|:
-\begin{itemize}[nosep]
-\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}}
-\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}}
-\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}}
-\end{itemize}
-
-The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
-
-Exception classes that extend \lstinline|java.lang.Exception| are so-called \textit{checked} exceptions; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException| is a direct subclass of \lstinline|java.lang.Exception| and the superclass of all \textit{runtime} exceptions – declaring these is not mandatory.
-
-While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception| instance, it is assumed that instances of the class \lstinline|java.lang.Error| and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
-
-The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception| or \lstinline|java.lang.RuntimeException| is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException| in case a divisor is 0.
-
-When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException| in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|, \lstinline|RuntimeException|, or \lstinline|Error|, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable| directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException| and \lstinline|ServletException|) or JDBC (throwing only \lstinline|SQLException| instances).}, and it can be also helpful for an application.
-
-When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
-\begin{lstlisting}
-protected final void doGet( HttpServletRequest request, HttpServletResponse response )
-    throws ServletException, IOException
-{
-    …
-    try
-    {
-        …
-    }
-    catch( final TimeOutException e )
-    {
-        throw new ServletException( e );
-    }
-
-    …
-}  //  doGet()
-\end{lstlisting}
-
-When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax.\footnote{In this regard, the sample above is bad, because it does not provide such an explanation.} These text have to be in English language, for the same reason why the names and the comments are in English.
-
-Of course, messages that will be presented to the end user in a UI have to be localised, but the UI should not display the raw exception message anyway at all.
-
-Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
-
-Some of these exception classes will allow a workaround that allows you to still provide both, cause and message, with them exceptions, like below:\footnote{Unfortunately, \lstinline|ExceptionInInitializerError| does not belong to this group of exception classes.}: 
-\begin{lstlisting}
-static
-{
-    try
-    {
-        …    
-    }
-    catch( final Exception e )
-    {
-        throw new DumpException( "Message" )
-            .initCause( e );    
-    }
-}
-\end{lstlisting}
-
-For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE:initCause}.
 
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
 A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.

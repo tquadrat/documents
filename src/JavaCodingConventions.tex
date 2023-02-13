@@ -4887,63 +4887,12 @@ Unfortunately, you have to test whether the exception that you have to deal with
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{General Exception Handling}\label{sec:GeneralExceptionHandling}
-A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate it. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
+A method is only allowed to handle an exception if it is able to restore the program state, otherwise it has to delegate the exception. Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it “bubbles up”) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
 
 To handle an exception you first have to catch it.
 
-Catching \lstinline|java.lang.Exception| is discouraged in most cases; it \textit{can} be acceptable when you need to wrap all checked exceptions into a runtime exception or an error:
+Catching \lstinline|java.lang.Exception| is discouraged in most cases; it \textit{can} be acceptable when you need to wrap all checked exceptions into a runtime exception or into an error:
 \begin{lstlisting}
 public final void run()
 {
@@ -5003,7 +4952,7 @@ public final void run()
     }
 }   // run()
 \end{lstlisting}
-Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because the class \lstinline|java.io.IOException| is its superclass.}.
+Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because its superclass \lstinline|java.io.IOException| is already on the list.}.
 
 Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library~… but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:
 \begin{lstlisting}
@@ -5109,6 +5058,8 @@ Finally, you handle the exception somehow, by assigning a default value\footnote
 
 If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()|\autocite{ORACLE_DOC_RUNNABLE:run} for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
 
+%------------------------------------------------------------------------------
+
 \subsection{Exceptions in Threads}\label{sec:ExceptionHandlingInThreads}
 When we execute the Java program below, the \lstinline|Error| is printed to the console:
 \lstinputlisting[numbers=left,caption={Test Abort main()}]{TestAbortMain.java}
@@ -5123,7 +5074,7 @@ $
 In the sample below, we abort a secondary thread:
 \lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
 
-The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown.}
+The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown at all.}
 \begin{verbatim}
 $ java TestAbortRun.java
 Exception in thread "Thread-0" java.lang.Error: run() aborted!
@@ -5273,11 +5224,12 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 }
+
 \item{On creation of a thread, a \lstinline|ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} instance will be assigned to it; if none is explicitly set, it will be the group of the current thread.
 
 The instance has a method \lstinline|uncaughtException()|\autocite{ORACLE_DOC_THREADGROUP:uncaughtException} method is called in the case the thread itself does not have an uncaught exception handler assigned to it. To change the behaviour of the handler from the thread group it is necessary to derive a new class from \lstinline|ThreadGroup| and to overwrite the \lstinline|uncaughtException()|.
 
-Chapter \tqvref{sec:ThreadGroup} shows an implementation for \lstinline|ThreadGroup| that allows to configure the uncaught exception handler; when using that, the configuration can look like this:
+Chapter \tqvref{sec:ThreadGroup} shows an implementation for \lstinline|ThreadGroup| (named \lstinline|ThreadGroupExt|) that allows to configure the uncaught exception handler; when using that class, the configuration can look like this:
 \begin{lstlisting}
 public final class MyClass
 {
@@ -5349,8 +5301,10 @@ The last option can be used only from standalone applications and from tools. Th
 
 If a function library creates new threads, the respective methods must accept at least an uncaught exception handler and optionally a thread group. Alternatively, a thread factory\autocite{ORACLE_DOC_THREADFACTORY_INTERFACE} can be injected.
  
+%------------------------------------------------------------------------------
+
 \subsection{Reporting Errors}\label{sec:ReportingErrors}
-As already said earlier, at some point we need to report an error condition to the user of the program; this can happen in various ways. The most common is to log the error somehow, but as logging has various additional aspects, it is covered by a chapter of its own: chapter \tqfullvref{sec:Logging}.
+As already said earlier, at some point we need to report an error condition to the user of our program; this can happen in various ways. The most common is to log the error somehow, but as logging has various additional aspects, it is covered by a chapter of its own: chapter \tqfullvref{sec:Logging}.
 
 Other means to report the error condition are the following:
 \begin{itemize}
@@ -5363,14 +5317,14 @@ Other means to report the error condition are the following:
 
 Before discussing this further, I want to repeat: \textit{Reporting an error condition is not handling it!}
 
-Obviously, not all ways of reporting an error condition are feasible for types of products.
+Obviously, not all ways of reporting an error condition are feasible for all types of products.
 
 \begin{itemize}
-\item{First, a function library should not report an error condition in any other way than just throwing the appropriate exception. It should not even log them.}
+\item{First, a \textit{function library} should not report an error condition in any other way than just throwing the appropriate exception. It should not even log them.}
 
-\item{Extensions and server-based applications should use the APIs that are provided to them by their host/container for reporting the error conditions, although server-based applications may introduce additionals ways to report an error.}
+\item{\textit{Extensions} and \textit{server-based applications} should use the APIs that are provided to them by their hosts/containers for reporting the error conditions, although server-based applications may introduce additionals ways to report an error.}
 
-\item{Code in a function library, in a server-based application and in an extension should never write to the console or display an error dialog. The code of a feature library can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
+\item{Code in a \textit{function library}, in a \textit{server-based application} and in an \textit{extension} should never write to the console or display an error dialog. The code of a \textit{feature library} can use a message window, status bar or error dialog, if it provides these resources itself (basically, when it provides the UI).
 
 Application servers, frameworks and the hosts for extensions usually provides a facility for error reporting that can be used; this may result in updating a message window or status bar, but for your code, this is transparent.}
 
@@ -5388,6 +5342,53 @@ You should also consider to localise the error message to the locale of the user
 It is a good idea to have a unique error code with your error message. That allows you to identify it when the user reports it back to you, and you do not understand their language. 
 
 Obviously, you should avoid to have sensitive data in your error messages. But ‘sensitive data’ may depend from the context your program is running in.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Logging}\label{sec:Logging}
 Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.

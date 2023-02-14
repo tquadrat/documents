@@ -136,21 +136,21 @@ The main goal of coding conventions in general is to help you writing better cod
 
 So what is good code?
 
-\paragraph{Good Code} does not have bugs and is running fast, without wasting necessary resources.
+\paragraph{Good Code} does not have bugs and is running fast, without wasting valuable resources.
 
-“Does not have bugs” also means that the code is doing what it is intended to do. We all know that it is nearly impossible to produce completely bug free code, for several reasons. An important reason is that already the specification, used as the base for the implementation, was faulty. So the code is doing what it should do according to the specification, but it is not doing what it is meant to do~…
+“Does not have bugs” also means that the code is doing what it is intended to do. We all know that it is nearly impossible to produce completely bug free code, for several reasons. An important reason is that already the specification, used as the base for the implementation, is often faulty. So the code is doing what it should do according to the specification, but it is not doing what it is meant to do~…
 
 However, we should not forget that there is still the possibility for \textit{real} bugs.
 
 And often you see the situation that your code is getting slower and slower, or is eating up more CPU cycles and/or memory than available. That may be due to higher data volumes or more users or lots of other reasons.
 
-But as a result, you will have to modify your code – although, in most cases, it will be someone else who have to dig into your code. Or you are the unlucky one who needs to revise someone else's code.
+But as a result, you will have to modify your code – although, in most cases, it will be someone else who have to dig into \textit{your} code.  Or you are the unlucky one who needs to revise someone else's code.
 
 So what you want is code that helps you with being modified – you want to have \textit{maintainable code}.
 
 \paragraph{Maintainable Code} supports its modification in various ways.
 
-From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know it, I would appreciate if you would share it with me.}
+From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know that source, I would appreciate if you would share it with me.}:
 
 \begin{quotation}
 “If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.” \\
@@ -186,11 +186,11 @@ And from my experience I found that verbosity is your friend!\footnote{Refer to 
 
 Several guidelines and recommendations in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that verbosity – but as said: that's not generally bad!
 
-But if you are afraid of the typing work, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Average values for a trained typist are around 200 CPM, peak values are at 500 to 900 CPM.}
+But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Average values for a trained typist are around 200 CPM, peak values are at 500 to 900 CPM.}
 
 Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
 
-Also, modern IDEs do a lot of the typing, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
+Also, modern IDEs do a lot of the typing for you, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
 
 Code readability shouldn’t depend on IDEs.\autocite{Marks:LocalVariableTypeInference:NoIDEDependency}
 
@@ -226,19 +226,19 @@ This document itself consists of four major parts, aside of this \nameref{sec:In
 \subsection{Sample Code}
 The code samples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guideline or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing.
 
-The source code samples in chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implements all recommendations.
+The source code samples in chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implement all recommendations.
 
-All the rules, guidelines and recommendations in this document assume, that at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} is used to write the code. I used that version also for the samples.
+All the rules, guidelines and recommendations in this document assume that you use at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} to write and to compile your code. I used that version also for the samples.
 
 \subsection{References}
 Instead of adding URLs directly into the document, I provided them in the “Bibliography” section. In the text, you will find references to it like this: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}. If you read the electronic version of the document, the reference is clickable and brings you to the respective entry. There you can click on the URL.
 
-This allows me to update the URLs on one single location if they changed. 
+This allows me to update the URLs on one single location if they will change. 
 
 \section{History and Implementation}
 Around the year~2000 I was asked to compile a set of coding guardrails for a team of developers that had been new to Java (and most were new to programming, too). That was the very first version of this document, based on the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} and the way I wrote Java code at that time.
 
-Later versions were created for other developer teams, and several software projects had been delivered successfully regarding these coding conventions.
+Later versions were created for other developer teams, and several software projects had been delivered successfully working with these coding conventions.
 
 Some of the code from these projects is still alive, proving the initial statement that coding conventions do help to create maintainable software.
 
@@ -281,14 +281,14 @@ A sample for code conventions for JavaScript can be found in the web at \autocit
 
 Coding conventions for C\# are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation}, another source can be found on GitHub\autocite{Taranov:CsharpCodingStandards}.
 
-The number of documents dealing with coding standards, naming conventions and style guides for C++ is close to indefinite. A starting point could be the ISO page\autocite{ISO:CppCodingStandards} or Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
+The number of documents dealing with coding standards, naming conventions and style guides for C++ is close to infinite. A starting point could be the ISO page\autocite{ISO:CppCodingStandards} or Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
 
 \section{Code Generators}
 Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}.}
 
-Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this means all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
+Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this covers all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
 
-Since Java~6 there is an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case still Java~5 is used as the source code version, you should consider to create your own \lstinline|@Generated| annotation along the lines given by that existing in Java~6 and later.}
+Java~6 introduced an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case you still have to use Java~5 as the source code version, you should consider to create your own \lstinline|@Generated| annotation along the lines given by that existing implementation in Java~6 and later.}
 
 \section{Coding for Sustaining}\label{sec:CodingForSustaining}
 And what to do with “legacy” code that has to be fixed, amended or extended? 
@@ -423,7 +423,7 @@ As said already coding conventions are primarily guidelines that should help mak
 
 In this regard, a source file is like any other text document, it benefits from having a clear structure, and that structure is supported by the formatting of the text.
 
-An article may have sections with headlines in bold face, the paragraphs are separated by blank lines and the first lines of them are indented by 0.3~cm, and there are rule about line length and hyphenation.
+An article may have sections with headlines in bold face, the paragraphs are separated by blank lines and the first lines of them are indented by 0.3~cm, and there are rules about line length and hyphenation.
 
 This chapter deals with the proper formatting of source files and their structure with the goal to get readable \textit{documents}.
 
@@ -506,12 +506,12 @@ public final class MyClass
 \end{lstlisting}
 
 \subsection{Indentation Size}\label{sec:IndentationSize}
-Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore it is recommended that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20).
+Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
 
 When you write code \textit{snippets} for a publication (for an article, as part of a program documentation, or for an answer on StackOverflow\autocite{STACKOVERFLOW}~…), sometimes using a base indentation unit of two spaces would be better, as it spares some room. But reformatting existing code for this use case is in most cases not worth the effort.
 
 \subsection{Indentation Character}\label{sec:IndentationCharacter}
-As said, you should use four \textit{blanks}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from what is said by the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
+As said, you should use four \textit{blanks}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
 
 Usually both, the indentation character and the indentation base unit can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
@@ -534,12 +534,12 @@ If not separated by an explicit comment, a blank line should always be used in t
 
 More than one blank line should be avoided, but if it seems feasible for a particular purpose, feel free to use ASCII art to express the separation of parts in the source file.
 
-This is different from what the Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:BlankLines} stated.
+This is again different from what the Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:BlankLines} stated.
 
 \subsection{Parenthesis}\label{sec:Parenthesis}
 Parenthesis are of course no whitespace characters – in the opposite, they are important syntax elements. But they trigger the use of whitespace, in particular blank spaces, and therefore, they are mentioned in this chapter.
 
-We distinguish between arithmetical parenthesis and parameter parenthesis; the first is used in (mathematical or logical) expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
+We distinguish between \textit{arithmetical} parenthesis and \textit{parameter} parenthesis; the first is used in (mathematical or logical) expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
 
 The Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:BlankSpaces} does not make this distinction, and it handles them differently (in the same way as arithmetical parenthesis).
 
@@ -577,7 +577,7 @@ Here an opening parenthesis is never followed by a blank, and a closing one is n
 \subsection{Blank Spaces}\label{sec:BlankSpaces}
 In addition to what was said already, blank spaces should be used in the following circumstances:
 \begin{itemize}
-\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. We think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
+\item{With a keyword followed by a parenthesis, like \lstinline|if|, \lstinline|while|, \lstinline|for| etc. There is no blank space between the keyword and the opening parenthesis, but  between that parenthesis and the argument. Another blank space is between the (last) argument and the closing parenthesis. As a short it can be said that parenthesis for these keywords will be treated like parameter parenthesis, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the sun codeing conventions \autocite{SUN_CODE_CONVENTIONS}; there it is recommended to have a blank between the keyword and the opening parenthesis while not using it between the method name and the opening parenthesis here, just to distinguish between keywords and methods calls. I think that it is more important to distinguish between parenthesis in arithmetical expressions and those in method calls.}
 
 Examples:
 \begin{lstlisting}[numbers=left]
@@ -607,7 +607,7 @@ Map<String,String> map = new HashMap<String,String>();
 Map<String,String> map = new HashMap<>(); // using the diamond operator
 map.put( key, value );
 \end{lstlisting}}
-\item{All binary operators except “.” has to be separated from their operands by spaces. Blank spaces should never separate unary operators such as unary minus, increment (“++”), and decrement (“--”) from their operands.
+\item{All binary operators except “\verb#.#” has to be separated from their operands by spaces. Blank spaces should never separate unary operators such as unary minus, increment (“\verb#++#”), and decrement (“\verb#--#”) from their operands.
 
 Example:
 \begin{lstlisting}[numbers=left]
@@ -659,12 +659,12 @@ Several sources (including the original Sun Code Conventions for the Java\textsu
 
 This had been true at the time those documents were written\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} were published in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.
 
-\textbf{Note:} Sample code for use in documentation, articles or alike should have a limited line length – generally not more than 70~characters.
+\textbf{Note:} Sample code for the use in documentations, articles or alike should have a limited line length – generally not more than 70~characters.
 
 Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
-As we have an unlimited line length, it will not happen that an expression does not fit on a single line, you will break it only to improve the readability. You should follow these general principles:
+As we have an unlimited line length, it will not happen that an expression does not fit into a single line. But you should break long lines to improve the readability. In this case, you should follow these general principles:
 \begin{itemize}
 \item{Only one statement per line!}
 \item{Break after a comma.}
@@ -860,7 +860,7 @@ Even proper breaking of the term in line~37 will not help much to understand wha
 %------------------------------------------------------------------------------
 
 \section{Java Source File Structure}
-Source files with more than 2000~lines are cumbersome to handle and should be avoided.\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
+Source files with more than 2000~lines\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} are cumbersome to handle and should be avoided. Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
 
 The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class the reflected the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes.
 
@@ -872,6 +872,7 @@ Java source code files basically have five parts, in the given order:
 \item{\nameref{sec:ClassAndInterfaceDeclarations}}
 \item{\nameref{sec:ClosingComment}}
 \end{enumerate}
+And in general, this sequence is ordered by the syntax for Java source files, also the comments are not mandatory, and the package defintion and the imports are optional~…
 
 \subsection{Beginning Comment}\label{sec:BeginningComment}
 All source files of a project – not only the Java sources – have to start with a comment that gives the copyright notice and the license information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
@@ -887,7 +888,7 @@ For a Java source file, that comment looks like this:
  */
 \end{lstlisting}
 
-A resource file has the following form: 
+A \textit{resource} file has the following form: 
 \begin{lstlisting}[numbers=left,language=,caption={Beginning Comment Resource}]
 #
 # ===================================================================

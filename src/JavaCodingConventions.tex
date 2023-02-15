@@ -5346,6 +5346,167 @@ Obviously, you should avoid to have sensitive data in your error messages. But �
 
 %------------------------------------------------------------------------------
 
+\subsection{Logging}\label{sec:Logging}
+Logging is a mean to report errors and to make the respective messages available even after the program is down, for a post~mortem analysis. But you can use logging for other purposes, too.
+
+Nevertheless, \textit{logging} is mainly for the recording of technical issues. If you need to keep track of business transactions (if you have to provide an audit log or a journal), we talk about \textit{journalling} instead. There may be some overlapping between those two, and the requirements look similar, but logging and journalling are two distinct topics and should be treated independently from each other.
+
+Another only slightly related topic is performance logging or monitoring where you issue alert messages in case operations took longer than expected. Of course these can be written to the regular error logs, but in most cases, you should consider a dedicated infrastructure for this feature.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Logging Infrastructure}
+The simplest way to implement logging would be to open a file during startup and to write the log messages there. That works, but this is not very flexible, although it might be sufficient for a tool.
+
+Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK~Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
+
+Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by the external Log4j\autocite{APACHE_LOG4J} library.
+
+Next, only tools and standalone applications should configure a logging framework. Function libraries should not log at all, while feature libraries rely on the logging facilities provided by the host environment, same as server-based applications and extensions.
+
+For the latter two the host environment also defines the whole API for logging, but for feature libraries (and for function libraries that really require logging) it is recommended to integrate the SLF4J\autocite{SLF4J} library.
+
+SLF4J is not a logging framework itself, the library provides only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4j, but it has evolved since then. SLF4J supports Log4j, JDK~Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks can be implemented easily if required.
+
+Looking at the code to write, all three (JDK~Logging, Log4j and SLF4J) work basically the same:
+\begin{enumerate}[nosep]
+\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it\footnote{This is discussed in more detail in chapter \tqvref{sec:NamingOfLoggers}.}. These names are used for the configuration of a logger.}
+
+\item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
+
+\item{Check whether the desired log level is active.}
+
+\item{If the desired log level is active, log your message.}
+\end{enumerate}
+
+Even the APIs are quite similar, down to the names\footnote{Of course the code sample will not compile.}: 
+\begin{lstlisting}[numbers=left]
+// For JDK Logging:
+import static java.util.logging.Logger.getLogger;
+import static java.util.logging.Level.*; 
+import java.util.logging.Logger;
+
+// For Log4j:
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static org.apache.logging.log4j.Level.*;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.*;
+
+// For SLF4J:
+import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
+
+public final class MyClass
+{
+       /*------------------------*\
+    ===** Static Initialisations **==================================
+       \*------------------------*/
+    /**
+     *  The logger that is used by this class.
+     */
+    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
+    
+    // For Log4j and SLF4J, this also works:
+    private static final Logger m_Logger = getLogger( MyClass.class );
+    
+       /*---------*\
+    ===** Methods **=================================================
+       \*---------*/
+    public final void myMethod()
+    {
+        //---* Logging an error message *----------------------------
+        final var message = "An error occurred!";
+        final var error = new Error( "Something happened!" );
+        
+        /* With JDK Logging */
+        m_Logger.severe( message );
+        m_Logger.log( SEVERE, message, error );
+        
+        /* With Log4j and SLF4J */
+        m_Logger.error( message, error );
+        
+        /* With Log4j */
+        m_Logger.log( ERROR, message, error );
+        m_Logger.atError()
+            .withThrowable( error )
+            .log( message );
+
+        //---* Logging an informational message *--------------------
+        /* With JDK Logging */
+        if( m_Logger.isLoggable( INFO ) )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.log( INFO, message );
+        }
+        
+        /* With Log4j and SLF4J */
+        if( m_Logger.isInfoEnabled() )
+        {
+            final var message = getCurrentStatus();
+            m_Logger.info( message );
+        }
+        
+        /* With Log4j */
+        m_Logger.atInfo()
+            .log( () -> new SimpleMessage( getCurrentStatus ) );
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Log Levels}\label{sec:LogLevels}
+A logger can be configured that it logs only messages with at least a certain priority or \textit{log level}. For JDK~Logging, Log4j and SLF4J, the predefined log levels differ:
+\begin{filecontents}{LogLevels.tbl}
+  \begin{longtable}{|c|c|c|X|}
+  \caption{Log Levels} \\
+  \hline 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
+  \hline
+  \endfirsthead
+  \multicolumn{4}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+  \hline 
+  JDK~Logging & Log4j & SLF4J & Description \\ 
+  \hline
+  \endhead
+  \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
+  & \verb#FATAL# & & A fatal event that will prevent the application from continuing. \\
+  \hline
+  \verb#SEVERE# & \verb#ERROR# & \verb#ERROR# & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
+  \hline 
+  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possibly lead to an error. \\ 
+  \hline 
+  \verb#INFO# & \verb#INFO# & \verb#INFO# & An event for informational purposes. \\ 
+  \hline 
+  \verb#CONFIG# & & & A message level for static configuration messages. \\ 
+  \hline 
+  \verb#FINE# & \verb#DEBUG# & & A general debugging event. A message level providing tracing information. \\ 
+  \hline 
+  \verb#FINER# & & & A fairly detailed tracing message.\\
+  \hline 
+  \verb#FINEST# & \verb#TRACE# & \verb#TRACE# & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
+  \hline 
+ \end{longtable} 
+\end{filecontents}
+\LTXtable{\linewidth}{LogLevels.tbl}
+In addition, they also know the ‘levels’ \verb#ALL# (log everything) and \verb#OFF# (log nothing), but you cannot check for these.
+
+A lower level includes all the higher levels, too. So when a logger is configured for the log level \verb#INFO#, \lstinline|m_Logger.isLoggable()| will return \lstinline|true| for \verb#INFO#, \verb#WARNING# (or \verb#WARN#), \verb#SEVERE#, \verb#ERROR# and \verb#FATAL#, but not for \verb#DEBUG# or \verb#FINER#.
+
+JDK~Logging and Log4j allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
@@ -5390,95 +5551,6 @@ Obviously, you should avoid to have sensitive data in your error messages. But �
 
 
 
-
-\subsection{Logging}\label{sec:Logging}
-Logging is a mean to report errors and to make the respective messages available even after the program is down. But you can use logging for other purposes, too.
-
-Nevertheless, \textit{logging} is mainly for the recording of technical issues. If you need to keep track of business transactions (if you have to provide an audit log or a journal), we talk about \textit{journalling} instead. There may be some overlapping between those two, and the requirements look similar, but logging and journalling are two distinct topics and should be treated independently from each other.
-
-\subsubsection{Logging Infrastructure}
-The simplest way would be to open a file during startup and to write the log messages there. That works, but this is not very flexible.
-
-Because logging is an important feature, Java comes with a logging facility right out of the box, the so called ‘JDK~Logging’\footnote{Sometimes also referred to as ‘JUL’, by the name of the package.}, provided by the package \lstinline|java.util.logging|\autocite{ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_OVERVIEW}.
-
-Despite the fact that it has improved significantly since its introduction with Java~1.4, most people prefer still use the logging subsystem provided by Log4j\autocite{APACHE_LOG4J}.
-
-Next, only tools and standalone applications should configure a logging framework. Function libraries should no log at all, while feature libraries rely on the logging facilities of the host environment, same as server-based applications and extensions.
-
-Logging for the latter two depends on the host environment, but for feature libraries (and for function libraries that really require logging) it is recommended to use SLF4J\autocite{SLF4J}.
-
-SLF4J is only a facade for a logging framework (“SLF4J” stands for “Simple Logging Facade for Java”), its methods delegate to a \textit{real} logging framework; refer to \autocite{SLF4J:Binding} on how this is done. Originally, the API was inspired from Log4j, but it has evolved since then. SLF4J supports Log4j, JDK~Logging, Apache Commons Logging\autocite{APACHE_COMMONS_LOGGING} (formerly known as JCL – Jakarta Commons Logging) and Logback\autocite{LOGBACK} as well as ‘Simple’ logging. Support for other frameworks could be implemented easily if required.
-
-Looking a the code to write, all three (JDK~Logging, Log4j and SLF4J) work basically the same:
-\begin{enumerate}[nosep]
-\item{During the initialisation of your class, obtain an instance of a logger class; the instances are named, usually by the name of the the class that obtains it\footnote{This is discussed in more detail in chapter \tqvref{sec:NamingOfLoggers}.}. These names are used for the configuration of a logger.}
-\item{Keep the reference in a \lstinline|private static final| variable with the name \lstinline|m_Logger|.}
-\item{Check whether the desired log level is active.}
-\item{If the desired log level is active, log your message.}
-\end{enumerate}
-
-Even APIs are quite similar\footnote{Of course the code sample will not compile.}: 
-\begin{lstlisting}[numbers=left]
-// For JDK Logging:
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Level.*; 
-import java.util.logging.Logger;
-
-// For Log4j:
-import static org.apache.logging.log4j.LogManager.getLogger;
-import org.apache.logging.log4j.Logger;
-
-// For SLF4J:
-import static org.slf4j.LoggerFactory.getLogger;
-import org.slf4j.Logger;
-
-public final class MyClass
-{
-       /*------------------------*\
-    ===** Static Initialisations **==================================
-       \*------------------------*/
-    /**
-     *  The logger that is used by this class.
-     */
-    private static final Logger m_Logger = getLogger( MyClass.class.getName() );
-    
-    // For Log4j and SLF4J, this also works:
-    private static final Logger m_Logger = getLogger( MyClass.class );
-    
-       /*---------*\
-    ===** Methods **=================================================
-       \*---------*/
-    public final void myMethod()
-    {
-        //---* Logging an error message *----------------------------
-        final var message = "An error occurred!";
-        final var error = new Error( "Something happened!" );
-        
-        // With JDK Logging
-        m_Logger.severe( message );
-        m_Logger.log( SEVERE, message, error );
-        
-        // With Log4j and SLF4J
-        m_Logger.error( message, error );
-
-        //---* Logging an informational message *--------------------
-        // With JDK Logging
-        if( m_Logger.isLoggable( INFO ) )
-        {
-            final var message = getCurrentStatus();
-            m_Logger.log( INFO, message );
-        }
-        
-        // With Log4j and SLF4J
-        if( m_Logger.isInfoEnabled() )
-        {
-            final var message = getCurrentStatus();
-            m_Logger.info( message );
-        }
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
 
 \subsubsection{The Log Levels}\label{sec:LogLevels}
 The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For JDK~Logging, Log4j and SLF4J, the predefined log levels differ:

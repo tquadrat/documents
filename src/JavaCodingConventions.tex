@@ -5499,146 +5499,74 @@ A lower level includes all the higher levels, too. So when a logger is configure
 
 JDK~Logging and Log4j allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
 
-%------------------------------------------------------------------------------
+So sometimes you want to have a log level that allows to log informational messages under all circumstances. Of course you could use \verb#SEVERE# or \verb#FATAL# for that purpose, but that would pollute the logs with false error messages. A better idea would be to introduce a log level \verb#INFO_FORCED# or \verb#VITAL#.
 
-%------------------------------------------------------------------------------
+The example below shows how to create additional log levels for the JDK~Logging:
+\lstinputlisting[numbers=left,caption={LogLevel.java for JDK~Logging}]{LogLevel.java}
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
+To create a log level \verb#INFO_FORCED# for Log4j, create the respective constant somewhere in your code:
+\begin{lstlisting}
+public final ApplicationMainClass
+{
+    …
+    
+        /*------------------------*\
+    ====** Static Initialisations **=================================
+        \*------------------------*/
+    /**
+     *  The log level &quot;{@code INFO_FORCED}&quot;.
+     */
+    public static final Level INFO_FORCED = Level.forName( "INFO_FORCED", 1 );
+    
+    …
+}
+//  class ApplicationMainClass
 \end{lstlisting}
 
+\textbf{Note:} For Log4j, the integer value for the highest log level is closer to \lstinline|0| (zero), while for JDK~Logging, it is closer to \lstinline|Integer.MAX_VALUE|.
+
 %------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{The Log Levels}\label{sec:LogLevels}
-The loggers can be configured to only log message with at least a certain priority or \textit{log level}. For JDK~Logging, Log4j and SLF4J, the predefined log levels differ:
-\begin{filecontents}{LogLevels.tbl}
-  \begin{longtable}{|c|c|c|X|}
-  \caption{Log Levels} \\
-  \hline 
-  JDK~Logging & Log4j & SLF4J & Description \\ 
-  \hline
-  \endfirsthead
-  \multicolumn{4}{c}%
-  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
-  \hline 
-  JDK~Logging & Log4j & SLF4J & Description \\ 
-  \hline
-  \endhead
-  \multicolumn{4}{r}{\textit{Continued on next page}} \\ 
-  \endfoot
-  \endlastfoot
-  & \verb#FATAL# & & A fatal event that will prevent the application from continuing. \\
-  \hline
-  \verb#SEVERE# & \verb#ERROR# & \verb#ERROR# & An error in the application, possibly recoverable. A message level indicating a serious failure. \\ 
-  \hline 
-  \verb#WARNING# & \verb#WARN# & \verb#WARN# & An event that might possibly lead to an error. \\ 
-  \hline 
-  \verb#INFO# & \verb#INFO# & \verb#INFO# & An event for informational purposes. \\ 
-  \hline 
-  \verb#CONFIG# & & & A message level for static configuration messages. \\ 
-  \hline 
-  \verb#FINE# & \verb#DEBUG# & & A general debugging event. A message level providing tracing information. \\ 
-  \hline 
-  \verb#FINER# & & & A fairly detailed tracing message.\\
-  \hline 
-  \verb#FINEST# & \verb#TRACE# & \verb#TRACE# & A fine-grained debug message, typically capturing the flow through the application. A highly detailed tracing message. \\
-  \hline 
- \end{longtable} 
-\end{filecontents}
-\LTXtable{\linewidth}{LogLevels.tbl}
-In addition, they also know the ‘levels’ \verb#ALL# (log everything) and \verb#OFF# (log nothing), but you cannot check for these.
-
-A lower level includes all the higher levels, too. So when a logger is configured for the log level \verb#INFO#, \lstinline|m_Logger.isLoggable()| will return \lstinline|true| for \verb#INFO#, \verb#WARNING# (or \verb#WARN#), \verb#SEVERE#, \verb#ERROR# and \verb#FATAL#, but not for \verb#DEBUG# or \verb#FINER#.
-
-JDK~Logging and Log4j allow both to define additional log levels. Basically, this is also possible for SLF4J, but without knowlegde about the implementation that is really used for logging, it is quite difficult to determine how these new log levels in SLF4J are mapped to those of the effective logging framework.
 
 \subsubsection{How to log}\label{sec:HowToLog}
 This chapter discusses how to emit log messages, but also when you should log something, and what you should log.
 
-\paragraph{Errors} First, you should log error conditions at some point in the program flow. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method.
+\paragraph{Errors} First, you should log error conditions at some point in the program flow. Usually this means that you will log an exception. And you will log an exception only when you do not further delegate the handling of that exception. For tools and standalone applications, this means that you will log an exception latest in the \lstinline|main()| method or in the \lstinline|UncaughtExceptionHandler| for threads other than the main thread (refer to chapter \tqfullvref{sec:ExceptionHandlingInThreads}).
 
-We said already that a function library will not log at all. For a feature library, an extension and server-based application, you should log when the control flow is about to leave the realm of your component and you do not know how the host code will handle the exception.
+We said already that a function library will not log at all. For a feature library, an extension and server-based application, you should log when the control flow is about to leave the realm of your component and you do not know how the host code will handle the exception (or if it will handle and/or them at all).
 
-You should also log (uncaught) exceptions in threads that your code creates; this was already discussed in chapter \tqfullvref{sec:ExceptionHandlingInThreads}.
+You should also log (uncaught) exceptions in threads that your code creates; this was already discussed in chapter \tqfullref{sec:ExceptionHandlingInThreads}.
 
 As a rule of thumb, you log an exception at the latest possible occasion.
 
 The log message should contain all information that you have a this point; this is at least the exception itself with its message and stacktrace. But perhaps you know additional things, for example what your code attempted when the exception was thrown, that name of resources that should be tried to access, the user name, the access rights and many other things – as long as these are not sensible data! So you should never add a password to a log message. And even the user name is already in a gray area.
 
-Obviously, the log levels \verb#FATAL#, \verb#SEVERE# and \verb#ERROR# are meant for these messages.
-
-The other log levels are not meant for reporting \textit{current} error conditions.
+Obviously, the log levels \verb#FATAL#, \verb#SEVERE# and \verb#ERROR# are meant for these messages. The other log levels are not meant for reporting \textit{current} error conditions.
 
 \paragraph{Warnings} The description for the log levels \verb#WARNING# and \verb#WARN# says that these indicate “an event that might possibly lead to an error” somewhen in the future.
 
-Such an event could be the repeatingly failed login attempt of a user, as that could be the indication for a hacker attack. Most probably, you should not log the first failed attempt, perhaps not even the second or third (at least not as a warning), but consecutive attempts from the same devide and/or with the same user name should be logged. And obviously, the respective log message must contain all the necessary data that can be used to repel that attack. Whether the used passwords should be added to the log messages can be discussed.
+Such an event could be the repeatingly failed login attempt of a user, as that could be the indication for a hacker attack. Most probably, you should not log the first failed attempt, perhaps not even the second or third (at least not as a warning), but consecutive attempts from the same device and/or with the same user name should be logged. And obviously, the respective log message must contain all the necessary data that can be used to repel that attack. Whether the used passwords should be added to the log messages can be discussed.
 
-In the same way obvious, you have to implement the necessary infrastructure to collect the data for all failed (and successful) logins, and you do this only to be able to log the respective warning.\footnote{Although you can collect this data also for general monitoring if your application lives in an environment where this is provided. Or you make it available through JMX – see chapter \tqvref{sec:UtilisingJMX}.} This means that you can switch it off when the log level is disabled.
+Obviously, you have to implement the necessary infrastructure to collect the data for all failed (and successful) logins, and you do this only to be able to log the respective warning.\footnote{Although you can collect this data also for general monitoring if your application lives in an environment where this is provided. Or you make it available through JMX – see chapter \tqvref{sec:UtilisingJMX}.} This means that you can switch it off when the log level is disabled.
 
-In the same way, you should log attempts of unauthorised access by authenticated users.
+In the same way, you should log attempts of unauthorised access to data or functionality by authenticated users.
 
 Another reason to log a warning would be when you handle an error condition by repeating an operation or by performing an alternative operation. Although the current problem is solved for now, it is worth to keep track of it in the logs.
 
-Then you should emit a warning to the logs when a resource gets short; even when the application recovers from that, it should be tracked.
-
-If you run out of a particular resource, this would be an error condition, no longer a warning condition.
+Then you should emit a warning to the logs when a resource gets short, but before it is exhausted; even when the application recovers from that, it should be tracked. If you run out of a particular resource, this would be an error condition, no longer a warning condition.
 
 Obviously, this is not a complete list.
 
 \paragraph{Info} You \textit{may} also log other important events that are clearly no error condition nor a warning. The log level for this kind of log entries is \verb#INFO#. You should assume that this is the default log level for each new logger, meaning that messages with the log levels \verb#INFO#, \verb#WARNING#/\verb#WARN# and \verb#FATAL#/\verb#ERROR#/\verb#SEVERE# are always written to the log file.
 
-This may be the successfully established connection with an external system, the start and the termination of a long running background process, the creation of a new user and alike.
+An \verb#INFO# log message may be confirmation for the successfully established connection with an external system, for the start and the termination of a long running background process, for the creation of a new user and alike.
 
-It is also a good idea to log the system configuration on startup.
+It is also a good idea to log the system configuration on startup with the log level \verb#INFO#. The log level \verb#CONFIG# from JDK~logging is lower than \verb#INFO#, therefore using that may cause unwanted behaviour. 
 
 You should not log (at least not with a log level of \verb#INFO#) the successful termination of common operations.\footnote{The kind of application that you create may request an audit log of some kind, but this is not covered by \textit{logging}. Instead we talk about \textit{journalling} here.}
 
 In general, you should avoid to log the “happy path” in your code – at least, you should not do this with the log level \verb#INFO#.
 
-\paragraph{Debug and Trace} A very basic tecnic for the debugging of a program is to add statements to the code that prints the current state to the console.
+\paragraph{Debug and Trace} A very basic technic for the debugging of a program is to add statements to the code that prints the current state to the console.
 
 Logging with the log levels \verb#DEBUG#, \verb#TRACE#, \verb#FINE#, \verb#FINER#, and \verb#FINEST# is basically the same, just with the difference that you do not emit to a console, but to the log file.
 
@@ -5648,6 +5576,8 @@ public final class myClass
 {
     private static final String CLASS_NAME = myClass.class.getName();
     private static final Logger m_Logger = getLogger( CLASS_NAME );
+    
+	…    
     
     public final String myMethod( final String value, final boolean flag )
     {
@@ -5720,7 +5650,7 @@ public final String myMethod( final String value, final boolean flag )
 }   //  myMethod()
 \end{lstlisting}
 
-In chapter \tqref{sec:GeneralExceptionHandling} I said that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is on exception on this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. Or you have some additional information at the current code location that you cannot add to the wrapper exception (perhaps because of its size). In this case, you can log that exception for debugging (the sample uses Log4j/SLF4J): 
+In chapter \tqref{sec:GeneralExceptionHandling} I said that it is usually not a good idea to log an exception and to rethrow or to wrap it afterwards. But there is one exception to this rule: sometimes you want to know about an exception that will be handled later and will be not logged then. Or you have some additional information at the current code location that you cannot add to the wrapper exception (perhaps because of its size). In this case, you can log that exception for debugging (the sample uses Log4j/SLF4J): 
 \begin{lstlisting}
 public final void myMethod() throw IOException
 {
@@ -5765,6 +5695,56 @@ But \verb#CONFIG# has a lower priority than \verb#INFO# – this means that when
 Therefore most people uses a dedicated logger\footnote{refer to chapter \tqfullvref{sec:NamingOfLoggers}.} to log the configuration settings – but this makes the log level \verb#CONFIG# completely obsolete.
 
 My recommendation would be to completely ignore the log level \verb#CONFIG# and to use a dedicated logger with log level \verb#INFO# instead. If you are using another logging framework than JDK~Logging, you don't have another choice either.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\begin{enumerate}[label=P\arabic*.]
+\item one
+\item two
+\item three
+\end{enumerate}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
 In all samples we have seen so far in this chapter, the logger was given the fully qualified name of the class it lives in:

@@ -4592,7 +4592,7 @@ With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWA
 
 %------------------------------------------------------------------------------
 
-\subsection{Comments vs. Annotations}\label{CommentVsAnnotations}
+\subsection{Comments vs. Annotations}\label{sec:CommentVsAnnotations}
 Sometimes a comment can be replaced or enhanced by an annotation. Obvious examples are the
 \lstinline|@Override|\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION} and the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotations, and to some extent, also the \lstinline|@FunctionalInterface|\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} annotation.
 
@@ -5406,8 +5406,11 @@ public final class MyClass
      */
     private static final Logger m_Logger = getLogger( MyClass.class.getName() );
     
-    // For Log4j and SLF4J, this also works:
+    /* For Log4j and SLF4J, this works, too: */
     private static final Logger m_Logger = getLogger( MyClass.class );
+    
+    /* For Log4j, even this will have the same result: */
+    private static final Logger m_Logger = getLogger();
     
        /*---------*\
     ===** Methods **=================================================
@@ -5419,7 +5422,7 @@ public final class MyClass
         final var error = new Error( "Something happened!" );
         
         /* With JDK Logging */
-        m_Logger.severe( message );
+        m_Logger.severe( message ); // Without the exception …
         m_Logger.log( SEVERE, message, error );
         
         /* With Log4j and SLF4J */
@@ -5453,6 +5456,13 @@ public final class MyClass
 }
 //  class MyClass
 \end{lstlisting}
+
+For the details, refer to the respective documentation:
+\begin{itemize}[nosep]
+\item{JDK~Logging: \lstinline|java.util.logging.Logger|\autocite{ORACLE_DOC_LOGGER_CLASS}}
+\item{Log4j: \lstinline|org.apache.logging.log4j.Logger|\autocite{APACHE_LOG4J:Logger}}
+\item{SLF4J: \lstinline|org.slf4j.Logger|\autocite{SLF4J:Logger}}
+\end{itemize}
 
 %------------------------------------------------------------------------------
 
@@ -5525,6 +5535,16 @@ public final ApplicationMainClass
 
 \textbf{Note:} For Log4j, the integer value for the highest log level is closer to \lstinline|0| (zero), while for JDK~Logging, it is closer to \lstinline|Integer.MAX_VALUE|.
 
+With Log4j, you can achieve a similar result by using \lstinline|Logger::always|\autocite{APACHE_LOG4J:Logger.always} instead of creating a new log level:
+\begin{lstlisting}
+…
+m_Logger.always()
+    .withThrowable( e )
+    .withLocation()
+    .log( "Vital message!" );
+…    
+\end{lstlisting}
+
 %------------------------------------------------------------------------------
 
 \subsubsection{How to log}\label{sec:HowToLog}
@@ -5570,7 +5590,7 @@ In general, you should avoid to log the “happy path” in your code – at lea
 
 Logging with the log levels \verb#DEBUG#, \verb#TRACE#, \verb#FINE#, \verb#FINER#, and \verb#FINEST# is basically the same, just with the difference that you do not emit to a console, but to the log file.
 
-There are some recommendations to log the entry and exit for each method, together with the arguments and the return value. In JDK~Logging, the class \lstinline|java.util.logging.Logger| does even have a set of specialised methods to support this approach (\lstinline|Logger::entering| and \lstinline|Logger::exiting|) that emit messages with the log level \verb#FINER#. That will look like this:
+There are some recommendations to log the entry and exit for each method, together with the arguments and the return value. In JDK~Logging, the class \lstinline|java.util.logging.Logger| has a set of specialised methods to support this approach (\lstinline|Logger::entering| and \lstinline|Logger::exiting|) that emit messages with the log level \verb#FINER#. That will look like this:
 \begin{lstlisting}
 public final class myClass
 {
@@ -5594,15 +5614,35 @@ public final class myClass
 }
 //  class myClass
 \end{lstlisting}
-Similar methods are missing in the other logging frameworks, for a reason:
-\begin{itemize}
-\item{First, the kind of information provided by this kind of logging is rarely useful.}
-\item{If really each and every method is instrumented in that way, the log file will be flooded with messages when the general log level is set to \verb#FINER# or \verb#FINEST#, making it very difficult to find the information you really need.}
-\item{It requires a real lot amount of unnecessary code to write.}
-\item{Neither the name of the class nor that of the method will be detected automatically; instead, these values have to be provided as a constant.That makes some refactorings quite challenging~…}
-\end{itemize}
 
-As a result, I do not recommend to use this approach. In fact, you should think twice before you add log statement for \verb#DEBUG# and \verb#TRACE# proactively.
+Log4j has the methods \lstinline|Logger::traceEntry| and \lstinline|Logger::traceExit| for the same purpose, that are easier to use:
+\begin{lstlisting}
+public final class myClass
+{
+    private static final Logger m_Logger = getLogger();
+    
+	…    
+    
+    public final String myMethod( final String value, final boolean flag )
+    {
+        m_Logger.traceEntry( "value: %s - flag: %b", value, Boolean.valueOf( flag ) );
+        
+        //---* Does some work here … *-------------------------------
+        …
+    
+        //---* Done *------------------------------------------------
+        m_Logger.traceExit( retValue );
+        return retValue;
+    }   //  myMethod()
+}
+//  class myClass
+\end{lstlisting}
+
+But you should be careful with applying these methods to your code. First, because the kind of information provided by this kind of logging is useful only in rare case. And next, if really each and every method is instrumented in that way, the log files will be flooded with messages when the general log level is set to \verb#FINER# or \verb#FINEST# for JDK~Logging or \verb#TRACE# for Log4j respectively, making it very difficult to find the information you really need.
+
+In addition, for JDK~Logging, it requires a real lot amount of unnecessary code to write, because neither the name of the class nor that of the method will be detected automatically; instead, these values have to be provided as a constant. That also makes some refactorings quite challenging~…
+
+As a result, I do not recommend to use entry/exit logging. In fact, you should generally think twice before you add a log statement for \verb#DEBUG# and \verb#TRACE# proactively.
 
 Of course, there are scenarios that are well known to cause issues during runtime quite often and therefore \verb#DEBUG# logging should be added for them. One good sample is the processing of emails, others are REST and SOAP communications.
 
@@ -5698,59 +5738,36 @@ My recommendation would be to completely ignore the log level \verb#CONFIG# and 
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-\begin{enumerate}[label=P\arabic*.]
-\item one
-\item two
-\item three
-\end{enumerate}
-
-\begin{lstlisting}[numbers=left]
+\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
+Each call to \lstinline|Logger::getLogger| (for JDK~Logging), \lstinline|LogManager::getLogger| (for Log4j), or \lstinline|LoggerFactory::getLogger| (for SLF4J) with the same argument will always return the \textit{same} logger instance:
+\begin{lstlisting}
+if( MyClass.class
+    .getName().equals( "org.tquadrat.foundation.sample.logging.MyClass" ) )
+{
+    // Always true!!
+    getLogger( MyClass.class.getName() )
+        == getLogger( "org.tquadrat.foundation.sample.logging.MyClass" );
+}
 \end{lstlisting}
 
-%------------------------------------------------------------------------------
+This means that a logger is created just once for a given name.
 
+Both JDK~Logging and Log4j organise their loggers in a parent-child hierarchy with a root logger at the top.\footnote{This root logger may or may not have a name itself, and your application may have more than one logger hierarchy tree in parallel, each with a separate root logger.}
 
+Global configuration settings are applied only to the root logger and will be inherited by/propagated to the children and grand children. Of course you can apply a setting also to a logger that represents a branch in that tree, and this will be affect all the loggers in that branch. Settings made specifically for a logger are not overwritten by changes to a parent logger.
 
+For JDK~Logging, you can set the parent for each logger explicitly, through \lstinline|Logger::setParent|\autocite{ORACLE_DOC_LOGGER:setParent}. But usually, that relationship is determined by the name of the loggers that is like a path from the root logger to the specific ‘leaf’ logger, with the dot (“\verb#.#”) as the path separator.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Naming of Loggers}\label{sec:NamingOfLoggers}
-In all samples we have seen so far in this chapter, the logger was given the fully qualified name of the class it lives in:
+In all samples we have seen so far in this chapter, we used the fully qualified name of the owning class as the name for the logger for that class:
 \begin{lstlisting}
+package org.tquadrat.foundation.sample.logging;
+
+…
+
 public final class MyClass
 {
+    …
+    
        /*------------------------*\
     ===** Static Initialisations **==================================
        \*------------------------*/
@@ -5759,54 +5776,47 @@ public final class MyClass
      */
     private static final Logger m_Logger = getLogger( MyClass.class.getName() );
     
-    // For Log4j and SLF4J, this also works:
+    /* For Log4j and SLF4J, this works, too: */
     private static final Logger m_Logger = getLogger( MyClass.class );
+    
+    /* And for Log4j, this will also return the same result: */
+    private static final Logger m_Logger = getLogger();
+    
+    …
 }
 //  class MyClass
 \end{lstlisting}
-This make sense, as there is a in fact a hierarchy for the loggers (I will come back to that in chapter \ref{sec:LoggerConfiguration} about the configuration of loggers).
 
-Assume \lstinline|com.foo.application.internal.MyClass| is the fully qualified name of your class; then this is also the name of the logger that is configured for that class.
-
-If you have not made any other settings\footnote{Like \lstinline|m_Logger.setParent()|~…}, you can change the log level for the logger like this:
-\begin{lstlisting}[numbers=left]
-getLogger( "com" ).setLevel( newLevel );
-getLogger( "com.foo" ).setLevel( newLevel );
-getLogger( "com.foo.application" ).setLevel( newLevel );
-getLogger( MyClass.class.getPackage().getName() ).setLevel( newLevel );
-getLogger( "com.foo.application.internal" ).setLevel( newLevel );
-m_Logger.setLevel( newLevel );
-getLogger( MyClass.class.getName() ).setLevel( newLevel );
+Obviously, the logger referenced by \lstinline|m_Logger| will have the name “\verb#org.tquadrat.foundation.sample.logging.MyClass#”. But the call to \lstinline|getLogger()| will also create the missing parents:
+\begin{lstlisting}[language=]
+function getLogger( name ):Logger
+  if exists( name )
+    then getLogger = retrieve( name )
+    else
+      parent = getLogger( parentName( name ) )
+      getLogger = create( name, parent )  
 \end{lstlisting}
 
-The lines~4 and 5 as well as the lines~6 and 7 are effectivly the same, and in all cases, the log level for the logger is set to the value of \lstinline|newLevel|. This works first because each call to \lstinline|Logger::getLogger| (for JDK~Logging), \lstinline|LogManager::getLogger| (for Log4j), or \lstinline|LoggerFactory::getLogger| (for SLF4J) with the same argument will always return the \textit{same} logger instance:
-\begin{lstlisting}
-if( MyClass.class.getName()
-    .equals( "com.foo.application.internal.MyClass" ) )
-{
-    // Always true
-    getLogger( MyClass.class.getName() ) == 
-        getLogger( "com.foo.application.internal.MyClass" );
-}
-\end{lstlisting}
+In the sample above, after the call to \lstinline|getLogger()|, you will end up with the loggers
+\begin{itemize}[nosep]
+\item{Logger “\verb#org.tquadrat.foundation.sample.logging.MyClass#”}
+\item{Logger “\verb#org.tquadrat.foundation.sample.logging#”}
+\item{Logger “\verb#org.tquadrat.foundation.sample#”}
+\item{Logger “\verb#org.tquadrat.foundation#”}
+\item{Logger “\verb#org.tquadrat#”}
+\item{Logger “\verb#org#”}
+\item{RootLogger}
+\end{itemize}
 
-Next, the dot (‘.’) indicates a hierarchy: the logger with the name \verb#com# is the parent of all loggers whose name starts with \verb#com.# (like \verb#com.foo# for the sample), and the logger with the name \verb#com.foo# is the parent of all loggers with names starting with \verb#com.foo.# and so on.
+For the regular loggers, it makes a lot of sense to organise them this way. It allows you to switch them on and off per class or per package, as well as to configure them on this level, and usually this is sufficient.
 
-Now if a configuration value is not explicitly set by a logger itself, it will pull this setting from the logger that is set as its parent.
+But there are no special requirements for the name of a logger. This means that “\verb#logger#”, “\verb#my.logger#”, “\verb#1.2.3.4.5.6.7.8#” or “\verb#Fritz#” are all valid logger names. Using the fully qualified class name for the main loggers gives you a predictable naming scheme for the configuration (the log level is not the only configuration parameter to set, see \tqfullvref{sec:LoggerConfiguration}).
 
-If the logger \verb#com.foo.application.internal.MyClass# is only logger that our program creates explicitly, a seven commands from the sample above are equivalent. Otherwise, those in the lines~1 to 5 may have the side effect to set the log level for these other loggers, too. This is exactly what want to achieve in the logger configuration that makes use of this relationship.
+But when you are on a bug hunt and add additional log statements to emit \verb#DEBUG# or \verb#TRACE# messages, this usually affects more than one class, and more than one package. So if you use the loggers named after the classes for the debug or trace logging, you always have to configure multiple loggers. That's not only inconvenient, but also error prone. Not to mention that you might get lots of entries to the log files that are unrelated to the problem that you are currently investigating.
 
-Please keep in mind that, once created, you cannot get rid of a logger instance. It will live until the current JVM is shut down. But in the sample above, no new logger will be created; all the loggers in the hierarchy, those with the names \verb#com.foo.application.internal#, \verb#com.foo.application#, \verb#com.foo# and \verb#com# were created implicitely already when creating the logger for the class name. It also means that there is nothing like a temporary logger!
+Same when you want to provide a debugging facility for a logical transaction in your application; usually this will also span multiple classes from different packages.
 
-There is no special requirement for the name of a logger. This means that “\verb#logger#”, “\verb#my.logger#”, “\verb#1.2.3.4.5.6.7.8#” or “\verb#Fritz#” are all valid logger names.
-
-Using the fully qualified class name for the main loggers makes perfect sense, as you want to need a predictable naming scheme for the configuration (the log level is not the only configuration parameter to set).
-
-But when you are on a bug hunt and add additional log statements to emit \verb#DEBUG# or \verb#TRACE# messages, this usually affects more then one class. If you use the class logger for the debug or trace logging, you always have to configure multiple loggers. That's not only inconvenient, but also error prone.
-
-Same when you want to provide a debugging facility for a transaction; usually this will also span multiple classes.
-
-So instead of using multiple class loggers, you should consider to introduce dedicated loggers that are reference in multiple classes – all classes that are involved in the respective operation:
+So instead of using multiple class loggers, you should consider to introduce dedicated loggers that are referenced in multiple classes – all the classes that are involved in the respective operation:
 \begin{lstlisting}
 /**
  *  The logger for this class.
@@ -5816,15 +5826,17 @@ private static final Logger m_Logger = getLogger( MyClass.class.getName() );
 /**
  *  The loggers for the database transactions.
  */
-private static final Lazy<Logger> m_InsertLogger = Lazy.use( () -> getLogger( "CRUD.Insert" ) );
-private static final Lazy<Logger> m_SelectLogger = Lazy.use( () -> getLogger( "CRUD.Select" ) );
-private static final Lazy<Logger> m_UpdateLogger = Lazy.use( () -> getLogger( "CRUD.Update" ) );
-private static final Lazy<Logger> m_DeleteLogger = Lazy.use( () -> getLogger( "CRUD.Delete" ) );
+private static final Logger m_InsertLogger = getLogger( "CRUD.Insert" );
+private static final Logger m_SelectLogger = getLogger( "CRUD.Select" );
+private static final Logger m_UpdateLogger = getLogger( "CRUD.Update" );
+private static final Logger m_DeleteLogger = getLogger( "CRUD.Delete" );
 
 /**
  *  The logger for the bug hunt started on 2022-12-14.
  */
-private static final Lazy<Logger> m_BugHunt_2022-12-14_Logger = Lazy.use( () -> getLogger( "BugHunt.2022-12-14" ) );
+private static final Logger m_BugHunt_2022-12-14_Logger = getLogger( "BugHunt.2022-12-14" ); 
+
+…
 
 public final void myMethod( final Operation operation, final Record data ) throws SQLException
 {
@@ -5856,14 +5868,18 @@ public final void myMethod( final Operation operation, final Record data ) throw
 }   //  myMethod() 
 \end{lstlisting}
 
-An example for the class \lstinline|Lazy| is given in chapter \tqvref{sec:Lazy}.
+When using Log4j, instead of having dedicated loggers, you can use \textit{Markers}; refer to \autocite{APACHE_LOG4J:Markers} to learn more about that.
+
+%------------------------------------------------------------------------------
 
 \subsubsection{Logger Configuration}\label{sec:LoggerConfiguration}
 Both, JDK~Logging and Log4j are best configured through configuration files.\footnote{SLF4J does not have a configuration of its own, as it is just a facade to a ‘real’ logging framework, like JDK~Logging or Log4j~…} These configuration files should be provided with the source code for your product.
 
-But both frameworks allow also a programmatical configuration, at least for the log level. This should be used to add a feature to change the log levels during runtime, to switch debugging on and off with requiring a restart of the application. This makes definitely sense for server-based applications, to some extent for feature libraries, and of course for long running standalone applications.
+But both frameworks allow also a programmatical configuration, at least for the log level. This can be used to add a feature to your application, allowing to change the log levels during runtime and to switch debugging on and off without requiring a restart of the application. It makes definitely sense for server-based applications, to some extent for feature libraries, and of course for long running standalone applications.
 
-JDK~Logging and Log4j will also support JMX for changes to the log levels\autocite{ORACLE_DOC_LOGGINGMXBEAN_INTERFACE, APACHE_LOG4J:JMX}; this can be used with long running tools to enable or disable some debug output during runtime.
+JDK~Logging and Log4j will also support JMX for changes to the log levels\autocite{ORACLE_DOC_LOGGINGMXBEAN_INTERFACE, APACHE_LOG4J:JMX}; you can use this with long running tools to enable or disable some debug output during runtime.
+
+%------------------------------------------------------------------------------
 
 \paragraph{JDK~Logging} The basic information about the configuration of JDK~Logging are given in \autocite{ORACLE_DOC_LOGGING_OVERVIEW:ConfigurationFile, ORACLE_DOC_LOGGING_OVERVIEW:DefaultConfiguration} and some important details can be found at \autocite{ORACLE_DOC_LOGMANAGER_CLASS}.
 
@@ -5935,7 +5951,7 @@ java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
 com.xyz.foo.level = SEVERE
 \end{lstlisting}
 
-To provide your own configuration, you can modify this file (not recommended) or you create your own configuration file that you announce through the system property \verb#java.util.logging.config.file#.
+To provide your own configuration, you can modify this file (not recommended) or you create your own configuration file that you announce through the system property \verb#java.util.logging.config.file#.\footnote{Chapter \tqfullvref{sec:LoadJDKLoggingConfiguration} describes two additional methods how to load the configuration.} 
 
 A sample configuration file for the sample provided above may look like this:
 \begin{lstlisting}[language=,numbers=left,caption={Sample JDK~Logging Configuration}]
@@ -5954,7 +5970,9 @@ It defines a configuration with two loggers, “\verb#BugHunt_2022-12-14_Logger#
 
 A handler determines the destination for the log messages, and here we selected the file handler. A handler has its own log level, and you define the formatter that determines how the log messages will look like when written by the respective handler. Finally, ‘pattern’ specifies the name of the logfile.
 
-This is more or less the simplest configuration you can make. Refer to \autocite{ORACLE_DOC_LOGGING_OVERVIEW, ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGGING_PACKAGE} and the JavaDoc for the various handlers and formatters for more details.
+This is more or less the simplest configuration you can make. Refer to \autocite{ORACLE_DOC_LOGGING_OVERVIEW, ORACLE_DOC_LOGGING_PACKAGE, ORACLE_DOC_LOGMANAGER_CLASS} and the JavaDoc for the various handlers and formatters for more details.
+
+%------------------------------------------------------------------------------
 
 \paragraph{Log4j} The configuration for Log4j is described in \autocite{APACHE_LOG4J:Configuration}. It allows four different formats for the configuration file (XML, JSON, YAML, or properties format), but the XML format is still the most common one.
 
@@ -5963,15 +5981,24 @@ Log4j has the ability to automatically configure itself during initialization.
 \item{When Log4j starts it will inspect the “\verb#log4j2.configurationFile#” system property and, if set, will attempt to load the configuration using a \lstinline|ConfigurationFactory| that matches the file extension.
 
 Note that this is not restricted to a location on the local file system and may contain a URL.}
-\item{If no system property is set the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.properties# in the classpath.}
-\item{If no such file is found the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.yaml# or \verb#log4j2-test.yml# in the classpath.}
-\item{If no such file is found the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.json# or \verb#log4j2-test.jsn# in the classpath.}
-\item{If no such file is found the “XML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.xml# in the classpath.}
-\item{If a test file cannot be located the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2.properties# on the classpath.}
-\item{If a properties file cannot be located the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2.yaml# or \verb#log4j2.yml# on the classpath.}
-\item{If a YAML file cannot be located the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2.json# or \verb#log4j2.jsn# on the classpath.}
-\item{If a JSON file cannot be located the “XML \lstinline|ConfigurationFactory|” will try to locate \verb#log4j2.xml# on the classpath.}
-\item{If no configuration file could be located the \lstinline|DefaultConfiguration|” will be used. This will cause logging output to go to the console.}
+
+\item{If no system property is set, the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.properties# on the classpath.}
+
+\item{If no such file is found, the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.yaml# or \verb#log4j2-test.yml# on the classpath.}
+
+\item{If no such file is found, the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.json# or \verb#log4j2-test.jsn# on the classpath.}
+
+\item{If no such file is found, the “XML \lstinline|ConfigurationFactory|” will look for \verb#log4j2-test.xml# on the classpath.}
+
+\item{If a test file cannot be located, the “properties \lstinline|ConfigurationFactory|” will look for \verb#log4j2.properties# on the classpath.}
+
+\item{If a properties file cannot be located, the “YAML \lstinline|ConfigurationFactory|” will look for \verb#log4j2.yaml# or \verb#log4j2.yml# on the classpath.}
+
+\item{If a YAML file cannot be located, the “JSON \lstinline|ConfigurationFactory|” will look for \verb#log4j2.json# or \verb#log4j2.jsn# on the classpath.}
+
+\item{If a JSON file cannot be located, the “XML \lstinline|ConfigurationFactory|” will try to locate \verb#log4j2.xml# on the classpath.}
+
+\item{If no configuration file could be located, the \lstinline|DefaultConfiguration|” will be used. This will cause logging output to go to the console.}
 \end{enumerate}
 
 A \verb#log4j2.xml# file may look like that one below:
@@ -6017,14 +6044,16 @@ A \verb#log4j2.xml# file may look like that one below:
 
 It defines a configuration with the name “\verb#Sample#”, and that has one appender, named “\verb#File#” and two named loggers, “\verb#CRUD#" and that infamous “\verb#BugHunt_2022-12-14_Logger#", together with the default configuration (with the name “\verb#Root#”).
 
-An appender is basically the definition for the target of the log messages and how the messages will look like (the ‘layout’); you can define as many appenders as you want. The name of the defined loggers match with those we used in the program code, and you will set the level and the destination (the ‘appender reference’) for it.
+An appender is basically the definition of the target for the log messages and how the messages will look like (the ‘layout’); you can define as many appenders as you want. The name of the defined loggers match with those we used in the program code, and you will set the level and the destination (the ‘appender reference’) for it.
 
 But the configuration is much more powerful than that what I will show here. For more details, see the documentation in \autocite{APACHE_LOG4J:Configuration}.
+
+%------------------------------------------------------------------------------
 
 \subsubsection{Side Effects of Logging}
 Logging may not have side-effects!
 
-This means that your code have to behave always in the same way, no matter which log levels are active for any of the loggers.
+This means that your code have to behave always in the same way, no matter which log levels are active for any of the defined loggers.
 
 Although this is literally impossible (a call to the \lstinline|log()| method will consume more or less CPU cycles, depending on whether the respective log level is active or not), you should take care to reduce the impact as much as possible.
 
@@ -6052,7 +6081,7 @@ public final void myMethod()
 }   //  myMethod()
 \end{lstlisting}
 
-The method \lstinline|composeLogMessage()| is just a placeholder here, but to keep the code readable, it is sometimes really a good idea to place the generation of the logging output into a dedicated method.
+The method \lstinline|composeLogMessage()| is just a placeholder here, but to keep the code readable, it is sometimes really a good idea to place the generation of the logging output into a dedicated \lstinline|private| method.
 
 \begin{lstlisting}[numbers=left]
 public final void myMethod()
@@ -6093,7 +6122,7 @@ public final void myMethod()
 }   //  myMethod()
 \end{lstlisting}
 
-The variants starting in line~3 and line~14 have both the risk that they may cause an \lstinline|OutOfMemoryError| when the output is larger. But it is in general a bad idea to have a variable that exists only for debugging purposes.
+The variants starting in line~3 and line~14 have both the risk that they may cause an \lstinline|OutOfMemoryError| when the output is larger. And it is generally a bad idea to have a variable that exists only for debugging purposes.
 
 On the other hand, the variant starting on line~29 may pollute the logs with a high number of messages. But for debugging purposes, this should be acceptable.
 
@@ -6134,7 +6163,7 @@ public final Data myMethod() throws IOException
     
     if( m_Logger.isTraceEnabled() )
     {
-        retValue = composeOutputDataWithTrace()
+        retValue = composeOutputDataWithTrace();
     }
     else
     {
@@ -6147,15 +6176,66 @@ public final Data myMethod() throws IOException
 \end{lstlisting}
 Do I have to comment this?
 
-As a conclusion, you should avoid side effects of (debug) logging as good as possible. The impact on time can be reduced if the operations done for logging are kept short. And instead of collecting large data chunks, log each small chunk separately.
+As a conclusion, you should avoid side effects of (debug) logging as much as possible. The impact on time (CPU cycles) can be reduced if the operations done for logging are kept short. And instead of collecting large data chunks, log each small chunk separately.
+
+%------------------------------------------------------------------------------
 
 \section{Checking Method Parameters and Return Values}\label{sec:CheckingMethodParametersAndReturnValues}
-A \lstinline|NullPointerException| that is thrown by your code indicates a serious bug: it reveals that either a method argument or a return value was not properly checked before it was further used.
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{A \lstinline|NullPointerException| indicates a serious programming bug.
 
-Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|.} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.
+A thrown \lstinline|NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS} reveals that either a method argument or a return value was not properly checked before it was further used.
 
-Consequently, you need to check the arguments for each and every method and constructor. But as these checks are not for free, it could be acceptable to omit these checks for \lstinline|private| methods and constructors, when the caller guarantees that the arguments are valid. But even then you should consider to check the arguments with assertions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert, ORACLE_DOC_ASSERTIONS}, at least for methods (for constructors that calls to \lstinline|this()| or \lstinline|super()|, this has to be the very first statement; no \lstinline|assert| statement can be placed before it).
+Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|.} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.}
 
+\item{Each method or constructor argument needs to be validated.
+
+The arguments must be checked for \lstinline|null|, but also to ensure that they meet any further specifications (e.g. that they are in a given range of values).}
+
+\item{Validate any return value.
+
+If \lstinline|null| is a valid return value of an invoked method, check whether the returned value is not \lstinline|null| before further using that value. In particular if the invoked method is not part of the code written by you.}
+
+\item{Fail fast.
+
+Arguments and return values should be checked as soon as possible, so that illegal values are detected fast – and before damage can be caused.}
+
+\item{Avoid \lstinline|null| as a valid return value.
+
+At least a \lstinline|public| or \lstinline|protected| method should nor return \lstinline|null|.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{How to implement the Validation}\label{sec:ImplementValidation}
+
+%------------------------------------------------------------------------------
+
+\subsection{Assertions}\label{sec:Assertions}
+Java~1.4 introduced the new keyword \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert} to the language. At first glance, this looks like the appropriate argument-checking feature~… 
+\begin{quotation}
+“[…]Java's assert keyword is unique in two very interesting ways:
+
+\begin{enumerate}
+\item{The intended use of this keyword is for test environments, or for temporarily performing debugging routines on production systems. No other keyword is targeted toward testing and debugging in the same way as the Java assert statement.}
+\item{The Java assert keyword is ignored when the Java Virtual Machine (JVM) is run using a default configuration. At startup, a special enableassertions runtime variable must be passed to the JVM as a command-line argument in order for code associated with with a Java assert to be executed. There is no other keyword in the Java language that is disabled by default at runtime.}
+\end{enumerate}
+[…]”\\ Cameron McKenzie, TechTarget\autocite{SERVERSIDE:JavaAssert}
+\end{quotation}
+
+The validation of arguments and return values has to be active also in production, not only during test, and it should not be possible to switch off that validation. Therefore \lstinline|assert| is not suitable for general validation. 
+
+As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
+\begin{quotation}
+“[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
+
+A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
+\end{quotation}
+
+As it is acceptable to omit the validation for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid, you should add \lstinline|assert| statements here that check the arguments\autocite{ORACLE_DOC_ASSERTIONS}. These are active during the testing phase but switched off in production.
+
+This can look like this:
 \begin{lstlisting}
 public final class MyClass
 {
@@ -6181,12 +6261,24 @@ public final class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
-\begin{quotation}
-“[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
 
-A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
-\end{quotation}
+
+
+
+
+
+
+
+
+Consequently, you need to check the arguments for each and every method and constructor. But as these checks are not for free, it could be acceptable to omit these checks for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid. But even in this case, you should add \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert, ORACLE_DOC_ASSERTIONS} statements that check the arguments; these are active during test, but switched off in production.
+
+
+
+
+But even then you should consider to check the arguments with assertions\autocite{}, at least for methods (for constructors that calls to \lstinline|this()| or \lstinline|super()|, this has to be the very first statement; no \lstinline|assert| statement can be placed before it).
+
+
+
 
 You can also delegate the argument check to another method:
 \begin{lstlisting}
@@ -6505,6 +6597,64 @@ Beside the arguments to a method or constructor, you also have to check the valu
 The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
 
 Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}[nosep]
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
 This chapter provides some hints for the design and implementation of classes and methods that should be/can be extended. This is basically relevant for libraries, but also for applications that should be customisable in some way and therefore providing an API.
@@ -9480,6 +9630,84 @@ public final class MyClass
 \lstinputlisting[numbers=left,caption={Lazy.java}]{Lazy.java}
 
 \lstinputlisting[numbers=left,caption={LazyImpl.java}]{LazyImpl.java}
+
+\subsection{Load JDK~Logging Configuration}\label{sec:LoadJDKLoggingConfiguration}
+The default configuration for the JDK~Logging can be found in the configuration file \verb#${JAVA_HOME}/conf/logging.properties#; if you want to use a different file, you can announce that by providing the JVM command line argument \verb#-Djava.util.logging.config.file=<filename># . This also allows you to easily replace one logging configuration by another.
+
+But in most cases, you want that a fixed logging configuration is used. You can enforce that by providing the configuration file as a resource and load that in the class with the method \lstinline|main()| like this:
+\begin{lstlisting}[numbers=left,caption={Load Logging Configuration from Resource}]
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger;
+
+static
+{
+    //---* Load the logger configuration and create the logger *-----
+    final var c = Main.class;
+    Logger logger;
+    final var resourceURL = c.getResource( "logging.properties" );
+    if( nonNull( resourceURL )
+    {
+        try( final var logConfiguration = resourceURL.openStream() )
+        {
+            getLogManager().readConfiguration( logConfiguration );
+            logger = getLogger( c.getName() );
+        }
+        catch( final IOException e )
+        {
+            m_Logger = getAnonymousLogger();
+            throw new ExceptionInInitializerError( e );
+        }
+    }
+    else
+    {
+        m_Logger = getAnonymousLogger();
+        throw new ExceptionInInitializerError( "Cannot find resource 'logging.properties'" );
+    }
+    m_Logger = logger;
+}
+
+…
+\end{lstlisting}
+
+Or if you want to read it still from an external file, it can be done like this:
+\begin{lstlisting}[numbers=left,caption={Load Logging Configuration from File}]
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger;
+
+static
+{
+    //---* Load the logger configuration and create the logger *-----
+    Logger logger;
+    try( final var logConfiguration = newInputStream( Path.of( ".", "logging.properties" ), READ ) )
+    {
+        getLogManager().readConfiguration( logConfiguration );
+        logger = getLogger( Main.class.getName() );
+    }
+    catch( final IOException e )
+    {
+        m_Logger = getAnonymousLogger();
+        throw new ExceptionInInitializerError( e );
+    }
+    m_Logger = logger;
+}
+
+…
+\end{lstlisting}
+The method \lstinline|LogManager::readConfiguration|\autocite{ORACLE_DOC_LOGMANAGER:readConfiguration} should be invoked before the first logger is configured, so the code above should be placed in the static initialisation part of that class of your application that is loaded first – usually this is the class that contains the method \lstinline|main()|.
 
 \subsection{MountPoint}\label{sec:MountPoint}
 The annotation \lstinline|@MountPoint| and how to use it is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}.

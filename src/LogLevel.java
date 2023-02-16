@@ -15,7 +15,7 @@ import org.tquadrat.foundation.annotation.ClassVersion;
  *  <ul>
  *      <li>{@link Level#FINE}</li>
  *      <li>{@link Level#FINEST}</li>
- *      <li>{@link Level#ERROR}</li>
+ *      <li>{@link Level#SEVERE}</li>
  *  </ul>
  *  <p>so that the log levels for the JDK logging are better aligned 
  *  with those from Log4j.</p>
@@ -26,77 +26,6 @@ import org.tquadrat.foundation.annotation.ClassVersion;
  */
 public class LogLevel extends Level
 {
-        /*-----------*\
-    ====** Constants **==============================================
-        \*-----------*/
-    /**
-     *  {@code ALL} indicates that all messages should be logged.
-     * 
-     *  @see Level#ALL
-     */
-    public static final LogLevel ALL = (LogLevel) Level.ALL;
-
-    /**
-     *  {@code CONFIG} is a message level for static configuration 
-     *  messages.
-     *
-     *  @see Level#CONFIG
-     */
-    public static final LogLevel CONFIG = (LogLevel) Level.CONFIG;
-
-    /**
-     *  {@code FINE} is a message level providing tracing
-     *  information.
-     *  
-     *  @see Level#FINE
-     */
-    public static final LogLevel FINE = (LogLevel) Level.FINE;
-
-    /**
-     *  {@code FINER} indicates a fairly detailed tracing message.
-     *
-     *  @see Level#FINER
-     */
-    public static final LogLevel FINER = (LogLevel) Level.FINER;
-
-    /**
-     *  {@code FINEST} indicates a highly detailed tracing message.
-     *
-     *  @see Level#FINEST
-     */
-    public static final LogLevel FINEST = (LogLevel) Level.FINEST;
-
-    /**
-     *  {@code INFO} is a message level for informational messages.
-     *
-     *  @see Level#INFO
-     */
-    public static final LogLevel INFO = (LogLevel) Level.INFO;
-
-    /**
-     *  {@code OFF} is a special level that can be used to turn off 
-     *  logging.
-     *
-     * @see Level#OFF
-     */
-    public static final LogLevel OFF = (LogLevel) Level.OFF;
-
-    /**
-     *  {@code SEVERE} is a message level indicating a serious
-     *  failure.
-     *
-     *  @see Level#SEVERE
-     */
-    public static final LogLevel SEVERE = (LogLevel) Level.SEVERE;
-
-    /**
-     *  {@code WARNING} is a message level indicating a potential
-     *  problem.
-     *  
-     *  @see Level#WARNING
-     */
-    public static final LogLevel WARNING = (LogLevel) Level.WARNING;
-
         /*------------------------*\
     ====** Static Initialisations **=================================
         \*------------------------*/
@@ -104,13 +33,13 @@ public class LogLevel extends Level
      *  {@code DEBUG} is the alias for
      *  {@link #FINE}.
      */
-    public static final LogLevel DEBUG = new LogLevel( "DEBUG", FINE );
+    public static final Level DEBUG = new LogLevel( "DEBUG", FINE );
 
     /**
      *  {@code ERROR} is the alias for
      *  {@link #SEVERE}.
      */
-    public static final LogLevel ERROR = new LogLevel( "ERROR", SEVERE );
+    public static final Level ERROR = new LogLevel( "ERROR", SEVERE );
 
     /**
      *  <p>{@summary {@code INFO_FORCED} is the log level for 
@@ -122,13 +51,13 @@ public class LogLevel extends Level
      *  by setting a logger's log level to
      *  {@link #OFF}.
      */
-    public static final LogLevel INFO_FORCED = new LogLevel( "INFO_FORCED", Integer.MAX_VALUE - 1 );
+    public static final Level INFO_FORCED = new LogLevel( "INFO_FORCED", Integer.MAX_VALUE - 1 );
 
     /**
      *  {@code TRACE} is the alias for
      *  {@link #FINEST}.
      */
-    public static final LogLevel TRACE = new LogLevel( "TRACE", FINEST );
+    public static final Level TRACE = new LogLevel( "TRACE", FINEST );
 
         /*--------------*\
     ====** Constructors **===========================================

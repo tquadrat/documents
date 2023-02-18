@@ -6735,12 +6735,12 @@ Each non-\lstinline|private| method, that is not explicitly meant to be overridd
 
 Non-\lstinline|final| methods require a comment about when and how they can be overridden, and if the super implementation has to be called, and when. On how to write the comments for classes and methods, refer to the respective chapters \tqvref{sec:ClassComment} and \tqvref{sec:MethodComment}.
 
-\lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|. Nevertheless, in the source code they will be marked as \lstinline|final|, too, although that is redundant.
+\lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|. Nevertheless, in the source code they will be marked as \lstinline|final|, too, although that is redundant. If your IDE issues a warning about that, you should switch that off.
 
 %------------------------------------------------------------------------------
 
 \subsection{Non-\lstinline|final| Classes}\label{sec:NonFinalClasses}
-As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
+As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, that it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
 
 Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses, ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedInterfaces}, this is obsolete\footnote{Ok, ‘redundant’ may be the better term here, because it could also support maintenance when the documentation elaborates on the inheritance concept also for these classes.}: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations have to be provided by your code. This is discussed further in chapter \tqfullvref{sec:EncapsulationWithModules}.
 
@@ -6752,76 +6752,14 @@ Although \textit{it is not recommended}, an extensible class can even provide di
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}[nosep]
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Non-\lstinline|final| Methods}\label{sec:NonFinalMethods}
-A method will be overridden to change the behaviour of an extended class, compared with its base class. The method either has already a behaviour, or it is empty, doing nothing\footnote{…~or it is \lstinline|abstract|, but that is another pattern.}.
+This chapter deals with non-\lstinline|final| and non-\lstinline|abstract| methods. Such a method will be overridden to change the behaviour of the child class, compared with the base class. The method either has already a behaviour, or it is empty, doing nothing.
 
-In the latter case, it is very likely that this method was already added to design an extendable class.
+In the latter case, it is very likely that this method was added with the focus on designing an extendable class.
 
 In the other case, the new method's behaviour will completely replace that of the original one with new functionality. If this is not possible – meaning that some of the original method's functionality has to be kept, this needs to be described in the documentation comment for that method. Or, even better, you should change the design of your class to use the Template Method Pattern\autocite{Gamma:DesignPatterns}.
 
-Assume your class has to implement the following process:
+As said already is it difficult to come up with a generic recipe for good design of an extendable class, so let me try it with an example here. Assume your class has to implement the following process:
 \begin{enumerate}
 \item{Initialisation}
 \item{Gathering data}
@@ -6837,13 +6775,13 @@ Your first, naïve implementation looks like this:
 \begin{lstlisting}[numbers=left]
 public class MyClass
 {
-    public String process() throw IOException
+    public String process() throws IOException
     {
         //---* Initialise the process context *----------------------
         final var context = …
         
         //---* Gather the input data *-------------------------------
-        final String inputData;
+        final Data inputData;
         try( final var inputFile = new FileInputStream( "inputFileName" ) )
         {
             inputData = readStream( inputFile );
@@ -6853,7 +6791,7 @@ public class MyClass
         final var filteredData = … // Do something with inputData
         
         //---* Process the filtered data to the result data *--------
-        final var resultData = … // Do something with filtererdData
+        final var resultData = … // Do something with filteredData
         
         //---* Format the data *-------------------------------------
         final var retValue = … // Do something with resultData
@@ -6870,20 +6808,20 @@ public class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-Works! Job done! Until your project manager returns to you with the requirement that the input data should be taken alternatively from other source that just a file, that different filter schemes are possible, and that the output format has to be customisable. But the initialisation step, the validation and the housekeeping are fine~…
+Works! Job done! Until your project manager returns to you with the requirement that the input data should be possible to specify alternative sources for the input data than just a file, that different filter schemes are possible when the class is used in different contexts, and that the output format has to be customisable, depending on the part of the application that uses the class. But the initialisation step, the validation and the housekeeping are fine~…
 
-Ok, the method \lstinline|MyClass::process| is not final, you override it:
+Ok, the method \lstinline|MyClass::process| is not final, you will override it in \lstinline|CustomClass|:\footnote{Of course implementing inheritance is not the only option you have to fullfil the requirements of your project manager in this case; it could be done also through implementing the Command Pattern\autocite{Gamma:DesignPatterns}, and there are still more ways it could be done. But we are discussing inheritance, the extension of classes and overriding of methods here.} 
 
 \begin{lstlisting}[numbers=left]
 public class CustomClass extends MyClass
 {
-    public String process() throw IOException
+    public String process() throws IOException
     {
         //---* Initialise the process context *----------------------
         final var context = …
         
         //---* Gather the input data *-------------------------------
-        final String inputData;
+        final Data inputData;
         try( final var inputFile = new FileInputStream( new URL( "192.168.0.1" ).openStream() )
         {
             inputData = readStream( inputFile );
@@ -6893,10 +6831,11 @@ public class CustomClass extends MyClass
         final var filteredData = … // Do something with inputData
         
         //---* Process the filtered data to the result data *--------
-        final var resultData = … // Do something with filtererdData
+        final var resultData = … // Do something with filteredData
         
         //---* Format the data *-------------------------------------
-        final var retValue = … // Do something else with resultData
+        final var retValue = … // Do something with resultData that's
+            // different from what MyClass::process did here
         
         //---* Cleanup *---------------------------------------------
         // Do whatever is necessary …
@@ -6911,7 +6850,7 @@ public class CustomClass extends MyClass
 //  class CustomClass
 \end{lstlisting}
 
-But obviously, this is not the solution … so you modify the original class:
+But obviously, this cannot be the solution … so you modify the original class, \lstinline|MyClass|:
 \begin{lstlisting}[numbers=left]
 public class MyClass // Second attempt
 {
@@ -6927,7 +6866,7 @@ public class MyClass // Second attempt
      *  @throws IllegalArgumentException  The input data is invalid.
      */
     @MountPoint 
-    protected String filterData( final String data, final ProcessContext context )
+    protected Data filterData( final Data data, final ProcessContext context )
     {
         if( /* data is not valid */ ) throw new IllegalArgumentException();
         
@@ -6943,7 +6882,7 @@ public class MyClass // Second attempt
      *  @return	The formatted data.
      */
     @MountPoint
-    protected String formatData( final String data, final ProcessContext context )
+    protected String formatData( final Data data, final ProcessContext context )
     {
         final var retValue = … // Do something with data
         
@@ -6960,9 +6899,9 @@ public class MyClass // Second attempt
      *      data.
      */
     @MountPoint
-    protected String obtainInputData() throws IOException
+    protected Data obtainInputData() throws IOException
     {
-        final String retValue;
+        final Data retValue;
         try( final var inputFile = new FileInputStream( "inputFileName" ) )
         {
             retValue = readStream( inputFile );
@@ -6972,7 +6911,7 @@ public class MyClass // Second attempt
         return retValue;
     }   //  obtainInputData()
         
-    public final String process() throw IOException
+    public final String process() throws IOException
     {
         //---* Initialise the process context *----------------------
         final var context = …
@@ -7004,11 +6943,34 @@ public class MyClass // Second attempt
 
 Looks good now! Tests were successful! Job done!
 
-Your colleagues implemented some custom classes extending your class, and basically, all is fine. Just once in a blue moon, the programs using one of the custom classes crashes spectacularly.
-
-When you look into the the source, you found this implementation for \lstinline|filterData()|
+A custom class that needs to get the data from the net can implement \lstinline|obtainInputData()| as
 \begin{lstlisting}
-protected final String filterData( final String data, final ProcessContext context )
+/**
+ *  Obtains the input data from the server with the IP4 address 192.168.0.1.
+ *
+ *  @return {@inheritDoc}
+ *  @throws {@inheritDoc}
+ */
+@Override
+protected final Data obtainInputData() throws IOException
+{
+    final Data retValue;
+    try( final var inputFile = new FileInputStream( new URL( "192.168.0.1" ).openStream() )
+    {
+        inputData = readStream( inputFile );
+    }
+        
+    //---* Done *------------------------------------------------
+    return retValue;
+}   //  obtainInputData()
+\end{lstlisting}
+Similarly, it can override \lstinline|formatData()| and \lstinline|filterData()|.
+
+Your colleagues implemented some custom classes extending your new version of \lstinline|MyClass|, and basically, all is fine. Just once in a blue moon, the programs using one of the custom classes crashes spectacularly.
+
+When you looked into the source for these customised implementations, you found this implementation for \lstinline|filterData()|
+\begin{lstlisting}
+protected final Data filterData( final Data data, final ProcessContext context )
 {
     final var validData = super.filterData( data, context );
     
@@ -7019,9 +6981,9 @@ protected final String filterData( final String data, final ProcessContext conte
 }   //  filterData()
 \end{lstlisting}
 
-This was not what you meant! It should be, to ensure that \textit{after} filtering the data is valid:
+This was not what you meant! It should be like shown below, to ensure that \textit{after} filtering the data is valid (remember: the method \lstinline|filterData()| of the base class \lstinline|MyClass| is responsible for \textit{filtering} and \textit{validation} of the input data)\footnote{Yes, this should not be the case, but if done correct, there would not be a story to tell, and no example to illustrate the issue}:
 \begin{lstlisting}
-protected final String filterData( final String data, final ProcessContext context )
+protected final Data filterData( final Data data, final ProcessContext context )
 {
     final var filteredData = … // Do some filtering on data
     final var retValue = super.filterData( filteredData, context );
@@ -7045,7 +7007,7 @@ public class MyClass // Third attempt
      *  @return	The filtered data.
      */
     @MountPoint 
-    protected String filterData( final String data, final ProcessContext context )
+    protected Data filterData( final Data data, final ProcessContext context )
     {
         /* Does nothing */
         
@@ -7061,7 +7023,7 @@ public class MyClass // Third attempt
      *  @return	The formatted data.
      */
     @MountPoint
-    protected String formatData( final String data, final ProcessContext context )
+    protected String formatData( final Data data, final ProcessContext context )
     {
         final var retValue = … // Do something with data
         
@@ -7078,9 +7040,9 @@ public class MyClass // Third attempt
      *      data.
      */
     @MountPoint
-    protected String obtainInputData() throws IOException
+    protected Data obtainInputData() throws IOException
     {
-        final String retValue;
+        final Data retValue;
         try( final var inputFile = new FileInputStream( "inputFileName" ) )
         {
             retValue = readStream( inputFile );
@@ -7097,12 +7059,12 @@ public class MyClass // Third attempt
      *  @param  context The process context.
      *  @throws IllegalArgumentException  The input data is invalid.
      */
-    private final void validateData( final String data, final ProcessContext context )
+    private final void validateData( final Data data, final ProcessContext context )
     {
         if( /* data is not valid */ ) throw new IllegalArgumentException();
     }   //  validateData()
     
-    public final String process() throw IOException
+    public final String process() throws IOException
     {
         //---* Initialise the process context *----------------------
         final var context = …
@@ -7134,18 +7096,20 @@ public class MyClass // Third attempt
 //  class MyClass
 \end{lstlisting}
 
-Now \lstinline|filterData()| does only filter data, it is no longer responsible for the validation, too. And the default implementation of that method is now empty.
+Now \lstinline|filterData()| will only filter data, it is no longer responsible for the validation, too. And the default implementation of that method is now empty.
 
-So you have basically the following options:
+So you have basically the following options when designing an extendable class:
 \begin{itemize}
-\item{The method (and the base class) is \lstinline|abstract|; this forces that any instantiable implementation (any non-\lstinline|abstract| subclass) is required to implement that method.}
+\item{The method (and the base class) is \lstinline|abstract|; this forces that any instantiable implementation (any non-\lstinline|abstract| subclass) has to implement that method.}
+
 \item{The method does nothing (the method body is empty or contains only a return statement) and can be implemented to add functionality if needed/desired.}
+
 \item{The method provides a default behaviour that can be \textit{completely} replaced in a subclass.}
 \end{itemize}
 
 You should avoid the \textit{requirement} to call the super implementation of the overriden method, by all means! But if you cannot avoid it, provide a detailed comment on how this has to be done!
 
-That does not mean that an overriding method is not allowed to call the super implementation! Assume that in the sample above, the method \lstinline|MyClass::formatData| is more or less doing what you want, but there is just one caption that you want to have different. Then a completely legal implementation for \lstinline|CustomClass::formatData| could look like this:
+That does not mean that an overriding method is \textit{not allowed} to call the super implementation! Assume that in the sample above, the implementation of the method \lstinline|formatData()| from \lstinline|MyClass| is more or less doing what you want, but there is just one caption that you want to have different. Then a completely legal implementation for \lstinline|CustomClass::formatData| could look like this:
 \begin{lstlisting}
 /**
  *  {@inheritDoc}
@@ -7163,8 +7127,12 @@ protected final String formatData( final String data, final ProcessContext conte
 
 And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter if it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
 
+%------------------------------------------------------------------------------
+
 \subsection{Adapter Classes}\label{sec:Adapter}
-An adapter class implements an interface with mainly optional methods; all methods in the class are empty. In addition, an adapter class does not define any attributes\footnote{Otherwise, it would need at least accessor and probably also mutator methods for these attributes that could not be empty.}. A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|; it implements the interface \lstinline|java.awt.event.KeyListener|.
+An adapter class implements an interface that declares mainly optional methods; all methods in the class are empty. In addition, an adapter class does not define any attributes\footnote{Otherwise, it would need at least accessor and probably also mutator methods for these attributes that could not be empty.}.
+
+A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|\autocite{ORACLE_DOC_KEYADAPTER_CLASS}; it implements the interface \lstinline|java.awt.event.KeyListener|\autocite{ORACLE_DOC_KEYADAPTER_INTERFACE}.
 
 This is used like this:
 \begin{lstlisting}
@@ -7177,17 +7145,10 @@ public final class MyClass
         final KeyListener listener = new KeyAdapter() 
         {
             @Override
-            public void keyPressed(KeyEvent event) {
-                printEventInfo("Key Pressed", event);
-            }
-            @Override
-            public void keyReleased(KeyEvent event) {
-                printEventInfo("Key Released", event);
-            }
-            @Override
-            public void keyTyped(KeyEvent event) {
+            public void keyTyped(KeyEvent event) 
+            {
                 printEventInfo("Key Typed", event);
-            }
+            }	//	keyTyped()
             
             private final void printEventInfo( final String str, final KeyEvent e ) 
             {
@@ -7202,9 +7163,9 @@ public final class MyClass
             }   //  printEventInfo()
             
             
-            private final String keyboardLocation( final int keybrd ) 
+            private final String keyboardLocation( final int keyboard ) 
             {
-                final var retValue = switch( keybrd ) 
+                final var retValue = switch( keyboard ) 
                 {
                     case KeyEvent.KEY_LOCATION_RIGHT -> "Right";
                     case KeyEvent.KEY_LOCATION_LEFT -> "Left";
@@ -7250,7 +7211,9 @@ public final class MyClass
                 printEventInfo("Key Typed", event);
             }   //  keyTyped()
             
-			…
+            …
+        };
+        …
     }   //  main()
 }
 //  class MyClass
@@ -7260,7 +7223,7 @@ For this interface and this adapter class, the advantage is marginal, but alread
 
 But since Java~8, interfaces may have \lstinline|default| methods\autocite{ORACLE_TUTORIALS:DefaultMethods, ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface}. Therefore, today the concept of an adapter class has got obsolete. Instead, you would define the interface differently, using \lstinline|default| methods.
 
-For the interface \lstinline|java.awt.event.KeyListener| this would look like this:
+If adjusting the interface \lstinline|java.awt.event.KeyListener| accordingly, this would look like this:
 \begin{lstlisting}
 package java.awt.event;
 
@@ -7310,7 +7273,187 @@ public interface KeyListener extends EventListener
 //  interface KeyListener
 \end{lstlisting}
 
-This would allow to use the interface, but to implement only the method \lstinline|keyTyped()|.
+This would allow to use the interface in the same way as previously the adapter class, and to implement only the method \lstinline|KeyListener::keyTyped|.
+
+%------------------------------------------------------------------------------
+
+\subsection{Alternatives to Extending a Class}
+The goal for the design of \lstinline|MyClass| in chapter \tqref{sec:NonFinalMethods} to allow modifications to the behaviour of the method \lstinline|process()|; there we used inheritance and extended the class.
+
+But it can be done also as in the implementation below:
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+    @FunctionalInterface
+    public interface DataSupplier
+    {
+            /*---------*\
+        ====** Methods **============================================
+            \*---------*/
+        /**
+         *  Returns an instance of
+         *  {@link Data}.
+         *
+         *  @return The data.
+         *  @throws IOException   Something went wrong.
+         */
+        public Data get() throws IOException;
+    }
+    //  interface DataSupplier
+
+        /*------------*\
+    ====** Attributes **=============================================
+        \*------------*/
+    /**
+     *  The filter method.
+     */
+    private final BiFunction<Data,ProcessContext,Data> m_FilterMethod;
+
+    /**
+     *  The formatter method.
+     */
+    private final BiFunction<Data,ProcessContext,String> m_FormatterMethod;
+
+    /**
+     *  The data supplier method.
+     */
+    private final DataSupplier m_DataSupplier;
+
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    /**
+     *  Creates a new instance of {@code MyClass}.
+     */
+    public MyClass() { this( null, null, null ); }
+
+    /**
+     *  Creates a new instance of {@code MyClass}.
+     *
+     *  @param  dataSupplier    The data supplier method; can be 
+     *      {@code null}.
+     *  @param  filter  The filter method; can be {@code null}.
+     *  @param  formatter   The formatter method; can be {@code null}.
+     */
+    public MyClass( final DataSupplier dataSupplier, final BiFunction<Data,ProcessContext,Data> filter, final BiFunction<Data,ProcessContext,String> formatter )
+    {
+        m_DataSupplier = isNull( dataSupplier ) 
+            ? this::obtainInputData 
+            : dataSupplier;
+        m_FilterMethod = isNull( filter ) 
+            ? this::filterData 
+            : filter;
+        m_FormatterMethod = isNull( formatter ) 
+            ? this::formatData 
+            : formatter;
+    }   //  MyClass()
+
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  Filters the input data. This implementation does nothing.
+     *
+     *  @param  data    The raw input data.
+     *  @param  context The process context.
+     *  @return	The filtered data.
+     */
+    private final Data filterData( final Data data, final ProcessContext context )
+    {
+        /* Does nothing */
+
+        //---* Done *------------------------------------------------
+        return data;
+    }   //  filterData()
+
+    /**
+     *  Formats the output data.
+     *
+     *  @param  data    The data to prepare for the output.
+     *  @param  context The process context.
+     *  @return	The formatted data.
+     */
+    private final String formatData( final Data data, final ProcessContext context )
+    {
+        final var retValue = … // Do something with data
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  formatData()
+
+    /**
+     *  Obtains the input data from somewhere; the default
+     *  implementation reads it from the file {@code inputFileName}.
+     *
+     *  @return The input data.
+     *  @throws IOException An I/O error occurred while gathering the
+     *      data.
+     */
+    private final Data obtainInputData() throws IOException
+    {
+        final Data retValue;
+        try( final var inputFile = new FileInputStream( "inputFileName" ) )
+        {
+            retValue = readStream( inputFile );
+        }
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  obtainInputData()
+
+    /**
+     *  Validates the input data.
+     *
+     *  @param  data    The input data.
+     *  @param  context The process context.
+     *  @throws IllegalArgumentException  The input data is invalid.
+     */
+    private final void validateData( final Data data, final ProcessContext context )
+    {
+        if( /* data is not valid */ ) throw new IllegalArgumentException();
+    }   //  validateData()
+
+    public final String process() throws IOException
+    {
+        //---* Initialise the process context *----------------------
+        final var context = …
+
+        //---* Gather the input data *-------------------------------
+        final var inputData = m_DataSupplier.get();
+
+        //---* Validate and filter the data *------------------------
+        validateData( inputData );
+        final var filteredData = m_FilterMethod.apply( inputData, context );
+        if( !inputData.equals( filteredData ) ) validateData( filteredData );
+
+        //---* Process the filtered data to the result data *--------
+        final var resultData = … // Do something with filtererdData
+
+        //---* Format the data *-------------------------------------
+        final var retValue = formatMethod.apply( resultData, context );
+
+        //---* Cleanup *---------------------------------------------
+        // Do whatever is necessary …
+
+        //---* Done *------------------------------------------------
+        /*
+         * Let the caller write the data to wherever it should end up.
+         */
+        return retValue;
+    }   //  process()
+}
+//  class MyClass
+\end{lstlisting}
+Basically the functionality is provided as arguments to the constructor; if an argument is \lstinline|null|, a default is used. The inner class (interface) \lstinline|DataSupplier| is needed because the method \lstinline|get()| of out-of-the-box functional interface \lstinline|java.util.function.Supplier|\autocite{ORACLE_DOC_SUPPLIER_INTERFACE} does not declare an exception.
+
+This is of course only one possible approach, and is does not work in all cases. So it does not allow to add additional attributes, on the other side it can be used to introduce some nasty side effects that are not immediately visible from the code of the class.
+
+But it is a valuable addition to our tool box that complements inheritance.
+
+%------------------------------------------------------------------------------
 
 \section{Types for Argument and Return Values}\label{sec:TypesForArgumentAndReturnValues}
 This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
@@ -7320,6 +7463,85 @@ This topic is relevant for all types of code, not only for code in a public API.
 \end{enumerate}
 
 In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{A return value may not provide access to the internal status of an object.
+
+There are exceptions to this rule, in particular for internal code, but in general it must be taken care that a modification to a returned value does not have an unwanted impact to the status of the object that owned the accessor method.}\label{princ:TypesForArgumentAndReturnValues:P1}
+
+\item{An argument should be as general as possible.
+
+You should choose that type from the class hierarchy as the argument type that provides all the functionality you really need.}
+
+\item{Do not cast the provided argument values.
+
+If you need to cast the given argument value, you have most probably chosen the wrong argument type. But again, there are exceptions to the rule – especially if you have to implement an interface or to override a method. \lstinline|Object::equals| is a good sample for such an exception from the rule.}
+
+\item{Chose the return type based on what the caller may want to do with the return value.
+
+Together with \ref{princ:TypesForArgumentAndReturnValues:P1} this can result in return types for accessor methods that are completely unrelated to the associated attributes.}
+
+\item{Avoid to return magic values to indicate errors.
+
+This also means that you should avoid to return \lstinline|null|. We discussed that already in chapter \tqfullref{sec:CheckingMethodParametersAndReturnValues}.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Return Types}\label{sec:ReturnTypes}
 

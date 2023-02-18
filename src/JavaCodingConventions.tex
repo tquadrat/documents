@@ -6187,7 +6187,7 @@ As a conclusion, you should avoid side effects of (debug) logging as much as pos
 
 A thrown \lstinline|NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS} reveals that either a method argument or a return value was not properly checked before it was further used.
 
-Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, it should also never catch it. A \lstinline|NullPointerException| should be treated like an \lstinline|Error|.} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.}
+Your code should never throw a \lstinline|NullPointerException|!\footnote{And, of course, your code should also never catch a \lstinline|NullPointerException|. Instead it should be treated in the same way as an \lstinline|Error|.} Nevertheless, values can still be \lstinline|null|, for various reasons, and if this is indicating an error condition, this has to be signalled.}
 
 \item{Each method or constructor argument needs to be validated.
 
@@ -6203,197 +6203,86 @@ Arguments and return values should be checked as soon as possible, so that illeg
 
 \item{Avoid \lstinline|null| as a valid return value.
 
-At least a \lstinline|public| or \lstinline|protected| method should nor return \lstinline|null|.}
+At least methods that are part of a public API (methods that are \lstinline|public| or \lstinline|protected|) should not return \lstinline|null|.}
 \end{enumerate}
+
+Consequently, you need to check the arguments for each and every method and constructor. 
+In case an argument value is invalid, your should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS} or another exception derived from that; chapter \tqvref{sec:IllegalArgumentExceptions} provides some sample implementations for exceptions that can be used to signal an invalid argument.
+
+Beside the arguments to a method or constructor, you also have to check the values that are returned by a method call, at least that they are not \lstinline|null|. But don't be paranoid: if the specification of the called method clearly declares that the method will not return \lstinline|null|, you should trust it\footnote{Although you can still add an \lstinline|assert| statement to ensure that – see chapter \tqfullvref{sec:Assertions}.}.
 
 %------------------------------------------------------------------------------
 
 \subsection{How to implement the Validation}\label{sec:ImplementValidation}
+A simple implementation for validating an argument could look like this:
+\begin{lstlisting}[numbers=left]
+public final void myMethod( final String s )
+{
+    if( s == null ) throw new IllegalArgumentException( "s is null" );
+    if( s.isEmpty() ) throw new IllegalArgumentException( "s is empty" );
+    if( s.isBlank() ) throw new IllegalArgumentException( "s is blank" );
+    
+    …
+}   //  myMethod()
+\end{lstlisting}
 
-%------------------------------------------------------------------------------
-
-\subsection{Assertions}\label{sec:Assertions}
-Java~1.4 introduced the new keyword \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert} to the language. At first glance, this looks like the appropriate argument-checking feature~… 
-\begin{quotation}
-“[…]Java's assert keyword is unique in two very interesting ways:
-
-\begin{enumerate}
-\item{The intended use of this keyword is for test environments, or for temporarily performing debugging routines on production systems. No other keyword is targeted toward testing and debugging in the same way as the Java assert statement.}
-\item{The Java assert keyword is ignored when the Java Virtual Machine (JVM) is run using a default configuration. At startup, a special enableassertions runtime variable must be passed to the JVM as a command-line argument in order for code associated with with a Java assert to be executed. There is no other keyword in the Java language that is disabled by default at runtime.}
-\end{enumerate}
-[…]”\\ Cameron McKenzie, TechTarget\autocite{SERVERSIDE:JavaAssert}
-\end{quotation}
-
-The validation of arguments and return values has to be active also in production, not only during test, and it should not be possible to switch off that validation. Therefore \lstinline|assert| is not suitable for general validation. 
-
-As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
-\begin{quotation}
-“[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
-
-A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
-\end{quotation}
-
-As it is acceptable to omit the validation for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid, you should add \lstinline|assert| statements here that check the arguments\autocite{ORACLE_DOC_ASSERTIONS}. These are active during the testing phase but switched off in production.
-
-This can look like this:
-\begin{lstlisting}
+That works for methods, but not for a constructor that calls another constructor:
+\begin{lstlisting}[numbers=left]
+// DOES NOT COMPILE!
 public final class MyClass
 {
-    private MyClass( final String value )
+    public final void MyClass( final String s )
     {
-        assert nonNull( value ) : "value is null";
-        
-        m_Value = value;
+        if( s == null ) throw new IllegalArgumentException( "s is null" );
+        if( s.isEmpty() ) throw new IllegalArgumentException( "s is empty" );
+        if( s.isBlank() ) throw new IllegalArgumentException( "s is blank" );
+    
+        this( s, true );
+        …
     }   //  MyClass()
-    
-    private final void myMethod( final String value )
-    {
-        assert nonNull( value ) : "value is null";
-        
-        if( value.equals( m_Value ) ) …
-    }   //  myMethod()
-    
-    public static final MyClass myFactory( final String value1, final String value2 )
-    {
-    	final var retValue = nonNull( value1 ) ? new MyClass( value1 ) : null;
-    	if( nonNull( retValue ) && nonNull( value2 ) ) retValue.myMethod( value2 );
-    }   //  myFactory()
 }
 //  class MyClass
 \end{lstlisting}
 
+This is because the call to \lstinline|this()| or \lstinline|super()| has to be the first statement in the constructor's body code block.
 
+The class \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} provides a method \lstinline|requireNonNull()|\autocite{ORACLE_DOC_OBJECTS:requireNonNull} that allows you to write at least the \lstinline|null| check like this:
+\begin{lstlisting}[numbers=left]
+import static java.util.Objects.requireNonNull;
 
-
-
-
-
-
-
-Consequently, you need to check the arguments for each and every method and constructor. But as these checks are not for free, it could be acceptable to omit these checks for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid. But even in this case, you should add \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert, ORACLE_DOC_ASSERTIONS} statements that check the arguments; these are active during test, but switched off in production.
-
-
-
-
-But even then you should consider to check the arguments with assertions\autocite{}, at least for methods (for constructors that calls to \lstinline|this()| or \lstinline|super()|, this has to be the very first statement; no \lstinline|assert| statement can be placed before it).
-
-
-
-
-You can also delegate the argument check to another method:
-\begin{lstlisting}
 public final class MyClass
 {
-    public MyClass( final String value )
+    public final void MyClass( final String s )
     {
-        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
-        
-        m_Value = value;
+        this( requireNonNull( s, "s is null" ), true );
+        …
     }   //  MyClass()
-    
-    public final void myMethod( final String value )
-    {
-        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
-        
-        if( value.equals( m_Value ) ) …
-    }   //  myMethod()
-    
-    public static final MyClass myFactory( final String value1, final String value2 )
-    {
-    	//---* Null check is done by constructor *----------------------
-    	final var retValue = new MyClass( value1 );
-    	
-    	//---* Null check is done by myMethod() *-----------------------
-    	retValue.myMethod( value2 );
-    }   //  myFactory()
 }
 //  class MyClass
 \end{lstlisting}
 
-In case the problematic \lstinline|null| value is an argument to a method or to a constructor, you should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}:
-\begin{lstlisting}
+Unfortunately, \lstinline|java.util.Objects::requireNonNull| throws a \lstinline|NullPointerException| and that is not wanted. Therefore I invented a replacement and an extension for \lstinline|java.util.Objects|; the class \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} is part of my foundation library\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
+
+With my \lstinline|Objects| class, you can write:
+\begin{lstlisting}[numbers=left]
+import static org.tquadrat.foundation.lang.Objects.requireNotBlankArgument;
+
 public final class MyClass
 {
-    public MyClass( final String value )
+    public final void MyClass( final String s )
     {
-        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
-        
-        m_Value = value;
-    }   //  MyClass()
-    
-    public final void myMethod( final String value )
-    {
-        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
-        
-        if( value.equals( m_Value ) ) …
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
-
-As this check is quite common, I suggest to create a custom exception for this purpose: \lstinline|NullArgumentException|, extending \lstinline|java.lang.IllegalArgumentException|; chapter \tqvref{sec:IllegalArgumentExceptions} provides sample implementations for this and the other exceptions discussed here. With that the sample looks like this:
-\begin{lstlisting}
-public final class MyClass
-{
-    public MyClass( final String value )
-    {
-        if( isNull( value ) ) throw new NullArgumentException( "value" );
-        
-        m_Value = value;
-    }   //  MyClass()
-    
-    public final void myMethod( final String value )
-    {
-        if( isNull( value ) ) throw new NullArgumentException( "value" );
-        
-        if( value.equals( m_Value ) ) …
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
-
-You may have noticed that I always use \lstinline|isNull()|\autocite{ORACLE_DOC_OBJECTS:isNull} and \lstinline|nonNull()|\autocite{ORACLE_DOC_OBJECTS:nonNull}\footnote{Both methods are defined in the class \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} that will be discussed in more detail later in this chapter.} instead of \lstinline|… == null| and \lstinline|… != null|. I think that the method calls are easier to read than the \verb#==# and \verb#!0# operators.
-
-Foreign code will still throw a \lstinline|NullPointerException| if called with \lstinline|null|, but we are not allowed to catch that …
-
-This means that we have to check the values before we call that foreign code. That's easy for a method, we already check all arguments. But what if we have to call the constructor of a super class?
-\begin{lstlisting}
-public final class MyClass extends ForeignClass
-{
-    public MyClass( final String value )
-    {
-        // WILL NOT COMPILE!!
-        if( isNull( value ) ) throw new NullArgumentException( "value" );
-        super( value );
+        this( requireNotBlankArgument( s, "s" ), true );
+        …
     }   //  MyClass()
 }
 //  class MyClass
 \end{lstlisting}
 
-The solution is to have a method that is doing the \lstinline|null| and throwing the \lstinline|NullArgumentException| if that fails. Then our sample may look like this:
+The method \lstinline|Objects::requiredNotBlankArgument| (see \hyperref[listing:requireNotBlankArgument]{below} for the implementation) throws a \lstinline|NullArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION} in case the argument is \lstinline|null|, an \lstinline|EmptyArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION} if the argument is empty, and when the argument is string that contains only whitespace, a \lstinline|BlankArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}. All three exception classes extend \lstinline|ValidationException|\autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, and that extends \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}.
 
-\begin{lstlisting}
-public final class MyClass extends ForeignClass
-{
-    public MyClass( final String value, final Data data )
-    {
-        super( requireNonNullArgument( data, "data" ) );
-        
-        m_Value = requireNonNullArgument( value, "value" );
-    }   //  MyClass()
-    
-    public final void myMethod( final String value, final Data data )
-    {
-        if( requireNonNullArgument( value, "value" ).equals( m_Value ) && requireNonNullArgument( data, "data" ).equals( getData() ) )
-        {
-            …
-        }
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
+To check an argument for \lstinline|null| only, you can use \lstinline|Objects::requireNonNullArgument|, and for the empty check, the method \lstinline|Objects::requireNotEmptyArgument| (see \hyperref[listing:requireNotEmptyArgument]{below}) is available.
 
-The method \lstinline|requireNonNullArgument()| looks like this\footnote{This one and the other methods in this chapter are implemented in the class \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} that also provides reimplementations of the methods from \lstinline|java.util.Objects|.}:
+The method \lstinline|requireNonNullArgument()| looks like this:
 \begin{lstlisting}[numbers=left,caption={requireNonNullArgument()}]
 /**
  *  Checks if the given argument {@code a} is {@code null} and throws a
@@ -6421,7 +6310,7 @@ public static final <T> T requireNonNullArgument( final T a, final String name )
 In general, it is a good idea to check the arguments for a method or a constructor is as soon as possible, but is needs to be checked latest before it is used in some way.
 
 We can check an argument for being empty, and Strings can be even tested for being blank, in the same way as for the null check:
-\begin{lstlisting}[numbers=left,caption={requireNotEmptyArgument()}]
+\begin{lstlisting}[numbers=left,caption={requireNotEmptyArgument()},label={listing:requireNotEmptyArgument}]
 /**
  *  <p>{@summary Checks if the given argument {@code arg} is 
  *  {@code null} or empty and throws a
@@ -6543,7 +6432,7 @@ public static final <T> T requireNotEmptyArgument( final T arg, final String nam
 }   //  requireNotEmptyArgument()
 \end{lstlisting}
 
-\begin{lstlisting}[numbers=left,caption={requireNotBlankArgument()}]
+\begin{lstlisting}[numbers=left,caption={requireNotBlankArgument()},label={listing:requireNotBlankArgument}]
 /**
  *  <p>{@summary Checks if the given String argument {@code arg} is
  *  {@code null}, empty or blank and throws a
@@ -6590,13 +6479,282 @@ public static final <T extends CharSequence> T requireNotBlankArgument( final T 
 }   //  requireNotBlankArgument()
 \end{lstlisting}
 
-The classes \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} and \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} provide a bunch of additional methods that can help with the validation of arguments.
+As said, the methods above are implemented in the class \lstinline|org.tquadrat.foundation.lang.Objects| that also provides reimplementations of the methods from \lstinline|java.util.Objects| that now throw \lstinline|NullArgumentException| instead of \lstinline|NullPointerException|.
 
-Beside the arguments to a method or constructor, you also have to check the values that are returned by a method call, at least that they are not \lstinline|null|. But don't be paranoid: if the specification of the called method clearly declares that the method will not return \lstinline|null|, you should trust it\footnote{Although you can still add an \lstinline|assert| statement to ensure that.}
+That utility class provides some more methods that support the validation of arguments; for the details, refer to \autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}.
 
-The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
+\begin{itemize}
+\item{\lstinline|checkFromIndexSize()| Checks if a \lstinline|fromIndex| value fits into a given range for a given size of a sub-range.
 
-Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
+\begin{lstlisting}
+public final byte [] cutOut( final byte [] source, final int fromIndex, final int size )
+{
+    final var retValue = copyOfRange( requireNonNullArgument( source ), checkFromIndexSize( fromIndex, size, source.length ), fromIndex + size );
+	 
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  cutOut()
+\end{lstlisting}
+
+The method \lstinline|Arrays::copyOfRange| will of course check the arguments by itself, but the main goal of the sample code above is to illustrate how to use the methods.}
+
+\item{\lstinline|checkFromToIndex()| Checks if a \lstinline|fromIndex| and a \lstinline|toIndex| value fits into a given range.
+
+\begin{lstlisting}
+public final byte [] cutOut( final byte [] source, final int fromIndex, final int toIndex )
+{
+    final var retValue = copyOfRange( requireNonNullArgument( source ), checkFromToIndex( fromIndex, toIndex, source.length ), toIndex );
+	 
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  cutOut()
+\end{lstlisting}}
+
+\item{\lstinline|checkIndex()| Checks if the given value is within the bounds of the range from 0 (inclusive) to the given length (exclusive).
+
+\begin{lstlisting}
+public final void setAge( final int age ) 
+{ 
+    m_Age = checkIndex( age, MAX_AGE + 1 ); 
+}   //  setAge()
+\end{lstlisting}}
+
+\item{\lstinline|require()| Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException| with a specified message is thrown. For the check on argument, prefer \lstinline|requireValidArgument()|, this method is more feasible for the check on return values.
+
+\begin{lstlisting}
+final var connection = require( obtainConnection(), "Connection is closed", Connection::isOpen );
+\end{lstlisting}}
+
+\item{\lstinline|requireNonNull()| This message throws a \lstinline|ValidationException| when the given argument is \lstinline|null|. For the \lstinline|null| check on arguments, you should prefer \lstinline|requireNonNullArgument()|, this method is more feasible for the \lstinline|null| check on the return value of a method. 
+
+\begin{lstlisting}
+final var configFileName = "config.file";
+final var resourceStream = requireNonNull( getClass().getResourceAsStream( configFileName ), () -> format( "Cannot open resource '%s'", configFileName ) );
+\end{lstlisting}}
+
+\item{\lstinline|requireValidArgument()| Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException| with a specified message is thrown.
+
+\begin{lstlisting}
+private final boolean checkPassword( final String password )
+{
+    final var retValue = (requireNotBlankArgument( password, "password" ).length() > 8)
+        && containsDigit( password )
+        && containsPunctuation( password )
+        && !password.equals( password.toLowerCase( ROOT )
+        && !password.equals( password.toUpperCase( ROOT );
+        	 
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  checkPassword()
+
+public final void setPassword( final String password )
+{
+    m_Password = requireValidArgument( password, "password", this::checkPassword );
+}   //  setPassword()
+\end{lstlisting}
+
+Similar methods exist for the primitive types \lstinline|double|, \lstinline|int| and \lstinline|long|.}
+\end{itemize}
+
+You may have noticed that I always use \lstinline|isNull()|\autocite{ORACLE_DOC_OBJECTS:isNull} and \lstinline|nonNull()|\autocite{ORACLE_DOC_OBJECTS:nonNull} from \lstinline|java.util.Objects| instead of \lstinline|… == null| and \lstinline|… != null|. I think that the method calls are easier to read than the \verb#==# and \verb#!0# operators. Both methods are also defined in \lstinline|org.tquadrat.foundation.lang.Objects|.
+
+%------------------------------------------------------------------------------
+
+\subsection{Delegating the Validation}
+It is possible to delegate the argument check to another method, like shown in lines~20 and 23:
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    public MyClass( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    public final void myMethod( final String value )
+    {
+        if( isNull( value ) ) throw new IllegalArgumentException( "value is null" );
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+    
+    public static final MyClass myFactory( final String value1, final String value2 )
+    {
+    	//---* Null check is done by constructor *----------------------
+    	final var retValue = new MyClass( value1 );
+    	
+    	//---* Null check is done by myMethod() *-----------------------
+    	retValue.myMethod( value2 );
+    }   //  myFactory()
+}
+//  class MyClass
+\end{lstlisting}
+The comments as in lines~19 and 22 are mandatory.
+
+%------------------------------------------------------------------------------
+\subsection{Foreign Code}\label{sec:ForeignCode}
+The methods and constructors from external libraries (but also from the Java Runtime library) may still throw a \lstinline|NullPointerException| if called with a \lstinline|null| argument, but we are not allowed to catch that exception …
+
+This means that we have to check the values of the arguments on \lstinline|null| \textit{before} we call a method or a constructor from that foreign code:
+\begin{lstlisting}
+final var partialArray = copyOfRange( requireNonNull( source ), fromIndex, toIndex );
+\end{lstlisting}
+
+Or we wrap the call to that 3\textsuperscript{rd} method into a method of our own:
+\begin{lstlisting}
+public final static byte [] copyOfRange( final byte [] source, final int fromIndex, final int toIndex )
+{
+    final var retValue = Arrays.copyOfRange( requireNonNullArgument( source ), checkFromToIndex( fromIndex, toIndex, source.length ), toIndex );
+	 
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  copyOfRange()
+\end{lstlisting}
+
+Of course we can also provide a facade class for the foreign stuff, either by extending the classes (if possible), or by wrapping it:
+\begin{lstlisting}
+public final class ForeignFacade extends ForeignClass
+{
+    public ForeignFacade( final String value, final Data data )
+    {
+        super( requireNonNullArgument( value, "value" ), requireNonNullArgument( data, "data" ) );
+    }   //  ForeignFacade()
+    
+    @Override
+    public final void foreignMethod( final String value, final Data data )
+    {
+        super.foreignMethod( requireNonNullArgument( value, "value" ), requireNonNullArgument( data, "data" ) );
+    }   //  foreignMethod()
+}
+//  class ForeignFacade
+
+public final class ForeignWrapper
+{
+    private final ForeignClass m_WrappedInstance;
+	
+    public ForeignWrapper( final String value, final Data data )
+    {
+        m_WrappedInstance = new ForeignClass( requireNonNullArgument( value, "value" ), requireNonNullArgument( data, "data" ) );
+    }   //  ForeignWrapper()
+    
+    @Override
+    public final void foreignMethod( final String value, final Data data )
+    {
+        m_WrappedInstance.foreignMethod( requireNonNullArgument( value, "value" ), requireNonNullArgument( data, "data" ) );
+    }   //  foreignMethod()
+}
+//  class ForeignWrapper
+\end{lstlisting}
+
+Regarding other validations, you can decide that your code will either perform them, too, before calling the foreign code, or that your code catches the respective exceptions and wraps them into an \lstinline|IllegalArgumentException| or a \lstinline|ValidationException|, or you just go with the exceptions from that 3\textsuperscript{rd} party code\footnote{In the latter case, you should check whether the foreign code will be consistent in this regard; if not, you should prefer one of the other two options.}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Assertions}\label{sec:Assertions}
+Java~1.4 introduced the new keyword \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert} to the language. At first glance, this looks like the appropriate argument-checking feature – but~… 
+\begin{quotation}
+“[…]Java's assert keyword is unique in two very interesting ways:
+
+\begin{enumerate}
+\item{The intended use of this keyword is for test environments, or for temporarily performing debugging routines on production systems. No other keyword is targeted toward testing and debugging in the same way as the Java assert statement.}
+\item{The Java assert keyword is ignored when the Java Virtual Machine (JVM) is run using a default configuration. At startup, a special enableassertions runtime variable must be passed to the JVM as a command-line argument in order for code associated with with a Java assert to be executed. There is no other keyword in the Java language that is disabled by default at runtime.}
+\end{enumerate}
+[…]”\\ Cameron McKenzie, TechTarget\autocite{SERVERSIDE:JavaAssert}
+\end{quotation}
+
+The validation of arguments and return values has to be active also in production, not only during test, and it should not be possible to switch off that validation. Therefore \lstinline|assert| is not suitable for general validation. 
+
+As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
+\begin{quotation}
+“[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
+
+A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
+\end{quotation}
+
+Because it is acceptable to omit the validation for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid, you should add \lstinline|assert| statements here that check the arguments\autocite{ORACLE_DOC_ASSERTIONS}. These are active during the testing phase, verifying that the caller will really invoke the method with valid arguments only, but switched off in production.
+
+This can look like this:
+\begin{lstlisting}
+public final class MyClass
+{
+    private MyClass( final String value )
+    {
+        assert nonNull( value ) : "value is null";
+        
+        m_Value = value;
+    }   //  MyClass()
+    
+    private final void myMethod( final String value )
+    {
+        assert nonNull( value ) : "value is null";
+        
+        if( value.equals( m_Value ) ) …
+    }   //  myMethod()
+    
+    public static final Optional<MyClass> myFactory( final String value1, final String value2 )
+    {
+    	final var retValue = Optional.ofNullable( nonNull( value1 ) ? new MyClass( value1 ) : null ); 
+    	if( nonNull( value2 ) ) retValue.ifPresent( v -> v.myMethod( value2 ) );
+    	
+    	//---* Done *---------------------------------------------------
+    	return retValue;
+    }   //  myFactory()
+}
+//  class MyClass
+\end{lstlisting}
+
+In the same way you can check the values returned by method calls, in particular those returned by methods from foreign code. But you should not use \lstinline|assert| to check results that depend from external conditions, like the existence of files or whether a connection attempt was successful.
+
+%------------------------------------------------------------------------------
+
+\section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
+This chapter provides some hints for the design and implementation of classes and methods that should be/can be extended. This is basically relevant for libraries, but also for applications that should be customisable in some way and therefore providing an API.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Avoid complex class hierachies.
+
+Inheritance is a ‘chainsaw tool’: very powerful, but with the inherent capability to cut off your foot. And its dangerousness increases with the complexity of the inheritance hierarchy. Therefore keep your hierarchies simple and small.}
+
+\item{The extensibility of your code should not be based on inheritance.
+
+Implementing an interface or extending a simple abstract class from an SPI is alright, but the requirement of plugging in new child classes into a multi-level class hierarchy can cause severe problems later.}
+
+\item{Extendable classes have to be build for being extended.
+
+This means first that the mount or extension points have to be marked clearly, and that they need to be documented properly.
+
+Next it means that all classes that are not meant to be extended have to be \lstinline|final|.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{‘\lstinline|final|’ for Classes and Methods}
+Each non-\lstinline|private| method, that is not explicitly meant to be overridden by an extending class has to be \lstinline|final|. Each non-\lstinline|final| class is implicitly meant to be extended – even if it contains only \lstinline|final| methods.
+
+Non-\lstinline|final| methods require a comment about when and how they can be overridden, and if the super implementation has to be called, and when. On how to write the comments for classes and methods, refer to the respective chapters \tqvref{sec:ClassComment} and \tqvref{sec:MethodComment}.
+
+\lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|. Nevertheless, in the source code they will be marked as \lstinline|final|, too, although that is redundant.
+
+%------------------------------------------------------------------------------
+
+\subsection{Non-\lstinline|final| Classes}\label{sec:NonFinalClasses}
+As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
+
+Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses, ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedInterfaces}, this is obsolete\footnote{Ok, ‘redundant’ may be the better term here, because it could also support maintenance when the documentation elaborates on the inheritance concept also for these classes.}: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations have to be provided by your code. This is discussed further in chapter \tqfullvref{sec:EncapsulationWithModules}.
+
+Unfortunately it is difficult to provide a globally valid recipe for extensible classes. In general, such a class should provide some so called ‘mount points’ or ‘extension points’ where the behaviour could be changed or more features could be added. This could be an \lstinline|abstract| method, an empty, non-\lstinline|final| place holder method, or a non-\lstinline|final| method providing some default behaviour. Such a method should be marked with the annotation \lstinline|@Mountpoint|\footnote{Refer to chapter \tqvref{sec:MountPoint} for an implementation of the Annotation.} (if not \lstinline|abstract| or part of an interface), to indicate that you have not just forgotten to add the \lstinline|final| keyword.
+
+An extensible class can also provide useful and/or convenience functionality as \lstinline|protected final| methods. 
+
+Although \textit{it is not recommended}, an extensible class can even provide direct access to fields by declaring them \lstinline|protected| instead of \lstinline|private|.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 
@@ -6611,7 +6769,7 @@ Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
-\subsubsection{Principles}
+%\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{one}
 \item{two}
@@ -6655,27 +6813,6 @@ Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_
 
 
 
-
-\section{Extending Classes, Overriding Methods}\label{sec:ExtendingClassesOverridingMethods}
-This chapter provides some hints for the design and implementation of classes and methods that should be/can be extended. This is basically relevant for libraries, but also for applications that should be customisable in some way and therefore providing an API.
-
-\subsection{‘\lstinline|final|’ for Classes and Methods}
-Each non-\lstinline|private| method, that is not explicitly meant to be overridden by an extending class has to be \lstinline|final|. Each non-\lstinline|final| class is implicitly meant to be extended – even if it contains only \lstinline|final| methods.
-
-Non-\lstinline|final| methods require a comment about when and how they can be overridden, and if the super implementation has to be called, and when. On how to write the comments for classes and methods, refer to the respective chapters \tqvref{sec:ClassComment} and \tqvref{sec:MethodComment}.
-
-\lstinline|private| and \lstinline|static| methods are implicitly \lstinline|final|. Nevertheless, in the source code they will be marked as \lstinline|final|, too, although that is redundant.
-
-\subsection{Non-\lstinline|final| Classes}\label{sec:NonFinalClasses}
-As already said above, each non-\lstinline|final| class is implicitly meant to be extended. This means, it has to be designed in a way that supports that extension, and it has to provide proper documentation on how to implement the extension and when.
-
-Only when the class is \lstinline|sealed|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedClasses, ORACLE_DOC_LANGUAGE_SPECIFICATION:SealedInterfaces}, this is obsolete: for a \lstinline|sealed| class (and for a \lstinline|sealed| interface), all implementations has to be provided by you. This is discussed further in chapter \tqvref{sec:EncapsulationWithModules}.
-
-Unfortunately it is difficult to provide a globally valid recipe for extensible classes. In general, such a class should provide some so called ‘mount points’ or ‘extension points’ where the behaviour could be changed or added. This could be an \lstinline|abstract| method, an empty, non-\lstinline|final| place holder method, or a non-\lstinline|final| method providing some default behaviour. Such a method should be marked with the annotation \lstinline|@Mountpoint|\footnote{Refer to chapter \tqvref{sec:MountPoint} for an implementation of the Annotation.} (if not \lstinline|abstract| or part of an interface), to indicate that you have not just forgotten to add the \lstinline|final| keyword.
-
-An extensible class can also provide useful and/or convenience functionality as \lstinline|protected final| methods. 
-
-Although \textit{it is not recommended}, an extensible class can even provide direct access to fields by declaring them \lstinline|protected| instead of \lstinline|private|.
 
 \subsection{Non-\lstinline|final| Methods}\label{sec:NonFinalMethods}
 A method will be overridden to change the behaviour of an extended class, compared with its base class. The method either has already a behaviour, or it is empty, doing nothing\footnote{…~or it is \lstinline|abstract|, but that is another pattern.}.
@@ -7024,7 +7161,7 @@ protected final String formatData( final String data, final ProcessContext conte
 }   //  formatData()
 \end{lstlisting}
 
-And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
+And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter if it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
 
 \subsection{Adapter Classes}\label{sec:Adapter}
 An adapter class implements an interface with mainly optional methods; all methods in the class are empty. In addition, an adapter class does not define any attributes\footnote{Otherwise, it would need at least accessor and probably also mutator methods for these attributes that could not be empty.}. A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|; it implements the interface \lstinline|java.awt.event.KeyListener|.
@@ -7185,6 +7322,14 @@ This topic is relevant for all types of code, not only for code in a public API.
 In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
 
 \subsection{Return Types}\label{sec:ReturnTypes}
+
+
+
+
+
+
+
+
 A method, in particular a non-\lstinline|private| method, should return the most general interface or class whenever possible. This means~…
 \begin{itemize}[nosep]
 \item{…~the interface \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE} or even \lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE} instead of the concrete implementation \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}}
@@ -7276,6 +7421,57 @@ The method \lstinline|unmodifiableList()| is part of the utility class \lstinlin
 A similar approach has to be taken for all attributes of a mutable type that will be returned by a method. The sample uses a collection, for other mutable types the details on how to create a copy or to make it immutable will differ.
 
 If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not. 
+
+
+
+
+
+
+
+
+
+
+
+
+The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
+
+Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Arguments}\label{sec:Arguments}
 Same as for a return type, the types for the formal parameters of a method should always be the most general type (interface or class) possible, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.

@@ -2451,13 +2451,13 @@ While the primary goal of the formatting rules is to make it easier to \textit{r
 \begin{enumerate}[label=P\arabic*.]
 \item{The selected name for a program element has to be meaningful.
 
-But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{p:MeaningfulNames}
+But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{princ:NamingConventions:MeaningfulNames}
 
 \item{Names, in particular those for methods, provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
 
 This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
 
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{p:NamesAsConctract}
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{princ:NamingConventions:NamesAsContract}
 
 \item{The naming has to be consistent.
 
@@ -2508,7 +2508,7 @@ Details are discussed in the chapters about the respective code elements.
 %------------------------------------------------------------------------------
 
 \subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
-In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \ref{p:MeaningfulNames}
+In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \ref{princ:NamingConventions:MeaningfulNames}
 
 The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
 
@@ -2667,7 +2667,7 @@ The name of a constructor is the name of the class it belongs to.
 \section{Methods}\label{sec:NamesForMethods}
 A method name has to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized\footnote{see chapter \tqvref{sec:CaseOfNames}}.
 
-The name of a method needs to describe what that method does; that is that contract between developer and maintainer mentioned in \ref{p:NamesAsConctract}
+The name of a method needs to describe what that method does; that is that contract between developer and maintainer mentioned in \ref{princ:NamingConventions:NamesAsContract}
 
 That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| are syntactically correct, but are discouraged or even invalid\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as \textit{a place holder for a meaningful method name}, and definitely \textit{not} as an example for the naming of a method.}.
 
@@ -3633,7 +3633,7 @@ If such a method has a dummy or default return value, there has to be an appropr
  */
 \end{lstlisting}
  
-Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected.
+Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected. This includes the modification of an argument; refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
 
 %------------------------------------------------------------------------------
 
@@ -3672,6 +3672,8 @@ private MyUtilityClass()
 If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
 
 Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
+
+Same as for a method, the documentation comment for a constructor has to describe all the side-effects caused by it; the modification of an argument is such a side-effect – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details. But in general, a constructor should not have any (visible) side-effects at all.
 
 %------------------------------------------------------------------------------
 
@@ -7449,9 +7451,219 @@ public final class MyClass
 \end{lstlisting}
 Basically the functionality is provided as arguments to the constructor; if an argument is \lstinline|null|, a default is used. The inner class (interface) \lstinline|DataSupplier| is needed because the method \lstinline|get()| of out-of-the-box functional interface \lstinline|java.util.function.Supplier|\autocite{ORACLE_DOC_SUPPLIER_INTERFACE} does not declare an exception.
 
-This is of course only one possible approach, and is does not work in all cases. So it does not allow to add additional attributes, on the other side it can be used to introduce some nasty side effects that are not immediately visible from the code of the class.
+This is of course only one possible approach, and is does not work in all cases. So it does not allow to add additional attributes, on the other side it can be used to introduce some nasty side effects that are not immediately visible from the code of the class. When you have configured logging in the usual way, the injected methods will use different loggers than the other methods of the class.
 
 But it is a valuable addition to our tool box that complements inheritance.
+
+%------------------------------------------------------------------------------
+
+\section{Method Signatures}\label{sec:MethodSignatures}
+The question how to define the signature of a method or constructor is important not only for a public API; doing it right helps with building better readable code in general.
+
+At first you need to understand what the ‘method signature’ is in Java; it is what identifies a method and distinguishes it from another.
+
+In Java, the method signature is the name of the method plus the sequence of the types of formal parameters for that method. Neither the names of the formal parameters nor the return type nor any declared exceptions are part of the signature. This reflects in the method \lstinline|Class::getMethod|\autocite{ORACLE_DOC_CLASS:getMethod,ORACLE_DOC_CLASS:getDeclaredMethod} that takes just the method name and a list of \lstinline|Class| instances as arguments to identify a method inside a class.
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The selected name for a method has to be meaningful.
+
+For more details on this, refer to \ref{princ:NamingConventions:MeaningfulNames} in chapter \tqfullref{sec:NamingConventions}, and to chapter \tqfullref{sec:NamesForMethods} that exhausts the topic regarding the naming of methods.}
+
+\item{The type for an argument should be as general as possible.
+
+That type from a class hierarchy, that provides exact all required functionality, has to be chosen as the type for the argument.}\label{princ:MethodSignatures:General}
+
+\item{An argument should be as specific as possible.
+
+At a first glance this seems to contradict \ref{princ:MethodSignatures:General}, but as that refers to the general type only, does this principle refers also to the value. It means that you should prefer to provide the object itself instead of a key to it, or its string representation.
+
+In this context, \ref{princ:MethodSignatures:NoCast} is important, too.}
+
+\item{Do not cast the provided argument value.
+
+If you need to cast the given argument value, you have most probably chosen the wrong argument type, although there are exceptions to the rule – especially if you have to implement an interface or to override a method from a foreign class. \lstinline|Object::equals| is a good sample for such an exception to this rule.}\label{princ:MethodSignatures:NoCast}
+
+\item{Keep the parameters list short.
+
+Method calls with a long list of arguments are difficult to read and to understand, and they are error prone.}
+
+\item{Avoid to have multiple arguments with the same type on the parameters list.
+
+This is also error prone and may cause errors that are really nasty to debug.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Mutable Types for Arguments}\label{sec:MutableTypesForArguments}
+A method (or constructor) \textit{must} declare in its documentation comment that it modifies a given argument value. This is important because otherwise the method could be called with an immutable implementation of the type for the formal parameter, what would cause an exception\footnote{Usually, it would be an \lstinline|UnsupportedOperationException|\autocite{ORACLE_DOC_UNSUPPORTEDOPERATIONEXCEPTION_CLASS}, sometimes an \lstinline|IllegalStateException|\autocite{ORACLE_DOC_ILLEGALSTATEEXCEPTION_CLASS}, but others are possible, too.}. It is also important for the caller as it cannot rely any longer that an object instance that was used as an argument in a method call has still the same state after the method call as it had before.
+
+Conversely, it also means a method, that \textit{does not specify} to modify one of its arguments, \textit{will not change} any of the arguments, and that it would be safe to call that method with a mutable object – at least safe for the caller.
+
+But when the called method or constructor stores the provided argument in the instance, this may call for trouble if it keeps just the give reference:
+\begin{lstlisting}
+public final class MyClass
+{
+    private List<String> m_Attribute;
+    
+    public MyClass( final List<String> attribute )
+    {
+        // AVOID!!
+        m_Attribute = attribute;
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+
+If the caller holds a reference to the \lstinline|List| instance provided as the argument to the constructor in this sample, it can still modify that list – and change the internal state of the \lstinline|MyClass| instance at the same time.\footnote{You may encounter a similar situation if the provided object instance is accessible from multiple threads than may attempt to modify it concurrently.}
+
+Therefore you must create a copy for all (potentially) mutable arguments\footnote{The examples will show a constructor, but a mutator method (a ‘setter’) needs to be implemented along the same lines.}:
+\begin{lstlisting}
+public final class MyClass
+{
+    private List<String> m_Attribute;
+    
+    public MyClass( final List<String> attribute )
+    {
+    	// Better!
+        m_Attribute = new ArrayList( attribute );
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
+
+Or you can do it like this\footnote{I deliberately omitted any otherwise necessary \lstinline|null| checks in these samples as they do not help to illustrate the issue.}:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+    
+    public MyClass( final List<String> attribute )
+    {
+        // PREFERRED!!
+        m_Attribute.addAll( attribute );
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+In the samples above, I used lists of \lstinline|java.lang.String|, and \lstinline|String| is an immutable type – meaning that it would not be required to copy the contents of the list, too. But if it would be a mutable type, a deep copy is required:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<StringBuilder> m_Attribute = new ArrayList<>();
+    
+    public MyClass( final List<StringBuilder> attribute )
+    {
+        for( final var s : attribute )
+        {
+            m_Attribute.add( new StringBuilder( s );
+        }    	
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+This is easy to implement for \lstinline|java.lang.StringBuilder|, but it can become arbitrarily complex for custom classes.
+
+%------------------------------------------------------------------------------
+\subsection{General vs. specific Argument Types}
+You should choose that type for a formal parameter of a method or a constructor that provides just the functionality that is needed.
+
+You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|myMethod( Collection<String> )| or \lstinline|myMethod( final ArrayList<String> )|?
+
+Another class hierarchy that raises this question is build around \lstinline|InputStream| and \lstinline|OutputStream|.
+
+A similar situation is there about \lstinline|String| and \lstinline|CharSequence|.
+
+I will discuss this topic here using these three areas a samples, and hopefully, it gives you an idea how to handle this question in other contexts.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Choose the proper Collection Type}\label{sec:ChooseTheProperCollectionType}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Choose the proper I/O Stream Type}\label{sec:ChooseTheProperIOStreamType}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsubsection{String vs. CharSequence}
+You should prefer \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE} over \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS} for the type of method and constructor arguments, even if you in fact need a \lstinline|String|: calling \lstinline|toString()| on an instance of \lstinline|String| is a \verb#NOOP# that will be optimised away by the \verb#javac# compiler or by the JIT, but line~3 from the sample below is easier to read than line~5, and the latter does not provide any additional information to the reader.
+\begin{lstlisting}[numbers=left]
+final var buffer = new StringBuilder();
+…
+final var parts = splitString( buffer );
+…
+final var parts = splitString( buffer.toString() );
+\end{lstlisting}
+
+Of course, there will be always methods that will be called never with an instance of \lstinline|CharBuffer|\autocite{ORACLE_DOC_CHARBUFFER_CLASS} or \lstinline|StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} as an argument, but only with \lstinline|String| instances, just because of the context the are defined in. Then it does not make any sense at all to define the formal parameter as \lstinline|CharSequence|.
+
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
@@ -7470,17 +7682,9 @@ In general, the answers are “Interface” and “Immutable”, but this is not
 
 There are exceptions to this rule, in particular for internal code, but in general it must be taken care that a modification to a returned value does not have an unwanted impact to the status of the object that owned the accessor method.}\label{princ:TypesForArgumentAndReturnValues:P1}
 
-\item{An argument should be as general as possible.
-
-You should choose that type from the class hierarchy as the argument type that provides all the functionality you really need.}
-
-\item{Do not cast the provided argument values.
-
-If you need to cast the given argument value, you have most probably chosen the wrong argument type. But again, there are exceptions to the rule – especially if you have to implement an interface or to override a method. \lstinline|Object::equals| is a good sample for such an exception from the rule.}
-
 \item{Chose the return type based on what the caller may want to do with the return value.
 
-Together with \ref{princ:TypesForArgumentAndReturnValues:P1} this can result in return types for accessor methods that are completely unrelated to the associated attributes.}
+Together with \ref{princ:TypesForArgumentAndReturnValues:P1} this can result in return types for accessor methods that are completely unrelated to the types of the associated attributes.}
 
 \item{Avoid to return magic values to indicate errors.
 
@@ -7488,6 +7692,57 @@ This also means that you should avoid to return \lstinline|null|. We discussed t
 \end{enumerate}
 
 %------------------------------------------------------------------------------
+
+\subsection{Arguments}\label{sec:Arguments}
+
+
+
+
+
+
+
+Same as for a return type, the types for the formal parameters of a method should always be the most general type (interface or class) possible, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.
+
+A method must declare that it will modify an argument value. This is important because otherwise it could be called with an immutable implementation, what would cause an exception. Conversely, this also means that a method that does not specify this will not change any of the arguments, and that it would also be safe to call a method with a mutable object – safe for the caller.
+
+But when the called method stores the provided reference in the instance, this may call for trouble:
+\begin{lstlisting}
+public final class MyClass
+{
+    private List<String> m_Attribute;
+    
+    public MyClass( final List<String> attribute )
+    {
+        // AVOID!!
+        m_Attribute = attribute;
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
+
+If the caller holds a reference to the argument object, it can still modify it – and change the internal state of the \lstinline|MyClass| instance at the same time.
+
+Therefore you should create a copy for the argument:
+\begin{lstlisting}
+…
+m_Attribute = new ArrayList( attribute );
+…
+\end{lstlisting}
+If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
+
+Or you can do it like this\footnote{And do not forget the null check!}:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+    
+    public MyClass( final List<String> attribute )
+    {
+        m_Attribute.addAll( attribute );
+    }   //  MyClass()
+}
+//  classMyClass
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
@@ -7694,50 +7949,6 @@ Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_
 
 
 
-
-\subsection{Arguments}\label{sec:Arguments}
-Same as for a return type, the types for the formal parameters of a method should always be the most general type (interface or class) possible, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.
-
-A method must declare that it will modify an argument value. This is important because otherwise it could be called with an immutable implementation, what would cause an exception. Conversely, this also means that a method that does not specify this will not change any of the arguments, and that it would also be safe to call a method with a mutable object – safe for the caller.
-
-But when the called method stores the provided reference in the instance, this may call for trouble:
-\begin{lstlisting}
-public final class MyClass
-{
-    private List<String> m_Attribute;
-    
-    public MyClass( final List<String> attribute )
-    {
-        // AVOID!!
-        m_Attribute = attribute;
-    }   //  MyClass()
-}
-//  classMyClass
-\end{lstlisting}
-
-If the caller holds a reference to the argument object, it can still modify it – and change the internal state of the \lstinline|MyClass| instance at the same time.
-
-Therefore you should create a copy for the argument:
-\begin{lstlisting}
-…
-m_Attribute = new ArrayList( attribute );
-…
-\end{lstlisting}
-If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
-
-Or you can do it like this\footnote{And do not forget the null check!}:
-\begin{lstlisting}
-public final class MyClass
-{
-    private final List<String> m_Attribute = new ArrayList<>();
-    
-    public MyClass( final List<String> attribute )
-    {
-        m_Attribute.addAll( attribute );
-    }   //  MyClass()
-}
-//  classMyClass
-\end{lstlisting}
 
 \section{Swap Logic Errors for Compiler Errors}
 From a book about Java programming:
@@ -9627,8 +9838,6 @@ addListener( listener2 );
 addListener( listener3 );
 \end{lstlisting}
 making the code easier to read.}
-
-\item{Prefer \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE} over \lstinline|java.lang.String| for the type of method arguments. See also chapter \tqvref{sec:TypeOfArgumentsAndReturnValues} on the topic of argument and return types.}
 
 \item{“Forever” loops should be coded as
 \begin{lstlisting}

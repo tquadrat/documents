@@ -104,7 +104,7 @@ literate=
 \tableofcontents
 
 \chapter{Introduction}\label{sec:Introduction}
-To get your “Coding Guardrails for Java in a Nutshell”, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay} and slightly amended~…}
+To get your “Coding Guardrails for Java in a Nutshell”\index{Coding Guardrails for Java in a Nutshell}, you can take them from below:\footnote{obviously stolen from the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\index{Zen of Python} and slightly amended~…}
 \begin{enumerate}[nosep]\label{lst:NutshellGuardrails}
 	\item{Beautiful is better than ugly.}\label{lst:ZoP:BeautifulVsUgly}
 	\item{Explicit is better than implicit, and verbosity is your friend.}\label{lst:ZoP:ExplicitVsImplicit}
@@ -148,7 +148,7 @@ But as a result, you will have to modify your code – although, in most cases, 
 
 So what you want is code that helps you with being modified – you want to have \textit{maintainable code}.
 
-\paragraph{Maintainable Code} supports its modification in various ways.
+\paragraph{Maintainable Code}\index{Maintainable code} supports its modification in various ways.
 
 From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know that source, I would appreciate if you would share it with me.}:
 
@@ -163,7 +163,7 @@ For that you have to read the already existing code, and of course, you have to 
 
 No matter whether your code will meet all the other criteria that would make it maintainable: if it is not readable, it is not really maintainable. 
 
-\paragraph{Readable Code} can be easily consumed by a human.
+\paragraph{Readable Code}\index{Readable code} can be easily consumed by a human.
 
 \begin{quotation}
 “[…], programs must be written for people to read, and only incidentally for machines to execute.”\\
@@ -249,7 +249,7 @@ Of course coding conventions like those described with this document are not onl
 
 Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
 
-In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\footnote{I added the ellipsis.} and used it for this document:
+In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\index{Zen of Python}\footnote{I added the ellipsis.} and used it for this document:
 
 \begin{itemize}[nosep]
 	\item Beautiful is better than ugly.
@@ -275,7 +275,7 @@ In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PY
 
 Only the last one regarding “Namespaces” does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module”~…).
 
-A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although we have to confess that the commenting style is not part of the specification of these languages but only supported by external tools.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL,~…) code (more precise, your comments) according to coding conventions similar to those defined here.
+A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc\index{javadoc} to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although I have to confess that the commenting style is not part of the specification of these languages but only supported by external tools; one of these tools is doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen}.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL,~…) code (more precise, your documentation comments) according to coding conventions similar to those defined here.
 
 A sample for code conventions for JavaScript can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
 
@@ -288,7 +288,7 @@ Java code that is automatically generated by another piece of software should im
 
 Especially if base classes will be generated it is important that proper comments are generated at least for all API elements; this covers all \lstinline|public| and \lstinline|protected| elements, and in some cases all package-local elements, too.
 
-Java~6 introduced an annotation \lstinline|javax.annotation.Generated| (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case you still have to use Java~5 as the source code version, you should consider to create your own \lstinline|@Generated| annotation along the lines given by that existing implementation in Java~6 and later.}
+Java~6 introduced an annotation \lstinline|javax.annotation.Generated|\index{javax.annotation.Generated} (\lstinline|@Generated|) that should be used to mark generated code. Refer to \autocite{ORACLE_DOC_GENERATED_ANNOTATION} for the details.\footnote{In case you still have to use Java~5 as the source code version, you should consider to create your own \lstinline|@Generated| annotation along the lines given by that existing implementation in Java~6 and later.}
 
 \section{Coding for Sustaining}\label{sec:CodingForSustaining}
 And what to do with “legacy” code that has to be fixed, amended or extended? 
@@ -456,12 +456,12 @@ Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Program
 \end{enumerate}
 
 \section{Indentation}\label{sec:Indentation}
-Indentation, together with empty lines, is the most important tool to structure any source code.
+Indentation\index{indentation}, together with empty lines, is the most important tool to structure any source code.
 
 \subsection{Indentation Style}\label{sec:IndentationStyle}
 For most programming languages, the indentation of code blocks increases the readability – for others, like Python\autocite{W3SCHOOLS:PythonIndentation}, the indentation is even part of the syntax rules.
 
-Obviously, “readability” is a relative term, depending from one's habits. So some people are more familiar with the Kernighan-Ritchie (K\&R) indentation style
+Obviously, “readability” is a relative term, depending from one's habits. So some people are more familiar with the Kernighan-Ritchie (K\&R) indentation style\index{Kernighan-Ritchie style}\index{K\&R style|see{Kernighan-Ritchie style}}
 
 \begin{lstlisting}
 public final void myMethod (){
@@ -471,7 +471,7 @@ public final void myMethod (){
 }   //  myMethod()
 \end{lstlisting}
 
-as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally part of code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
+as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\index{GNU style}\index{BSD style}\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally part of code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
 
 \begin{lstlisting}
 public final void myMethod()
@@ -485,7 +485,7 @@ public final void myMethod()
 
 Both styles will work, but they look different. So as a lot of other guidelines from a code conventions document, too, this is a matter of taste. But as conformity suppports readability, a main purpose of these guidelines is to ensure that all source code looks similar, and we have to determine the style to use.
 
-I prefer the so-called GNU or BSD style and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block than the Kernighan-Ritchie style. It demands to have the opening and closing curly braces on a line of their own, like this:
+I prefer the so-called GNU or BSD style\index{indentation!style} and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block than the Kernighan-Ritchie style. It demands to have the opening and closing curly braces on a line of their own, like this:
 
 \begin{lstlisting}
 public final class MyClass
@@ -506,12 +506,12 @@ public final class MyClass
 \end{lstlisting}
 
 \subsection{Indentation Size}\label{sec:IndentationSize}
-Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
+Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces\index{indentation!size|see{indentation!base unit}}\index{indentation!base unit} has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
 
 When you write code \textit{snippets} for a publication (for an article, as part of a program documentation, or for an answer on StackOverflow\autocite{STACKOVERFLOW}~…), sometimes using a base indentation unit of two spaces would be better, as it spares some room. But reformatting existing code for this use case is in most cases not worth the effort.
 
 \subsection{Indentation Character}\label{sec:IndentationCharacter}
-As said, you should use four \textit{blanks}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
+As said, you should use four \textit{blanks}\index{indentation!character}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
 
 Usually both, the indentation character and the indentation base unit can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
@@ -601,7 +601,7 @@ if( list.isEmpty() ) { … }
 \end{lstlisting}}
 \item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
 
-Examples:
+Examples:\index{java.util.Map}\index{java.util.HashMap}
 \begin{lstlisting}[numbers=left]
 Map<String,String> map = new HashMap<String,String>();
 Map<String,String> map = new HashMap<>(); // using the diamond operator
@@ -647,8 +647,8 @@ In this sample, some parentheses would be helpful, too.}
 
 Examples:
 \begin{lstlisting}
-method( (byte) aNum, (Object) x);
-method( (int) (cp + 5), ((int) (i + 3)) + 1 );
+myMethod( (byte) aNum, (Object) x);
+myMethod( (int) (cp + 5), ((int) (i + 3)) + 1 );
 \end{lstlisting}}
 \end{itemize}
 
@@ -657,11 +657,11 @@ method( (int) (cp + 5), ((int) (i + 3)) + 1 );
 \section{Line Length}\label{sec:LineLength}
 Several sources (including the original Sun Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:LineLength}) recommend to avoid code lines longer than 80~characters, because they were not handled well by many terminals and tools.
 
-This had been true at the time those documents were written\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} were published in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.
+This had been true at the time those documents were written\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} were published in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.\index{line length}
 
-\textbf{Note:} Sample code for the use in documentations, articles or alike should have a limited line length – generally not more than 70~characters.
+\textbf{Note:} Sample code for the use in documentations, articles or alike should have a limited line length – generally not more than 70~characters.\index{line length!articles and documentation}
 
-Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
+Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80\index{line length!comments}. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
 As we have an unlimited line length, it will not happen that an expression does not fit into a single line. But you should break long lines to improve the readability. In this case, you should follow these general principles:
@@ -854,6 +854,7 @@ public static final LocalDate calcEasterDate( final Year year )
     return retValue;
 }   //  calcEasterDate()
 \end{lstlisting}
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 
 Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with “breaking up the code into multiple parts by introducing additional temporary variables”.
 
@@ -875,7 +876,7 @@ Java source code files basically have five parts, in the given order:
 And in general, this sequence is ordered by the syntax for Java source files, also the comments are not mandatory, and the package defintion and the imports are optional~…
 
 \subsection{Beginning Comment}\label{sec:BeginningComment}
-All source files of a project – not only the Java sources – have to start with a comment that gives the copyright notice and the license information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
+All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
 
 For a Java source file, that comment looks like this:
 \begin{lstlisting}[numbers=left,caption={Beginning Comment Java}]
@@ -935,7 +936,7 @@ import java.awt.peer.CanvasPeer;
 import java.io.InputStream;
 …
 \end{lstlisting}
-
+\index{java.lang.String}\index{java.lang.String!format()}\index{java.lang.System}\index{java.lang.System!out}\index{java.awt.peer.CanvasPeer}\index{java.io.InputStream}
 Static imports (for methods and constants) have to be placed before the imports for classes. Inside these blocks, the imports should be ordered alphabetically.
 
 Wildcard imports like
@@ -1098,7 +1099,7 @@ public interface MyInterface
 \LTXtable{\linewidth}{InterfaceParts.tbl}
 
 \subsubsection{enum}
-An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| class may look like this:
+\index{emum}An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| class may look like this:
 
 \begin{lstlisting}[numbers=left,caption={enum Skeleton}]
 public enum MyEnum 
@@ -1172,7 +1173,7 @@ public enum MyEnum
 \LTXtable{\linewidth}{EnumParts.tbl}
 
 \subsubsection{Record}
-Records had been introduced to Java with version~14\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carrier” classes that contain data not meant to be altered and usually it has only the most fundamental methods, such as constructors and accessors.
+\index{record}Records had been introduced to Java with version~14\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carrier” classes that contain data not meant to be altered and usually it has only the most fundamental methods, such as constructors and accessors.
 
 A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
@@ -1443,7 +1444,7 @@ Example:\footnote{I omitted the structuring comments here; refer to chapters \tq
 public final class MyClass {
 public static InnerClass {
 public final String innerMethod {
-return Instant.now(); } }
+return Instant.now().toString(); } }
 public static final void main( final String... args ) {
 System.out.println( new InnerClass().innerMethod() ); } }
 
@@ -1454,7 +1455,7 @@ public final class MyClass
     {
         public final String innerMethod 
         {
-            return Instant.now(); 
+            return Instant.now().toString(); 
         }   //  innerMethod()
     }
     //  class InnerClass
@@ -1466,6 +1467,7 @@ public final class MyClass
 }
 //  class MyClass    
 \end{lstlisting}
+\index{java.time.Instant}\index{java.time.Instant!now()}\index{java.time.Instant!toString()}
 Both versions compile properly, can be executed and will return the same result ~…}
 
 \item{Inner classes, constants, attributes, constructors, methods, they all are separated from each other by a  single blank line (see chapter \tqfullref{sec:BlankLines}.}
@@ -1568,7 +1570,7 @@ For more examples regarding the formatting of compound statements refer in parti
 %------------------------------------------------------------------------------
 
 \subsection{Method Chaining}
-Some APIs are designed to allow “method chaining”, sometimes also referred as “Call Chaining”; you may find this in particular on implementations of the “builder” pattern, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} (obviously not a builder), an example for a builder class would be the class \lstinline|java.time.format.DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}.
+Some APIs are designed to allow “method chaining”, sometimes also referred as “Call Chaining”; you may find this in particular on implementations of the “builder” pattern, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang.StringBuilder} (obviously not a builder), an example for a builder class would be the class \lstinline|java.time.format.DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}\index{java.time.format.DateTimeFormatterBuilder}.
 
 A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory to use chaining.
 
@@ -3176,7 +3178,7 @@ The discussion of non-trivial or non-obvious design decisions is appropriate, bu
 
 \item{For Java source code, comments are part of or the source for the external documentation of that code.
 
-The Java Development Kit (JKD) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
+The Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}\index{javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
 
 \item{The frequency of comments reflects poor quality of code.
 
@@ -3190,7 +3192,7 @@ Obviously, the advice: “Even if you don't think, a comment might be necessary,
 
 \item{Comments should be in full sentence and using a clear language.
 
-All comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstanding.}
+All comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.}
 \end{enumerate}
 
 Java source code can generally have three kinds of comments:
@@ -4152,6 +4154,7 @@ public static final LocalDate calcEasterDate( final Year year )
     return retValue;
 }   //  calcEasterDate()
 \end{lstlisting}
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 
 As you can see, for this use case it is acceptable to continue a long comment in the following line (see lines~31 and 32, for example) without using a block comment. But writing
 \begin{lstlisting}[numbers=left,firstnumber=30]
@@ -7221,7 +7224,7 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 
-For this interface and this adapter class, the advantage is marginal, but already the JDK knows some interfaces with much more methods that do have an adapter class, and these would benefit much more from an adapter class.
+For this interface and this adapter class, the advantage is marginal, but already the Java Runtime Library knows some interfaces with much more methods that do have an adapter class, and these would benefit much more from an adapter class.
 
 But since Java~8, interfaces may have \lstinline|default| methods\autocite{ORACLE_TUTORIALS:DefaultMethods, ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface}. Therefore, today the concept of an adapter class has got obsolete. Instead, you would define the interface differently, using \lstinline|default| methods.
 
@@ -7569,11 +7572,11 @@ This is easy to implement for \lstinline|java.lang.StringBuilder|, but it can be
 \subsection{General vs. specific Argument Types}
 You should choose that type for a formal parameter of a method or a constructor that provides just the functionality that is needed.
 
-You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|myMethod( Collection<String> )| or \lstinline|myMethod( final ArrayList<String> )|?
+You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection} or \lstinline|ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}?
 
-Another class hierarchy that raises this question is build around \lstinline|InputStream| and \lstinline|OutputStream|.
+Another class hierarchy that raises this question is built around \lstinline|InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS} and \lstinline|OutputStream|\autocite{ORACLE_DOC_OUTPUTSTREAM_CLASS}.
 
-A similar situation is there about \lstinline|String| and \lstinline|CharSequence|.
+A similar situation is there about \lstinline|String|\autocite{ORACLE_DOC_STRING_CLASS} and \lstinline|CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE}.
 
 I will discuss this topic here using these three areas a samples, and hopefully, it gives you an idea how to handle this question in other contexts.
 
@@ -10460,12 +10463,16 @@ Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 \lstinputlisting[numbers=left,caption={UnsupportedEnumError.java}]{UnsupportedEnumError.java}
 
 \listoftables
+\addcontentsline{toc}{chapter}{Tables}
 
 \lstlistoflistings
+\addcontentsline{toc}{chapter}{Listings}
 
 \begin{FlushLeft}
 \printbibliography
+\addcontentsline{toc}{chapter}{References}
 \end{FlushLeft}
 
 \printindex
+\addcontentsline{toc}{chapter}{Index}
 \end{document}

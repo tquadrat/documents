@@ -1,0 +1,16 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  node          [shape=box]
+  map           [label="java.util.Map"]
+  hashmap       [label="java.util.HashMap"]
+  sortedmap     [label="java.util.SortedMap"]
+  linkedhashmap [label="java.util.LinkedHashMap"]
+  treemap       [label="java.util.TreeMap"]
+  hashtable     [label="java.util.HashTable"]
+  enummap       [label="java.util.EnumMap"]
+  
+  {hashmap,sortedmap,hashtable,enummap} -> map
+  treemap -> sortedmap
+  linkedhashmap -> hashmap
+}

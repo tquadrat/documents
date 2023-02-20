@@ -7605,6 +7605,45 @@ I will discuss this topic here using these three areas a samples, and hopefully,
 %------------------------------------------------------------------------------
 
 \subsubsection{Choose the proper Collection Type}\label{sec:ChooseTheProperCollectionType}
+\lstinline|java.lang.Iterable|\autocite{ORACLE_DOC_ITERABLE_INTERFACE}\index{java.lang.Iterable}
+
+\lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection}
+
+\lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util.List}
+
+\lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE}\index{java.util.Set}
+
+\lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util.ArrayList}
+
+\lstinline|java.util.LinkedList|\autocite{ORACLE_DOC_LINKEDLIST_CLASS}\index{java.util.LinkedList}
+
+\lstinline|java.util.Vector|\autocite{ORACLE_DOC_VECTOR_CLASS}\index{java.util.Vector}
+
+\lstinline|java.util.HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util.HashSet}
+
+\lstinline|java.util.LinkedHashSet|\autocite{ORACLE_DOC_LINKEDHASHSET_CLASS}\index{java.util.LinkedHashSet}
+
+\lstinline|java.util.SortedSet|\autocite{ORACLE_DOC_SORTEDSET_INTERFACE}\index{java.util.SortedSet}
+
+\lstinline|java.util.EnumSet|\autocite{ORACLE_DOC_ENUMSET_CLASS}\index{java.util.EnumSet}
+
+\lstinline|java.util.TreeSet|\autocite{ORACLE_DOC_TREESET_CLASS}\index{java.util.TreeSet}
+\newline\includegraphics{collection}\newline
+
+\lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util.Map}
+
+\lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util.HashMap}
+
+\lstinline|java.util.SortedMap|\autocite{ORACLE_DOC_SORTEDMAP_INTERFACE}\index{java.util.SortedMap}
+
+\lstinline|java.util.LinkedHashMap|\autocite{ORACLE_DOC_LINKEDHASHMAP_CLASS}\index{java.util.LinkedHashMap}
+
+\lstinline|java.util.Hashtable|\autocite{ORACLE_DOC_HASHTABLE_CLASS}\index{java.util.Hashtable}
+
+\lstinline|java.util.EnumMap|\autocite{ORACLE_DOC_ENUMMAP_CLASS}\index{java.util.EnumMap}
+
+\lstinline|java.util.TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}\index{java.util.TreeMap}
+\newline\includegraphics{map}\newline
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -7908,7 +7947,7 @@ public final List<String> getAttribute()
 
 \paragraph{Line~9} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE} and \lstinline|java.util.Map|. The only limitation is that \lstinline|null| is not valid as a value, and – for \lstinline|Map| – as a key.
 
-It is important to know, that in case a \lstinline|Set| is a \lstinline|SortedSet|\autocite{ORACLE_DOC_SORTEDSET_CLASS} or a \lstinline|Map| is a \lstinline|TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}, the sort order gets lost for the copy.
+It is important to know, that in case a \lstinline|Set| is a \lstinline|SortedSet|\autocite{ORACLE_DOC_SORTEDSET_INTERFACE} or a \lstinline|Map| is a \lstinline|TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}, the sort order gets lost for the copy.
 
 \paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|. Drawback is that the returned value changes when the attribute itself will be changed.
 

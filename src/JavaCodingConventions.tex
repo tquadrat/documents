@@ -148,7 +148,7 @@ But as a result, you will have to modify your code – although, in most cases, 
 
 So what you want is code that helps you with being modified – you want to have \textit{maintainable code}.
 
-\paragraph{Maintainable Code}\index{Maintainable code} supports its modification in various ways.
+\paragraph{Maintainable Code}\index{maintainable code} supports its modification in various ways.
 
 From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know that source, I would appreciate if you would share it with me.}:
 
@@ -163,7 +163,7 @@ For that you have to read the already existing code, and of course, you have to 
 
 No matter whether your code will meet all the other criteria that would make it maintainable: if it is not readable, it is not really maintainable. 
 
-\paragraph{Readable Code}\index{Readable code} can be easily consumed by a human.
+\paragraph{Readable Code}\index{readable code} can be easily consumed by a human.
 
 \begin{quotation}
 “[…], programs must be written for people to read, and only incidentally for machines to execute.”\\
@@ -601,7 +601,8 @@ if( list.isEmpty() ) { … }
 \end{lstlisting}}
 \item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
 
-Examples:\index{java.util.Map}\index{java.util.HashMap}
+Examples:
+\index{java.util.Map}\index{java.util.HashMap}
 \begin{lstlisting}[numbers=left]
 Map<String,String> map = new HashMap<String,String>();
 Map<String,String> map = new HashMap<>(); // using the diamond operator
@@ -811,6 +812,7 @@ final var alpha = (aLongBooleanExpression)
 
 And finally a bad sample for a statement that should be broken into multiple statements; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
 
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left]
 /**
  *  <p>{@summary This method calculates the date of Easter Sunday 
@@ -854,7 +856,6 @@ public static final LocalDate calcEasterDate( final Year year )
     return retValue;
 }   //  calcEasterDate()
 \end{lstlisting}
-\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 
 Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with “breaking up the code into multiple parts by introducing additional temporary variables”.
 
@@ -927,6 +928,7 @@ Next, usually several \lstinline|import| statements will follow\footnote{Only ve
 
 For example:
 
+\index{java.lang.String}\index{java.lang.String!format()}\index{java.lang.System}\index{java.lang.System!out}\index{java.awt.peer.CanvasPeer}\index{java.io.InputStream}
 \begin{lstlisting}
 import static java.lang.String.format;
 import static java.lang.System.out;
@@ -936,7 +938,6 @@ import java.awt.peer.CanvasPeer;
 import java.io.InputStream;
 …
 \end{lstlisting}
-\index{java.lang.String}\index{java.lang.String!format()}\index{java.lang.System}\index{java.lang.System!out}\index{java.awt.peer.CanvasPeer}\index{java.io.InputStream}
 Static imports (for methods and constants) have to be placed before the imports for classes. Inside these blocks, the imports should be ordered alphabetically.
 
 Wildcard imports like
@@ -1099,7 +1100,7 @@ public interface MyInterface
 \LTXtable{\linewidth}{InterfaceParts.tbl}
 
 \subsubsection{enum}
-\index{emum}An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| class may look like this:
+\index{enum}An \lstinline|enum| is a special case of a Java class. Usually it only contains the enumeration values, but it can have more components. A skeleton for a \lstinline|enum| class may look like this:
 
 \begin{lstlisting}[numbers=left,caption={enum Skeleton}]
 public enum MyEnum 
@@ -1439,6 +1440,7 @@ public MyClass implements otherInterface<Instant,String>
 The corresponding closing curly brace “\}” starts a new line, indented to match its corresponding opening statement. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.
 
 Example:\footnote{I omitted the structuring comments here; refer to chapters \tqfullvref{sec:ClassAndInterfaceDeclarations} and \tqfullvref{sec:StructuringComments}. And the bad sample is \textit{really} bad!}
+\index{java.time.Instant!now()}\index{java.time.Instant!toString()}
 \begin{lstlisting}
 // AVOID!!
 public final class MyClass {
@@ -1467,7 +1469,6 @@ public final class MyClass
 }
 //  class MyClass    
 \end{lstlisting}
-\index{java.time.Instant}\index{java.time.Instant!now()}\index{java.time.Instant!toString()}
 Both versions compile properly, can be executed and will return the same result ~…}
 
 \item{Inner classes, constants, attributes, constructors, methods, they all are separated from each other by a  single blank line (see chapter \tqfullref{sec:BlankLines}.}
@@ -3178,7 +3179,7 @@ The discussion of non-trivial or non-obvious design decisions is appropriate, bu
 
 \item{For Java source code, comments are part of or the source for the external documentation of that code.
 
-The Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}\index{javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
+The Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}\index{javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
 
 \item{The frequency of comments reflects poor quality of code.
 
@@ -4075,6 +4076,7 @@ else
 
 You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqfullvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
 
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left,caption={Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}},label={listing:GaussEaster}]
 /**
  *  <p>{@summary This method calculates the date of Easter Sunday 
@@ -4154,7 +4156,6 @@ public static final LocalDate calcEasterDate( final Year year )
     return retValue;
 }   //  calcEasterDate()
 \end{lstlisting}
-\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang.IllegalArgumentException}\index{java.time.LocalDate}\index{java.time.LocalDate!minusDays()}\index{java.time.LocalDate!of()}\index{java.time.LocalDate!plusDays()}\index{java.time.Month!MARCH}\index{java.time.Year}\index{java.time.Year!getValue()}\index{java.time.Year!isAfter()}\index{java.time.Year!isBefore()}\index{org.tquadrat.foundation.lang.Objects}\index{org.tquadrat.foundation.lang.Objects!requireNonNullArgument()}
 
 As you can see, for this use case it is acceptable to continue a long comment in the following line (see lines~31 and 32, for example) without using a block comment. But writing
 \begin{lstlisting}[numbers=left,firstnumber=30]
@@ -4173,7 +4174,7 @@ As you can see, for this use case it is acceptable to continue a long comment in
         Märzdatum – 32. März = 1. April usw.) */
     …    
 \end{lstlisting}
-can be considered also as valid. But in general, so long trailing comments should be avoided.
+can be considered also as valid. But in general, lengthy trailing comments like these should be avoided.
 
 Another use case for these kind of comments is to provide information about the arguments of a method call; usually, you should avoid method signatures where this is required (the formal parameter of the method should be sufficient to explain the argument), but sometimes it makes still sense:
 \begin{lstlisting}
@@ -4206,6 +4207,7 @@ Also a long code block\footnote{But if it seems really necessary to add such a c
 But if the comment should only mark begin and end of the code block, without providing further information, you should consider to use a label, as explained below.
 
 The end comments for the bodies of \lstinline|for|, \lstinline|while|, \lstinline|switch| and even \lstinline|if-then-else| blocks are a special case, as those blocks should be introduced by a label, and this label should be repeated as the end comment:
+\index{java.lang.IllegalArgumentException}
 \begin{lstlisting}
 ScanLoop: for( final var s : lines )
 {
@@ -4242,6 +4244,7 @@ Note the colon at the end of each of the comments!
 Do not use the introducing code line for the end comment, although you can find this pattern in many books and even in real world code! That introducing code line may change at some point in time and then the end comment does not have a corresponding starting line anymore.\footnote{This also means that you should be careful with removing or changing labels in the code.}
 
 Avoid this:
+\index{java.lang.IllegalArgumentException}
 \begin{lstlisting}
 // AVOID!!!
 for( final var s : lines )
@@ -6777,6 +6780,7 @@ As said already is it difficult to come up with a generic recipe for good design
 \end{enumerate}
 
 Your first, naïve implementation looks like this:
+\index{java.io.FileInputStream}\index{java.io.IOException}
 \begin{lstlisting}[numbers=left]
 public class MyClass
 {
@@ -6817,9 +6821,11 @@ Works! Job done! Until your project manager returns to you with the requirement 
 
 Ok, the method \lstinline|MyClass::process| is not final, you will override it in \lstinline|CustomClass|:\footnote{Of course implementing inheritance is not the only option you have to fullfil the requirements of your project manager in this case; it could be done also through implementing the Command Pattern\autocite{Gamma:DesignPatterns}, and there are still more ways it could be done. But we are discussing inheritance, the extension of classes and overriding of methods here.} 
 
+\index{java.io.IOException}\index{java.net.URL}\index{java.net.URL!openStream()}\index{java.lang.Override}
 \begin{lstlisting}[numbers=left]
 public class CustomClass extends MyClass
 {
+    @Override
     public String process() throws IOException
     {
         //---* Initialise the process context *----------------------
@@ -6827,7 +6833,7 @@ public class CustomClass extends MyClass
         
         //---* Gather the input data *-------------------------------
         final Data inputData;
-        try( final var inputFile = new FileInputStream( new URL( "192.168.0.1" ).openStream() )
+        try( final var inputFile = new URL( "192.168.0.1" ).openStream() )
         {
             inputData = readStream( inputFile );
         }
@@ -6856,6 +6862,7 @@ public class CustomClass extends MyClass
 \end{lstlisting}
 
 But obviously, this cannot be the solution … so you modify the original class, \lstinline|MyClass|:
+\index{java.io.FileInputStream}\index{java.io.IOException}\index{java.lang.IllegalArgumentException}\index{org.tquadrat.foundation.annotation.MountPoint}
 \begin{lstlisting}[numbers=left]
 public class MyClass // Second attempt
 {
@@ -6948,7 +6955,8 @@ public class MyClass // Second attempt
 
 Looks good now! Tests were successful! Job done!
 
-A custom class that needs to get the data from the net can implement \lstinline|obtainInputData()| as
+A custom class that needs to get the data from the net can implement the method \lstinline|obtainInputData()| as
+\index{java.io.IOException}\index{java.net.URL}\index{java.net.URL!openStream()}\index{java.lang.Override}
 \begin{lstlisting}
 /**
  *  Obtains the input data from the server with the IP4 address 192.168.0.1.
@@ -6960,7 +6968,7 @@ A custom class that needs to get the data from the net can implement \lstinline|
 protected final Data obtainInputData() throws IOException
 {
     final Data retValue;
-    try( final var inputFile = new FileInputStream( new URL( "192.168.0.1" ).openStream() )
+    try( final var inputFile = new URL( "192.168.0.1" ).openStream() )
     {
         inputData = readStream( inputFile );
     }
@@ -6974,7 +6982,9 @@ Similarly, it can override \lstinline|formatData()| and \lstinline|filterData()|
 Your colleagues implemented some custom classes extending your new version of \lstinline|MyClass|, and basically, all is fine. Just once in a blue moon, the programs using one of the custom classes crashes spectacularly.
 
 When you looked into the source for these customised implementations, you found this implementation for \lstinline|filterData()|
+\index{java.lang.Override}
 \begin{lstlisting}
+@Override
 protected final Data filterData( final Data data, final ProcessContext context )
 {
     final var validData = super.filterData( data, context );
@@ -6987,7 +6997,9 @@ protected final Data filterData( final Data data, final ProcessContext context )
 \end{lstlisting}
 
 This was not what you meant! It should be like shown below, to ensure that \textit{after} filtering the data is valid (remember: the method \lstinline|filterData()| of the base class \lstinline|MyClass| is responsible for \textit{filtering} and \textit{validation} of the input data)\footnote{Yes, this should not be the case, but if done correct, there would not be a story to tell, and no example to illustrate the issue}:
+\index{java.lang.Override}
 \begin{lstlisting}
+@Override
 protected final Data filterData( final Data data, final ProcessContext context )
 {
     final var filteredData = … // Do some filtering on data
@@ -7001,6 +7013,7 @@ protected final Data filterData( final Data data, final ProcessContext context )
 But your colleagues says that they have to check the input data – and it seems that they are right! But the data has to be checked after the filtering again~…
 
 So you modified your base class once more:
+\index{java.io.FileInputStream}\index{java.io.IOException}\index{java.lang.IllegalArgumentException}\index{org.tquadrat.foundation.annotation.MountPoint}
 \begin{lstlisting}[numbers=left]
 public class MyClass // Third attempt
 {
@@ -7078,9 +7091,9 @@ public class MyClass // Third attempt
         final var inputData = obtainInputData();
         
         //---* Validate and filter the data *------------------------
-        validateData( inputData );
+        validateData( inputData, context );
         final var filteredData = filterData( inputData, context );
-        if( !inputData.equals( filteredData ) ) validateData( filteredData );
+        if( !inputData.equals( filteredData ) ) validateData( filteredData, context );
         
         //---* Process the filtered data to the result data *--------
         final var resultData = … // Do something with filtererdData
@@ -7115,6 +7128,7 @@ So you have basically the following options when designing an extendable class:
 You should avoid the \textit{requirement} to call the super implementation of the overriden method, by all means! But if you cannot avoid it, provide a detailed comment on how this has to be done!
 
 That does not mean that an overriding method is \textit{not allowed} to call the super implementation! Assume that in the sample above, the implementation of the method \lstinline|formatData()| from \lstinline|MyClass| is more or less doing what you want, but there is just one caption that you want to have different. Then a completely legal implementation for \lstinline|CustomClass::formatData| could look like this:
+\index{java.lang.String!replace()}\index{java.lang.Override}
 \begin{lstlisting}
 /**
  *  {@inheritDoc}
@@ -7130,16 +7144,17 @@ protected final String formatData( final String data, final ProcessContext conte
 }   //  formatData()
 \end{lstlisting}
 
-And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter if it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
+And before it gets lost: each overriding method has to be annotated with the \lstinline|@Override| annotation\index{java.lang.Override}\autocite{ORACLE_DOC_OVERRIDE_ANNOTATION}, no matter if it was declared in a class or in an interface. Usually, you can use just \verb#{@inheritDoc}# as the documentation for that method.
 
 %------------------------------------------------------------------------------
 
 \subsection{Adapter Classes}\label{sec:Adapter}
 An adapter class implements an interface that declares mainly optional methods; all methods in the class are empty. In addition, an adapter class does not define any attributes\footnote{Otherwise, it would need at least accessor and probably also mutator methods for these attributes that could not be empty.}.
 
-A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|\autocite{ORACLE_DOC_KEYADAPTER_CLASS}; it implements the interface \lstinline|java.awt.event.KeyListener|\autocite{ORACLE_DOC_KEYADAPTER_INTERFACE}.
+A sample for that pattern is the class \lstinline|java.awt.event.KeyAdapter|\autocite{ORACLE_DOC_KEYADAPTER_CLASS}\index{java.awt.event.KeyAdapter}; it implements the interface \lstinline|java.awt.event.KeyListener|\autocite{ORACLE_DOC_KEYADAPTER_INTERFACE}\index{java.awt.event.KeyListener}.
 
 This is used like this:
+\index{java.awt.BorderLayout!NORTH}\index{java.awt.Container!add()}\index{java.awt.event.KeyAdapter}\index{java.awt.event.KeyEvent}\index{java.awt.event.KeyEvent!getKeyCode()}\index{java.awt.event.KeyEvent!getKeyText()}\index{java.awt.event.KeyEvent!getKeyChar()}\index{java.awt.event.KeyEvent!getModifiersEx()}\index{java.awt.event.KeyEvent!getModifiersExText()}\index{java.awt.event.KeyEvent!getKeyLocation()}\index{java.awt.event.KeyEvent!isActionKey()}\index{java.awt.event.KeyEvent!KEY\_LOCATION\_RIGHT}\index{java.awt.event.KeyEvent!KEY\_LOCATION\_LEFT}\index{java.awt.event.KeyEvent!KEY\_LOCATION\_NUMPAD}\index{java.awt.event.KeyEvent!KEY\_LOCATION\_STANDARD}\index{java.awt.event.KeyAdapter}\index{java.awt.event.KeyAdapter!keyTyped()}\index{java.awt.event.KeyListener}\index{java.awt.event.KeyListener!keyTyped()}\index{java.lang.Override}\index{javax.swing.JFrame}\index{javax.swing.JFrame!getContentPane()}\index{javax.swing.JFrame!pack()}\index{javax.swing.JFrame!setVisible()}\index{javax.swing.JTextField}\index{javax.swing.JTextField!addKeyListener()}
 \begin{lstlisting}
 public final class MyClass 
 {
@@ -7196,6 +7211,7 @@ public final class MyClass
 
 The advantage from using \lstinline|KeyAdapter| instead of implementing the interface \lstinline|KeyListener| directly is that you do not have to implement those methods you are not interested in. Below the relevant part when using the interface:
 
+\index{java.awt.event.KeyEvent}\index{java.awt.event.KeyListener}\index{java.awt.event.KeyListener!keyPressed()}\index{java.awt.event.KeyListener!keyReleased()}\index{java.awt.event.KeyListener!keyTyped()}\index{java.lang.Override}
 \begin{lstlisting}
 public final class MyClass 
 {
@@ -7229,6 +7245,7 @@ For this interface and this adapter class, the advantage is marginal, but alread
 But since Java~8, interfaces may have \lstinline|default| methods\autocite{ORACLE_TUTORIALS:DefaultMethods, ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface}. Therefore, today the concept of an adapter class has got obsolete. Instead, you would define the interface differently, using \lstinline|default| methods.
 
 If adjusting the interface \lstinline|java.awt.event.KeyListener| accordingly, this would look like this:
+\index{java.awt.event.KeyEvent}\index{java.awt.event.KeyListener}\index{java.awt.event.KeyListener!keyPressed()}\index{java.awt.event.KeyListener!keyReleased()}\index{java.awt.event.KeyListener!keyTyped()}\index{java.util.EventListener}
 \begin{lstlisting}
 package java.awt.event;
 
@@ -7245,16 +7262,6 @@ import java.util.EventListener;
  */
 public interface KeyListener extends EventListener 
 {
-    /**
-     *  <p>{@summary Invoked when a key has been typed.} See the
-     *  class description for 
-     *  {@link KeyEvent} 
-     *  for a definition of a key typed event.</p>
-     *
-     *  @param	e   The event to be processed.
-     */
-    public default void keyTyped( final KeyEvent e ) { /* Does nothing */ }
-
     /**
      *  <p>{@summary Invoked when a key has been pressed.} See the
      *  class description for 
@@ -7274,6 +7281,16 @@ public interface KeyListener extends EventListener
      *  @param  e   The event to be processed.
      */
     public default void keyReleased( final KeyEvent e ) { /* Does nothing */ }
+
+    /**
+     *  <p>{@summary Invoked when a key has been typed.} See the
+     *  class description for 
+     *  {@link KeyEvent} 
+     *  for a definition of a key typed event.</p>
+     *
+     *  @param	e   The event to be processed.
+     */
+    public default void keyTyped( final KeyEvent e ) { /* Does nothing */ }
 }
 //  interface KeyListener
 \end{lstlisting}
@@ -7286,6 +7303,7 @@ This would allow to use the interface in the same way as previously the adapter 
 The goal for the design of \lstinline|MyClass| in chapter \tqref{sec:NonFinalMethods} to allow modifications to the behaviour of the method \lstinline|process()|; there we used inheritance and extended the class.
 
 But it can be done also as in the implementation below:
+\index{java.lang.FunctionalInterface}\index{java.io.IOException}\index{java.util.function.BiFunction}\index{java.util.function.BiFunction!apply()}\index{org.tquadrat.foundation.lang.Objects!isNull()}\index{java.io.FileInputStream}
 \begin{lstlisting}[numbers=left]
 public final class MyClass
 {
@@ -7430,15 +7448,15 @@ public final class MyClass
         final var inputData = m_DataSupplier.get();
 
         //---* Validate and filter the data *------------------------
-        validateData( inputData );
+        validateData( inputData, context );
         final var filteredData = m_FilterMethod.apply( inputData, context );
-        if( !inputData.equals( filteredData ) ) validateData( filteredData );
+        if( !inputData.equals( filteredData ) ) validateData( filteredData, context );
 
         //---* Process the filtered data to the result data *--------
         final var resultData = … // Do something with filtererdData
 
         //---* Format the data *-------------------------------------
-        final var retValue = formatMethod.apply( resultData, context );
+        final var retValue = m_FormatterMethod.apply( resultData, context );
 
         //---* Cleanup *---------------------------------------------
         // Do whatever is necessary …
@@ -7452,7 +7470,7 @@ public final class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-Basically the functionality is provided as arguments to the constructor; if an argument is \lstinline|null|, a default is used. The inner class (interface) \lstinline|DataSupplier| is needed because the method \lstinline|get()| of out-of-the-box functional interface \lstinline|java.util.function.Supplier|\autocite{ORACLE_DOC_SUPPLIER_INTERFACE} does not declare an exception.
+Basically the functionality is provided as arguments to the constructor; if an argument is \lstinline|null|, a default is used. The inner class (interface) \lstinline|DataSupplier| is needed because the method \lstinline|get()| of out-of-the-box functional interface \lstinline|java.util.function.Supplier|\autocite{ORACLE_DOC_SUPPLIER_INTERFACE}\index{java.util.function.Supplier} does not declare an exception.
 
 This is of course only one possible approach, and is does not work in all cases. So it does not allow to add additional attributes, on the other side it can be used to introduce some nasty side effects that are not immediately visible from the code of the class. When you have configured logging in the usual way, the injected methods will use different loggers than the other methods of the class.
 
@@ -7465,7 +7483,7 @@ The question how to define the signature of a method or constructor is important
 
 At first you need to understand what the ‘method signature’ is in Java; it is what identifies a method and distinguishes it from another.
 
-In Java, the method signature is the name of the method plus the sequence of the types of formal parameters for that method. Neither the names of the formal parameters nor the return type nor any declared exceptions are part of the signature. This reflects in the method \lstinline|Class::getMethod|\autocite{ORACLE_DOC_CLASS:getMethod,ORACLE_DOC_CLASS:getDeclaredMethod} that takes just the method name and a list of \lstinline|Class| instances as arguments to identify a method inside a class.
+In Java, the method signature is the name of the method plus the sequence of the types of formal parameters for that method. Neither the names of the formal parameters nor the return type nor any declared exceptions are part of the signature. This reflects in the method \lstinline|Class::getMethod|\autocite{ORACLE_DOC_CLASS:getMethod,ORACLE_DOC_CLASS:getDeclaredMethod}\index{java.lang.Class!getMethod()}\index{java.lang.Class!getDeclaredMethod()} that takes just the method name and a list of \lstinline|Class|\index{java.lang.Class} instances as arguments to identify a method inside a class.
 
 %\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
@@ -7499,11 +7517,12 @@ This is also error prone and may cause errors that are really nasty to debug.}
 %------------------------------------------------------------------------------
 
 \subsection{Mutable Types for Arguments}\label{sec:MutableTypesForArguments}
-A method (or constructor) \textit{must} declare in its documentation comment that it modifies a given argument value. This is important because otherwise the method could be called with an immutable implementation of the type for the formal parameter, what would cause an exception\footnote{Usually, it would be an \lstinline|UnsupportedOperationException|\autocite{ORACLE_DOC_UNSUPPORTEDOPERATIONEXCEPTION_CLASS}, sometimes an \lstinline|IllegalStateException|\autocite{ORACLE_DOC_ILLEGALSTATEEXCEPTION_CLASS}, but others are possible, too.}. It is also important for the caller as it cannot rely any longer that an object instance that was used as an argument in a method call has still the same state after the method call as it had before.
+A method (or constructor) \textit{must} declare in its documentation comment that it modifies a given argument value. This is important because otherwise the method could be called with an immutable implementation of the type for the formal parameter, what would cause an exception\footnote{Usually, it would be an \lstinline|java.lang.UnsupportedOperationException|\autocite{ORACLE_DOC_UNSUPPORTEDOPERATIONEXCEPTION_CLASS}\index{java.lang.UnsupportedOperationException}, sometimes an \lstinline|java.lang.IllegalStateException|\autocite{ORACLE_DOC_ILLEGALSTATEEXCEPTION_CLASS}\index{java.lang.IllegalStateException}, but others are possible, too.}. It is also important for the caller as it cannot rely any longer that an object instance that was used as an argument in a method call has still the same state after the method call as it had before.
 
 Conversely, it also means a method, that \textit{does not specify} to modify one of its arguments, \textit{will not change} any of the arguments, and that it would be safe to call that method with a mutable object – at least safe for the caller.
 
-But when the called method or constructor stores the provided argument in the instance, this may call for trouble if it keeps just the give reference:
+But when the called method or constructor stores the provided argument in the instance, this may call for trouble if it keeps just the given reference:
+\index{java.util.List}
 \begin{lstlisting}
 public final class MyClass
 {
@@ -7518,9 +7537,10 @@ public final class MyClass
 //  classMyClass
 \end{lstlisting}
 
-If the caller holds a reference to the \lstinline|List| instance provided as the argument to the constructor in this sample, it can still modify that list – and change the internal state of the \lstinline|MyClass| instance at the same time.\footnote{You may encounter a similar situation if the provided object instance is accessible from multiple threads than may attempt to modify it concurrently.}
+If the caller holds a reference to the \lstinline|List|\index{java.util.List} instance provided as the argument to the constructor in this sample, it can still modify that list – and change the internal state of the \lstinline|MyClass| instance at the same time.\footnote{You may encounter a similar situation if the provided object instance is accessible from multiple threads than may attempt to modify it concurrently.}
 
 Therefore you must create a copy for all (potentially) mutable arguments\footnote{The examples will show a constructor, but a mutator method (a ‘setter’) needs to be implemented along the same lines.}:
+\index{java.util.List}\index{java.util.ArrayList}
 \begin{lstlisting}
 public final class MyClass
 {
@@ -7534,9 +7554,10 @@ public final class MyClass
 }
 //  classMyClass
 \end{lstlisting}
-If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
+If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|\index{java.util.List!copyOf()}, too.
 
 Or you can do it like this\footnote{I deliberately omitted any otherwise necessary \lstinline|null| checks in these samples as they do not help to illustrate the issue.}:
+\index{java.util.List}\index{java.util.List!addAll()}\index{java.util.ArrayList}
 \begin{lstlisting}
 public final class MyClass
 {
@@ -7551,6 +7572,7 @@ public final class MyClass
 //  classMyClass
 \end{lstlisting}
 In the samples above, I used lists of \lstinline|java.lang.String|, and \lstinline|String| is an immutable type – meaning that it would not be required to copy the contents of the list, too. But if it would be a mutable type, a deep copy is required:
+\index{java.util.List}\index{java.util.List!add()}\index{java.util.ArrayList}\index{java.lang.StringBuilder}
 \begin{lstlisting}
 public final class MyClass
 {
@@ -7566,17 +7588,17 @@ public final class MyClass
 }
 //  classMyClass
 \end{lstlisting}
-This is easy to implement for \lstinline|java.lang.StringBuilder|, but it can become arbitrarily complex for custom classes.
+This is easy to implement for \lstinline|java.lang.StringBuilder|\index{java.lang.StringBuilder}, but it can become arbitrarily complex for custom classes.
 
 %------------------------------------------------------------------------------
 \subsection{General vs. specific Argument Types}
 You should choose that type for a formal parameter of a method or a constructor that provides just the functionality that is needed.
 
-You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection} or \lstinline|ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}?
+You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection} or \lstinline|ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util.ArrayList}?
 
-Another class hierarchy that raises this question is built around \lstinline|InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS} and \lstinline|OutputStream|\autocite{ORACLE_DOC_OUTPUTSTREAM_CLASS}.
+Another class hierarchy that raises this question is built around \lstinline|InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS}\index{java.io.InputStream} and \lstinline|OutputStream|\autocite{ORACLE_DOC_OUTPUTSTREAM_CLASS}\index{java.io.OutputStream}.
 
-A similar situation is there about \lstinline|String|\autocite{ORACLE_DOC_STRING_CLASS} and \lstinline|CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE}.
+A similar situation is there about \lstinline|String|\autocite{ORACLE_DOC_STRING_CLASS} and \lstinline|CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE}\index{java.lang.CharSequence}.
 
 I will discuss this topic here using these three areas a samples, and hopefully, it gives you an idea how to handle this question in other contexts.
 
@@ -10469,8 +10491,7 @@ Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 \lstlistoflistings
 
 \begin{FlushLeft}
-\addcontentsline{toc}{chapter}{References}
-\printbibliography
+\addcontentsline{toc}{chapter}{References}\printbibliography
 \end{FlushLeft}
 
 \addcontentsline{toc}{chapter}{\indexname}

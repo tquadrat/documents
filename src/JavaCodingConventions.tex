@@ -7639,22 +7639,14 @@ The corresponding class hierarchy for a map looks like this:
 \includegraphics{map}
 \newline
 
-
-\lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util.Map}
-
-\lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util.HashMap}
-
-\lstinline|java.util.SortedMap|\autocite{ORACLE_DOC_SORTEDMAP_INTERFACE}\index{java.util.SortedMap}
-
-\lstinline|java.util.LinkedHashMap|\autocite{ORACLE_DOC_LINKEDHASHMAP_CLASS}\index{java.util.LinkedHashMap}
-
-\lstinline|java.util.Hashtable|\autocite{ORACLE_DOC_HASHTABLE_CLASS}\index{java.util.Hashtable}
-
-\lstinline|java.util.EnumMap|\autocite{ORACLE_DOC_ENUMMAP_CLASS}\index{java.util.EnumMap}
-
-\lstinline|java.util.TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}\index{java.util.TreeMap}
-
-
+In most cases you use \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util.Map} for the type of a method's formal parameter, or \lstinline|java.util.SortedMap|\autocite{ORACLE_DOC_SORTEDMAP_INTERFACE}\index{java.util.SortedMap} if a defined sequence is relevant. The concrete implementation \lstinline|java.util.LinkedHashMap|\autocite{ORACLE_DOC_LINKEDHASHMAP_CLASS}\index{java.util.LinkedHashMap} can be used if the insertion order has to be maintained somehow, but the other implementations
+\begin{itemize}
+\item{\lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util.HashMap}}
+\item{\lstinline|java.util.Hashtable|\autocite{ORACLE_DOC_HASHTABLE_CLASS}\index{java.util.Hashtable}}
+\item{\lstinline|java.util.EnumMap|\autocite{ORACLE_DOC_ENUMMAP_CLASS}\index{java.util.EnumMap}}
+\item{\lstinline|java.util.TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}\index{java.util.TreeMap}}
+\end{itemize}
+are usually not used as argument types.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -7680,6 +7672,7 @@ The corresponding class hierarchy for a map looks like this:
 %------------------------------------------------------------------------------
 
 \subsubsection{Choose the proper I/O Stream Type}\label{sec:ChooseTheProperIOStreamType}
+
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -7714,7 +7707,32 @@ final var parts = splitString( buffer );
 final var parts = splitString( buffer.toString() );
 \end{lstlisting}
 
-Of course, there will be always methods that will be called never with an instance of \lstinline|CharBuffer|\autocite{ORACLE_DOC_CHARBUFFER_CLASS} or \lstinline|StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} as an argument, but only with \lstinline|String| instances, just because of the context the are defined in. Then it does not make any sense at all to define the formal parameter as \lstinline|CharSequence|.
+Of course, there will be always methods that will be called only with \lstinline|String| instances as the arguments, and  never with an instance of \lstinline|CharBuffer|\autocite{ORACLE_DOC_CHARBUFFER_CLASS} or \lstinline|StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, just because of the context they are defined in. Then it does not make any sense at all to define the formal parameter as \lstinline|CharSequence|.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Generics}\label{sec:GenericTypes}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 

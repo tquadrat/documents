@@ -7,7 +7,7 @@ digraph {
   sortedmap     [label="java.util.SortedMap"]
   linkedhashmap [label="java.util.LinkedHashMap"]
   treemap       [label="java.util.TreeMap"]
-  hashtable     [label="java.util.HashTable"]
+  hashtable     [label="java.util.Hashtable"]
   enummap       [label="java.util.EnumMap"]
   
   {hashmap,sortedmap,hashtable,enummap} -> map

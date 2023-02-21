@@ -7605,30 +7605,40 @@ I will discuss this topic here using these three areas a samples, and hopefully,
 %------------------------------------------------------------------------------
 
 \subsubsection{Choose the proper Collection Type}\label{sec:ChooseTheProperCollectionType}
-\lstinline|java.lang.Iterable|\autocite{ORACLE_DOC_ITERABLE_INTERFACE}\index{java.lang.Iterable}
+The diagram below shows the relevant class hierarchy for the collection types (we will discuss the map types later).
+\index{java.lang.Iterable}\index{java.util.Collection}\index{java.util.List}\index{java.util.Set}\index{java.util.ArrayList}\index{java.util.LinkedList}\index{java.util.Vector}\index{java.util.HashSet}\index{java.util.LinkedHashSet}\index{java.util.SortedSet}\index{java.util.EnumSet}\index{java.util.TreeSet}
+\newline
+\includegraphics{collection}
+\newline
 
-\lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection}
+If your method will only iterate over the contents of a collection, the argument type of choice would be \lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util.Collection}. It even allows to add and to remove entries.
 
-\lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util.List}
+The interface \lstinline|java.lang.Iterable|\autocite{ORACLE_DOC_ITERABLE_INTERFACE}\index{java.lang.Iterable} is usually not the proper selection – although it looks like that – because it is also implemented by types like \lstinline|java.nio.file.Path|\autocite{ORACLE_DOC_PATH_INTERFACE}\index{java.nio.file.Path} or \lstinline|java.beans.beancontext.BeanContext|\autocite{ORACLE_DOC_BEANCONTEXT_INTERFACE}\index{java.beans.beancontext.BeanContext}.\footnote{To be precise, \lstinline|Path| and \lstinline|BeanContext| \textit{extend} \lstinline|java.lang.Iterable|, as these are interfaces, too.}
 
-\lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE}\index{java.util.Set}
+You use the interface \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util.List} as the argument type, if somehow the sequence of the entries is important and/or you want to the have duplicate entries in the collection.
 
-\lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util.ArrayList}
+The implementations of the interface \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE}\index{java.util.Set} does not guarantee any particular sequence, but therefore all entries are distinct.
 
-\lstinline|java.util.LinkedList|\autocite{ORACLE_DOC_LINKEDLIST_CLASS}\index{java.util.LinkedList}
+Finally the interface \lstinline|java.util.SortedSet|\autocite{ORACLE_DOC_SORTEDSET_INTERFACE}\index{java.util.SortedSet} allows you to force a particular order of the distinct entries.
 
-\lstinline|java.util.Vector|\autocite{ORACLE_DOC_VECTOR_CLASS}\index{java.util.Vector}
+The concrete implementations
+\begin{itemize}[nosep]
+\item{\lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util.ArrayList}}
+\item{\lstinline|java.util.LinkedList|\autocite{ORACLE_DOC_LINKEDLIST_CLASS}\index{java.util.LinkedList}}
+\item{\lstinline|java.util.Vector|\autocite{ORACLE_DOC_VECTOR_CLASS}\index{java.util.Vector}}
+\item{\lstinline|java.util.HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util.HashSet}}
+\item{\lstinline|java.util.LinkedHashSet|\autocite{ORACLE_DOC_LINKEDHASHSET_CLASS}\index{java.util.LinkedHashSet}}
+\item{\lstinline|java.util.EnumSet|\autocite{ORACLE_DOC_ENUMSET_CLASS}\index{java.util.EnumSet}}
+\item{\lstinline|java.util.TreeSet|\autocite{ORACLE_DOC_TREESET_CLASS}\index{java.util.TreeSet}}
+\end{itemize}
+are rarely used as argument types, with the exception of \lstinline|LinkedHashSet| in cases where you need distinct entries in their insertion order.
 
-\lstinline|java.util.HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util.HashSet}
+The corresponding class hierarchy for a map looks like this:
+\index{java.util.Map}\index{java.util.HashMap}\index{java.util.SortedMap}\index{java.util.LinkedHashMap}\index{java.util.Hashtable}\index{java.util.EnumMap}\index{java.util.TreeMap}
+\newline
+\includegraphics{map}
+\newline
 
-\lstinline|java.util.LinkedHashSet|\autocite{ORACLE_DOC_LINKEDHASHSET_CLASS}\index{java.util.LinkedHashSet}
-
-\lstinline|java.util.SortedSet|\autocite{ORACLE_DOC_SORTEDSET_INTERFACE}\index{java.util.SortedSet}
-
-\lstinline|java.util.EnumSet|\autocite{ORACLE_DOC_ENUMSET_CLASS}\index{java.util.EnumSet}
-
-\lstinline|java.util.TreeSet|\autocite{ORACLE_DOC_TREESET_CLASS}\index{java.util.TreeSet}
-\newline\includegraphics{collection}\newline
 
 \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util.Map}
 
@@ -7643,7 +7653,8 @@ I will discuss this topic here using these three areas a samples, and hopefully,
 \lstinline|java.util.EnumMap|\autocite{ORACLE_DOC_ENUMMAP_CLASS}\index{java.util.EnumMap}
 
 \lstinline|java.util.TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}\index{java.util.TreeMap}
-\newline\includegraphics{map}\newline
+
+
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 

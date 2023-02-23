@@ -4675,22 +4675,22 @@ The individual types cannot be clearly distinguished one from another, there are
 %------------------------------------------------------------------------------
 
 \paragraph{Function Library}\label{sec:FunctionLibrary}
-A function library is a collection of functions (often organised in utility classes – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes. A function library does not have a state or requires an initialisation or configuration.
+A function library\index{function library} is a collection of functions (often organised in utility classes\index{utility class} – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes\index{helper class|see{utility class}}. A function library does not have a state or requires an initialisation or configuration.
 
-Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}, or Google Guava\autocite{GOOGLE_GUAVA}.
+Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}\index{tquadrat Foundation!Util}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}\index{Apache Commons}\index{Apache Commons!Lang}, or Google Guava\autocite{GOOGLE_GUAVA}\index{Google Guava}.
 
-My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
+My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}\index{tquadrat Foundation!JavaComposer} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
 
 %------------------------------------------------------------------------------
 
 \paragraph{Feature Library}\label{sec:FeatureLibrary}
-A feature library adds a service or a complex functionality to your application. Quite often that functionality runs in its own thread(s) and is accessed like an external service, it has its own configuration and initialisation.
+A feature library\index{feature library} adds a service or a complex functionality to your application. Usually, the library as a whole has an internal state, and it has its own configuration and initialisation. Quite often the library's functionality is accessed like an external service, and the library runs its own threads.
 
-Some of these libraries can even be started standalone, in a server mode.
+Some feature libraries can even be started standalone, in a server mode. Samples for this are the H2 Database Engine\autocite{H2_DATABASE}\index{H2}, ActiveMQ\autocite{APACHE_ACTIVEMQ}\index{Apache ActiveMQ}, or Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}.
 
-Samples for this are the various JDBC drivers, the H2 Database Engine\autocite{H2_DATABASE}, ActiveMQ\autocite{APACHE_ACTIVEMQ}, Jetty\autocite{ECLIPSE_JETTY}, or Hibernate\autocite{HIBERNATE_ORM}.
+Others are only providing access to external services that runs in external processes even on different machines. The examples here are the various JDBC drivers or Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}.
 
-In the gray area here I would place JUnit\autocite{JUNIT5} and Log4j\autocite{APACHE_LOG4J}.
+In the gray area here I would place JUnit\autocite{JUNIT5}\index{JUnit} and Log4j\autocite{APACHE_LOG4J}\index{Log4j}.
 
 %------------------------------------------------------------------------------
 
@@ -4699,31 +4699,30 @@ A tool in this context is a program that is started, performs a single task and 
 
 Programs like \verb#ls# or \verb#grep# belongs to this type, although these are usually not provided as Java programs, although there are implementations written in Java.
 
-Gray area candidates are \verb#awk# and also \verb#sed# (again usually provided as Java programs, but available in versions written in Java), jAlbum\autocite{JALBUM}, but even \verb#javac#, the Java compiler, or \verb#javadoc#, the documentation tool for Java.
+Gray area candidates are \verb#awk# and also \verb#sed# (again usually not provided as Java programs, but available in versions written in Java), jAlbum\autocite{JALBUM}\index{jAlbum}, but even \verb#javac#, the Java compiler, or \verb#javadoc#\index{javadoc}, the documentation tool for Java.
 
 %------------------------------------------------------------------------------
 
 \paragraph{Standalone Application}\label{sec:StandaloneApplication}
-A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE} or a web container like Tomcat\autocite{APACHE_TOMCAT}.
+A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}\index{jEdit}, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere} or a web container like Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}.
 
-A gray area candidate is jAlbum that I already mentioned as a tool, above, others are 
-the H2 Database Engine, ActiveMQ or Jetty in their standalone/server mode.
+A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, above, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache MQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes.
 
 %------------------------------------------------------------------------------
 
 \paragraph{Server-based Application}\label{sec:ServerbasedApplication}
-Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}, WebLogic\autocite{ORACLE_WEBLOGIC} or WebSphere\autocite{IBM_WEBSPHERE}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}, Jetty\autocite{ECLIPSE_JETTY} or any of the appservers mentioned before.
+Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic} or WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty} or any of the appservers mentioned before.
 
 In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be utilised by the application.
 
-Other samples are Maillets for James\autocite{APACHE_JAMES} or the customisations (“mods”) for Minecraft\autocite{MINECRAFT} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions).
+Other samples are Maillets\index{maillet} for James\autocite{APACHE_JAMES}\index{Apache James} or the customisations (“mods”)\index{Minecraft!mod} for Minecraft\autocite{MINECRAFT}\index{Minecraft} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions).
 
 %------------------------------------------------------------------------------
 
 \paragraph{Extension}\label{sec:Extension}
-An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN} plugins.
+An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN}\index{Apache Maven} plugins.
 
-Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\autocite{APACHE_OPENOFFICE} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\autocite{LIBREOFFICE}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
+Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\autocite{APACHE_OPENOFFICE}\index{Apache OpenOffice} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\autocite{LIBREOFFICE}\index{LibreOffice}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
 
 %------------------------------------------------------------------------------
 
@@ -7557,7 +7556,7 @@ public final class MyClass
 }
 //  classMyClass
 \end{lstlisting}
-If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|\index{java.util!List!copyOf()}, too.
+If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|\autocite{ORACLE_DOC_LIST:copyOf}\index{java.util!List!copyOf()}, too.
 
 Or you can do it like this\footnote{I deliberately omitted any otherwise necessary \lstinline|null| checks in these samples as they do not help to illustrate the issue.}:
 \index{java.util!List}\index{java.util!List!addAll()}\index{java.util!ArrayList}
@@ -7690,6 +7689,383 @@ final var parts = splitString( buffer.toString() );
 
 Of course, there will be always methods that will be called only with \lstinline|String| instances as the arguments, and  never with an instance of \lstinline|CharBuffer|\autocite{ORACLE_DOC_CHARBUFFER_CLASS} or \lstinline|StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, just because of the context they are defined in. Then it does not make any sense at all to define the formal parameter as \lstinline|CharSequence|.
 
+\subsection{\lstinline|boolean| Arguments}\label{sec:BooleanArguments}
+You should avoid method or constructor signatures that have formal parameters of type \lstinline|boolean|\index{boolean} or \lstinline|java.lang.Boolean|\index{java.lang!Boolean}. A single flag for a setter is acceptable, but something like the constructor below will cause issues:
+\begin{lstlisting}[numbers=left]
+public final MyClass
+{
+        /*------------*\
+    ====** Attributes **=============================================    
+        \*------------*/
+    private final boolean m_Flag01;
+    private final boolean m_Flag02;
+    private final boolean m_Flag03;
+    private final boolean m_Flag04;
+    private final boolean m_Flag05;
+    private final boolean m_Flag06;
+    private final boolean m_Flag07;
+    private final boolean m_Flag08;
+    private final boolean m_Flag09;
+    private final boolean m_Flag10;
+    
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    // BAD!!
+    public MyClass( final boolean flag01, final boolean flag02, final boolean flag03, final boolean flag04, final boolean flag05, final boolean flag06, final boolean flag07, final boolean flag08, final boolean flag09 final boolean flag10 )
+    {
+        m_Flag01 = flag01;
+        m_Flag02 = flag02;
+        m_Flag03 = flag03;
+        m_Flag04 = flag04;
+        m_Flag05 = flag05;
+        m_Flag06 = flag06;
+        m_Flag07 = flag07;
+        m_Flag08 = flag08;
+        m_Flag09 = flag09;
+        m_Flag10 = flag10;
+    }   //  MyClass()
+    
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    public static final void main( final String... args )
+    {
+        final var instance = new MyClass( true, false, false, true, false, true, false, true, false, false );
+    }   //  main()
+}
+//  class MyClass
+\end{lstlisting}
+Can you say with a quick look how that \lstinline|MyClass| object is instantiated in line~40? This approach produces code that is definitely bad to read!
+
+An alternative is this approach:
+\index{java.util!EnumSet}\index{java.util!EnumSet!of()}\index{java.util!EnumSet!noneOf()}\index{java.util!Set!contains()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\begin{lstlisting}[numbers=left]
+public final MyClass
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+    public enum Flag
+    {
+        FLAG01,
+        FLAG02,
+        FLAG03,
+        FLAG04,
+        FLAG05,
+        FLAG06,
+        FLAG07,
+        FLAG08,
+        FLAG09,
+        FLAG10
+    }   //  enum Flag    
+   
+        /*------------*\
+    ====** Attributes **=============================================    
+        \*------------*/
+    private final boolean m_Flag01;
+    private final boolean m_Flag02;
+    private final boolean m_Flag03;
+    private final boolean m_Flag04;
+    private final boolean m_Flag05;
+    private final boolean m_Flag06;
+    private final boolean m_Flag07;
+    private final boolean m_Flag08;
+    private final boolean m_Flag09;
+    private final boolean m_Flag10;
+    
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    public MyClass( final Flag... flags )
+    {
+        final Set<Flag> flagSet = switch( requireNonNullArgument( flags, "flags" ).length )
+        {
+            case 0 -> EnumSet.noneOf( Flag.class );
+            case 1 -> EnumSet.of( flags [0] );
+            default -> EnumSet.of( flags [0], flags );
+        }
+        m_Flag01 = flagSet.contains( FLAG01 );
+        m_Flag02 = flagSet.contains( FLAG02 );
+        m_Flag03 = flagSet.contains( FLAG03 );
+        m_Flag04 = flagSet.contains( FLAG04 );
+        m_Flag05 = flagSet.contains( FLAG05 );
+        m_Flag06 = flagSet.contains( FLAG06 );
+        m_Flag07 = flagSet.contains( FLAG07 );
+        m_Flag08 = flagSet.contains( FLAG08 );
+        m_Flag09 = flagSet.contains( FLAG09 );
+        m_Flag10 = flagSet.contains( FLAG10 );
+    }   //  MyClass()
+    
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    public static final void main( final String... args )
+    {
+        final var instance = new MyClass( FLAG01, FLAG04, FLAG06, FLAG08 );
+    }   //  main()
+}
+//  class MyClass
+\end{lstlisting}
+That is definitely easier to read than the original version. You should even consider whether you really want to have all the \lstinline|boolean| attributes: you can replace them by an \lstinline|EnumSet|\autocite{ORACLE_DOC_ENUMSET_CLASS}\index{java.util!EnumSet} that holds values of type \lstinline|MyClass.Flag|. A getter is now implemented like in this sample:
+\index{java.util!EnumSet}\index{java.util!EnumSet!noneOf()}\index{java.util!Set!add()}\index{java.util!Set!contains()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\begin{lstlisting}
+public final MyClass
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+    public enum Flag
+    {
+        …
+    }   //  enum Flag    
+   
+        /*------------*\
+    ====** Attributes **=============================================    
+        \*------------*/
+    private final Set<Flag> m_Flags = EnumSet.noneOf( Flag.class );
+    
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    public MyClass( final Flag... flags )
+    {
+        for( final flag : requireNonNullArgument( flags, "flags" ) )
+        {
+            m_Flags.add( flag );
+        }
+    }   //  MyClass()
+    
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    public final boolean isFlag01() { return m_Flags.contains( FLAG01 ) );
+        
+    public static final void main( final String... args )
+    {
+        final var instance = new MyClass( FLAG01, FLAG04, FLAG06, FLAG08 );
+    }   //  main()
+}
+//  class MyClass
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsection{Multiple Parameters with same Type}\label{sec:MultipleSameTypeArgs}
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+
+\section{Types for Return Values}\label{sec:TypesReturnValues}
+This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
+\begin{enumerate}
+\item{Interface vs. concrete Class}
+\item{Mutable vs. Immutable}
+\end{enumerate}
+
+In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{A return value may not provide access to the internal status of an object.
+
+There are exceptions to this rule, in particular for internal code, but in general it must be taken care that a modification to a returned value does not have an unwanted impact to the status of the object that owned the accessor method.}\label{p:TypesForReturnValues:NoInternalStatus}
+
+\item{Chose the return type based on what the caller may want to do with the return value.
+
+Together with \ref{p:TypesForReturnValues:NoInternalStatus} this can result in return types for accessor methods that are completely unrelated to the types of the associated attributes.}
+
+\item{Avoid to return magic values to indicate errors.
+
+This also means that you should avoid to return \lstinline|null|. We discussed that already in chapter \tqfullref{sec:CheckingMethodParametersAndReturnValues}.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{General vs. specific Return Types}\label{sec:ReturnTypes}
+Same as for the types of the formal parameters (see chapter \tqfullvref{sec:ArgumentTypes}), the type for a return value of a method should always be the most general type (interface or class) possible, based on the features that the caller might require or expect from the return type. Consequently, \lstinline|java.lang.Object|\index{java.lang!Object} is rarely the correct type for the return value.
+
+This means, you will usually use \lstinline|Collection|\index{java.util!Collection} or \lstinline|List|\index{java.util!List} instead of \lstinline|LinkedList|\index{java.util!LinkedList}, \lstinline|OutputStream|\index{java.io!OutputStream} instead of \lstinline|ByteArrayOutputStream|\autocite{ORACLE_DOC_BYTEARRAYOUTPUTSTREAM_CLASS}\index{java.io!ByteArrayOutputStream}, and so on.
+
+Only when a concrete class or a more specialised interface provides features that are relevant for the caller, the method should be defined to return that type.
+
+One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang.String} anyway – not to mention that \lstinline|String|\index{java.lang.String} implements \lstinline|CharSequence|\index{java.lang.CharSequence}.
+
+Another reason is that the interface \lstinline|CharSequence|\index{java.lang.CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Mutable Return Types}\label{MutableReturnTypes}
+In general, it is not evil if a method returns a mutable type, but it can get nasty under some circumstances – for example when you expose the object's internal state this way:
+\index{java.util!List}\index{java.util!ArrayList}
+\begin{lstlisting}
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+
+    // PROBLEMATIC!!    
+    public final List<String> getAttribute() { return m_Attribute; }
+}
+//  class MyClass    
+\end{lstlisting}
+
+This means that code like that below would modify \lstinline|myObject| – and not only the lines~3 to~5, but also the lines~9 to~11:
+\index{java.util!List!add()}\index{java.util!List!sort()}\index{java.util!List!clear()}\index{java.lang!String!CASE\_INSENSITIVE\_ORDER}
+\begin{lstlisting}[numbers=left]
+final var myObject = new MyClass();
+
+myObject.getAttribute().add( "Some String" );
+myObject.getAttribute().sort( String.CASE_INSENSITIVE_ORDER );
+myObject.getAttritute().clear();
+
+final var list = myObject.getAttribute();
+
+list.add( "Some String" );
+list.sort( String.CASE_INSENSITIVE_ORDER );
+list.clear();
+\end{lstlisting}
+Usually, this is not desired! Otherwise, it should be clearly documented: 
+\begin{lstlisting}
+…
+/**
+ *  Returns a reference to the attribute.
+ * 
+ *  @note Any modifications of the returned value will be reflected 
+ *      to the attribute itself and changes the state of the object.
+ * 
+ *  @return The reference to the attribute.
+ */ 
+public final List<String> getAttribute() { return m_Attribute; }
+…
+\end{lstlisting}
+
+But keep in mind that changes to the state of the object may be reflected also to the return value if your methods returns a reference to a mutable attribute:
+\index{java.util!List}\index{java.util!List!add()}\index{java.util!List!sort()}\index{java.util!ArrayList}
+\begin{lstlisting}[numbers=left,firstnumber=23]
+public final class MyClass
+{
+    private final List<String> m_Attribute = new ArrayList<>();
+
+    public final void addAttributEntry( final String s )
+    {
+        m_Attribute.add( s );
+    }   //  addAttributeEntry()
+    
+    // PROBLEMATIC!!    
+    public final List<String> getAttribute() { return m_Attribute; }
+}
+//  class MyClass    
+
+…
+
+final var myObject = new MyClass();
+final var list = myObject.getAttribute();
+final var size1 = list.size();
+myObject.addAttributeEntry( "Some String" );
+final var size2 = list.size();
+
+final var status = size1 == size2;
+\end{lstlisting}
+The value of \lstinline|status| in line~23 will always be \lstinline|false|!
+
+Some better implementations of \lstinline|getAttribute()| would be:
+\index{java.util!List}\index{java.util!List!copyOf()}\index{java.util!Collections!unmodifiableList()}\index{java.util!ArrayList}\index{java.lang!Object!clone()}
+\begin{lstlisting}[numbers=left]
+/**
+ *  Returns the attribute.
+ * 
+ *  @return The attribute.
+ */ 
+public final List<String> getAttribute() 
+{ 
+	final var retValue = List.copyOf( m_Attribute );
+	final List<String> retValue = unmodifiableList( m_Attribute );
+	final List<> retValue = new ArrayList<>( m_Attribute );
+	final List<String> retValue = unmodifiableList( new ArrayList<>( m_Attribute ) );
+	final List<String> retValue = m_Attribute.clone();
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  getAttribute()
+\end{lstlisting}
+
+\paragraph{Line~9} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST:copyOf}\index{java.util!List!copyOf()}, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET:copyOf}\index{java.util!Set!copyOf()} and \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP:copyOf}\index{java.util!Map!copyOf()}.
+
+\lstinline|copyOf()| has some limitations: first is that \lstinline|null| is not valid as a value, and – for \lstinline|Map|\index{java.util!Map} – as a key.
+
+Next it is important to know, that \lstinline|Set::copyOf|\index{java.util!Set!copyOf()} returns an implementation of \lstinline|Set|\index{java.util!Set} that resembles a \lstinline|java.util.HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util!HashSet}, and for \lstinline|Map::copyOf|\index{java.util!Map!copyOf()} the return value is resembling a \lstinline|java.util!HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util!HashMap} – this means that any sort order gets lost for the copy.
+
+\paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|\index{java.util.List!copyOf()}. Drawback is that the returned value changes when the attribute itself is modified somehow.
+
+The utility class \lstinline|java.util.Collections|\index{java.util!Collections}\autocite{ORACLE_DOC_COLLECTIONS_CLASS} provides not only the shown method \lstinline|unmodifiableList()|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableList}\index{java.util!Collections!unmodifiableList()} but also corresponding methods for \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableCollection}\index{java.util!Collections!unmodifiableCollection()}, \lstinline|Set|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableSet}\index{java.util!Collections!unmodifiableSet()} and \lstinline|Map|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableMap}\index{java.util!Collections!unmodifiableMap()}. 
+
+\paragraph{Line~11} creates a instance of \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util!ArrayList} for the return value and initialises that with \lstinline|m_Attribute|. The returned value will be mutable, but changes will not affect the attribute and therefore will not affect the state of the object instance, too. And \lstinline|null| values are no problem, other than for the solution with \lstinline|copyOf()|.
+
+\paragraph{Line~12} basically combines lines~10 and 11, eliminating the shortcoming of the solutions from lines~9 and 10.
+
+\paragraph{Line~13} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.
+
+In the examples, the collection's element type is immutable\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy.
+
+In general you have to take care that you will not return a reference to an attribute with a mutable type that would allow to modify the internal state of the owning object. This clearly does not affect just collections – although this is the most common case – but for example also instances of \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date}\footnote{Another good reason to abandon \lstinline|java.util.Date| and to use the classes from the \lstinline|java.time|\index{java.time} package instead.}. Obviously, for other types the details on how to create a copy or to make them immutable will differ.
+
+If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not.
+
+%------------------------------------------------------------------------------
+
+\subsection{Special Return Values}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
 %------------------------------------------------------------------------------
 
 \section{Generics}\label{sec:GenericTypes}
@@ -7714,265 +8090,14 @@ Of course, there will be always methods that will be called only with \lstinline
 
 \begin{lstlisting}[numbers=left]
 \end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-\section{Types for Return Values}\label{sec:TypesReturnValues}
-This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
-\begin{enumerate}
-\item{Interface vs. concrete Class}
-\item{Mutable vs. Immutable}
-\end{enumerate}
-
-In general, the answers are “Interface” and “Immutable”, but this is not always the best option.
-
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{A return value may not provide access to the internal status of an object.
-
-There are exceptions to this rule, in particular for internal code, but in general it must be taken care that a modification to a returned value does not have an unwanted impact to the status of the object that owned the accessor method.}\label{p:TypesForReturnValues:NoInternalStatus}
-
-\item{Chose the return type based on what the caller may want to do with the return value.
-
-Together with \ref{princ:TypesForArgumentAndReturnValues:P1} this can result in return types for accessor methods that are completely unrelated to the types of the associated attributes.}
-
-\item{Avoid to return magic values to indicate errors.
-
-This also means that you should avoid to return \lstinline|null|. We discussed that already in chapter \tqfullref{sec:CheckingMethodParametersAndReturnValues}.}
-\end{enumerate}
-
-%------------------------------------------------------------------------------
-
-\subsection{General vs. specific Return Types}\label{sec:ReturnTypes}
-Same as for the types of the formal parameters (see chapter \tqfullvref{sec:ArgumentTypes}), the type for a return value of a method should always be the most general type (interface or class) possible, based on the features that the caller might require or expect from the return type. Consequently, \lstinline|java.lang.Object|\index{java.lang!Object} is rarely the correct type for the return value.
-
-This means, you will usually use \lstinline|Collection|\index{java.util!Collection} or \lstinline|List|\index{java.util!List} instead of \lstinline|LinkedList|\index{java.util!LinkedList}, and \lstinline|OutputStream|\index{java.io!OutputStream} instead of \lstinline|ByteArrayOutputStream|\autocite{ORACLE_DOC_BYTEARRAYOUTPUTSTREAM_CLASS}\index{java.io!ByteArrayOutputStream}.
-
-One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence}! In nearly all cases where a method returns a string this value will be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang.String} anyway – not to mention that \lstinline|String|\index{java.lang.String} implements \lstinline|CharSequence|\index{java.lang.CharSequence}.
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-
-
-
-, but different from the return types, you should always to consider to use \lstinline|java.lang.CharSequence| instead of \lstinline|java.lang.String|.
-
-A method must declare that it will modify an argument value. This is important because otherwise it could be called with an immutable implementation, what would cause an exception. Conversely, this also means that a method that does not specify this will not change any of the arguments, and that it would also be safe to call a method with a mutable object – safe for the caller.
-
-But when the called method stores the provided reference in the instance, this may call for trouble:
-\begin{lstlisting}
-public final class MyClass
-{
-    private List<String> m_Attribute;
-    
-    public MyClass( final List<String> attribute )
-    {
-        // AVOID!!
-        m_Attribute = attribute;
-    }   //  MyClass()
-}
-//  classMyClass
-\end{lstlisting}
-
-If the caller holds a reference to the argument object, it can still modify it – and change the internal state of the \lstinline|MyClass| instance at the same time.
-
-Therefore you should create a copy for the argument:
-\begin{lstlisting}
-…
-m_Attribute = new ArrayList( attribute );
-…
-\end{lstlisting}
-If the code of the class will not modify the attribute, you can of course use \lstinline|List::copyOf|, too.
-
-Or you can do it like this\footnote{And do not forget the null check!}:
-\begin{lstlisting}
-public final class MyClass
-{
-    private final List<String> m_Attribute = new ArrayList<>();
-    
-    public MyClass( final List<String> attribute )
-    {
-        m_Attribute.addAll( attribute );
-    }   //  MyClass()
-}
-//  classMyClass
-\end{lstlisting}
-
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Return Types}\label{sec:ReturnTypes}
-
-
-
-
-
-
-
-
-A method, in particular a non-\lstinline|private| method, should return the most general interface or class whenever possible. This means~…
-\begin{itemize}[nosep]
-\item{…~the interface \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE} or even \lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE} instead of the concrete implementation \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}}
-\item{…~the interface \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE} and not the class \lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}}
-\item{…the base class ~\lstinline|java.io.InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS} and not the wrapper class \lstinline|java.io.FileInputStream|\autocite{ORACLE_DOC_FILEINPUTSTREAM_CLASS}}
-\end{itemize}
-
-Only when a concrete class or a more specialised interface provides features that are relevant to the caller, the method should be defined to return that type.
-
-The only exception is \lstinline|java.lang.String| as the return type. Here you should really use that type, and not \lstinline|java.lang.CharSequence|. That is because this interface is implemented by immutable types (\lstinline|String|) and mutable types (e.g. \lstinline|StringBuilder|) as well.
-
-In general, it is not evil if a method returns a mutable type, but it can get nasty under some circumstances – for example when you expose the object's internal state this way:
-\begin{lstlisting}
-public final class MyClass
-{
-    private final List<String> m_Attribute = new ArrayList<>();
-
-    // PROBLEMATIC!!    
-    public final List<String> getAttribute() { return m_Attribute; }
-}
-//  class MyClass    
-\end{lstlisting}
-
-This means that code like that below would modify \lstinline|myObject| – and not only the lines~3 to~5, but also the lines~9 to~11:
-\begin{lstlisting}[numbers=left]
-final var myObject = new MyClass();
-
-myObject.getAttribute().add( "Some String" );
-myObject.getAttribute().sort( String.CASE_INSENSITIVE_ORDER );
-myObject.getAttritute().clear();
-
-final var list = myObject.getAttribute();
-
-list.getAttribute().add( "Some String" );
-list.getAttribute().sort( String.CASE_INSENSITIVE_ORDER );
-list.getAttritute().clear();
-\end{lstlisting}
-Usually, this is not desired! Otherwise, it should be clearly documented: 
-\begin{lstlisting}
-…
-/**
- *  Returns a reference to the attribute.
- * 
- *  @note Any modification of the returned value will be reflected to
- *      the attribute itself and changes the state of the object.
- * 
- *  @return The reference to the attribute.
- */ 
-public final List<String> getAttribute() { return m_Attribute; }
-…
-\end{lstlisting}
-
-Some better implementations of \lstinline|getAttribute()| would be:
-\begin{lstlisting}[numbers=left]
-…
-/**
- *  Returns the attribute.
- * 
- *  @return The attribute.
- */ 
-public final List<String> getAttribute() 
-{ 
-	final var retValue = List.copyOf( m_Attribute );
-	final List<String> retValue = unmodifiableList( m_Attribute );
-	final List<> retValue = new ArrayList<>( m_Attribute );
-	final List<String> retValue = unmodifiableList( new ArrayList<>( m_Attribute ) );
-	final List<String> retValue = m_Attribute.clone();
-
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  getAttribute()
-…
-\end{lstlisting}
-
-\paragraph{Line~9} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET_INTERFACE} and \lstinline|java.util.Map|. The only limitation is that \lstinline|null| is not valid as a value, and – for \lstinline|Map| – as a key.
-
-It is important to know, that in case a \lstinline|Set| is a \lstinline|SortedSet|\autocite{ORACLE_DOC_SORTEDSET_INTERFACE} or a \lstinline|Map| is a \lstinline|TreeMap|\autocite{ORACLE_DOC_TREEMAP_CLASS}, the sort order gets lost for the copy.
-
-\paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|. Drawback is that the returned value changes when the attribute itself will be changed.
-
-The method \lstinline|unmodifiableList()| is part of the utility class \lstinline|java.util.Collections|\autocite{ORACLE_DOC_COLLECTIONS_CLASS}.
-
-\paragraph{Line~11} creates a copy of \lstinline|m_Attribute|; the returned value will be mutable, but changes will not affect the attribute and therefore will not affect the state of the object instance, too. And \lstinline|null| values are no problem.
-
-\paragraph{Line~12} creates a copy of \lstinline|m_Attribute| and wraps it into an umodifiable instance of \lstinline|List| – it combines lines~10 and 11, eliminating the shortcoming of the solutions from lines~9 and 10.
-
-\paragraph{Line~13} ‘clones’ \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}.
-
-A similar approach has to be taken for all attributes of a mutable type that will be returned by a method. The sample uses a collection, for other mutable types the details on how to create a copy or to make it immutable will differ.
-
-If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not. 
 
 
 

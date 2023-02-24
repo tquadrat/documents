@@ -2991,7 +2991,7 @@ For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where
 \section{Constants}\label{sec:Constants}
 Constants in Java are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
 
-Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”, static configuration values and texts.
+Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”\index{magic number}, static configuration values and texts.
 
 Some samples for valid constants:
 \begin{lstlisting}
@@ -3069,7 +3069,7 @@ public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( 
 
 If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
 
-In case you have a constant value (a magic number, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number or a message string~…), use the naming pattern for constants. 
+In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
 
 Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
 \begin{lstlisting}
@@ -6191,6 +6191,7 @@ As a conclusion, you should avoid side effects of (debug) logging as much as pos
 %------------------------------------------------------------------------------
 
 \section{Checking Method Parameters and Return Values}\label{sec:CheckingMethodParametersAndReturnValues}
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{A \lstinline|NullPointerException| indicates a serious programming bug.
@@ -6202,6 +6203,10 @@ Your code should never throw a \lstinline|NullPointerException|!\footnote{And, o
 \item{Each method or constructor argument needs to be validated.
 
 The arguments must be checked for \lstinline|null|, but also to ensure that they meet any further specifications (e.g. that they are in a given range of values).}
+
+\item{Consolidate the validation methods in one place.
+
+To avoid that you repeat yourself on validating the arguments (refer to the \ngref~ bullet point \ref{lst:ZoP:DRY}) you should consider to provide a utility class\index{utility class} as central location for validation methods; using (domain) value types would be an alternative (refer to chapter \tqfullvref{sec:ValueTypes}).}
 
 \item{Validate any return value.
 
@@ -6237,6 +6242,7 @@ public final void myMethod( final String s )
 \end{lstlisting}
 
 That works for methods, but not for a constructor that calls another constructor:
+\index{java.lang!String!isEmpty()}\index{java.lang!String!isBlank()}\index{java.lang!IllegalArgumentException}
 \begin{lstlisting}[numbers=left]
 // DOES NOT COMPILE!
 public final class MyClass
@@ -6256,7 +6262,7 @@ public final class MyClass
 
 This is because the call to \lstinline|this()| or \lstinline|super()| has to be the first statement in the constructor's body code block.
 
-The class \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS} provides a method \lstinline|requireNonNull()|\autocite{ORACLE_DOC_OBJECTS:requireNonNull} that allows you to write at least the \lstinline|null| check like this:
+The class \lstinline|java.util.Objects|\autocite{ORACLE_DOC_OBJECTS_CLASS}\index{java.util!Objects} provides a method \lstinline|requireNonNull()|\autocite{ORACLE_DOC_OBJECTS:requireNonNull}´ that allows you to write at least the \lstinline|null| check like this:
 \begin{lstlisting}[numbers=left]
 import static java.util.Objects.requireNonNull;
 
@@ -6271,9 +6277,10 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 
-Unfortunately, \lstinline|java.util.Objects::requireNonNull| throws a \lstinline|NullPointerException| and that is not wanted. Therefore I invented a replacement and an extension for \lstinline|java.util.Objects|; the class \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} is part of my foundation library\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
+Unfortunately, \lstinline|java.util.Objects::requireNonNull|\index{java.util!Objects!requireNonNull()} throws a \lstinline|NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS}\index{java.lang!NullPointerException} and that is not wanted. Therefore I invented a replacement and an extension for \lstinline|java.util.Objects|\index{java.util!Objects}; the class \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}\index{org.tquadrat.foundation.lang!Objects} is part of my foundation library\autocite{TQUADRAT_ORG_FOUNDATION_BASE}.
 
 With my \lstinline|Objects| class, you can write:
+\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}
 \begin{lstlisting}[numbers=left]
 import static org.tquadrat.foundation.lang.Objects.requireNotBlankArgument;
 
@@ -6288,11 +6295,12 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 
-The method \lstinline|Objects::requiredNotBlankArgument| (see \hyperref[listing:requireNotBlankArgument]{below} for the implementation) throws a \lstinline|NullArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION} in case the argument is \lstinline|null|, an \lstinline|EmptyArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION} if the argument is empty, and when the argument is string that contains only whitespace, a \lstinline|BlankArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}. All three exception classes extend \lstinline|ValidationException|\autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, and that extends \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}.
+The method \lstinline|Objects::requireNotBlankArgument|\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()} (see \hyperref[listing:requireNotBlankArgument]{below} for the implementation) throws a \lstinline|NullArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}\index{org.tquadrat.foundation.exception!NullArgumentException} in case the argument is \lstinline|null|, an \lstinline|EmptyArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}\index{org.tquadrat.foundation.exception!EmptyArgumentException} if the argument is empty, and when the argument is string that contains only whitespace, a \lstinline|BlankArgumentException|\autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}\index{org.tquadrat.foundation.exception!BlankArgumentException}. All three exception classes extend \lstinline|ValidationException|\autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}\index{org.tquadrat.foundation.exception!ValidationException}, and that extends \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS}\index{java.lang!IllegalArgumentException}.
 
-To check an argument for \lstinline|null| only, you can use \lstinline|Objects::requireNonNullArgument|, and for the empty check, the method \lstinline|Objects::requireNotEmptyArgument| (see \hyperref[listing:requireNotEmptyArgument]{below}) is available.
+To check an argument for \lstinline|null| only, you can use \lstinline|Objects::requireNonNullArgument|\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}, and for the empty check, the method \lstinline|Objects::requireNotEmptyArgument|\index{org.tquadrat.foundation.lang!Objects!requireNotEmptyArgument()} (see \hyperref[listing:requireNotEmptyArgument]{below}) is available.
 
 The method \lstinline|requireNonNullArgument()| looks like this:
+\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.exception!EmptyArgumentException}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!String!isEmpty()}
 \begin{lstlisting}[numbers=left,caption={requireNonNullArgument()}]
 /**
  *  Checks if the given argument {@code a} is {@code null} and throws a
@@ -6317,9 +6325,10 @@ public static final <T> T requireNonNullArgument( final T a, final String name )
 }   //  requireNonNullArgument()
 \end{lstlisting}
 
-In general, it is a good idea to check the arguments for a method or a constructor is as soon as possible, but is needs to be checked latest before it is used in some way.
+In general, it is a good idea to check the arguments for a method or a constructor as soon as possible, but it needs to be checked latest before it is used in some way.
 
 We can check an argument for being empty, and Strings can be even tested for being blank, in the same way as for the null check:
+\index{org.tquadrat.foundation.lang!Objects!requireNotEmptyArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.exception!EmptyArgumentException}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!String!isEmpty()}\index{java.util!Collection}\index{java.util!Collection!isEmpty()}\index{java.util!Map}\index{java.util!Map!isEmpty()}\index{java.lang!StringBuilder}\index{java.lang!StringBuffer}\index{java.lang!CharSequence}\index{java.lang!CharSequence!isEmpty()}\index{java.util!Optional}\index{java.util!Optional!isEmpty()}\index{java.util!Enumeration}\index{java.util!Enumeration!hasMoreElements()}\index{java.util!Stream}\index{java.util!StringJoiner}\index{java.util!StringJoiner!length()}\index{java.util!StringJoiner!setEmptyValue()}\index{java.lang!Object!getClass()}\index{java.lang!Class!isArray()}\index{java.lang.reflect!Array!getLength()}
 \begin{lstlisting}[numbers=left,caption={requireNotEmptyArgument()},label={listing:requireNotEmptyArgument}]
 /**
  *  <p>{@summary Checks if the given argument {@code arg} is 
@@ -6442,6 +6451,7 @@ public static final <T> T requireNotEmptyArgument( final T arg, final String nam
 }   //  requireNotEmptyArgument()
 \end{lstlisting}
 
+\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.exception!EmptyArgumentException}\index{java.lang!String!isEmpty()}\index{java.lang!String!isBlank()}\index{java.lang!CharSequence}\index{java.lang!CharSequence!isEmpty()}\index{java.lang!CharSequence!toString()}
 \begin{lstlisting}[numbers=left,caption={requireNotBlankArgument()},label={listing:requireNotBlankArgument}]
 /**
  *  <p>{@summary Checks if the given String argument {@code arg} is
@@ -6489,13 +6499,14 @@ public static final <T extends CharSequence> T requireNotBlankArgument( final T 
 }   //  requireNotBlankArgument()
 \end{lstlisting}
 
-As said, the methods above are implemented in the class \lstinline|org.tquadrat.foundation.lang.Objects| that also provides reimplementations of the methods from \lstinline|java.util.Objects| that now throw \lstinline|NullArgumentException| instead of \lstinline|NullPointerException|.
+As said, the methods above are implemented in the utility class \lstinline|Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}\index{org.tquadrat.foundation.lang!Objects} from the package \lstinline|org.tquadrat.foundation.lang|\index{org.tquadrat.foundation.lang} that also provides reimplementations of the methods from \lstinline|java.util.Objects|\index{java.util!Objects}; these methods throw now \lstinline|NullArgumentException|\index{org.tquadrat.foundation.exception!NullArgumentException} instead of \lstinline|NullPointerException|\index{java.lang!NullPointerException}.
 
 That utility class provides some more methods that support the validation of arguments; for the details, refer to \autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}.
 
 \begin{itemize}
-\item{\lstinline|checkFromIndexSize()| Checks if a \lstinline|fromIndex| value fits into a given range for a given size of a sub-range.
+\item{\lstinline|checkFromIndexSize()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:checkFromIndexSize}\index{org.tquadrat.foundation.lang!Objects!checkFromIndexSize()} Checks if a \lstinline|fromIndex| value fits into a given range for a given size of a sub-range.
 
+\index{org.tquadrat.foundation.lang!Objects!checkFromIndexSize()}\index{java.util!Arrays!copyOfRange()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}
 public final byte [] cutOut( final byte [] source, final int fromIndex, final int size )
 {
@@ -6506,10 +6517,10 @@ public final byte [] cutOut( final byte [] source, final int fromIndex, final in
 }   //  cutOut()
 \end{lstlisting}
 
-The method \lstinline|Arrays::copyOfRange| will of course check the arguments by itself, but the main goal of the sample code above is to illustrate how to use the methods.}
+The method \lstinline|Arrays::copyOfRange|\autocite{ORACLE_DOC_ARRAYS:copyOfRange}\index{java.util!Arrays!copyOfRange()} will of course check the arguments by itself, but the main goal of the sample code above is to illustrate how to use the methods from \lstinline|Objects|.}
 
-\item{\lstinline|checkFromToIndex()| Checks if a \lstinline|fromIndex| and a \lstinline|toIndex| value fits into a given range.
-
+\item{\lstinline|checkFromToIndex()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:checkFromToIndex}\index{org.tquadrat.foundation.lang!Objects!checkFromToIndex()} Checks if a \lstinline|fromIndex| and a \lstinline|toIndex| value fits into a given range.
+\index{org.tquadrat.foundation.lang!Objects!checkFromToIndex)}\index{java.util!Arrays!copyOfRange()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}
 public final byte [] cutOut( final byte [] source, final int fromIndex, final int toIndex )
 {
@@ -6520,8 +6531,9 @@ public final byte [] cutOut( final byte [] source, final int fromIndex, final in
 }   //  cutOut()
 \end{lstlisting}}
 
-\item{\lstinline|checkIndex()| Checks if the given value is within the bounds of the range from 0 (inclusive) to the given length (exclusive).
+\item{\lstinline|checkIndex()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:checkIndex}\index{org.tquadrat.foundation.lang!Objects!checkIndex()} Checks if the given value is within the bounds of the range from 0 (inclusive) to the given length (exclusive).
 
+\index{org.tquadrat.foundation.lang!Objects!checkIndex()}
 \begin{lstlisting}
 public final void setAge( final int age ) 
 { 
@@ -6529,21 +6541,22 @@ public final void setAge( final int age )
 }   //  setAge()
 \end{lstlisting}}
 
-\item{\lstinline|require()| Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException| with a specified message is thrown. For the check on argument, prefer \lstinline|requireValidArgument()|, this method is more feasible for the check on return values.
-
+\item{\lstinline|require()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:require}\index{org.tquadrat.foundation.lang!Objects!require()} Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException|\index{org.tquadrat.foundation.exception!ValidationException} with a specified message is thrown. For the check on argument, prefer \lstinline|requireValidArgument()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:requireValidArgument}\index{org.tquadrat.foundation.lang!Objects!requireValidArgument()}, this method is more feasible for the check on return values.
+\index{org.tquadrat.foundation.lang!Objects!require()}
 \begin{lstlisting}
 final var connection = require( obtainConnection(), "Connection is closed", Connection::isOpen );
 \end{lstlisting}}
 
-\item{\lstinline|requireNonNull()| This message throws a \lstinline|ValidationException| when the given argument is \lstinline|null|. For the \lstinline|null| check on arguments, you should prefer \lstinline|requireNonNullArgument()|, this method is more feasible for the \lstinline|null| check on the return value of a method. 
-
+\item{\lstinline|requireNonNull()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:requireNonNull}\index{org.tquadrat.foundation.lang!Objects!requireNonNull()} This message throws a \lstinline|ValidationException| when the given argument is \lstinline|null|. For the \lstinline|null| check on arguments, you should prefer \lstinline|requireNonNullArgument()|\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}, this method is more feasible for the \lstinline|null| check on the return value of a method. 
+\index{java.lang!Class!getResourceAsStream()}\index{org.tquadrat.foundation.lang!Objects!requireNonNull()}\index{org.tquadrat.foundation.util!StringUtils!format()}
 \begin{lstlisting}
 final var configFileName = "config.file";
 final var resourceStream = requireNonNull( getClass().getResourceAsStream( configFileName ), () -> format( "Cannot open resource '%s'", configFileName ) );
 \end{lstlisting}}
 
-\item{\lstinline|requireValidArgument()| Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException| with a specified message is thrown.
-
+\item{\lstinline|requireValidArgument()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:requireValidArgument}\index{org.tquadrat.foundation.lang!Objects!requireValidArgument()} Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException|\index{org.tquadrat.foundation.exception!ValidationException} with a specified message is thrown.
+\index{org.tquadrat.foundation.lang!Objects!requireValidArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}\index{java.lang!String!toLowerCase()}\index{java.lang!String!toUpperCase()}
+\index{java.util!Locale!ROOT()}
 \begin{lstlisting}
 private final boolean checkPassword( final String password )
 {
@@ -6563,15 +6576,16 @@ public final void setPassword( final String password )
 }   //  setPassword()
 \end{lstlisting}
 
-Similar methods exist for the primitive types \lstinline|double|, \lstinline|int| and \lstinline|long|.}
+Similar methods exist for the primitive types \lstinline|double|\index{org.tquadrat.foundation.lang!Objects!requireValidDoubleArgument()}, \lstinline|int|\index{org.tquadrat.foundation.lang!Objects!requireValidIntArgument()} and \lstinline|long|\index{org.tquadrat.foundation.lang!Objects!requireValidLongArgument()}.}
 \end{itemize}
 
-You may have noticed that I always use \lstinline|isNull()|\autocite{ORACLE_DOC_OBJECTS:isNull} and \lstinline|nonNull()|\autocite{ORACLE_DOC_OBJECTS:nonNull} from \lstinline|java.util.Objects| instead of \lstinline|… == null| and \lstinline|… != null|. I think that the method calls are easier to read than the \verb#==# and \verb#!0# operators. Both methods are also defined in \lstinline|org.tquadrat.foundation.lang.Objects|.
+You may have noticed that I always use \lstinline|isNull()|\autocite{ORACLE_DOC_OBJECTS:isNull}\index{java.util!Objects!isNull()} and \lstinline|nonNull()|\autocite{ORACLE_DOC_OBJECTS:nonNull}\index{java.util!Objects!nonNull()} from \lstinline|java.util.Objects|\index{java.util!Objects} instead of \lstinline|… == null| and \lstinline|… != null|. I think that the method calls are easier to read than the \verb#==# and \verb#!=# operators. Both methods are also defined in \lstinline|org.tquadrat.foundation.lang.Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{org.tquadrat.foundation.lang!Objects!nonNull()}.
 
 %------------------------------------------------------------------------------
 
 \subsection{Delegating the Validation}
 It is possible to delegate the argument check to another method, like shown in lines~20 and 23:
+\index{java.util!Objects!isNull()}\index{java.lang!IllegalArgumentException}
 \begin{lstlisting}[numbers=left]
 public final class MyClass
 {
@@ -7678,7 +7692,8 @@ While the collection types are a clear class hierarchy, this is different for th
 In most cases you use just the abstract classes as the types for the formal parameters of your methods, in rare cases one of the decorator classes. There are nearly no use cases that would require to use an implementation class like \lstinline|FileInputStream|\index{java.io!FileInputStream} as argument type.
 
 \subsubsection{String vs. CharSequence}
-For the type of method and constructor arguments you should prefer \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE} over \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}, even if you in fact need a \lstinline|String|: calling \lstinline|toString()| on an instance of \lstinline|String| is a \verb#NOOP# that will be optimised away by the \verb#javac# compiler or by the JIT, but line~3 from the sample below is easier to read than line~5, and the latter does not provide any additional information to the reader.
+For the type of method and constructor arguments you should prefer \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE}\index{java.lang!CharSequence} over \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String}, even if you in fact need a \lstinline|String|: calling \lstinline|toString()|\index{java.lang!Object!toString()} on an instance of \lstinline|String| is a \verb#NOOP# that will be optimised away by the \verb#javac# compiler or by the JIT, but line~3 from the sample below is easier to read than line~5, and the latter does not provide any additional information to the reader.
+\index{java.lang!StringBuilder}\index{org.tquadrat.foundation.util!StringUtils!splitString()}
 \begin{lstlisting}[numbers=left]
 final var buffer = new StringBuilder();
 …
@@ -7852,31 +7867,118 @@ public final MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Multiple Parameters with same Type}\label{sec:MultipleSameTypeArgs}
+Chapter \tqref{sec:BooleanArguments} describes the problem that multiple \lstinline|boolean| parameters can cause in a method or constructor signature.
+
+It should be obvious that long parameter lists with only \lstinline|int|, \lstinline|String| or \lstinline|MyClass| arguments (or whatever else~…) will cause the same kind of problems. Therefore you should avoid that kind of signature declarations.
+
+Unfortunately, the solution is not that simple as for \lstinline|boolean| arguments.
+
+For a constructor, you can think about the implementation of the Builder pattern\autocite{Gamma:DesignPatterns}, but that does not work for methods.
+
+Another alternative is described in chapter \tqref{sec:GenericParameterTypes}.
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+\subsection{Generic Parameter Types}\label{sec:GenericParameterTypes}
+The topic of this chapter is closely related to that of chapter \tqfullref{sec:MultipleSameTypeArgs}, and it touches also the topic of parameter validation that is discussed in chapter \tqvref{sec:CheckingMethodParametersAndReturnValues} as well as chapter \tqfullvref{sec:ValueTypes}.
 
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
+‘Generic parameter type’ means here a type whose values can have multiple meanings: an \lstinline|int| could be a \verb#x# coordinate of a point in a graphic, a color component, the price for something or a day in a month. In the same way, a \lstinline|String| could be text message, an email address or a customer id.
 
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
+The problem with these that their value does not have a meaning outside a defined context: \lstinline|10| means nothing, but as argument to \lstinline|Thread::sleep|\autocite{ORACLE_DOC_THREAD:sleep}\index{java.lang!Thread!sleep()} is stands for the ten milliseconds that the current thread will be asleep:
+\index{java.lang!InterruptedException}
+\begin{lstlisting}
+try
+{
+    sleep( 10 );
+}
+catch( final InterruptedException ignored )
+{
+    /* Deliberately ignored */
+}    
 \end{lstlisting}
-%------------------------------------------------------------------------------
+But in another context, it could be a length, a port number or a magic number\index{magic number}.
 
+First, avoid the use of magic numbers\index{magic number}! Use enums instead! At least use constants if the magic numbers\index{magic number} are defined by an external library.
+
+A sample for that is the class \lstinline|java.sql.Types|\autocite{ORACLE_DOC_TYPES_CLASS}\index{java.sql!Types}: the various SQL types are represented by an integer number. The enum class \lstinline|java.sql.JDBCType|\autocite{ORACLE_DOC_JDBCTYPE_ENUM}\index{java.sql!JDBCType} that was introduced with JDBC~4.2 shows how this could be handled: when calling \lstinline|JDBCType::getVendorTypeNumber|\autocite{ORACLE_DOC_JDBCTYPE:getVendorTypeNumber}\index{java.sql!JDBCType!getVendorTypeNumber()} on a SQL type, it returns the corresponding value from \lstinline|Types|\index{java.sql!Types}, while \lstinline|JDBCType::valueOf|\autocite{ORACLE_DOC_JDBCTYPE:valueOf}\index{java.sql!JDBCType!valueOf()} returns the enum constant for the corresponding integer value from \lstinline|Types|\index{java.sql!Types}.
+
+When using an enum, you also benefit from the strict typing of Java:
+\begin{lstlisting}
+public void assignDataType( final int type );
+\end{lstlisting}
+can be called with any integer value; of course you should use one of the constants from \lstinline|Types|\index{java.sql!Types}, but this is not enforced in any way. And the validation whether the given number is allowed is a nightmare.
+
+But when declaring
+\index{java.sql!JDBCType}
+\begin{lstlisting}
+public void assignDataType( final JDBCType type );
+\end{lstlisting}
+the valid arguments are limited to the values in the enum class, and the argument validation can be reduced to a simple \lstinline|null| check. The compiler will reliably protect you from using an invalid data type~…
+
+But it also it helps to protect your code from other bugs; assume a method with the following method signature:
+\begin{lstlisting}
+public void assignDataTypeToColumn( final int type, final int columnIndex )
+{
+    …
+}	//	assignDataTypeToColumn()
+\end{lstlisting}
+
+The compiler will not complain about this method invocation:
+\index{java.sql!Types!BOOLEAN}
+\begin{lstlisting}
+final var columnIndex = 7;
+assignDataTypeToColumn( columnIndex, Types.BOOLEAN );
+\end{lstlisting}
+
+But this will not compile until you get the arguments on the method call right:
+\index{java.sql!JDBCType}\index{java.sql!JDBCType!BOOLEAN}
+\begin{lstlisting}
+public void assignDataTypeToColumn( final JDBCType type, final int columnIndex )
+{
+    …
+}   //  assignDataTypeToColumn()
+
+…
+
+final var columnIndex = 7;
+// DOES NOT COMPILE!!
+assignDataTypeToColumn( columnIndex, JDBCType.BOOLEAN );
+\end{lstlisting}
+Refer also to chapter \tqfullvref{sec:SwapToCompilerErrors}.
+
+The same kind of bug is this one:
+\begin{lstlisting}
+public final Order createOrder( final String customerId, final String articleNumber )
+{
+    …
+}   //  createOrder()
+
+…
+
+final var customerId = "C-1234";
+final var articleNumber = "BigBook_4711";
+final var order = createOrder( articleNumber, customerId );
+\end{lstlisting}
+You can avoid this easily by defining the domain value types \lstinline|CustomerId| and \lstinline|ArticleNumber| and using them for the formal parameters of \lstinline|createOrder()|; then the compiler will already complain.
+
+A related problem class is this:
+\index{java.lang!Thread!sleep()}\index{java.lang!InterruptedException}
+\begin{lstlisting}
+final var minutes = 10;
+try
+{
+    Thread.sleep( minutes );
+}
+catch( final InterruptedException ignored )
+{
+    /* Deliberately ignored */
+}
+\end{lstlisting}
+Do you remember? \lstinline|Thread::sleep| takes the waiting time in milliseconds, not in minutes~…
+
+This class of bugs can be addressed by the definition of ‘value types’ or ‘dimensioned values’\footnote{Although this will not necessary help to prevent providing values with the wrong dimension to already existing methods~…}. 
+
+Value types and domain value types are covered in more detail in chapter \tqvref{sec:ValueTypes}.
 
 \section{Types for Return Values}\label{sec:TypesReturnValues}
 This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
@@ -7911,13 +8013,13 @@ This means, you will usually use \lstinline|Collection|\index{java.util!Collecti
 
 Only when a concrete class or a more specialised interface provides features that are relevant for the caller, the method should be defined to return that type.
 
-One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang.String} anyway – not to mention that \lstinline|String|\index{java.lang.String} implements \lstinline|CharSequence|\index{java.lang.CharSequence}.
+One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} anyway – not to mention that \lstinline|String|\index{java.lang!String} implements \lstinline|CharSequence|\index{java.lang¹CharSequence}.
 
-Another reason is that the interface \lstinline|CharSequence|\index{java.lang.CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
+Another reason is that the interface \lstinline|CharSequence|\index{java.lang!CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
 
 %------------------------------------------------------------------------------
 
-\subsection{Mutable Return Types}\label{MutableReturnTypes}
+\subsection{Mutable Return Types}\label{sec:MutableReturnTypes}
 In general, it is not evil if a method returns a mutable type, but it can get nasty under some circumstances – for example when you expose the object's internal state this way:
 \index{java.util!List}\index{java.util!ArrayList}
 \begin{lstlisting}
@@ -7961,7 +8063,7 @@ public final List<String> getAttribute() { return m_Attribute; }
 …
 \end{lstlisting}
 
-But keep in mind that changes to the state of the object may be reflected also to the return value if your methods returns a reference to a mutable attribute:
+But keep in mind that changes to the state of the object may be reflected also to the return value if your method returns a reference to a mutable attribute:
 \index{java.util!List}\index{java.util!List!add()}\index{java.util!List!sort()}\index{java.util!ArrayList}
 \begin{lstlisting}[numbers=left,firstnumber=23]
 public final class MyClass
@@ -8025,17 +8127,17 @@ The utility class \lstinline|java.util.Collections|\index{java.util!Collections}
 
 \paragraph{Line~12} basically combines lines~10 and 11, eliminating the shortcoming of the solutions from lines~9 and 10.
 
-\paragraph{Line~13} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.
+\paragraph{Line~13} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.\\[1\baselineskip]
 
 In the examples, the collection's element type is immutable\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy.
 
-In general you have to take care that you will not return a reference to an attribute with a mutable type that would allow to modify the internal state of the owning object. This clearly does not affect just collections – although this is the most common case – but for example also instances of \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date}\footnote{Another good reason to abandon \lstinline|java.util.Date| and to use the classes from the \lstinline|java.time|\index{java.time} package instead.}. Obviously, for other types the details on how to create a copy or to make them immutable will differ.
+In general you have to take care that you will not return a reference to an attribute with a mutable type that would allow to modify the internal state of the owning object. This clearly does not affect just collections – although this is the most common case – but for example also instances of \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date}\footnote{Another good reason to abandon \lstinline|java.util.Date| and to use the classes from the \lstinline|java.time|\autocite{ORACLE_DOC_TIME_PACKAGE}\index{java.time} package instead.}. Obviously, for other types the details on how to create a copy or to make them immutable will differ.
 
-If a method creates (generates, obtains, reads, loads,~…) the return value, it is part of the methods's contract whether that value is mutable or not.
+If a method creates (generates, obtains, reads, loads,~…) the value it returns, it is part of the methods's contract whether that value is mutable or not.
 
 %------------------------------------------------------------------------------
 
-\subsection{Special Return Values}
+\subsection{Special Return Values}\label{sec:SpecialReturnValues}
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
@@ -8064,6 +8166,30 @@ If a method creates (generates, obtains, reads, loads,~…) the return value, it
 \end{lstlisting}
 %------------------------------------------------------------------------------
 
+%------------------------------------------------------------------------------
+
+\section{Value Types}\label{sec:ValueTypes}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
@@ -8112,7 +8238,7 @@ If a method creates (generates, obtains, reads, loads,~…) the return value, it
 
 The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
 
-Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers” as return values, indicating special results. And still no \lstinline|null|~…
+Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers”\index{magic number} as return values, indicating special results. And still no \lstinline|null|~…
 
 
 
@@ -8150,7 +8276,7 @@ Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_
 
 
 
-\section{Swap Logic Errors for Compiler Errors}
+\section{Swap Logic Errors for Compiler Errors}\label{sec:SwapToCompilerErrors}
 From a book about Java programming:
 \begin{quotation}
 “One fundamental principle of programming is that, generally, it is best to swap a logic error for a compiler error. Compiler errors tend to be found in seconds and are corrected just as fast. Syntax errors are a good example […]
@@ -8167,6 +8293,10 @@ if( 5 == len ) …
 \end{lstlisting}
 
 Another sample for this is the recommendation to name fields with the “m\_” prefix (refer to chapter \tqfullvref{sec:Fields}). The compiler will never complain if you omit the \lstinline|this.| prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field\footnote{Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.| and if you shadow a field through a local variable with the same name.} – but it will scream loudly about a non-existing reference if you forget the “m\_” prefix when accessing a field named along the rules defined here.
+
+Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
+
+For the same reason you should always to consider to use enums instead of defining magic numbers\index{magic number}.
 
 The best thing about compiler errors is, that they usually show up during development – and not first after deployment at customer side.
 
@@ -10402,7 +10532,7 @@ So the postfix version has an additional stack operation that is not necessary i
 
 I confess that there are other possible locations where one can save more CPU cycles, and I also know the advice not to begin too early with optimisations (to “avoid premature optimisation”). My opinion is that this is not an optimisation but a best practice, and that every cycle counts – especially if it is that easy to achieve.
 
-As said also already, most Java compilers (and not only these) will optimise the particular code, but different Java compilers optimises this pattern differently (meaning some even do not touch it – for example that one for the LEGO® Mindstorms Controller~…), and even the runtime optimisation will treat it differently, so just from this point of view I would recommend this simple change of one's personal habits.
+As said also already, most Java compilers (and not only these) will optimise the particular code, but different Java compilers optimises this pattern differently (meaning some even do not touch it – for example that one for the LEGO® Mindstorms Controller\index{LEGO Mindstorms}~…), and even the runtime optimisation will treat it differently, so just from this point of view I would recommend this simple change of one's personal habits.
 
 \section{Examples}\label{sec:Examples}
 

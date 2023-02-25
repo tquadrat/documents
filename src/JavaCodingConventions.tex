@@ -7980,6 +7980,34 @@ This class of bugs can be addressed by the definition of ‘value types’ or �
 
 Value types and domain value types are covered in more detail in chapter \tqvref{sec:ValueTypes}.
 
+%------------------------------------------------------------------------------
+
+\subsection{Arrays and \lstinline|varargs|}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
 \section{Types for Return Values}\label{sec:TypesReturnValues}
 This topic is relevant for all types of code, not only for code in a public API. Basically, it can be reduced to two questions that needs to be answered:
 \begin{enumerate}
@@ -8138,33 +8166,124 @@ If a method creates (generates, obtains, reads, loads,~…) the value it returns
 %------------------------------------------------------------------------------
 
 \subsection{Special Return Values}\label{sec:SpecialReturnValues}
-%------------------------------------------------------------------------------
+‘Special return values’ here does not mean those ‘magic numbers’\index{magic number} mentioned in chapter \tqvref{sec:GenericParameterTypes} and elsewhere, although you should avoid them as return values in the same way as you should not use them as arguments to a method call.
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
+This term indicates otherwise impossible return values indicating a special condition, like in the samples below:
+\index{java.lang!String!indexOf()}\index{java.lang!String!substring()}\index{java.util!Map}\index{java.util!Map!get()}
 \begin{lstlisting}[numbers=left]
+final var input = "Some Text follows …";
+final var pos = input.indexOf( "value" );
+if( index > 0 ) process( input.substring( 0, pos ) );
+
+final Map<Key,Value> map = loadData();
+final var key = getKey();
+final var value = map.get( key );
+if( nonNull( value ) ) process( value );
 \end{lstlisting}
-%------------------------------------------------------------------------------
+In line~2, the method \lstinline|String::indexOf|\autocite{ORACLE_DOC_STRING:indexOf}\index{java.lang!String!indexOf()} return \verb#-1# in case the given text is not part of the \lstinline|String|.
+
+In the same way, the method \lstinline|Map::get|\autocite{ORACLE_DOC_MAP:get}\index{java.util!Map!get()} in line~7 returns \lstinline|null| if the given key is not in the map. Unfortunately, \lstinline|null| could also be a valid value, so in this case it does not necessarily indicate that key is not in the map.
+
+You should avoid this kind of return values.
+
+A better declaration for the two methods would be\footnote{Both methods had been part of the Java Runtime library since version~1.0, and no one seriously suggests to change them now; this is just to illustrate the topic.}:
+\index{java.lang!String}\index{java.lang!String!indexOf()}\index{java.util!Map}\index{java.util!Map!get()}\index{java.util!Optional}\index{java.util!OptionalInt}
+\begin{lstlisting}
+public interface Map<K,V>
+{
+    public Optional<V> get( final K key );
+}   //  interface Map
+
+public final class String
+{
+    public OptionalInt indexOf( final String str ) { … }
+}   //  class String
+\end{lstlisting}
+
+With this declarations, you could now write the examples from above as:
+\index{java.util!Optional}\index{java.util!Optional!ifPresent()}\index{java.util!OptionalInt}\index{java.util!OptionalInt!ifPresent()}
+\begin{lstlisting}[numbers=left]
+final var input = "Some Text follows …";
+final OptionalInt pos = input.indexOf( "value" );
+pos.ifPresent( p -> process( input.substring( 0, p ) ) ;
+
+final Map<Key,Value> map = loadData();
+final var key = getKey();
+final Optional<Value> value = map.get( key );
+value.ifPresent( this::process );
+\end{lstlisting}
+
+The classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}\index{java.util.OptionalInt}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS}\index{java.util.OptionalLong} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS}\index{java.util.OptionalDouble} can help you to avoid “magic numbers”\index{magic number} as return values, indicating special results.
+
+In cases were \lstinline|null| seemed the proper response, choose \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}\index{java.util.Optional} instead.
+
+So you can implement the methods in your code they \textit{never} return \lstinline|null| nor a magic number\index{magic number} of some kind. Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| or another special value under some conditions, you have to obey that requirements.
+
+In Java, you usually do not return an error code if an operation fails – that \lstinline|Map::get| returns \lstinline|null| if the key is not mapped is not indicating an error: that a key is not mapped is one expected result. So instead of returning an error code, a method will throw an exception.
+
+But what if you do not want to throw an exception, for whatever reason?
+
+Try this:
+\index{java.util!Optional}\index{java.util!Optional!ofNullable()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\begin{lstlisting}[numbers=left,caption={Status Record}]
+public record Status( ResultCode resultCode, Optional<Data> data )
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+    /** */
+    public enum ResultCode
+    {
+        SUCCESS, NO_DATA, FAILURE, TIMEOUT, INCOMPLETE
+    }
+    //  enum ResultCode
+    
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    public Status( final ResultCode resultCode, final Data data )
+    {
+        this( resultCode, Optional.ofNullable( data ) );
+    }   //  Status()
+
+    public Status( final ResultCode resultCode, final Optional<Data> data )
+    {
+        this.resultCode = requireNonNullArgument( resultCode, "resultCode" );
+        this.data = requireNonNullArgument( data, "data" );
+    }   //  Status()
+}
+//  record Status
+\end{lstlisting}
+
+This would allow you to write:
+\index{java.util!Optional!ifPresent()}
+\begin{lstlisting}
+public final Status retrieveData() { … }
+…
+var proceed = true;
+while( proceed )
+{
+    final var status = retrieveData();
+    switch( status.resultCode )
+    {
+        case SUCCESS -> process( status.data().get() );
+        case INCOMPLETE -> status.data().ifPresent( this::processIncomplete );
+        case NO_DATA -> proceed = false;
+        case TIMEOUT -> reconnect();
+        case FAILURE -> throw new ProcessStatusException();
+        default -> throw new UnsupportedEnumError( status.resultCode() );
+    }
+\end{lstlisting}
+
+If you need this kind of return values more often for your project, you can enhance that \lstinline|Status| class in various ways. So you can use a type variable instead of the concrete class \lstinline|Data|, to make the class generic. Or you add a method like this:
+\begin{lstlisting}
+…
+public final void onSuccess( final Consumer<Data> processor )
+{
+    if( resultCode == SUCCESS ) data.ifPresent( processor::accept );
+}   //  onSuccess()
+…
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
@@ -8235,10 +8354,6 @@ If a method creates (generates, obtains, reads, loads,~…) the value it returns
 
 
 
-
-The methods in your code should \textit{never} return \lstinline|null|, at least not those methods that are published as the API of your class.\footnote{Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| under some conditions, you have to obey that requirements.} Instead, they should return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}.
-
-Additionally, the classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS} can help you to avoid “magic numbers”\index{magic number} as return values, indicating special results. And still no \lstinline|null|~…
 
 
 
@@ -9931,6 +10046,272 @@ See \ref{sec:Logging}, and there the part about warnings! Keeping track about fa
 \section{Multi-Threading and Synchronisation}\label{sec:MultiThreading}
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+\section{Chaining Constructors}\label{sec:ChainingConstructors}
+The DRY (“Don’t repeat yourself”) principle should be also used for constructors. Basically there are two different scenarios. In the first, you have constructors with a different number of arguments, reflecting to amount of default settings for the new object. We call this the “Primary Constructor” pattern.
+In the other case you have constructors with different arguments, what we want to call the “Common Constructor” pattern. Both patterns are discussed below.
+Obviously there are situations where you have hybrids of these patterns, and sometimes you have to decide which one is better for the current design.
+\subsection{The “Primary Constructor” Pattern}
+Refer to the sample class below:\footnote{I took the example from \autocite{Simmons:HARDCORE_JAVA} and adopted is to my needs. As usual, I omitted the comments that are otherwise required for productive code.}
+\begin{lstlisting}
+// AVOID!!
+public class UnchainedConstructors extends Jbutton
+{
+    public UnchainedConstructors( String text )
+    {
+        setText( text );
+        String tooltip = "A Button to show " + text;
+        setToolTipText( tooltip );
+    }
+    
+    public UnchainedConstructors( String text, String tooltip )
+    {
+        setText( text );
+        setToolTipText( tooltip );
+    }
+    
+    public UnchainedConstructors( String text, String tooltip,
+                                  ActionListener listener )
+    {
+        setText( text );
+        setToolTipText( tooltip );
+        addActionListener( listener );
+    }
+\end{lstlisting}
+
+Although the code works, it is wasteful and prone to errors, especially when modified in later stages of the product. Making changes to one of the constructors will not reflect to the others, making the class working correctly under some circumstances and causing issues in others.
+
+This can be done by declaring the constructor with the most arguments to the “primary constructor” and having all others calling it:
+\begin{lstlisting}
+public class ChainedConstructors extends Jbutton
+{
+    public ChainedConstructors( String text )
+    {
+        this( text, "A Button to show " + text, null );
+    }
+    
+    public ChainedConstructors( String text, String tooltip )
+    {
+        this( text, tooltip, null );
+    }
+    
+    public ChainedConstructors( String text, String tooltip,
+                                  ActionListener listener )
+    {
+        setText( text );
+        setToolTipText( tooltip );
+        addActionListener( listener );
+    }
+\end{lstlisting}
+In this case it would be possible also that the first constructor calls the second one:
+\begin{lstlisting}
+…
+public ChainedConstructors( String text )
+{
+    this( text, "A Button to show " + text );
+}
+…
+\end{lstlisting}
+that in turn will call the primary constructor. Now the code for the other constructors is limited to what they do differently.
+\subsection{The “Common Constructor” Pattern}
+Again, we want to look at a bad sample first:
+\begin{lstlisting}
+// AVOID!!
+public class UnchainedConstructors2
+{
+    private String m_Text;
+    private int m_CurrentPos;
+    private PropertyChangeSupport m_PropertyChangeSupport;
+    
+    public UnchainedConstructors2( String text )
+    {
+        m_Text = text;
+        m_CurrentPos = 0;
+        m_PropertyChangeSupport = new PropertyChangeSupport( this );
+    }
+
+    public UnchainedConstructors2( String [] text )
+    {
+        StringBuilder buffer = new StringBuilder();
+        for( String s : text ) buffer.append( s ).append( '\n' );
+        m_Text = buffer.toString();
+        m_CurrentPos = 0;
+        m_PropertyChangeSupport = new PropertyChangeSupport( this );
+    }
+
+    public UnchainedConstructors2( Collection<String> text )
+    {
+        StringBuilder buffer = new StringBuilder();
+        for( String s : text ) buffer.append( s ).append( '\n' );
+        m_Text = buffer.toString();
+        m_CurrentPos = 0;
+        m_PropertyChangeSupport = new PropertyChangeSupport( this );
+    }
+
+    public UnchainedConstructors2( BufferedReader reader )
+    {
+        StringBuilder buffer = new StringBuilder();
+        String line = null;
+        do
+        {
+            line = reader.readline();
+            if( line != null ) buffer.append( s ).append( '\n' );
+        } while line != null;
+        m_Text = buffer.toString();
+        m_CurrentPos = 0;
+        m_PropertyChangeSupport = new PropertyChangeSupport( this );
+    }
+\end{lstlisting}
+
+Obviously, in this case we do not have a constructor that can be designated as the primary constructor as each of the existing ones have just one argument, but each of a different type.
+
+Saying that one taking the single String argument is the primary constructor and calling it like below does not work.
+\begin{lstlisting}
+// DOES NOT WORK!!!
+…
+public UnchainedConstructors2( String [] text )
+{
+    StringBuilder buffer = new StringBuilder();
+    for( String s : text ) buffer.append( s ).append( '\n' );
+    this( buffer.toString() );
+}
+…
+\end{lstlisting}
+
+According to the language specification, the call to this() has to be the very first statement of the constructor. This is the same as for the call to the super constructor with super().
+
+The issue is solved like shown below. Instead of repeating the initialisation steps that are necessary for each constructor, they are placed in an additional constructor with a different (usually shorter) signature, named the “common constructor” (and in this example, it is also the default constructor, but this is not always the case).
+\begin{lstlisting}[numbers=left]
+public class ChainedConstructors2
+{
+    private String m_Text;
+    private int m_CurrentPos;
+    private PropertyChangeSupport m_PropertyChangeSupport;
+    
+    private ChainedConstructors2()
+    {
+        m_CurrentPos = 0;
+        m_PropertyChangeSupport = new PropertyChangeSupport( this );
+    }
+    
+    public ChainedConstructors2( String text )
+    {
+        this()
+        m_Text = text;
+    }
+    
+    public ChainedConstructors2( String [] text )
+    {
+        this()
+        StringBuilder buffer = new StringBuilder();
+        for( String s : text ) buffer.append( s ).append( '\n' );
+        m_Text = buffer.toString();
+    }
+    
+    public ChainedConstructors2( Collection<String> text )
+    {
+        this()
+        StringBuilder buffer = new StringBuilder();
+        for( String s : text ) buffer.append( s ).append( '\n' );
+        m_Text = buffer.toString();
+    }
+    
+    public ChainedConstructors2( BufferedReader reader )
+    {
+        this()
+        StringBuilder buffer = new StringBuilder();
+        String line = null;
+        do
+        {
+            line = reader.readline();
+            if( line != null ) buffer.append( s ).append( '\n' );
+        } while line != null;
+        m_Text = buffer.toString();
+    }
+\end{lstlisting}
+It is not necessary that the common constructor is private like in this example. It is even possible to have a cascade of constructor calls.
+
+If required you can also introduce a private constructor with an artifical formal parameter that is never used as the “Common Constructor”:
+\begin{lstlisting}
+private ChainedConstructor( final boolean ignored ) { … }
+\end{lstlisting}
+
+\subsection{Constructor Helpers}
+In the sample for the ChainedConstructors class in chapter 5.19.1 above we have a constructor like this:
+\begin{lstlisting}[numbers=left]
+public ChainedConstructors( String text )
+{
+    this( text, "A Button to show " + text, null );
+}
+\end{lstlisting}
+Sometimes the expressions are more complex like a simple string concatenation as in this case.
+
+It is possible to call a helper method from the arguments list of this() (or super(), what is equivalent in this case):
+\begin{lstlisting}[numbers=left]
+public ChainedConstructors( String text )
+{
+    this( text, composeToolTip( text ), null );
+}
+…
+private static String composeToolTip( String text )
+{
+    String template = getText( TOOLTIP_DEFAULT );
+    if( template == null ) template = "A Button to show %1$s";
+    String retValue = format( template, text );
+    return retValue;
+}
+\end{lstlisting}
+Java requires that this helper is static, and it should be private, or in case the class allows to be extended, protected and final.
+
+Such a helper could also be used to check the arguments before conveying them to this() or super(), as shown in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}.
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+
+
+
 
 \section{Miscellaneous}
 In this chapter I collected some dos and don'ts that do not fit into one of the other chapters, but are not relevant enough for a chapter on there own.

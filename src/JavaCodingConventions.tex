@@ -4711,7 +4711,7 @@ A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool
 %------------------------------------------------------------------------------
 
 \paragraph{Server-based Application}\label{sec:ServerbasedApplication}
-Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic} or WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty} or any of the appservers mentioned before.
+Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic} or WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}\index{Tomcat|see{Apache Tomcat}}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}\index{Jetty|see{Eclipse Jetty}} or any of the appservers mentioned before.
 
 In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be utilised by the application.
 
@@ -4723,6 +4723,51 @@ Other samples are Maillets\index{maillet} for James\autocite{APACHE_JAMES}\index
 An extension or a plugin requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors are samples for this (they change the behaviour of the Java compiler), as well as Maven\autocite{APACHE_MAVEN}\index{Apache Maven} plugins.
 
 Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\autocite{APACHE_OPENOFFICE}\index{Apache OpenOffice} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\autocite{LIBREOFFICE}\index{LibreOffice}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
+
+%------------------------------------------------------------------------------
+
+\section{Swap Logic Errors for Compiler Errors}\label{sec:SwapToCompilerErrors}
+From a book about Java programming:
+\begin{quotation}
+“One fundamental principle of programming is that, generally, it is best to swap a logic error for a compiler error. Compiler errors tend to be found in seconds and are corrected just as fast. Syntax errors are a good example […]
+
+Logic errors, on the other hand, are the bane of all programmers. They hide and hate to reveal themselves. Logic errors seem to have minds of their own, constantly evading detection and dodging your efforts to pin down their cause. They can easily take a thousand times more effort to solve than the worst compiler errors. Worst of all, many logic errors are not found at all and occur only intermittently in sensitive places, which causes your customer to scream for a fix. Logic errors often require you to throw thousands of man-hours at them, only to finally discover that they are minor typos.”
+
+Robert Simmons Jr.: \textit{Hardcore Java}\autocite{Simmons:HARDCORE_JAVA}
+\end{quotation}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Utilise the capabilities of your development tools to detect bugs as soon as possible.
+
+Java is a strongly typed language, and this makes the compiler a powerful tool in the regard, given that you design your code in a manner that it can detect errors.}
+
+\item{Take warnings serious!
+
+The \verb#javac# in its standard configuration emits already several warnings, build tools like Maven\autocite{APACHE_MAVEN}\index{Apache Maven}\index{Maven|see{Apache Maven}} or Gradle\autocite{GRADLE}\index{Gradle} can add to them, and finally you can configure additional warnings in your favourite IDE.}
+
+\item{Avoid to outsmart the compiler!
+
+Casting an object to another type is a sample for this, invoking methods through reflection is another.\footnote{Thanks to the creators of Java that you cannot invoke a method through a pointer, as it is non uncommon in C and C++~…}}
+\end{enumerate}
+
+A quite simple example for swapping a potential logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
+\begin{lstlisting}
+if( length() == len ) …
+if( 5 == len ) …
+\end{lstlisting}
+
+Another sample for this is the recommendation to name fields with the “\verb#m_#” prefix (refer to chapter \tqfullvref{sec:Fields}) instead of using the \lstinline|this.| prefix. The compiler will never complain if you omit that prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field – but it will scream loudly about a non-existing reference if you forget the “\verb#m_#” prefix when accessing a field named along the rules defined here. Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.|, or if you shadow a field through a local variable with the same name. Nevertheless, I prefer the “\verb#m_#” prefix for fields because it is also easier to read.
+
+Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
+
+For the same reason you should always to consider to use enums instead of defining magic numbers\index{magic number}.
+
+The best thing about compiler errors is, that they usually show up early during development – and not first after deployment at customer side.
+
+############
+
+See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
 
 %------------------------------------------------------------------------------
 
@@ -5543,9 +5588,10 @@ public final ApplicationMainClass
 //  class ApplicationMainClass
 \end{lstlisting}
 
-\textbf{Note:} For Log4j, the integer value for the highest log level is closer to \lstinline|0| (zero), while for JDK~Logging, it is closer to \lstinline|Integer.MAX_VALUE|.
+\textbf{Note:} For Log4j, the integer value for the higher log level is closer to \lstinline|0| (zero), while for JDK~Logging, it is closer to \lstinline|Integer.MAX_VALUE|.
 
-With Log4j, you can achieve a similar result by using \lstinline|Logger::always|\autocite{APACHE_LOG4J:Logger.always} instead of creating a new log level:
+With Log4j, you can achieve a similar result by using \lstinline|Logger::always|\autocite{APACHE_LOG4J:Logger.always}\index{org.apache.logging.log4j!Logger!always()} instead of creating a new log level:
+\index{org.apache.logging.log4j!Logger!always()}\index{org.apache.logging.log4j!Logger!withThrowable()}\index{org.apache.logging.log4j!Logger!withLocation()}\index{org.apache.logging.log4j!Logger!log()}
 \begin{lstlisting}
 …
 m_Logger.always()
@@ -8390,32 +8436,6 @@ public final void onSuccess( final Consumer<Data> processor )
 
 
 
-
-\section{Swap Logic Errors for Compiler Errors}\label{sec:SwapToCompilerErrors}
-From a book about Java programming:
-\begin{quotation}
-“One fundamental principle of programming is that, generally, it is best to swap a logic error for a compiler error. Compiler errors tend to be found in seconds and are corrected just as fast. Syntax errors are a good example […]
-
-Logic errors, on the other hand, are the bane of all programmers. They hide and hate to reveal themselves. Logic errors seem to have minds of their own, constantly evading detection and dodging your efforts to pin down their cause. They can easily take a thousand times more effort to solve than the worst compiler errors. Worst of all, many logic errors are not found at all and occur only intermittently in sensitive places, which causes your customer to scream for a fix. Logic errors often require you to throw thousands of man-hours at them, only to finally discover that they are minor typos.”
-
-Robert Simmons Jr.: \textit{Hardcore Java}\autocite{Simmons:HARDCORE_JAVA}
-\end{quotation}
-
-A sample for swapping a logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
-\begin{lstlisting}
-if( length() == len ) …
-if( 5 == len ) …
-\end{lstlisting}
-
-Another sample for this is the recommendation to name fields with the “m\_” prefix (refer to chapter \tqfullvref{sec:Fields}). The compiler will never complain if you omit the \lstinline|this.| prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field\footnote{Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.| and if you shadow a field through a local variable with the same name.} – but it will scream loudly about a non-existing reference if you forget the “m\_” prefix when accessing a field named along the rules defined here.
-
-Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
-
-For the same reason you should always to consider to use enums instead of defining magic numbers\index{magic number}.
-
-The best thing about compiler errors is, that they usually show up during development – and not first after deployment at customer side.
-
-See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
 
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
 Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language, it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser.

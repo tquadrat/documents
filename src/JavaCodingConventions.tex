@@ -8036,29 +8036,54 @@ Value types and domain value types are covered in more detail in chapter \tqvref
 
 %------------------------------------------------------------------------------
 
-\subsection{Arrays and \lstinline|varargs|}
+\subsection{Arrays and \lstinline|varargs| as Arguments}
+The signatures \lstinline|myMethod( final String... args )| (using \verb#vararg#) and \lstinline|myMethod( final String [] args )| are basically the same. There is only a difference on how to call a method with one or the other signature.
 
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+The only option for the call to the variant with the array argument signature looks like this:
+\begin{lstlisting}
+public final void myMethod( final String [] args ) { … }
 
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
+…
 
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
+final var args = new String [] { "value1", "value2", … };
+myMethod( args ); 
 \end{lstlisting}
-%------------------------------------------------------------------------------
+
+The \verb#vararg# variant additionally allows to be invoked like this:
+\begin{lstlisting}
+public final void myMethod( final String... args ) { … }
+
+…
+
+final var args = new String [] { "value1", "value2", … };
+myMethod( args ); 
+
+myMethod( "value1", "value2", … );
+\end{lstlisting}
+
+The only other difference is that a \verb#vararg# has to be the last formal parameter in a method or constructor signature, while a mere array argument can be anywhere on the parameters list.
+
+Internally, the arguments are represented as arrays in both cases; this means, the body would look identically irrespectively the kind of the formal parameter.
+
+And arrays are not immutable: despite the \lstinline|final| qualifier, I can always assign a new value to an (existing) array element. As a consequence you cannot store just the reference for a provided array to an attribute of your class, you have to copy the array (and if the array elements are also not immutable, it has to be a deep copy). In this regard, arrays are like collections.
+
+For a shallow copy, there are multiple options:
+\index{java.lang!Object!clone()}\index{java.lang!System!arraycopy()}\index{java.util!Arrays!copyOf()}\index{java.util!Arrays!stream()}\index{java.util.stream!Stream!toArray()}
+\begin{lstlisting}[numbers=left]
+public final void myMethod( final String... args )
+{
+    final var c1 = args.clone();
+
+    final var c2 = new String [args.length];
+    System.arraycopy( args, 0, c2, 0, args.length );
+
+    final var c3 = Arrays.copyOf( args, args.length );
+
+    final var c4 = Arrays.stream( args ).toArray( String []::new );
+}   // myMethod()
+\end{lstlisting}
+
+The Java Runtime library does not provide any pre-build solutions for a deep copy of arrays; if you do not want to implement it yourself, you can look for 3\textsuperscript{rd} libraries  providing the respective functionality.
 
 %------------------------------------------------------------------------------
 
@@ -8185,9 +8210,13 @@ Some better implementations of \lstinline|getAttribute()| would be:
 public final List<String> getAttribute() 
 { 
 	final var retValue = List.copyOf( m_Attribute );
+	
 	final List<String> retValue = unmodifiableList( m_Attribute );
+	
 	final List<> retValue = new ArrayList<>( m_Attribute );
+	
 	final List<String> retValue = unmodifiableList( new ArrayList<>( m_Attribute ) );
+	
 	final List<String> retValue = m_Attribute.clone();
 
     //---* Done *----------------------------------------------------
@@ -8195,7 +8224,7 @@ public final List<String> getAttribute()
 }   //  getAttribute()
 \end{lstlisting}
 
-\paragraph{Line~9} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST:copyOf}\index{java.util!List!copyOf()}, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET:copyOf}\index{java.util!Set!copyOf()} and \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP:copyOf}\index{java.util!Map!copyOf()}.
+\paragraph{Line~8} creates an unmodifiable copy of \lstinline|m_Attribute|. The method \lstinline|copyOf()| exists for \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST:copyOf}\index{java.util!List!copyOf()}, \lstinline|java.util.Set|\autocite{ORACLE_DOC_SET:copyOf}\index{java.util!Set!copyOf()} and \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP:copyOf}\index{java.util!Map!copyOf()}.
 
 \lstinline|copyOf()| has some limitations: first is that \lstinline|null| is not valid as a value, and – for \lstinline|Map|\index{java.util!Map} – as a key.
 
@@ -8205,13 +8234,44 @@ Next it is important to know, that \lstinline|Set::copyOf|\index{java.util!Set!c
 
 The utility class \lstinline|java.util.Collections|\index{java.util!Collections}\autocite{ORACLE_DOC_COLLECTIONS_CLASS} provides not only the shown method \lstinline|unmodifiableList()|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableList}\index{java.util!Collections!unmodifiableList()} but also corresponding methods for \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableCollection}\index{java.util!Collections!unmodifiableCollection()}, \lstinline|Set|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableSet}\index{java.util!Collections!unmodifiableSet()} and \lstinline|Map|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableMap}\index{java.util!Collections!unmodifiableMap()}. 
 
-\paragraph{Line~11} creates a instance of \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util!ArrayList} for the return value and initialises that with \lstinline|m_Attribute|. The returned value will be mutable, but changes will not affect the attribute and therefore will not affect the state of the object instance, too. And \lstinline|null| values are no problem, other than for the solution with \lstinline|copyOf()|.
+\paragraph{Line~12} creates a instance of \lstinline|java.util.ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util!ArrayList} for the return value and initialises that with \lstinline|m_Attribute|. The returned value will be mutable, but changes will not affect the attribute and therefore will not affect the state of the object instance, too. And \lstinline|null| values are no problem, other than for the solution with \lstinline|copyOf()|.
 
-\paragraph{Line~12} basically combines lines~10 and 11, eliminating the shortcoming of the solutions from lines~9 and 10.
+\paragraph{Line~14} basically combines lines~10 and 12, eliminating the shortcoming of the solutions from lines~8 and 10.
 
-\paragraph{Line~13} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.\\[1\baselineskip]
+\paragraph{Line~16} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.\\[1\baselineskip]
 
-In the examples, the collection's element type is immutable\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy.
+Remember that arrays are not immutable; you can always assign a new value to an existing array element. Therefore you have to take the same precautions when your method should return an array attribute as for returning a collection.
+\index{java.lang!Object!clone()}\index{java.lang!System!arraycopy()}\index{java.util!Arrays!copyOf()}\index{java.util!Arrays!stream()}\index{java.util.stream!Stream!toArray()}
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    private String [] m_Attribute;
+
+    /**
+     *  Returns the attribute.
+     * 
+     *  @return The attribute.
+     */ 
+    public final String [] getAttribute()
+    {
+        final var retValue = m_Attribute.clone();
+
+        final var retValue = new String [m_Attribute.length];
+        System.arraycopy( m_Attribute, 0, retValue, 0, m_Attribute.length );
+
+        final var retValue = Arrays.copyOf( m_Attribute, m_Attribute.length );
+
+        final var retValue = Arrays.stream( m_Attribute )
+            .toArray( String []::new );
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   // getAttribute()
+}
+//  class MyClass    
+\end{lstlisting}
+
+In the examples, the element type for both, the collections and the arrays, is immutable\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy of the collection or the array.
 
 In general you have to take care that you will not return a reference to an attribute with a mutable type that would allow to modify the internal state of the owning object. This clearly does not affect just collections – although this is the most common case – but for example also instances of \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date}\footnote{Another good reason to abandon \lstinline|java.util.Date| and to use the classes from the \lstinline|java.time|\autocite{ORACLE_DOC_TIME_PACKAGE}\index{java.time} package instead.}. Obviously, for other types the details on how to create a copy or to make them immutable will differ.
 
@@ -8341,132 +8401,32 @@ public final void onSuccess( final Consumer<Data> processor )
 
 %------------------------------------------------------------------------------
 
-\section{Value Types}\label{sec:ValueTypes}
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\section{Generics}\label{sec:GenericTypes}
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
-Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language, it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser.
+Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language means it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser:
+\begin{lstlisting}
+final var s = "String";                   // s is java.lang.String
+final var i = 9;                          // i is int
+final var d = 3.1415;                     // d is double
+final var list = new ArrayList<String>(); // list is java.util.ArrayList<String>
+\end{lstlisting}
 
-There is a certain amount of controversy over this feature. Some welcome the concision it enables; others fear that it deprives readers of important type information, impairing readability. And both groups are right, to some extent. It can make code more readable by eliminating redundant information, and it can also make code less readable by eliding useful information. Another group worries that it will be overused, resulting in more bad Java code being written. This is also true, but it’s also likely to result in more good Java code being written. Like all features, it must be used with judgment. There’s no blanket rule for when it should and shouldn’t be used. 
+There is a certain amount of controversy over this feature. Some welcome the concision it enables; others fear that it deprives readers of important type information, impairing readability. And both groups are right, to some extent. It can make code more readable by eliminating redundant information, and it can also make code less readable by eliding useful information. Another group worries that it will be overused, resulting in more bad Java code being written. This is also true, but it’s also likely to result in more good Java code being written. Like all features, it must be used with judgement. There’s no blanket rule for when it should and shouldn’t be used. 
 
 Local variable declarations do not exist in isolation; the surrounding code can affect or even overwhelm the effects of using \lstinline|var|. The goal of this chapter is to examine the impact that surrounding code has on \lstinline|var| declarations, to explain some of the tradeoffs, and to provide guidelines for the effective use of \lstinline|var|.\footnote{This chapter is basically a summary of the article “Local Variable Type Inference – Style Guidelines”, published by Stuart~W.~Marks in March 2018\autocite{Marks:LocalVariableTypeInference}.}
 
-\subsection{Principles}
-The guidelines below are based on a few principles.
-
-\begin{enumerate}
-\item[P1.]{Reading code is more important than writing code.
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Reading code is more important than writing code.
 
 Code is read much more often than it is written. Further, when writing code, you usually have the whole context in your head, and take your time; when reading code, you are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that is useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
 
 You should be specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.}
 
-\item[P2.]{Code should be clear from local reasoning.
+\item{Code should be clear from local reasoning.
 
 The reader should be able to look at a \lstinline|var| declaration, along with uses of the declared variable, and understand almost immediately what is going on. Ideally, the code should be readily understandable using only the context from a snippet or a patch. If understanding a \lstinline|var| declaration requires the reader to look at several locations around the code, it might not be a good situation in which to use \lstinline|var|. Then again, it might indicate a problem with the code itself.}
 
-\item[P3.]{Code readability shouldn’t depend on IDEs.
+\item{Code readability shouldn’t depend on IDEs.
 
 Code is often written and read within an IDE, so it’s tempting to rely heavily on the code analysis features of IDEs. For type declarations, why not just use \lstinline|var| everywhere, since one can always point at a variable to determine its type?
 
@@ -8474,12 +8434,34 @@ The main reason is that code is often read outside an IDE. Code appears in many 
 
 Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.}
 
-\item[P4.]{Explicit types are a tradeoff.
+\item{Explicit types are a tradeoff.
 
 Java has historically required local variable declarations to include the type explicitly. While explicit types can be very helpful, they are sometimes not very important, and are sometimes just in the way. Requiring an explicit type can add clutter that crowds out useful information.
 
 Omitting an explicit type can reduce clutter, but only if its omission does not impair understandability. The type is not the only way to convey information to the reader. Other means include the variable's name and the initialiser expression. You should take all the available channels into account when determining whether it is appropriate to mute one of these channels.}
 \end{enumerate}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
 
 \subsection{Guidelines}
 \begin{enumerate}
@@ -8807,6 +8789,112 @@ try (var inputStream = socket.getInputStream();
 
 Conclusion
 Using var for declarations can improve code by reducing clutter, thereby letting more important information stand out. On the other hand, applying var indiscriminately can make things worse. Used properly, var can help improve good code, making it shorter and clearer without compromising understandability.
+
+%------------------------------------------------------------------------------
+
+\section{Value Types}\label{sec:ValueTypes}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{Generics}\label{sec:GenericTypes}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Access to Properties}
 Encapsulation is an important design principle for classes. This means that the internal state of an object can be manipulated only in a well defined manner, through the methods. Consequently, it may not be possible to modify the attributes  directly, by a direct assignment.

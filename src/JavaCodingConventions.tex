@@ -4686,11 +4686,11 @@ My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}\index{tqu
 \paragraph{Feature Library}\label{sec:FeatureLibrary}
 A feature library\index{feature library} adds a service or a complex functionality to your application. Usually, the library as a whole has an internal state, and it has its own configuration and initialisation. Quite often the library's functionality is accessed like an external service, and the library runs its own threads.
 
-Some feature libraries can even be started standalone, in a server mode. Samples for this are the H2 Database Engine\autocite{H2_DATABASE}\index{H2}, ActiveMQ\autocite{APACHE_ACTIVEMQ}\index{Apache ActiveMQ}, or Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}.
+Some feature libraries can even be started standalone, in a server mode. Samples for this are the H2 Database Engine\autocite{H2_DATABASE}\index{H2}, ActiveMQ\autocite{APACHE_ACTIVEMQ}\index{Apache ActiveMQ}\index{Active MQ|see {Apache ActiveMQ}}, or Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}\index{Jetty|see {Eclipse Jetty}}.
 
 Others are only providing access to external services that runs in external processes even on different machines. The examples here are the various JDBC drivers or Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}.
 
-In the gray area here I would place JUnit\autocite{JUNIT5}\index{JUnit} and Log4j\autocite{APACHE_LOG4J}\index{Log4j}.
+In the gray area here I would place JUnit\autocite{JUNIT5}\index{JUnit} and Log4j\autocite{APACHE_LOG4J}\index{Apache Log4j}\index{Log4j|see {Apache Log4j}}.
 
 %------------------------------------------------------------------------------
 
@@ -4704,14 +4704,14 @@ Gray area candidates are \verb#awk# and also \verb#sed# (again usually not provi
 %------------------------------------------------------------------------------
 
 \paragraph{Standalone Application}\label{sec:StandaloneApplication}
-A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}\index{jEdit}, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere} or a web container like Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}.
+A standalone application will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}\index{jEdit}, an IDE, an application server like WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} or a web container like Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}}.
 
-A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, above, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache MQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes.
+A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, above, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache MQ} or Jetty\index{Eclipse Jetty}\index{Jetty|see{Eclipse Jetty}} in their standalone/server modes.
 
 %------------------------------------------------------------------------------
 
 \paragraph{Server-based Application}\label{sec:ServerbasedApplication}
-Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic} or WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}\index{Tomcat|see{Apache Tomcat}}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}\index{Jetty|see{Eclipse Jetty}} or any of the appservers mentioned before.
+Server-based applications are applications that require a special environment to be executed; the best example are JEE applications that need an application server like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}\index{JBoss|see {Redhat JBoss}}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic}\index{WebLogic|see {Oracle WebLogic}} or WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty} or any of the appservers mentioned before.
 
 In this case, the program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be utilised by the application.
 
@@ -4761,13 +4761,21 @@ Another sample for this is the recommendation to name fields with the “\verb#m
 
 Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
 
-For the same reason you should always to consider to use enums instead of defining magic numbers\index{magic number}.
+For the same reason you should always consider to use enums instead of defining magic numbers\index{magic number}.
 
-The best thing about compiler errors is, that they usually show up early during development – and not first after deployment at customer side.
-
-############
+The best thing about compiler errors is, that they usually show up early during development – and not first after deployment at customer side. Under this aspect you should take compiler warnings seriously, no matter whether emitted by \verb#javac# or your development environment. When CI/CD pipelines are used, additional code checking tools may have been integrated. Utilise them, and respond to their warnings, at least by thinking twice before adding the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}\index{java.lang!SuppressWarnings} annotation.
 
 See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
+
+In this regard the use of \lstinline|java.lang.Class::forName|\autocite{ORACLE_DOC_CLASS:forName}\index{java.lang!Class!forName()} and the use of reflection in general are another nasty source for bugs that might be difficult to identify.
+
+Basically, \lstinline|Class.forName()|\index{java.lang!Class!forName()} takes a string as its argument that is the fully qualified name of a class. If there is at least one instance of \lstinline|Class|\index{java.lang!Class} on the current classpath, the method will return that object – otherwise it will throw a \lstinline|ClassNotFoundException|\autocite{ORACLE_DOC_CLASSNOTFOUNDEXCEPTION_CLASS}\index{java.lang!ClassNotFoundException}. This will not happen at compile time, but only during the execution of the program, depending on the execution path of your program – meaning the bug that you introduced by having a typo in the class or package name may remain undetected for a long time.
+
+So if you want to access a class object that you expect to be there, always use “\lstinline|<ClassName>.class|”\index{java.lang!Class!class} where \verb#<ClassName># is the name of the class; you can use the fully qualified name, or you can import it. Either way, the compiler will complain if the class is not there.
+
+Only if a class is optional for your application (for example, it may come with a plugin), use “\lstinline|Class.forName( <ClassName> )|”\index{java.lang!Class!forName()}; of course you also have to add the proper error handling for the case that the class is not there.
+
+For reflection, the situation is similar: you refer to the class element that you want to get access to by its name, provided as a string. The compiler is unable to validate that name, so a potential error will surface earliest at runtime. Refer to the chapter \tqfullvref{sec:Reflection} for more details about reflection and its alternatives.
 
 %------------------------------------------------------------------------------
 
@@ -8087,7 +8095,7 @@ This means, you will usually use \lstinline|Collection|\index{java.util!Collecti
 
 Only when a concrete class or a more specialised interface provides features that are relevant for the caller, the method should be defined to return that type.
 
-One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} anyway – not to mention that \lstinline|String|\index{java.lang!String} implements \lstinline|CharSequence|\index{java.lang¹CharSequence}.
+One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} anyway – not to mention that \lstinline|String|\index{java.lang!String} implements \lstinline|CharSequence|\index{java.lang!CharSequence}.
 
 Another reason is that the interface \lstinline|CharSequence|\index{java.lang!CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
 
@@ -8819,7 +8827,7 @@ Constants are the only exception, obviously, because a constant is explicitly de
 
 Regarding encapsulation in general, refer to chapter \tqvref{sec:EncapsulationWithModules}.
 
-\section{Accessing Fields or Methods using Reflection}
+\section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
 First of all, you should avoid to use Reflection whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
 
 One reason is that accessing a field or a method via reflection causes some overhead that decreases a program’s performance. 
@@ -8834,8 +8842,9 @@ Reflection also allows you to access non-\lstinline|public| member of a class th
 
 But there are useful applications for this, too: you can and should used it in unit tests for \lstinline|private| or \lstinline|protected| methods that are not \lstinline|public| for good reasons, and if these methods cannot be tested indirectly.\footnote{The alternative would be to make the method at least \lstinline|protected|, but this would make it (more) visible to the consumers of the API, and perhaps even accessible – but there was a reason why that method was originally \lstinline|private|.}
 
-I recommend to use the following pattern if you want to access a \lstinline|private| method in your unit tests:
-\begin{lstlisting}[numbers=left]
+I recommend to use the following pattern if you want to access a \lstinline|private| method in your unit tests; first the class under test:
+\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}
+\begin{lstlisting}
 public final class MyClass
 {
     /**
@@ -8845,10 +8854,19 @@ public final class MyClass
      *  @return The result.
      *  @throws IOException Something went wrong.
      */
-    private final String myMethod( final CharSequence value ) throws IOException      { … }
+    private final String myMethod( final CharSequence value ) throws IOException
+    { 
+        final var retValue = … 
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  myMethod()
 }   
 //  class MyClass
-
+\end{lstlisting}
+The test class:
+\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect.Method!setAccessible()}\index{java.lang.reflect.Method!invode()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!requiredNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang.Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
+\begin{lstlisting}[numbers=left]
 /**
  *  This class provides some unit tests for
  *  {@link MyClass}.

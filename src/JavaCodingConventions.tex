@@ -2768,7 +2768,7 @@ Some names are fixed: the name of the value that is returned from a method has t
 // OK
 public final int getValue() { return m_Value; }
 
-// AVOID!! Use 'retValue' instead of 'i'!!
+// AVOID!! Use 'retValue' here instead of 'i'!!
 public final int signum( double d )
 {
     final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
@@ -2824,7 +2824,7 @@ for( final Component value : values )
 }    
 \end{lstlisting}
 
-Using the class name (with a lower case first letter, of course) for a variable is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “\verb#my#” or “\verb#the#” has to be avoided.
+Using the class name (with a lower case first letter, of course) for a variable name is completely acceptable in case this is sufficient to explain the function of the variable; but the prefix “\verb#my#” or “\verb#the#” has to be avoided.
 \begin{lstlisting}
 // RECOMMENDED
 public final String retrieveMessage( final String messageKey, 
@@ -2885,7 +2885,7 @@ public final ResultData loadData( Connection connection, … )
 }   //  loadData()
 \end{lstlisting}
 
-Do not (never!) use a prefix to indicate the type of a variable (Hungarian notation)! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian notation for the naming of variables is discouraged for strongly typed languages like Java or C++, because it does not provide any benefit.\newline For languages like C, JavaScript or also Groovy, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.\newline The use of the \lstinline|var| keyword in Java programs does not weaken the strong typing of Java in any way – refer to chapter \ref{sec:LocalVariableTypeInference}.}
+Do not (never!) use a prefix to indicate the type of a variable (Hungarian Notation\autocite{WIKIPEDIA:Hungarian_notation,Jack:HungarianNotation}\index{Hungarian Notation})! Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{The use of the Hungarian Notation\index{Hungarian Notation} – in particular the ‘Systems Hungarian’ variant – for the naming of variables is discouraged for strongly typed languages like Java or C++\index{C++}, because it does not provide any benefit.\newline For languages like PHP\index{PHP}, C\index{C}, JavaScript\index{JavaScript} or also Groovy\index{Groovy}, this may be different: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.} The use of the \lstinline|var| keyword\footnote{\lstinline|var| is in fact not a keyword, but a special type.} in Java programs does not weaken the strong typing of Java in any way – refer to chapter \tqfullvref{sec:LocalVariableTypeInference}.
 
 Local variables inside lambdas are just like any other local variable and their naming follows the same rules. The only exception is that a lambda does not use \lstinline|retValue| for a return value, but \lstinline|result| – refer to chapter \tqfullvref{sec:LambdaResults} for the details.
 
@@ -8403,6 +8403,7 @@ public final void onSuccess( final Consumer<Data> processor )
 
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
 Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language means it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser:
+\index{java.util!ArrayList}
 \begin{lstlisting}
 final var s = "String";                   // s is java.lang.String
 final var i = 9;                          // i is int
@@ -8442,6 +8443,101 @@ Omitting an explicit type can reduce clutter, but only if its omission does not 
 \end{enumerate}
 
 %------------------------------------------------------------------------------
+
+\subsection{Naming}
+I discussed the naming of local variable already in chapter \tqvref{sec:NamesForLocalVariables} and I want elaborate on this again here.
+
+First you have to choose a variable name that provides useful information to the reader of your code. This is good practice in general, but it is much more important in the context of \lstinline|var|. In a declaration using \lstinline|var|, information about the meaning and use of the variable can be conveyed mainly using the variable's name. Replacing an explicit type with \lstinline|var| should often be accompanied by improving the variable name.
+
+For example:
+\index{java.util!List}
+\begin{lstlisting}
+// BAD
+final List<Customer> x = dbConnection.executeQuery( query );
+
+// BETTER
+final var customerList = dbConnection.executeQuery( query );
+\end{lstlisting}
+
+In this case, a useless variable name has been replaced with a name that is evocative of the type of the variable, which is now implicit in the \lstinline|var| declaration.
+
+Encoding the variable's type in its name, taken to its logical conclusion, may result in “Hungarian Notation”\autocite{WIKIPEDIA:Hungarian_notation,Jack:HungarianNotation}\index{Hungarian Notation}. Just as with explicit types, this is sometimes helpful, but in most times just clutter. In this example the name \lstinline|customerList| implies that a \lstinline|List|\index{java.util!List} with customer data is being returned. It might not be significant that it is in fact a \lstinline|List|\index{java.util!List}. Instead of the exact type, it’s sometimes better for a variable’s name to express the role or the nature of the variable, such as \lstinline|customers|:
+
+\begin{lstlisting}
+// BAD
+try( final Stream<Customer> result = dbConnection.executeQuery( query ) ) 
+{
+    return result.map( … )
+        .filter( … )
+        .findAny();
+}
+
+// BETTER
+final Optional<Customer> retValue;
+try( final var customers = dbConnection.executeQuery( query ) ) 
+{
+    retValue = customers.map( … )
+        .filter( … )
+        .findAny();
+}
+
+//---* Done *--------------------------------------------------------
+return retValue;
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsection{Scope}
+You should also try to minimize the scope of your local variables. This practice is described in “Effective Java (3\textsuperscript{rd} Edition)”\autocite{Bloch:EffectiveJava}, Item~57.
+
+Limiting the scope of a local variable is good practice in general, but it applies with extra force if \lstinline|var| is in use.
+
+In the following example, the \lstinline|add()| method clearly adds the special item as the last list element, so it’s processed last, as expected.
+\index{java.util!ArrayList}\index{java.util!ArrayList!add()}
+\begin{lstlisting}
+final var items = new ArrayList<Item>( … );
+items.add( MUST_BE_PROCESSED_LAST );
+for( final var item : items ) { … }
+\end{lstlisting}
+
+Now suppose that in order to remove duplicate items, you modify this code to use a \lstinline|HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util!HashSet} instead of an \lstinline|ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util!ArrayList}, like below:
+\index{java.util!HashSet}\index{java.util!HashSet!add()}
+\begin{lstlisting}
+final var items = new HashSet<Item>( … );
+items.add( MUST_BE_PROCESSED_LAST );
+for( final var item : items ) { … }
+\end{lstlisting}
+
+Your code now has a bug, since a \lstinline|Set|\index{java.util!Set} does not have a defined iteration order. However, it is likely that you will fix this bug immediately, as the uses of the \lstinline|items| variable are adjacent to its declaration.
+
+Now suppose that this code is part of a large method, with a correspondingly large scope for the \lstinline|items| variable:
+\index{java.util!HashSet}\index{java.util!HashSet!add()}
+\begin{lstlisting}
+final var items = new HashSet<Item>( … );
+
+// … 100 lines of code …
+
+items.add( MUST_BE_PROCESSED_LAST );
+for( final var item : items ) { … }
+\end{lstlisting}
+
+The impact of changing from an \lstinline|ArrayList|\index{java.util!ArrayList} to a \lstinline|HashSet|\index{java.util!HashSet} is no longer readily apparent, since \lstinline|items| is used so far away from its declaration. It seems likely that this bug could survive for much longer.
+
+If \lstinline|items| had been declared explicitly as \lstinline|List<String>|, changing the initialiser would also require changing the type to \lstinline|Set<String>|. This \textit{might} prompt you to inspect the rest of the method for code that would be impacted by such a change (then again, it might not). Use of \lstinline|var| would remove this prompting, possibly increasing the risk of a bug being introduced in code like this.
+
+This might seem like an argument against using \lstinline|var|, but it really is not. The initial example that uses \lstinline|var| is perfectly fine. The problem only occurs when the variable's scope is large. Instead of simply avoiding \lstinline|var| in these cases, you should change the code to reduce the scope of the local variables, and only then declare them with \lstinline|var|.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
@@ -8465,81 +8561,9 @@ Omitting an explicit type can reduce clutter, but only if its omission does not 
 
 \subsection{Guidelines}
 \begin{enumerate}
-\item[G1.]{Choose variable names that provide useful information.
+\item[G1.]{Choose variable names that provide useful information.}
 
-This is good practice in general, but it is much more important in the context of \lstinline|var|. In a \lstinline|var| declaration, information about the meaning and use of the variable can be conveyed using the variable's name. Replacing an explicit type with \lstinline|var| should often be accompanied by improving the variable name.
-
-For example:
-
-\begin{lstlisting}
-// BAD
-final List<Customer> x = dbConnection.executeQuery( query );
-
-// BETTER
-final var customerList = dbConnection.executeQuery( query );
-\end{lstlisting}
-
-In this case, a useless variable name has been replaced with a name that is evocative of the type of the variable, which is now implicit in the var declaration.
-
-Encoding the variable's type in its name, taken to its logical conclusion, results in “Hungarian Notation”. Just as with explicit types, this is sometimes helpful, and sometimes just clutter. In this example the name \lstinline|customerList| implies that a \lstinline|List| is being returned. That might not be significant. Instead of the exact type, it’s sometimes better for a variable’s name to express the role or the nature of the variable, such as \lstinline|customers|:
-
-\begin{lstlisting}
-// BAD
-try( final Stream<Customer> result = dbConnection.executeQuery( query ) ) 
-{
-    return result.map( … )
-        .filter( … )
-        .findAny();
-}
-
-// BETTER
-try( final var customers = dbConnection.executeQuery( query ) ) 
-{
-    final var retValue = customers.map( … )
-        .filter( … )
-        .findAny();
-    return retValue;
-}
-\end{lstlisting}}
-
-\item[G2.]{Minimize the scope of local variables.
-
-Limiting the scope of local variables is good practice in general. This practice is described in “Effective Java (3\textsuperscript{rd} Edition)”\autocite{Bloch:EffectiveJava}, Item~57. It applies with extra force if \lstinline|var| is in use.
-
-In the following example, the \lstinline|add()| method clearly adds the special item as the last list element, so it’s processed last, as expected.
-
-\begin{lstlisting}
-final var items = new ArrayList<Item>( … );
-items.add( MUST_BE_PROCESSED_LAST );
-for( final var item : items ) { … }
-\end{lstlisting}
-
-Now suppose that in order to remove duplicate items, you modify this code to use a \lstinline|HashSet| instead of an \lstinline|ArrayList|, like below:
-
-\begin{lstlisting}
-final var items = new HashSet<Item>( … );
-items.add( MUST_BE_PROCESSED_LAST );
-for( fnial var item : items ) { … }
-\end{lstlisting}
-
-Your code now has a bug, since sets do not have a defined iteration order. However, it is likely that you will fix this bug immediately, as the uses of the \lstinline|items| variable are adjacent to its declaration.
-
-Now suppose that this code is part of a large method, with a correspondingly large scope for the \lstinline|items| variable:
-
-\begin{lstlisting}
-final var items = new HashSet<Item>( … );
-
-// … 100 lines of code …
-
-items.add( MUST_BE_PROCESSED_LAST );
-for( final var item : items ) { … }
-\end{lstlisting}
-
-The impact of changing from an \lstinline|ArrayList| to a \lstinline|HashSet| is no longer readily apparent, since \lstinline|items| is used so far away from its declaration. It seems likely that this bug could survive for much longer.
-
-If \lstinline|items| had been declared explicitly as \lstinline|List<String>|, changing the initialiser would also require changing the type to \lstinline|Set<String>|. This \textit{might} prompt you to inspect the rest of the method for code that would be impacted by such a change (then again, it might not). Use of \lstinline|var| would remove this prompting, possibly increasing the risk of a bug being introduced in code like this.
-
-This might seem like an argument against using \lstinline|var|, but it really is not. The initial example that uses \lstinline|var| is perfectly fine. The problem only occurs when the variable's scope is large. Instead of simply avoiding \lstinline|var| in these cases, you should change the code to reduce the scope of the local variables, and only then declare them with \lstinline|var|.}
+\item[G2.]{}
 
 \item[G3.]{Consider \lstinline|var| when the initialiser provides sufficient information to the reader.
 

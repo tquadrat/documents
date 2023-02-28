@@ -7661,8 +7661,9 @@ public final class MyClass
 This is easy to implement for \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}, but it can become arbitrarily complex for custom classes.
 
 %------------------------------------------------------------------------------
-\subsection{General vs. specific Argument Types}\label{sec:ArgumentTypes}
-You should choose that type for a formal parameter of a method or a constructor that provides just the functionality that is needed, not more.
+
+\subsection{Abstract vs. concrete Argument Types}\label{sec:ArgumentTypes}
+If you have the choice, you should prefer always an abstraction over a concrete implementation, given that the abstraction reveals all the functionality you need. This is often referred to as “Programming to the Interface”\index{programming to the interface} and discussed in more detail in chapter \tqvref{sec:ProgrammingToTheInterface}.
 
 You encounter this situation mostly when your method takes a collection type as an argument: should it be \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util!Collection} or \lstinline|ArrayList|\autocite{ORACLE_DOC_ARRAYLIST_CLASS}\index{java.util!ArrayList}?
 
@@ -8113,8 +8114,8 @@ This also means that you should avoid to return \lstinline|null|. We discussed t
 
 %------------------------------------------------------------------------------
 
-\subsection{General vs. specific Return Types}\label{sec:ReturnTypes}
-Same as for the types of the formal parameters (see chapter \tqfullvref{sec:ArgumentTypes}), the type for a return value of a method should always be the most general type (interface or class) possible, based on the features that the caller might require or expect from the return type. Consequently, \lstinline|java.lang.Object|\index{java.lang!Object} is rarely the correct type for the return value.
+\subsection{Abstract vs. concrete Return Types}\label{sec:ReturnTypes}
+Same as for the types of the formal parameters (see chapter \tqfullvref{sec:ArgumentTypes}), the type for a return value of a method should always be the most abstract type (interface or class) possible, based on the features that the caller might require or expect from the return type. Consequently, \lstinline|java.lang.Object|\index{java.lang!Object} is rarely the correct type for the return value as is the most abstract type, but does provide nearly no functionality.
 
 This means, you will usually use \lstinline|Collection|\index{java.util!Collection} or \lstinline|List|\index{java.util!List} instead of \lstinline|LinkedList|\index{java.util!LinkedList}, \lstinline|OutputStream|\index{java.io!OutputStream} instead of \lstinline|ByteArrayOutputStream|\autocite{ORACLE_DOC_BYTEARRAYOUTPUTSTREAM_CLASS}\index{java.io!ByteArrayOutputStream}, and so on.
 
@@ -8123,6 +8124,8 @@ Only when a concrete class or a more specialised interface provides features tha
 One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} anyway – not to mention that \lstinline|String|\index{java.lang!String} implements \lstinline|CharSequence|\index{java.lang!CharSequence}.
 
 Another reason is that the interface \lstinline|CharSequence|\index{java.lang!CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
+
+In general, the idiom to prefer an abstraction over a concrete implementation is usually referred to as “Programming to the Interface”\index{programming to the interface}; it will be discussed in more detail in chapter \tqvref{sec:ProgrammingToTheInterface}.
 
 %------------------------------------------------------------------------------
 
@@ -8487,7 +8490,7 @@ return retValue;
 
 %------------------------------------------------------------------------------
 
-\subsection{Scope}
+\subsection{Scope}\label{sec:varScope}
 You should also try to minimize the scope of your local variables. This practice is described in “Effective Java (3\textsuperscript{rd} Edition)”\autocite{Bloch:EffectiveJava}, Item~57.
 
 Limiting the scope of a local variable is good practice in general, but it applies with extra force if \lstinline|var| is in use.
@@ -8523,15 +8526,134 @@ for( final var item : items ) { … }
 
 The impact of changing from an \lstinline|ArrayList|\index{java.util!ArrayList} to a \lstinline|HashSet|\index{java.util!HashSet} is no longer readily apparent, since \lstinline|items| is used so far away from its declaration. It seems likely that this bug could survive for much longer.
 
-If \lstinline|items| had been declared explicitly as \lstinline|List<String>|, changing the initialiser would also require changing the type to \lstinline|Set<String>|. This \textit{might} prompt you to inspect the rest of the method for code that would be impacted by such a change (then again, it might not). Use of \lstinline|var| would remove this prompting, possibly increasing the risk of a bug being introduced in code like this.
+If \lstinline|items| had been declared explicitly as \lstinline|List<String>|\index{java.util!List}, changing the initialiser would also require changing the type to \lstinline|Set<String>|\index{java.util!Set}. This \textit{might} prompt you to inspect the rest of the method for code that would be impacted by such a change (then again, it might not). Use of \lstinline|var| would remove this prompting, possibly increasing the risk of a bug being introduced in code like this.
 
 This might seem like an argument against using \lstinline|var|, but it really is not. The initial example that uses \lstinline|var| is perfectly fine. The problem only occurs when the variable's scope is large. Instead of simply avoiding \lstinline|var| in these cases, you should change the code to reduce the scope of the local variables, and only then declare them with \lstinline|var|.
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
+\subsection{Initialisers}\label{sec:varInitialisers}
+First, you cannot use \lstinline|var| if you do not have a proper initialiser:
+\begin{lstlisting}
+// DOES NOT WORK!
+final var x;
+
+// DOES NOT WORK EITHER!
+final var x = null;
+\end{lstlisting}
+
+Local variables are often initialised with constructors. The name of the class being constructed is often repeated as the explicit type on the left-hand side. If the type name is long, use of \lstinline|var| provides concision without loss of information:
+\index{java.io!ByteArrayOutputStream}
+\begin{lstlisting}
+// ACCEPTABLE
+final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+// BETTER
+final var outputStream = new ByteArrayOutputStream();
+\end{lstlisting}
+
+It is also reasonable to use \lstinline|var| in cases where the initialiser is a method call, such as a \lstinline|static| factory method, instead of a constructor, and when its name contains enough type information:
+\index{java.io!BufferedReader}\index{java.nio.files!Files!newBufferedReader()}\index{java.util!List}\index{java.util!List!of()}
+\begin{lstlisting}
+// ACCEPTABLE
+final BufferedReader reader = Files.newBufferedReader( … );
+final List<String> stringList = List.of("a", "b", "c");
+
+// BETTER
+final var reader = Files.newBufferedReader(...);
+final var stringList = List.of("a", "b", "c");
+\end{lstlisting}
+
+In these cases, the method names strongly imply a particular return type, which is then used for inferring the type of the variable.
+
+So the rule of thumb is to consider the use of \lstinline|var| when the initialiser provides sufficient information to the reader.
 
 %------------------------------------------------------------------------------
+
+\subsection{\lstinline|var| and “Programming to the Interface”}
+A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
+\index{java.util!List}\index{java.util!ArrayList}
+\begin{lstlisting}
+// ORIGINAL
+final List<String> list = new ArrayList<>();
+\end{lstlisting}
+If \lstinline|var| is used, however, the concrete type is inferred instead of the interface:
+\index{java.util!ArrayList}
+\begin{lstlisting}
+// Inferred type of list is ArrayList<String>
+final var list = new ArrayList<String>();
+\end{lstlisting}
+
+Usually this idiom is referred to as “Programming to the Interface”\index{programming to the interface}, and it will be discussed in more detail in chapter \tqvref{sec:ProgrammingToTheInterface}.
+
+In the context that we discuss here, the recommendation is just: don’t worry too much about “programming to the interface”\index{programming to the interface} with local variables. As we saw above, the compiler will always infer the current type returned by the initialiser for the variable that is declared with \lstinline|var|.
+
+It must be reiterated here that \lstinline|var| can only be used for local variables. It cannot be used to infer field types, method parameter types, and method return types. The principle of “programming to the interface”\index{programming to the interface} is still as important as ever in those contexts.
+
+The main issue is that code that uses the variable can form dependencies on the concrete implementation. If the variable’s initialiser were to change in the future, this might cause its inferred type to change, causing errors or bugs to occur in subsequent code that uses the variable.
+
+If, as recommended in chapter \tqref{sec:varScope}, the scope of the local variable is small, the risks from “leakage” of the concrete implementation that can impact the subsequent code are limited. If the variable is used only in code that’s a few lines away, it should be easy to avoid problems or to mitigate them if they arise.
+
+In this particular case, \lstinline|ArrayList|\index{java.util!ArrayList} only contains a couple of methods that aren’t on \lstinline|List|\index{java.util!List}, namely \lstinline|ensureCapacity()|\index{java.util!ArrayList!ensureCapacity()} and \lstinline|trimToSize()|\index{java.util!ArrayList!trimToSize()}. These methods don’t affect the contents of the list, so calls to them don’t affect the correctness of the program. This further reduces the impact of the inferred type being a concrete implementation rather than an interface.
+
+%------------------------------------------------------------------------------
+
+\subsection{\lstinline|var| with Literals}
+Primitive literals can be used as initialisers for \lstinline|var| declarations. It’s unlikely that using \lstinline|var| in these cases will provide much advantage, as the type names are generally short. However, \lstinline|var| is sometimes useful, for example, to align variable names. And it usually does no harm.
+
+But you should take some care when using \lstinline|var| with literals.
+
+There is no issue with \lstinline|boolean|, character, \lstinline|long|, and string literals. The type inferred from these literals is precise, and so the meaning of \lstinline|var| is unambiguous:
+\begin{lstlisting}
+// ORIGINAL
+boolean ready = true;
+char ch = '\ufffd';
+long sum = 0L;
+String label = "wombat";
+
+// GOOD
+var ready = true;
+var ch    = '\ufffd';
+var sum   = 0L;
+var label = "wombat";
+\end{lstlisting}
+
+Particular care should be taken when the initialiser is a numeric value, especially an integer literal. With an explicit type on the left-hand side, the numeric value may be silently widened or narrowed to types other than int. With \lstinline|var|, the value will be inferred as an \lstinline|int|, which may be unintended.
+\begin{lstlisting}
+// ORIGINAL
+byte flags = 0;
+short mask = 0x7fff;
+long base = 17;
+
+// DANGEROUS: all infer as int
+var flags = 0;
+var mask = 0x7fff;
+var base = 17;
+\end{lstlisting}
+
+Floating point literals are mostly unambiguous:
+\begin{lstlisting}
+// ORIGINAL
+float f = 1.0f;
+double d = 2.0;
+
+// GOOD
+var f = 1.0f;
+var d = 2.0;
+\end{lstlisting}
+
+Note that \lstinline|float| literals can be widened silently to \lstinline|double|. It is somewhat obtuse to initialise a \lstinline|double| variable using an explicit \lstinline|float| literal such as \verb#3.0f#, however, cases may arise where a \lstinline|double| variable is initialised from a \lstinline|float| field. Caution with \lstinline|var| is advised here\footnote{Indeed, this example violates the guideline from chapter \tqvref{sec:varInitialisers}, because there isn’t enough information in the initialiser for a reader to see the inferred type.}
+:
+\begin{lstlisting}
+// ORIGINAL
+static final float INITIAL = 3.0f;
+...
+double temp = INITIAL;
+
+// DANGEROUS: now infers as float
+var temp = INITIAL;
+\end{lstlisting}
+
 
 %------------------------------------------------------------------------------
 
@@ -8561,40 +8683,16 @@ This might seem like an argument against using \lstinline|var|, but it really is
 
 \subsection{Guidelines}
 \begin{enumerate}
-\item[G1.]{Choose variable names that provide useful information.}
+\item[G1.]{}
 
 \item[G2.]{}
 
-\item[G3.]{Consider \lstinline|var| when the initialiser provides sufficient information to the reader.
-
-Local variables are often initialised with constructors. The name of the class being constructed is often repeated as the explicit type on the left-hand side. If the type name is long, use of \lstinline|var| provides concision without loss of information:
-
-\begin{lstlisting}
-// ACCEPTABLE
-final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-// BETTER
-final var outputStream = new ByteArrayOutputStream();
-\end{lstlisting}
-
-It is also reasonable to use \lstinline|var| in cases where the initialiser is a method call, such as a \lstinline|static| factory method, instead of a constructor, and when its name contains enough type information:
-
-\begin{lstlisting}
-// ACCEPTABLE
-final BufferedReader reader = Files.newBufferedReader( … );
-final List<String> stringList = List.of("a", "b", "c");
-
-// BETTER
-final var reader = Files.newBufferedReader(...);
-final var stringList = List.of("a", "b", "c");
-\end{lstlisting}
-
-In these cases, the methods names strongly imply a particular return type, which is then used for inferring the type of the variable.}
+\item[G3.]{}
 
 \item[G4.]{Use \lstinline|var| to break up chained or nested expressions with local variables.
 
 Consider code that takes a collection of strings and finds the string that occurs most often. This might look like the following:
-
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 return strings.stream()
     .collect( groupingBy( s -> s, counting() ) )
@@ -8632,26 +8730,8 @@ return retValue;
 You might legitimately prefer the first snippet with its single long chain of method calls. However, in some cases it is better to break up long method chains. Using \lstinline|var| for these cases is a viable approach, whereas using full declarations of the intermediate variables as in the second snippet makes it an unpalatable alternative. As with many other situations, the correct use of \lstinline|var| might involve both taking something out (explicit types) and adding something back (better variable names, better structuring of code).}
 
 \subsection{-------------------------------------------- Proceed from here!}
-\item[G5.]{Don’t worry too much about “programming to the interface” with local variables.
+\item[G5.]{}
 
-A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
-
-\begin{lstlisting}
-// ORIGINAL
-List<String> list = new ArrayList<>();
-If var is used, however, the concrete type is inferred instead of the interface:
-
-// Inferred type of list is ArrayList<String>
-var list = new ArrayList<String>();
-\end{lstlisting}
-
-It must be reiterated here that var can only be used for local variables. It cannot be used to infer field types, method parameter types, and method return types. The principle of “programming to the interface” is still as important as ever in those contexts.
-
-The main issue is that code that uses the variable can form dependencies on the concrete implementation. If the variable’s initialiser were to change in the future, this might cause its inferred type to change, causing errors or bugs to occur in subsequent code that uses the variable.
-
-If, as recommended in guideline G2, the scope of the local variable is small, the risks from “leakage” of the concrete implementation that can impact the subsequent code are limited. If the variable is used only in code that’s a few lines away, it should be easy to avoid problems or to mitigate them if they arise.
-
-In this particular case, ArrayList only contains a couple of methods that aren’t on List, namely ensureCapacity and trimToSize. These methods don’t affect the contents of the list, so calls to them don’t affect the correctness of the program. This further reduces the impact of the inferred type being a concrete implementation rather than an interface.}
 \item[G6.]{Take care when using var with diamond or generic methods.
 
 Both var and the “diamond” feature allow you to omit explicit type information when it can be derived from information already present. Can you use both in the same declaration?
@@ -8697,64 +8777,7 @@ var list = List.of(BigInteger.ZERO);
 \end{lstlisting}
 
 If you decide to use var with diamond or a generic method, you should ensure that method or constructor arguments provide enough type information so that the inferred type matches your intent. Otherwise, avoid using both var with diamond or a generic method in the same declaration.}
-\item[G7.]{Take care when using var with literals.
-Primitive literals can be used as initialisers for var declarations. It’s unlikely that using var in these cases will provide much advantage, as the type names are generally short. However, var is sometimes useful, for example, to align variable names.
-
-There is no issue with boolean, character, long, and string literals. The type inferred from these literals is precise, and so the meaning of var is unambiguous:
-
-\begin{lstlisting}
-// ORIGINAL
-boolean ready = true;
-char ch = '\ufffd';
-long sum = 0L;
-String label = "wombat";
-
-// GOOD
-var ready = true;
-var ch    = '\ufffd';
-var sum   = 0L;
-var label = "wombat";
-\end{lstlisting}
-
-Particular care should be taken when the initialiser is a numeric value, especially an integer literal. With an explicit type on the left-hand side, the numeric value may be silently widened or narrowed to types other than int. With var, the value will be inferred as an int, which may be unintended.
-
-\begin{lstlisting}
-// ORIGINAL
-byte flags = 0;
-short mask = 0x7fff;
-long base = 17;
-
-// DANGEROUS: all infer as int
-var flags = 0;
-var mask = 0x7fff;
-var base = 17;
-\end{lstlisting}
-
-Floating point literals are mostly unambiguous:
-
-\begin{lstlisting}
-// ORIGINAL
-float f = 1.0f;
-double d = 2.0;
-
-// GOOD
-var f = 1.0f;
-var d = 2.0;
-\end{lstlisting}
-
-Note that float literals can be widened silently to double. It is somewhat obtuse to initialise a double variable using an explicit float literal such as 3.0f, however, cases may arise where a double variable is initialised from a float field. Caution with var is advised here:
-
-\begin{lstlisting}
-// ORIGINAL
-static final float INITIAL = 3.0f;
-...
-double temp = INITIAL;
-
-// DANGEROUS: now infers as float
-var temp = INITIAL;
-\end{lstlisting}
-
-(Indeed, this example violates guideline G3, because there isn’t enough information in the initialiser for a reader to see the inferred type.)}
+\item[G7.]{}
 \end{enumerate}
 
 \subsection{Examples}
@@ -9824,6 +9847,18 @@ The lambda cannot use the name \lstinline|retValue| for its return value, becaus
 \end{lstlisting}
 
 \section{Programming to the Interface}\label{sec:ProgrammingToTheInterface}
+\index{programming to the interface}
+A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
+
+\begin{lstlisting}
+// ORIGINAL
+List<String> list = new ArrayList<>();
+If var is used, however, the concrete type is inferred instead of the interface:
+
+// Inferred type of list is ArrayList<String>
+var list = new ArrayList<String>();
+\end{lstlisting}
+
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}

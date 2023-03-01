@@ -6574,7 +6574,7 @@ public final byte [] cutOut( final byte [] source, final int fromIndex, final in
 The method \lstinline|Arrays::copyOfRange|\autocite{ORACLE_DOC_ARRAYS:copyOfRange}\index{java.util!Arrays!copyOfRange()} will of course check the arguments by itself, but the main goal of the sample code above is to illustrate how to use the methods from \lstinline|Objects|.}
 
 \item{\lstinline|checkFromToIndex()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:checkFromToIndex}\index{org.tquadrat.foundation.lang!Objects!checkFromToIndex()} Checks if a \lstinline|fromIndex| and a \lstinline|toIndex| value fits into a given range.
-\index{org.tquadrat.foundation.lang!Objects!checkFromToIndex)}\index{java.util!Arrays!copyOfRange()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\index{org.tquadrat.foundation.lang!Objects!checkFromToIndex()}\index{java.util!Arrays!copyOfRange()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}
 public final byte [] cutOut( final byte [] source, final int fromIndex, final int toIndex )
 {
@@ -8574,7 +8574,7 @@ So the rule of thumb is to consider the use of \lstinline|var| when the initiali
 A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
 \index{java.util!List}\index{java.util!ArrayList}
 \begin{lstlisting}
-// ORIGINAL
+// Original
 final List<String> list = new ArrayList<>();
 \end{lstlisting}
 If \lstinline|var| is used, however, the concrete type is inferred instead of the interface:
@@ -8599,13 +8599,13 @@ In this particular case, \lstinline|ArrayList|\index{java.util!ArrayList} only c
 %------------------------------------------------------------------------------
 
 \subsection{\lstinline|var| with Literals}
-Primitive literals can be used as initialisers for \lstinline|var| declarations. It’s unlikely that using \lstinline|var| in these cases will provide much advantage, as the type names are generally short. However, \lstinline|var| is sometimes useful, for example, to align variable names. And it usually does no harm.
+Primitive literals can be used as initialisers for \lstinline|var| declarations. It’s unlikely that using \lstinline|var| in these cases will provide much advantage, as the type names are generally short. However, \lstinline|var| is sometimes useful, for example, to align variable names. And it usually does no harm either.
 
 But you should take some care when using \lstinline|var| with literals.
 
 There is no issue with \lstinline|boolean|, character, \lstinline|long|, and string literals. The type inferred from these literals is precise, and so the meaning of \lstinline|var| is unambiguous:
 \begin{lstlisting}
-// ORIGINAL
+// Original
 boolean ready = true;
 char ch = '\ufffd';
 long sum = 0L;
@@ -8620,7 +8620,7 @@ var label = "wombat";
 
 Particular care should be taken when the initialiser is a numeric value, especially an integer literal. With an explicit type on the left-hand side, the numeric value may be silently widened or narrowed to types other than int. With \lstinline|var|, the value will be inferred as an \lstinline|int|, which may be unintended.
 \begin{lstlisting}
-// ORIGINAL
+// Original
 byte flags = 0;
 short mask = 0x7fff;
 long base = 17;
@@ -8633,7 +8633,7 @@ var base = 17;
 
 Floating point literals are mostly unambiguous:
 \begin{lstlisting}
-// ORIGINAL
+// Original
 float f = 1.0f;
 double d = 2.0;
 
@@ -8642,10 +8642,9 @@ var f = 1.0f;
 var d = 2.0;
 \end{lstlisting}
 
-Note that \lstinline|float| literals can be widened silently to \lstinline|double|. It is somewhat obtuse to initialise a \lstinline|double| variable using an explicit \lstinline|float| literal such as \verb#3.0f#, however, cases may arise where a \lstinline|double| variable is initialised from a \lstinline|float| field. Caution with \lstinline|var| is advised here\footnote{Indeed, this example violates the guideline from chapter \tqvref{sec:varInitialisers}, because there isn’t enough information in the initialiser for a reader to see the inferred type.}
-:
+Note that \lstinline|float| literals can be widened silently to \lstinline|double|. It is somewhat obtuse to initialise a \lstinline|double| variable using an explicit \lstinline|float| literal such as \verb#3.0f#, however, cases may arise where a \lstinline|double| variable is initialised from a \lstinline|float| field. Caution with \lstinline|var| is advised here\footnote{Indeed, this example violates the guideline from chapter \tqvref{sec:varInitialisers}, because there isn’t enough information in the initialiser for a reader to see the inferred type.}:
 \begin{lstlisting}
-// ORIGINAL
+// Original
 static final float INITIAL = 3.0f;
 ...
 double temp = INITIAL;
@@ -8654,12 +8653,140 @@ double temp = INITIAL;
 var temp = INITIAL;
 \end{lstlisting}
 
+%------------------------------------------------------------------------------
+
+\subsection{Using \lstinline|var| with the ‘Diamond Operator’ or Generic Methods}
+Both \lstinline|var| and the “diamond” feature\footnote{The name ‘diamond’ stems from the appearance of the empty angle brackets, and it is not an operator at all. Nevertheless, it is referred to as the “Diamond operator” in quite a lot sources.} allow you to omit explicit type information when it can be derived from information already present. Can you use both in the same declaration?
+
+Consider the following:
+\index{java.util!PriorityQueue}
+\begin{lstlisting}
+final PriorityQueue<Item> itemQueue = new PriorityQueue<Item>();
+\end{lstlisting}
+
+This can be rewritten using either diamond or \lstinline|var|, without losing type information:
+\index{java.util!PriorityQueue}
+\begin{lstlisting}
+// OK: both declare variables of type PriorityQueue<Item>
+final PriorityQueue<Item> itemQueue = new PriorityQueue<>();
+final var itemQueue = new PriorityQueue<Item>();
+\end{lstlisting}
+
+It is syntactically legal to use both \lstinline|var| \textit{and} diamond, but the inferred type will change:
+\index{java.util!PriorityQueue}\index{java.lang!Object}
+\begin{lstlisting}
+// DANGEROUS: infers as PriorityQueue<Object>
+final var itemQueue = new PriorityQueue<>();
+\end{lstlisting}
+
+For its inference, diamond can use the target type (typically, the left-hand side of a declaration) or the types of constructor arguments. If neither is present, it falls back to the broadest applicable type, which is often \lstinline|java.lang!Object|\index{java.lang.Object}. This is usually not what was intended.
+
+Generic methods have employed type inference so successfully that it’s quite rare for programmers to provide explicit type arguments. Inference for generic methods relies on the target type if there are no actual method arguments that provide sufficient type information. In a \lstinline|var| declaration, there is no target type, so a similar issue can occur as with diamond. For example,
+\index{java.util!List}\index{java.util!List!of()}\index{java.lang!Object}
+\begin{lstlisting}
+// DANGEROUS: infers as List<Object>
+final var list = List.of();
+\end{lstlisting}
+
+With both diamond and generic methods, additional type information can be provided by actual arguments to the constructor or method, allowing the intended type to be inferred. Thus like below:\footnote{But notice that the instances are slighthly different: the \lstinline|PriorityQueue| is now using an explicit comparator, and the \lstinline|List| is not empty~…}
+\index{java.util!PriorityQueue}\index{java.util!List}\index{java.util!List!of()}\index{java.lang!Object}\index{java.util!Comparator}
+\begin{lstlisting}
+// OK: itemQueue infers as PriorityQueue<String>
+final Comparator<String> comp = ... ;
+final var itemQueue = new PriorityQueue<>( comp );
+
+// OK: infers as List<BigInteger>
+final var list = List.of( BigInteger.ZERO );
+\end{lstlisting}
+
+If you decide to use \lstinline|var| with diamond or a generic method, you should ensure that method or constructor arguments provide enough type information so that the inferred type matches your intent. Otherwise, avoid using both \lstinline|var| with diamond or a generic method in the same declaration.
+
+%------------------------------------------------------------------------------
+
+\subsection{Examples}
+Some examples of where \lstinline|var| can be used to greatest benefit.
+
+\begin{itemize}
+\item{The following code removes at most max matching entries from a \lstinline|Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util!Map}. Wildcarded type bounds are used for improving the flexibility of the method, resulting in considerable verbosity. Unfortunately, this requires the type of the \lstinline|Iterator|\autocite{ORACLE_DOC_ITERATOR_INTERFACE}\index{java.util!Iterator} to be a nested wildcard, making its declaration more verbose. This declaration is so long that the header of the for-loop no longer fits on a single line, making the code even harder to read.
+\index{java.util!Map}\index{java.util!Map!entrySet()}\index{java.util!Map.Entry}\index{java.util!Set!iterator()}\index{java.util!Iterator}\index{java.util!Iterator!remove()}\index{java.lang!Number}
+\begin{lstlisting}
+// Original
+public final void removeMatches( final Map<? extends String,? extends Number> map, final int max ) 
+{
+    for( Iterator<? extends Map.Entry<? extends String,? extends Number>> iterator = map.entrySet().iterator(); iterator.hasNext(); ) 
+    {
+        Map.Entry<? extends String,? extends Number> entry = iterator.next();
+        if( max > 0 && matches( entry ) ) 
+        {
+            iterator.remove();
+            --max;
+        }
+    }
+}   //  removeMatches()
+\end{lstlisting}
+
+Use of \lstinline|var| here removes the noisy type declarations for the local variables. Having explicit types for the \lstinline|Iterator|\index{java.util!Iterator} and \lstinline|Map.Entry|\autocite{ORACLE_DOC_MAP.ENTRY_INTERFACE}\index{java.util!Map.Entry} locals in this kind of loop is largely unnecessary. This also allows the \lstinline|for|-loop control to fit on a single line, further improving readability.
+\index{java.util!Map}\index{java.util!Map!entrySet()}\index{java.util!Map.Entry}\index{java.util!Set!iterator()}\index{java.util!Iterator}\index{java.util!Iterator!remove()}\index{java.lang!Number}
+\begin{lstlisting}
+// GOOD
+public final void removeMatches( final Map<? extends String,? extends Number> map, final int max ) 
+{
+    for( var iterator = map.entrySet().iterator(); iterator.hasNext(); ) 
+    {
+        var entry = iterator.next();
+        if( max > 0 && matches( entry ) ) 
+        {
+            iterator.remove();
+            --max;
+        }
+    }
+}   //  removeMatches()
+\end{lstlisting}}
+
+\item{}#############################
+
+\item{}
+
+\item{}
+
+\item{}
+
+\item{}
+
+\item{}
+
+\item{}
+
+\item{}
+\end{itemize}
+
+
+
+Consider code that reads a single line of text from a socket using the try-with-resources statement. The networking and I/O APIs use an object wrapping idiom. Each intermediate object must be declared as a resource variable so that it will be closed properly if an error occurs while opening a subsequent wrapper. The conventional code for this requires the class name to be repeated on the left and right sides of the variable declaration, resulting in a lot of clutter:
+
+\begin{lstlisting}
+// Original
+try (InputStream is = socket.getInputStream();
+     InputStreamReader isr = new InputStreamReader(is, charsetName);
+     BufferedReader buf = new BufferedReader(isr)) {
+    return buf.readLine();
+}
+\end{lstlisting}
+Using var reduces the noise considerably:
+
+\begin{lstlisting}
+// GOOD
+try (var inputStream = socket.getInputStream();
+     var reader = new InputStreamReader(inputStream, charsetName);
+     var bufReader = new BufferedReader(reader)) {
+    return bufReader.readLine();
+}
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
@@ -8732,107 +8859,10 @@ You might legitimately prefer the first snippet with its single long chain of me
 \subsection{-------------------------------------------- Proceed from here!}
 \item[G5.]{}
 
-\item[G6.]{Take care when using var with diamond or generic methods.
-
-Both var and the “diamond” feature allow you to omit explicit type information when it can be derived from information already present. Can you use both in the same declaration?
-
-Consider the following:
-
-\begin{lstlisting}
-PriorityQueue<Item> itemQueue = new PriorityQueue<Item>();
-\end{lstlisting}
-This can be rewritten using either diamond or var, without losing type information:
-
-\begin{lstlisting}
-// OK: both declare variables of type PriorityQueue<Item>
-PriorityQueue<Item> itemQueue = new PriorityQueue<>();
-var itemQueue = new PriorityQueue<Item>();
-\end{lstlisting}
-
-It is legal to use both var and diamond, but the inferred type will change:
-
-\begin{lstlisting}
-// DANGEROUS: infers as PriorityQueue<Object>
-var itemQueue = new PriorityQueue<>();
-\end{lstlisting}
-
-For its inference, diamond can use the target type (typically, the left-hand side of a declaration) or the types of constructor arguments. If neither is present, it falls back to the broadest applicable type, which is often Object. This is usually not what was intended.
-
-Generic methods have employed type inference so successfully that it’s quite rare for programmers to provide explicit type arguments. Inference for generic methods relies on the target type if there are no actual method arguments that provide sufficient type information. In a var declaration, there is no target type, so a similar issue can occur as with diamond. For example,
-
-\begin{lstlisting}
-// DANGEROUS: infers as List<Object>
-var list = List.of();
-\end{lstlisting}
-
-With both diamond and generic methods, additional type information can be provided by actual arguments to the constructor or method, allowing the intended type to be inferred. Thus,
-
-\begin{lstlisting}
-// OK: itemQueue infers as PriorityQueue<String>
-Comparator<String> comp = ... ;
-var itemQueue = new PriorityQueue<>(comp);
-
-// OK: infers as List<BigInteger>
-var list = List.of(BigInteger.ZERO);
-\end{lstlisting}
-
-If you decide to use var with diamond or a generic method, you should ensure that method or constructor arguments provide enough type information so that the inferred type matches your intent. Otherwise, avoid using both var with diamond or a generic method in the same declaration.}
+\item[G6.]{}
 \item[G7.]{}
 \end{enumerate}
 
-\subsection{Examples}
-This section contains some examples of where var can be used to greatest benefit.
-
-The following code removes at most max matching entries from a Map. Wildcarded type bounds are used for improving the flexibility of the method, resulting in considerable verbosity. Unfortunately, this requires the type of the Iterator to be a nested wildcard, making its declaration more verbose. This declaration is so long that the header of the for-loop no longer fits on a single line, making the code even harder to read.
-
-\begin{lstlisting}
-// ORIGINAL
-void removeMatches(Map<? extends String, ? extends Number> map, int max) {
-    for (Iterator<? extends Map.Entry<? extends String, ? extends Number>> iterator =
-             map.entrySet().iterator(); iterator.hasNext();) {
-        Map.Entry<? extends String, ? extends Number> entry = iterator.next();
-        if (max > 0 && matches(entry)) {
-            iterator.remove();
-            max--;
-        }
-    }
-}
-\end{lstlisting}
-Use of var here removes the noisy type declarations for the local variables. Having explicit types for the Iterator and Map.Entry locals in this kind of loop is largely unnecessary. This also allows the for-loop control to fit on a single line, further improving readability.
-
-\begin{lstlisting}
-// GOOD
-void removeMatches(Map<? extends String, ? extends Number> map, int max) {
-    for (var iterator = map.entrySet().iterator(); iterator.hasNext();) {
-        var entry = iterator.next();
-        if (max > 0 && matches(entry)) {
-            iterator.remove();
-            max--;
-        }
-    }
-}
-\end{lstlisting}
-
-Consider code that reads a single line of text from a socket using the try-with-resources statement. The networking and I/O APIs use an object wrapping idiom. Each intermediate object must be declared as a resource variable so that it will be closed properly if an error occurs while opening a subsequent wrapper. The conventional code for this requires the class name to be repeated on the left and right sides of the variable declaration, resulting in a lot of clutter:
-
-\begin{lstlisting}
-// ORIGINAL
-try (InputStream is = socket.getInputStream();
-     InputStreamReader isr = new InputStreamReader(is, charsetName);
-     BufferedReader buf = new BufferedReader(isr)) {
-    return buf.readLine();
-}
-\end{lstlisting}
-Using var reduces the noise considerably:
-
-\begin{lstlisting}
-// GOOD
-try (var inputStream = socket.getInputStream();
-     var reader = new InputStreamReader(inputStream, charsetName);
-     var bufReader = new BufferedReader(reader)) {
-    return bufReader.readLine();
-}
-\end{lstlisting}
 
 Conclusion
 Using var for declarations can improve code by reducing clutter, thereby letting more important information stand out. On the other hand, applying var indiscriminately can make things worse. Used properly, var can help improve good code, making it shorter and clearer without compromising understandability.
@@ -9851,7 +9881,7 @@ The lambda cannot use the name \lstinline|retValue| for its return value, becaus
 A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
 
 \begin{lstlisting}
-// ORIGINAL
+// Original
 List<String> list = new ArrayList<>();
 If var is used, however, the concrete type is inferred instead of the interface:
 

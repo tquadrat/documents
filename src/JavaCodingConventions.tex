@@ -8405,7 +8405,7 @@ public final void onSuccess( final Consumer<Data> processor )
 %------------------------------------------------------------------------------
 
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
-Java~10 introduced type inference for local variables. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language means it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser:
+Java~10 introduced type inference\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TypeInference} for local variables\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LocalVariableDeclarations,Marks:LocalVariableTypeInference,Urma:LocalVariableTypeInference}. Previously, all local variable declarations required an explicit (manifest) type on the left-hand side. With type inference for local variable, the explicit type can be replaced by the reserved type name \lstinline|var|\footnote{That \lstinline|var| was not introduced as an new \textit{keyword} for the language means it can be still used as name for local variables, fields and methods – although it is definitely discouraged to do so!} for local variable declarations that have initialisers. The type of the variable is inferred from the type of the initialiser:
 \index{java.util!ArrayList}
 \begin{lstlisting}
 final var s = "String";                   // s is java.lang.String
@@ -8725,7 +8725,7 @@ public final void removeMatches( final Map<? extends String,? extends Number> ma
 }   //  removeMatches()
 \end{lstlisting}
 
-Use of \lstinline|var| here removes the noisy type declarations for the local variables. Having explicit types for the \lstinline|Iterator|\index{java.util!Iterator} and \lstinline|Map.Entry|\autocite{ORACLE_DOC_MAP.ENTRY_INTERFACE}\index{java.util!Map.Entry} locals in this kind of loop is largely unnecessary. This also allows the \lstinline|for|-loop control to fit on a single line, further improving readability.
+Use of \lstinline|var| here removes the noisy type declarations for the local variables. Having explicit types for the \lstinline|Iterator|\index{java.util!Iterator} and \lstinline|Map.Entry|\autocite{ORACLE_DOC_MAP.ENTRY_INTERFACE}\index{java.util!Map.Entry} locals in this kind of loop is largely unnecessary. This also allows the \lstinline|for|-loop control to fit on a single line\footnote{Confessed, not with the line length enforced in this document~…}, further improving readability.
 \index{java.util!Map}\index{java.util!Map!entrySet()}\index{java.util!Map.Entry}\index{java.util!Set!iterator()}\index{java.util!Iterator}\index{java.util!Iterator!remove()}\index{java.lang!Number}
 \begin{lstlisting}
 // GOOD
@@ -8743,85 +8743,34 @@ public final void removeMatches( final Map<? extends String,? extends Number> ma
 }   //  removeMatches()
 \end{lstlisting}}
 
-\item{}#############################
-
-\item{}
-
-\item{}
-
-\item{}
-
-\item{}
-
-\item{}
-
-\item{}
-
-\item{}
-\end{itemize}
-
-
-
-Consider code that reads a single line of text from a socket using the try-with-resources statement. The networking and I/O APIs use an object wrapping idiom. Each intermediate object must be declared as a resource variable so that it will be closed properly if an error occurs while opening a subsequent wrapper. The conventional code for this requires the class name to be repeated on the left and right sides of the variable declaration, resulting in a lot of clutter:
-
+\item{Consider code that reads a single line of text from a socket using the \lstinline|try-with-resources| statement. The networking and I/O APIs use an object wrapping idiom. Each intermediate object must be declared as a resource variable so that it will be closed properly if an error occurs while opening a subsequent wrapper. The conventional code for this requires the class name to be repeated on the left and right sides of the variable declaration, resulting in a lot of clutter:
+\index{java.io!InputStream}\index{java.net!Socket!getInputStream()}\index{java.io!InputStreamReader}\index{java.io!BufferedReader}\index{java.io!BufferedReader!readLine()}
 \begin{lstlisting}
 // Original
-try (InputStream is = socket.getInputStream();
-     InputStreamReader isr = new InputStreamReader(is, charsetName);
-     BufferedReader buf = new BufferedReader(isr)) {
-    return buf.readLine();
+try( final InputStream is = socket.getInputStream();
+     final InputStreamReader isr = new InputStreamReader( is, charset );
+     final BufferedReader buf = new BufferedReader( isr ) ) 
+{
+     return buf.readLine();
 }
 \end{lstlisting}
-Using var reduces the noise considerably:
 
+Using \lstinline|var| reduces the noise considerably:
+\index{java.io!InputStream}\index{java.net!Socket!getInputStream()}\index{java.io!InputStreamReader}\index{java.io!BufferedReader}\index{java.io!BufferedReader!readLine()}
 \begin{lstlisting}
 // GOOD
-try (var inputStream = socket.getInputStream();
-     var reader = new InputStreamReader(inputStream, charsetName);
-     var bufReader = new BufferedReader(reader)) {
+try( final var inputStream = socket.getInputStream();
+     final var reader = new InputStreamReader( inputStream, charset );
+     final var bufReader = new BufferedReader( reader ) ) 
+{
     return bufReader.readLine();
 }
-\end{lstlisting}
+\end{lstlisting}}
 
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-\subsection{Guidelines}
-\begin{enumerate}
-\item[G1.]{}
-
-\item[G2.]{}
-
-\item[G3.]{}
-
-\item[G4.]{Use \lstinline|var| to break up chained or nested expressions with local variables.
-
-Consider code that takes a collection of strings and finds the string that occurs most often. This might look like the following:
+\item{Consider code that takes a collection of strings and finds the string that occurs most often. This might look like the following:
 \index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
-return strings.stream()
+final String retValue = strings.stream()
     .collect( groupingBy( s -> s, counting() ) )
     .entrySet()
     .stream()
@@ -8829,8 +8778,8 @@ return strings.stream()
     .map( Map.Entry::getKey );
 \end{lstlisting}
 
-This code is correct, but it is potentially confusing, as it looks like a single stream pipeline. In fact, it’s a short stream, followed by a second stream over the result of the first stream, followed by a mapping of the \lstinline|Optional| result of the second stream. The most readable way to express this code would have been as two or three statements; first group entries into a map, then reduce over that map, then extract the key from the result (if present), as shown below:
-
+This code is correct, but it is potentially confusing, as it looks like a single stream pipeline. In fact, it’s a short stream, followed by a second stream over the result of the first stream, followed by a mapping of the \lstinline|Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}\index{java.util!Optional} result of the second stream. The most readable way to express this code would have been as two or three statements; first group entries into a map, then reduce over that map, then extract the key from the result (if present), as shown below:
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Optional}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 // BETTER READABLE
 final Map<String, Long> freqMap = strings.stream()
@@ -8838,11 +8787,11 @@ final Map<String, Long> freqMap = strings.stream()
 final Optional<Map.Entry<String,Long>> maxEntryOpt = freqMap.entrySet()
     .stream()
     .max( Map.Entry.comparingByValue() );
-return maxEntryOpt.map( Map.Entry::getKey );
+final String retValue = maxEntryOpt.map( Map.Entry::getKey );
 \end{lstlisting}
 
 But you probably resisted doing that because writing the types of the intermediate variables seemed too burdensome, so instead they distorted the control flow. Using \lstinline|var| here allows you to express the code more naturally without paying the high price of explicitly declaring the types of the intermediate variables:
-
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 // EVEN BETTER READABLE
 final var freqMap = strings.stream()
@@ -8851,25 +8800,56 @@ final var maxEntryOpt = freqMap.entrySet()
     .stream()
     .max( Map.Entry.comparingByValue() );
 final var retValue = maxEntryOpt.map( Map.Entry::getKey );
-return retValue;
 \end{lstlisting}
 
 You might legitimately prefer the first snippet with its single long chain of method calls. However, in some cases it is better to break up long method chains. Using \lstinline|var| for these cases is a viable approach, whereas using full declarations of the intermediate variables as in the second snippet makes it an unpalatable alternative. As with many other situations, the correct use of \lstinline|var| might involve both taking something out (explicit types) and adding something back (better variable names, better structuring of code).}
+\end{itemize}
 
-\subsection{-------------------------------------------- Proceed from here!}
-\item[G5.]{}
+%------------------------------------------------------------------------------
 
-\item[G6.]{}
-\item[G7.]{}
+\subsection{Conclusion}
+Using \lstinline|var| for declarations can improve code by reducing clutter, thereby letting more important information stand out. On the other hand, applying \lstinline|var| indiscriminately can make things worse. Used properly, \lstinline|var| can help improve good code, making it shorter and clearer without compromising understandability.
+
+%------------------------------------------------------------------------------
+
+\section{Access to Properties}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Encapsulation is an important design principle for classes.
+
+It means that the internal state of an object can be manipulated only in a well defined manner, through the declared \lstinline|public| methods.}
 \end{enumerate}
 
+When the object state may be changed only through public method, this means it may not be possible to modify the attributes directly, by a direct assignment.
 
-Conclusion
-Using var for declarations can improve code by reducing clutter, thereby letting more important information stand out. On the other hand, applying var indiscriminately can make things worse. Used properly, var can help improve good code, making it shorter and clearer without compromising understandability.
+To achieve that all non-\lstinline|final| mutable instance or class variables – also known as properties, attributes or fields – have to be \lstinline|private|.
+
+If it is necessary to set or retrieve an instance variable (a property) directly, you have to provide the appropriate methods for this (setter and/or getter, or mutator and/or accessor methods). But often attributes are set or retrieved as a side effect of method calls that modify the internal state of the object instance, or rely on it.
+
+Programmers are sometimes inclined to use \lstinline|public| fields when they need a data structure like a \lstinline|struct|\index{struct} in C/C++\index{C}\index{C++}, and not a full-fledged class. But as Java does not know that \lstinline|struct|\index{struct} data structure, it seems to be a quick solution to have a \lstinline|class| with only \lstinline|public| fields and no methods, just to spare typing effort\footnote{And sometimes also with the idea, that the direct access to the \lstinline|public| field is much faster than accessing it through a method. But modern optimising compilers will inline the code of a simple getter method, so that there is no difference in the end.}.
+
+And if you want to avoid the typing, use a \lstinline|record|\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses} instead. Sometimes also an instance of \lstinline|java.util.Map|\index{java.util!Map} or another collection implementation could be an alternative to a specialised class.
+ 
+Sometimes fields from base classes are defined as \lstinline|protected|, to make them directly accessible by methods from the derived implementations, but this is also discouraged.\footnote{The idea behind that is the same false assumption that the direct access to the \lstinline|protected| field is much faster than accessing it through a method.}
+
+It does not matter if we talk about properties (instance variables) or \lstinline|static| fields (class variables): both should always be \lstinline|private|.
+
+Constants are the only exception, obviously, because a constant is explicitly defined as a \lstinline|public static final| field.
+
+To read more about encapsulation in general, refer to chapter \tqvref{sec:EncapsulationWithModules}.
 
 %------------------------------------------------------------------------------
 
 \section{Value Types}\label{sec:ValueTypes}
+Basically, we distinguish two types of ‘Value Types’: first there are the ‘Domain Value Types’, and then we have ‘Dimensioned Values’.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -8972,25 +8952,6 @@ Using var for declarations can improve code by reducing clutter, thereby letting
 
 
 
-
-\section{Access to Properties}
-Encapsulation is an important design principle for classes. This means that the internal state of an object can be manipulated only in a well defined manner, through the methods. Consequently, it may not be possible to modify the attributes  directly, by a direct assignment.
-
-To achieve that, instance or class variables – also known as properties, attributes or fields – have to be \lstinline|private|.
-
-If it is necessary to set or retrieve an instance variable (a property) directly, it mandatory to provide the appropriate methods for this (setter and/or getter, or mutator and/or accessor methods). But often attributes are set or retrieved as a side effect of method calls that modify the internal state of the object instance, or rely on it.
-
-Programmers are inclined to use \lstinline|public| fields when the need a data structure like a \lstinline|struct| in C/C++, and not a full-fledged class. But as Java does not now that data structure, it seems to be a quick solution to have a \lstinline|class| with only \lstinline|public| fields and no methods, just to spare typing effort, and sometimes with the idea, that the direct access to the \lstinline|public| field is much faster that accessing it through a method. But modern optimising compilers will inline the code of a simple getter method, so that there is no difference in the end.
-
-And if you want to avoid the typing, use a \lstinline|record|\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses} instead. Sometimes also an instance of \lstinline|java.util.Map| or another collection implementation could be an alternative to a specialised class.
- 
-Sometimes fields from base classes are defined as \lstinline|protected|, to make them directly accessible by methods from the derived implementations, but this is also discouraged.\footnote{The idea behind that is the same false assumption that the direct access to the \lstinline|protected| field is much faster that accessing it through a method.}
-
-It does not matter if we talk about properties (instance variables) or \lstinline|static| field (class variables): both should always be \lstinline|private|.
-
-Constants are the only exception, obviously, because a constant is explicitly defined as a \lstinline|public static final| field.
-
-Regarding encapsulation in general, refer to chapter \tqvref{sec:EncapsulationWithModules}.
 
 \section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
 First of all, you should avoid to use Reflection whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}

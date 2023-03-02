@@ -8846,10 +8846,40 @@ Basically, we distinguish two types of ‘Value Types’: first there are the �
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
+\item{Value types are immutable.
+
+Once created, a value type instance cannot be modified, like a number.}
+
+\item{A value type instance has to be validated on creation.
+
+Once instantiated, the value type instance remains valid.}
+
 \item{three}
 \end{enumerate}
+
+Assume the following specification: “A person is identified by an alpha-numeric id with seven places; the first place has to be a letter, all other places can be letters and digits; only capital letters are allowed, but not ‘I’, ‘J’, ‘O’ and ‘Q’."
+
+Next, you have to provide the definition for the class \lstinline|Person| that holds the id, the last name, the first name and a list of contacts, represented by the ids of those persons.
+
+The constructor for that class may look like this:
+\index{org.tquadrat.foundation.lang!Objects!requireValidArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.util!StringUtils!format()}\index{java.util!Collection!add()}
+\begin{lstlisting}
+public Person( final String id, final String lastName, final String firstName, final String... contactIds )
+{
+    m_Id = requireValidArgument( id, "id", this::validatePersonId );
+    m_LastName = requireNotBlankArgument( lastName, "lastName" );
+    m_FirstName = requireNotBlankArgument( firstName, "firstName" );
+    var counter = 0;
+    for( final var contactId : requiredNonNullArgument( contactIds, "contactIds" ) )
+    {
+        m_ContactIds.add( requiredValidArgument( contactId, format( "contactIds [%d]", counter++ ), this::validatePersonId ) );
+    }
+}   //  Person()
+\end{lstlisting}
+
+When you call that constructor, there is a lot of strings on the arguments list, and when you miss a name, suddenly the new person got the person id of a contact as its first name. This problem was already discussed in the chapters \tqfullvref{sec:SwapToCompilerErrors}, \tqfullref{sec:MultipleSameTypeArgs} and \tqfullvref{sec:GenericParameterTypes}, and using value types were suggested as a solution.
+
+Another issue is that you have to validate the provided person ids before storing them. Most probably this happened already elsewhere, perhaps already several times, but the constructor is public and you have to do it again.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 

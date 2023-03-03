@@ -1175,7 +1175,7 @@ public enum MyEnum
 \LTXtable{\linewidth}{EnumParts.tbl}
 
 \subsubsection{Record}
-\index{record}Records had been introduced to Java with version~14\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses}. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carrier” classes that contain data not meant to be altered and usually it has only the most fundamental methods, such as constructors and accessors.
+\index{record}Records had been introduced to Java with version~14 and were finalised with version~16\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords}. Like an enum, a record is a restricted form of a Java class. It’s ideal for “plain data carrier” classes that contain data not meant to be altered and usually it has only the most fundamental methods, such as constructors and accessors.
 
 A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
@@ -2610,7 +2610,7 @@ For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}. The
 %------------------------------------------------------------------------------
 
 \section{Classes}\label{sec:Classes}
-In Java, classes, interfaces, enums, records and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|)\footnote{refer to chapter \tqvref{sec:CaseOfNames}}. Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
+In Java, classes, interfaces, enums, records\index{record} and annotations are all “classes”, and the names for a class will be written in mixed case (also known as “camel case”) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|)\footnote{refer to chapter \tqvref{sec:CaseOfNames}}. Try to keep your class names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL or HTML.
 
 According to the Java syntax specification, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)!\footnote{Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner classes and anynomous classes, as well as for the classes that will be generared for lambdas.}
 
@@ -2619,7 +2619,7 @@ You should also avoid numerical characters in class names.
 %------------------------------------------------------------------------------
 
 \subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
-The term ‘real’ class means that this Java class is declared with the keyword \lstinline|class|. Records and enum classes are also Java classes, to some extent even interfaces and annotations, but you use a different keyword when you declare them.
+The term ‘real’ class means that this Java class is declared with the keyword \lstinline|class|. Records\index{record} and enum classes are also Java classes, to some extent even interfaces and annotations, but you use a different keyword when you declare them.
 
 Some parts of a class name will indicate a special position of that class in the class hierarchy: the suffix ‘\verb#Impl#’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface or an \lstinline|abstract| class named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|.}.
 
@@ -2652,9 +2652,9 @@ For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
 %------------------------------------------------------------------------------
 
 \subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
-Basically, a record class is like a ‘real’ Java class, and should be named in the same ways. So it can implement an interface, like a regular class, meaning that the suffix ‘\verb#Impl#’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘\verb#Base#’ is not permitted, as well as any other suffix indicating a class that should or can be extended.
+Basically, a record\index{record} class is like a ‘real’ Java class, and should be named in the same ways. So it can implement an interface, like a regular class, meaning that the suffix ‘\verb#Impl#’ would be valid in such case. But as record classes are implicitly \lstinline|final|, ‘\verb#Base#’ is not permitted, as well as any other suffix indicating a class that should or can be extended.
 
-Also a record class should not be named ‘\verb#Record#’.
+Also a record\index{record} class should not be named ‘\verb#Record#’.
 
 %------------------------------------------------------------------------------
 
@@ -3232,7 +3232,7 @@ Eclipse can be configured in a way that it will issue warnings or even errors fo
 
 To achieve the same for IntelliJ IDEA, you go to \verb#File|Settings#, and there you select \verb#Editor|Inspections>Java>Javadoc#.
 
-Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
+Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records}\index{record} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
 
 \begin{lstlisting}
 /**
@@ -3422,7 +3422,7 @@ The package comment for the main package of a project can replace the overview c
 %------------------------------------------------------------------------------
 
 \subsubsection{The ‘class’ Comment}\label{sec:ClassComment}
-The documentation comment for a class, an interface, an enum, a record or an annotation (the ‘class comment’) describes that class, its purpose and its usage. If the class is not \lstinline|final|, the comment should provide some hints what the mount points\footnote{Another term for “mount point” is “extension point”, but I do not like this expression as we do not always “extend” a class on these points. Most often we replace existing behaviour to customise the class to our needs.} are and how to utilise them.
+The documentation comment for a class, an interface, an enum, a record\index{record} or an annotation (the ‘class comment’) describes that class, its purpose and its usage. If the class is not \lstinline|final|, the comment should provide some hints what the mount points\footnote{Another term for “mount point” is “extension point”, but I do not like this expression as we do not always “extend” a class on these points. Most often we replace existing behaviour to customise the class to our needs.} are and how to utilise them.
 
 Then the class comment should list the authors of the class, using the \nameref{sec:TagAuthor}\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})} tag, the class version (using the \nameref{sec:TagVersion} tag), and when the class was added to the project with the \nameref{sec:TagSince} tag, although this can be omitted if this information is already given within the package.
 
@@ -3484,9 +3484,9 @@ The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{s
 %------------------------------------------------------------------------------
 
 \subsubsection{The ‘record’ Comment}\label{sec:RecordComment}
-The class comment for a \lstinline|record| is a bit special as it has to incorporate the documentation for the fields of the record as well as for the arguments for the constructor (as both are the same).
+The class comment for a record\index{record} is a bit special as it has to incorporate the documentation for the fields of the record as well as for the arguments for the constructor (as both are the same).
 
-The declaration for a \lstinline|record| may look like this:
+The declaration for a record may look like this:
 \begin{lstlisting}[numbers=left,caption={A tupel class}]
 /**
  *  <p>{@summary A tupel.} The first entry, usually referred to as 
@@ -8363,10 +8363,10 @@ public record Status( ResultCode resultCode, Optional<Data> data )
         this( resultCode, Optional.ofNullable( data ) );
     }   //  Status()
 
-    public Status( final ResultCode resultCode, final Optional<Data> data )
+    public Status
     {
-        this.resultCode = requireNonNullArgument( resultCode, "resultCode" );
-        this.data = requireNonNullArgument( data, "data" );
+        requireNonNullArgument( resultCode, "resultCode" );
+        requireNonNullArgument( data, "data" );
     }   //  Status()
 }
 //  record Status
@@ -8829,7 +8829,7 @@ If it is necessary to set or retrieve an instance variable (a property) directly
 
 Programmers are sometimes inclined to use \lstinline|public| fields when they need a data structure like a \lstinline|struct|\index{struct} in C/C++\index{C}\index{C++}, and not a full-fledged class. But as Java does not know that \lstinline|struct|\index{struct} data structure, it seems to be a quick solution to have a \lstinline|class| with only \lstinline|public| fields and no methods, just to spare typing effort\footnote{And sometimes also with the idea, that the direct access to the \lstinline|public| field is much faster than accessing it through a method. But modern optimising compilers will inline the code of a simple getter method, so that there is no difference in the end.}.
 
-And if you want to avoid the typing, use a \lstinline|record|\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses} instead. Sometimes also an instance of \lstinline|java.util.Map|\index{java.util!Map} or another collection implementation could be an alternative to a specialised class.
+And if you want to avoid the typing, use a record\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords} \index{record} instead. Sometimes also an instance of \lstinline|java.util.Map|\index{java.util!Map} or another collection implementation could be an alternative to a specialised class.
  
 Sometimes fields from base classes are defined as \lstinline|protected|, to make them directly accessible by methods from the derived implementations, but this is also discouraged.\footnote{The idea behind that is the same false assumption that the direct access to the \lstinline|protected| field is much faster than accessing it through a method.}
 
@@ -8853,8 +8853,6 @@ Once created, a value type instance cannot be modified, like a number.}
 \item{A value type instance has to be validated on creation.
 
 Once instantiated, the value type instance remains valid.}
-
-\item{three}
 \end{enumerate}
 
 Assume the following specification: “A person is identified by an alpha-numeric id with seven places; the first place has to be a letter, all other places can be letters and digits; only capital letters are allowed, but not ‘I’, ‘J’, ‘O’ and ‘Q’."
@@ -8877,9 +8875,237 @@ public Person( final String id, final String lastName, final String firstName, f
 }   //  Person()
 \end{lstlisting}
 
-When you call that constructor, there is a lot of strings on the arguments list, and when you miss a name, suddenly the new person got the person id of a contact as its first name. This problem was already discussed in the chapters \tqfullvref{sec:SwapToCompilerErrors}, \tqfullref{sec:MultipleSameTypeArgs} and \tqfullvref{sec:GenericParameterTypes}, and using value types were suggested as a solution.
+When you call that constructor, there are a lot of strings on the arguments list, and when you miss a name, suddenly the new person got the person id of a contact as its first name. This problem was already discussed in the chapters \tqfullvref{sec:SwapToCompilerErrors}, \tqfullref{sec:MultipleSameTypeArgs} and \tqfullvref{sec:GenericParameterTypes}, and using value types were suggested as a solution.
 
-Another issue is that you have to validate the provided person ids before storing them. Most probably this happened already elsewhere, perhaps already several times, but the constructor is public and you have to do it again.
+Another issue is that you have to validate the provided person ids before storing them. Most probably this happened already elsewhere, perhaps already several times, but the constructor is public and you have to do it here again. Of course you can provide (and you should do!) the validation method through a utility class\index{utility class}, but it still costs time and CPU cycles.
+
+Using a value type – in this case, a ‘domain value type’ as it is defined for a specific problem domain – could solve this:
+\index{java.lang!Comparable}\index{java.lang!Comparable!compareTo()}\index{java.lang!String!compareTo()}\index{org.tquadrat.foundation.lang!Objects!requireValidArgument}\index{java.lang!Object!toString()}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang!Object!toString()}
+\begin{lstlisting}[numbers=left,caption={Value Type ‘PersonId’}]
+public record PersonId( String id ) implements Cloneable, Comparable<PersonId>
+{
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    public PersonId { requireValidArgument( id, "id", this::validate ); }
+    
+        /*---------*\    
+    ====** Methods **================================================
+        \*---------*/
+    @Override
+    public final PersonId clone()
+    {
+        final PersonId retValue;
+        try
+        {
+            retValue = (PersonId) super.clone();                                
+        }
+        catch( final CloneNotSupportedException e )
+        {
+            throw new UnexpectedExceptionError( e );
+        }
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  clone()
+        
+    @Override
+    public final int compareTo( final PersonId o )
+    {
+        return id.compareTo( o.id );
+    }   //  compareTo()
+    
+    @Override
+    public final String toString() { return id; }
+        
+    private final boolean validate( final String id )
+    {
+        …
+    }   //  validate()
+}
+//  record PersonId
+\end{lstlisting}
+
+Implementing the \lstinline|PersonId| as a \lstinline|record| has some advantages\autocite{Eckel:JavaRecords}: it provides working implementations for the methods \lstinline|equals()|\autocite{ORACLE_DOC_OBJECT:equals}\index{java.lang!Object!equals()} and \lstinline|hashCode()|\autocite{ORACLE_DOC_OBJECT:hashCode}\index{java.lang!Object!hashCode()} from \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}\index{java.lang!Object} as well as an accessor method for the raw string representing the id. You need to implement only the methods \lstinline|clone()|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()}, \lstinline|toString()|\autocite{ORACLE_DOC_OBJECT:toString}\index{java.lang!Object!toString()}\footnote{A record provides also an implementation of \lstinline|toString()| but that is not feasible for our purpose here.} and \lstinline|compareTo()|\autocite{ORACLE_DOC_COMPARABALE:compareTo}\index{java.lang!Comparable!compareTo()}\footnote{from the interface \lstinline|java.lang.Comparable|\autocite{ORACLE_DOC_COMPARABALE_INTERFACE}\index{java.lang!Comparable}} – the latter allows to sort instances of \lstinline|PersonId| according to their natural order.
+
+With this new type, we can declare the constructor \lstinline|Person| like this:
+\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!Collection!add()}\index{java.util!Arrays!stream()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!forEach()}\index{org.tquadrat.foundation.lang!Objects!nonNull()}
+\begin{lstlisting}
+public Person( final PersonId id, final String lastName, final String firstName, final PersonId... contactIds )
+{
+    m_Id = requireNonNullArgument( id, "id" );
+    m_LastName = requireNotBlankArgument( lastName, "lastName" );
+    m_FirstName = requireNotBlankArgument( firstName, "firstName" );
+    stream( requireNonNullArgument( contactIds, "contactIds" ) )
+        .filter( Objects::nonNull )
+        .forEach( m_ContactIds::add );
+}   //  Person()
+\end{lstlisting}
+
+Most domain value types follow the same a pattern as \lstinline|PersonId| here: they are  not much more than a wrapper around a simple value; is not always a \lstinline|String|, you can also wrap a \lstinline|UUID|\autocite{ORACLE_DOC_UUID_CLASS}\index{java.util!UUID} or a numerical value.
+
+A ‘dimensioned value’ is similar to a domain value type, but the purpose is slightly different. Consider the following class:
+\index{org.tquadrat.foundation.lang!Objects!requireValidDoubleArgument()}\index{java.util!Arrays!sort()}
+\begin{lstlisting}
+public final class CardboardBox
+{
+    final double m_Height;
+    final double m_Length;
+    final double m_Width;
+    
+    public CardboardBox( final double height, final double length, final double width )
+    {
+        final var values = new double [] 
+        { 
+            requireValidDoubleArgument( height, "height", h -> h > 0.0 ),
+            requireValidDoubleArgument( length, "length", l -> l > 0.0 ),
+            requireValidDoubleArgument( width, "width", w -> w > 0.0 )
+        }
+        sort( values );
+        m_Height = values [2];
+        m_Length = values [0];
+        m_Width = values [1];
+    }   //  CardboardBox()
+}
+//  class CardboardBox
+\end{lstlisting}
+
+Again, the signature of the constructor contains multiple formal parameters of the same type, but we solved the problem here by rearranging them in the body of the constructor.
+
+The real issue with this constructor is different: from the code, we cannot see how large a cardboard box is~… The instance that you create with
+\begin{lstlisting}
+final var box = new CardboardBox( 1.0, 2.5, 4.0 );
+\end{lstlisting}
+can be as tiny as a matchbox or big enough for an aircraft carrier – because we do not know the dimensions for the given arguments. Of course, they could be written to the specification, perhaps you have added this information to the documentation comment for the class, or even to that for the constructor, but it is still error prone.
+
+A solution may look like this:
+\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.lang!Objects!requireValidDoubleArgument()}\index{org.tquadrat.foundation.util!StringUtils!format()}\index{java.lang!Comparable}\index{java.lang!Comparable!compareTo()}\index{java.lang!Double!compare()}\index{java.lang!Object!toString()}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang!Object!toString()}
+\begin{lstlisting}[numbers=left,caption={Dimensioned Value Length}]
+public record Length( Dimension dimension, double value ) implements Cloneable, Comparable<Length>
+{
+        /*---------------*\
+    ====** Inner Classes **==========================================
+        \*---------------*/
+    public enum Dimension
+    {
+            /*------------------*\
+        ====** Enum Declaration **===================================
+            \*------------------*/
+        MILLIMETER(     1.0, "mm" ),
+        CENTIMETER(    10.0, "cm" ),
+        METER     ( 1_000.0, "m" );
+
+            /*------------*\
+        ====** Attributes **=========================================
+            \*------------*/
+        private final double m_Factor;
+        private final String m_Unit;
+
+            /*--------------*\
+        ====** Constructors **=======================================
+            \*--------------*/
+        private Dimension( final double factor, final String unit )
+        {
+            m_Factor = factor;
+            m_Unit = unit;
+        }   //  Dimension()
+
+            /*---------*\
+        ====** Methods **============================================
+            \*---------*/
+        public final double factor() { return m_Factor; }
+        public final String unit() { return m_Unit; }
+    }
+    //  enum Dimension
+
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    public Length
+    {
+        requireNonNullArgument( dimension, "dimension" );
+        value = requireValidDoubleArgument( value, "value", v -> v > 0.0 ) * dimension.factor();
+    }   //  Length()
+
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    @Override
+    public final Length clone()
+    {
+        final Length retValue;
+        try
+        {
+            retValue = (Length) super.clone();
+        }
+        catch( final CloneNotSupportedException e )
+        {
+            throw new UnexpectedExceptionError( e );
+        }
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  clone
+    
+    @Override
+    public final int compareTo( final Length o ) { return Double.compare( value, o.value ); }
+    
+    /**
+     *  Factory method for your convenience …
+     */
+    public static final length( final double value, final Dimension dimension )
+    {
+        return new Length( value, dimension );
+    }   //  length()
+    
+    @Override
+    public final String toString() { return format( "%2$f %1$s", dimension.unit(), value( dimension() ) ); }
+    
+    public final double value( final Dimension otherDimension ) 
+    { 
+        final var retValue = value / requireNonNullArgument( otherDimension, "otherDimension" ).factor(); 
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  value()
+}
+//  record Length
+\end{lstlisting}
+
+Now \lstinline|CardboardBox| would look like this:
+\index{org.tquadrat.foundation.lang!Objects!requireValidDoubleArgument()}\index{java.util!Arrays!sort()}
+\begin{lstlisting}
+public final class CardboardBox
+{
+    final Length m_Height;
+    final Length m_Length;
+    final Length m_Width;
+    
+    public CardboardBox( final Length height, final Length length, final Length width )
+    {
+        final var values = new Length [] 
+        { 
+            requireNonNullArgument( height, "height" ),
+            requireNonNullArgument( length, "length" ),
+            requireNonNullArgument( width, "width" )
+        }
+        sort( values );
+        m_Height = values [2];
+        m_Length = values [0];
+        m_Width = values [1];
+    }   //  CardboardBox()
+}
+//  class CardboardBox
+\end{lstlisting}
+
+and we can write for a new instance:
+\begin{lstlisting}
+final var box = new CardboardBox( length( 1.0, MILLIMETER ), length( 2.5, MILLIMETER ), length( 4.0, MILLIMETER ) );
+\end{lstlisting}
+
+Obviously, the resulting box is even smaller than a regular matchbox~…
+
+Another advantage is that you have to change your code only at one single location if you have to support also inch and foot as valid units: you just add the appropriate enum values to \lstinline|Length.Dimension|.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 

@@ -4592,7 +4592,7 @@ catch( final NumberFormatException e )
 \end{lstlisting}
 All this might be intended, but at a first glance it looks like a mistake. This mean that a comment is mandatory each time an exception is swallowed, no matter if silently or not, meaning the exception is logged somewhere. If the program is continued after an exception was caught, write a comment (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
 
-Also when you catch \lstinline|java.lang.Error| or a child class of it, or \lstinline|java.lang.Throwable|, you should provide a comment why you are doing that (and why you think it is allowed in your special case~…).
+Also when you catch \lstinline|java.lang.Error| or a child class of it, or \lstinline|java.lang.Throwable|\index{java.lang!Throwable}, you should provide a comment why you are doing that (and why you think it is allowed in your special case~…).
 
 %------------------------------------------------------------------------------
 
@@ -4971,7 +4971,7 @@ public final void run()
 }   // run()
 \end{lstlisting}
 
-You should absolutely avoid to catch \lstinline|java.lang.Error| and all of its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
+You should absolutely avoid to catch \lstinline|java.lang.Error| and all of its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|\index{java.lang!Throwable}!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
 
 Provide a \lstinline|catch| block for each and every exception that you want to handle:
 \begin{lstlisting}
@@ -5399,7 +5399,7 @@ Whether it makes sense for a tool depends on the kind of the tool.}
 \item{Same for the use of external signalling devices.}
 \end{itemize}
 
-In most cases, it is not sufficient to provide the user with the caught exception only – meaning just calling \lstinline|java.lang.Throwable::printStackTrace| is not enough. In fact, for most users, this is even too much information. Also providing the call stack for an operation in an \textit{error message} is sometimes considered as a security loophole, because it may give a potential attacker information about code internals that they can use to shape their attack against your system.
+In most cases, it is not sufficient to provide the user with the caught exception only – meaning just calling \lstinline|java.lang.Throwable::printStackTrace|\index{java.lang!Throwable!printStackTrace()} is not enough. In fact, for most users, this is even too much information. Also providing the call stack for an operation in an \textit{error message} is sometimes considered as a security loophole, because it may give a potential attacker information about code internals that they can use to shape their attack against your system.
 
 You should also consider to localise the error message to the locale of the user; that is mainly translating it to the user's language, but not only. You should always add the time zone to timestamps, or at least the offset to UTC, even when you adjust them to the user's time zone.
 
@@ -6610,7 +6610,7 @@ final var resourceStream = requireNonNull( getClass().getResourceAsStream( confi
 
 \item{\lstinline|requireValidArgument()|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS:requireValidArgument}\index{org.tquadrat.foundation.lang!Objects!requireValidArgument()} Applies a given validation on the given value, and if that validation fails, a \lstinline|ValidationException|\index{org.tquadrat.foundation.exception!ValidationException} with a specified message is thrown.
 \index{org.tquadrat.foundation.lang!Objects!requireValidArgument()}\index{org.tquadrat.foundation.lang!Objects!requireNotBlankArgument()}\index{java.lang!String!toLowerCase()}\index{java.lang!String!toUpperCase()}
-\index{java.util!Locale!ROOT()}
+\index{java.util!Locale!ROOT}
 \begin{lstlisting}
 private final boolean checkPassword( final String password )
 {
@@ -8233,7 +8233,7 @@ public final List<String> getAttribute()
 
 Next it is important to know, that \lstinline|Set::copyOf|\index{java.util!Set!copyOf()} returns an implementation of \lstinline|Set|\index{java.util!Set} that resembles a \lstinline|java.util.HashSet|\autocite{ORACLE_DOC_HASHSET_CLASS}\index{java.util!HashSet}, and for \lstinline|Map::copyOf|\index{java.util!Map!copyOf()} the return value is resembling a \lstinline|java.util!HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util!HashMap} – this means that any sort order gets lost for the copy.
 
-\paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|\index{java.util.List!copyOf()}. Drawback is that the returned value changes when the attribute itself is modified somehow.
+\paragraph{Line~10} wraps \lstinline|m_Attribute| into an unmodifiable instance of \lstinline|List|\index{java.util!List!copyOf()}. Drawback is that the returned value changes when the attribute itself is modified somehow.
 
 The utility class \lstinline|java.util.Collections|\index{java.util!Collections}\autocite{ORACLE_DOC_COLLECTIONS_CLASS} provides not only the shown method \lstinline|unmodifiableList()|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableList}\index{java.util!Collections!unmodifiableList()} but also corresponding methods for \lstinline|Collection|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableCollection}\index{java.util!Collections!unmodifiableCollection()}, \lstinline|Set|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableSet}\index{java.util!Collections!unmodifiableSet()} and \lstinline|Map|\autocite{ORACLE_DOC_COLLECTIONS:unmodifiableMap}\index{java.util!Collections!unmodifiableMap()}. 
 
@@ -8330,9 +8330,9 @@ final Optional<Value> value = map.get( key );
 value.ifPresent( this::process );
 \end{lstlisting}
 
-The classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}\index{java.util.OptionalInt}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS}\index{java.util.OptionalLong} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS}\index{java.util.OptionalDouble} can help you to avoid “magic numbers”\index{magic number} as return values, indicating special results.
+The classes \lstinline|java.util.OptionalInt|\autocite{ORACLE_DOC_OPTIONALINT_CLASS}\index{java.util!OptionalInt}, \lstinline|java.util.OptionalLong|\autocite{ORACLE_DOC_OPTIONALLONG_CLASS}\index{java.util!OptionalLong} and \lstinline|java.util.OptionalDouble|\autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS}\index{java.util!OptionalDouble} can help you to avoid “magic numbers”\index{magic number} as return values, indicating special results.
 
-In cases were \lstinline|null| seemed the proper response, choose \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}\index{java.util.Optional} instead.
+In cases were \lstinline|null| seemed the proper response, choose \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}\index{java.util!Optional} instead.
 
 So you can implement the methods in your code they \textit{never} return \lstinline|null| nor a magic number\index{magic number} of some kind. Nevertheless, when you are implementing a (3\textsuperscript{rd} party) interface that requests a return value of \lstinline|null| or another special value under some conditions, you have to obey that requirements.
 
@@ -8553,7 +8553,7 @@ final var outputStream = new ByteArrayOutputStream();
 \end{lstlisting}
 
 It is also reasonable to use \lstinline|var| in cases where the initialiser is a method call, such as a \lstinline|static| factory method, instead of a constructor, and when its name contains enough type information:
-\index{java.io!BufferedReader}\index{java.nio.files!Files!newBufferedReader()}\index{java.util!List}\index{java.util!List!of()}
+\index{java.io!BufferedReader}\index{java.nio.file!Files!newBufferedReader()}\index{java.util!List}\index{java.util!List!of()}
 \begin{lstlisting}
 // ACCEPTABLE
 final BufferedReader reader = Files.newBufferedReader( … );
@@ -8679,7 +8679,7 @@ It is syntactically legal to use both \lstinline|var| \textit{and} diamond, but 
 final var itemQueue = new PriorityQueue<>();
 \end{lstlisting}
 
-For its inference, diamond can use the target type (typically, the left-hand side of a declaration) or the types of constructor arguments. If neither is present, it falls back to the broadest applicable type, which is often \lstinline|java.lang!Object|\index{java.lang.Object}. This is usually not what was intended.
+For its inference, diamond can use the target type (typically, the left-hand side of a declaration) or the types of constructor arguments. If neither is present, it falls back to the broadest applicable type, which is often \lstinline|java.lang.Object|\index{java.lang!Object}. This is usually not what was intended.
 
 Generic methods have employed type inference so successfully that it’s quite rare for programmers to provide explicit type arguments. Inference for generic methods relies on the target type if there are no actual method arguments that provide sufficient type information. In a \lstinline|var| declaration, there is no target type, so a similar issue can occur as with diamond. For example,
 \index{java.util!List}\index{java.util!List!of()}\index{java.lang!Object}
@@ -8768,7 +8768,7 @@ try( final var inputStream = socket.getInputStream();
 \end{lstlisting}}
 
 \item{Consider code that takes a collection of strings and finds the string that occurs most often. This might look like the following:
-\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util!Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 final String retValue = strings.stream()
     .collect( groupingBy( s -> s, counting() ) )
@@ -9175,7 +9175,7 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 The test class:
-\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect.Method!setAccessible()}\index{java.lang.reflect.Method!invode()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!requiredNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang.Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
+\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invode()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!requiredNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
 \begin{lstlisting}[numbers=left]
 /**
  *  This class provides some unit tests for
@@ -9255,7 +9255,9 @@ This allows you to call the method \lstinline|MyClass::myMethod| nearly directly
 
 \lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
 
-\section{Implementing the \lstinline|Object| Methods}\label{sec:ImplementObjectMethods}
+%------------------------------------------------------------------------------
+
+\section{Implementing the Methods from ‘java.lang.Object’}\label{sec:ImplementObjectMethods}
 In Java, all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}\index{java.lang!Object}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
 \begin{itemize}[nosep]
 \item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()}}
@@ -9268,6 +9270,8 @@ In Java, all \textit{classes} are somehow extending the class \lstinline|java.la
 \end{itemize}
 
 The chapters below will provide some guidelines on how to code new implementations for these methods.
+
+%------------------------------------------------------------------------------
 
 \subsection{\lstinline|equals()| and \lstinline|hashCode()|}\label{sec:EqualsAndHashCode}
 Overriding the method \lstinline|java.lang.Object::equals|\autocite{ORACLE_DOC_OBJECT:equals}\index{java.lang!Object!equals()} always requires to override the method \lstinline|java.lang.Object::hashCode|\autocite{ORACLE_DOC_OBJECT:hashCode}\index{java.lang!Object!hashCode()}, too – and vice versa.
@@ -9344,6 +9348,8 @@ Obviously, \lstinline|OtherClass.hashCode()|\index{java.lang!Object!hashCode()} 
 
 This does not work that well with \lstinline|equals()|\index{java.lang!Object!equals()}.
 
+%------------------------------------------------------------------------------
+
 \subsection{\lstinline|toString()|}\label{sec:ToString}
 According to \autocite{ORACLE_DOC_OBJECT:toString}, the method \lstinline|toString()|\index{java.lang!Object!toString()}
 \begin{quotation}
@@ -9357,17 +9363,17 @@ What does “textually represents” mean?
 The implementation for \lstinline|java.lang.Object::toString|\index{java.lang!Object!toString()}~…
 \begin{quotation}
 “[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
-\lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|”
+\lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|\index{java.lang!Object!getClass()}\index{java.lang!Object!hashCode()}\index{java.lang!Integer!toHexString()}”
 \end{quotation}
-But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, it is the current contents of the buffer.
+But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}\index{java.lang!Integer}\index{java.lang!Integer!toString()}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder}\index{java.lang!StringBuilder!toString()}, it is the current contents of the buffer.
 
 For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}\index{java.util!StringJoiner}, \lstinline|toString()|\index{java.util!StringJoiner!toString()} is even the method that provides the result.
 
-Originally, the textual representation of an object as provided by the \lstinline|toString()|\index{java.lang!Object!toString()} method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|, \lstinline|java.util.UUID| or \lstinline|java.time.Instant|.
+Originally, the textual representation of an object as provided by the \lstinline|toString()|\index{java.lang!Object!toString()} method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|\index{java.lang!Integer}, \lstinline|java.util.UUID|\index{java.util!UUID} or \lstinline|java.time.Instant|\index{java.time!Instant}.
 
-So how to implement the method \lstinline|toString()| for your method?
+So how to implement the method \lstinline|toString()|\index{java.lang!Object!toString()} for your class?
 
-If your class represents objects that can be easily written as a string, you should implement \lstinline|toString()| accordingly:
+If your class represents objects that can be easily written as a string, you should implement \lstinline|toString()|\index{java.lang!Object!toString()} accordingly:
 \begin{lstlisting}
 public final class PhoneNumber
 {
@@ -9394,21 +9400,23 @@ public final class PhoneNumber
 
 Some samples for this from the Java Runtime Library are the classes below:
 \begin{itemize}
-\item\lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
-\item\lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
-\item\lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}
-\item\lstinline|java.time.Instant|\autocite{ORACLE_DOC_INSTANT_CLASS} and the other classes representing time/date values from the \lstinline|java.time| package\autocite{ORACLE_DOC_TIME_PACKAGE}
-\item\lstinline|java.io.File|\autocite{ORACLE_DOC_FILE_CLASS}
-\item\lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS} and the other wrapper classes for the primitives
+\item\lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder}
+\item\lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}\index{java.lang!StringBuffer}
+\item\lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}\index{java.util!UUID}
+\item\lstinline|java.time.Instant|\autocite{ORACLE_DOC_INSTANT_CLASS}\index{java.time!Instant} and the other classes representing time/date values from the \lstinline|java.time| package\autocite{ORACLE_DOC_TIME_PACKAGE}\index{java.time}
+\item\lstinline|java.io.File|\autocite{ORACLE_DOC_FILE_CLASS}\index{java.io!File}
+\item\lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}\index{java.lang!Integer} and the other wrapper classes for the primitives
 \end{itemize}
 
 In all these cases, you can use a call to \lstinline|toString()| to embed the value of the instance into a regular text:
+\index{java.lang!Object!toString()}\index{java.lang!System!out}\index{java.io!PrintStream!printf()}
 \begin{lstlisting}
 final var phoneNumber = new PhoneNumber( … );
 out.printf( "The customer's phonenumber is %s.", phoneNumber.toString() );
 \end{lstlisting}
 
 If your class is more complex and/or an output makes only sense for debugging purposes or requires additional formatting instructions, you should consider a different implementation of \lstinline|toString()|:
+\index{java.lang!Object!toString()}\index{java.util!Map}\index{java.util!List}\index{java.time!ZonedDateTime}\index{java.util!StringJoiner}\index{java.lang!String!formatted()}\index{java.util!Objects!toString()}\index{java.util!StringJoiner!add()}\index{java.util!StringJoiner!toString()}
 \begin{lstlisting}
 public final class EmailMessage
 {
@@ -9443,7 +9451,7 @@ public final class EmailMessage
 //  class EmailMessage
 \end{lstlisting}
 
-This is basically how the IDEs will generate the \lstinline|toString()| method. The output may look like this\footnote{The backslash indicates where I inserted a linebreak so that it looks fine in this document; otherwise it would be just one long line.}:
+This is basically how the IDEs will generate the \lstinline|toString()|\index{java.lang!Object!toString()} method. The output may look like this\footnote{The backslash indicates where I inserted a linebreak so that it looks fine in this document; otherwise it would be just one long line.}:
 \begin{verbatim}
 org.tquadrat.sample.EmailMessage[Body='This is the body of the\
 email', Recipients=[a.b@c.de], Sender='thomas.thrien@tquadrat.\
@@ -9451,19 +9459,21 @@ org', Sent_when=2022-11-26T20:31:17.884636950+01:00[Europe/Ber\
 lin], Subject='Ping!']
 \end{verbatim}
 
-This will work fine for a debug log, but to get it ‘pretty printed’, you may have to provide another method. Refer to chapter \tqvref{sec:FormattableInterface} for how
+This will work fine for a debug log, but to get it ‘pretty printed’, you may have to provide another method. Refer to chapter \tqvref{sec:FormattableInterface} on how
 this could look like.
 
-If your class is not \lstinline|final|, the method \lstinline|toString()| should not be \lstinline|final| as well. 
+If your class is not \lstinline|final|, the method \lstinline|toString()|\index{java.lang!Object!toString()} should not be \lstinline|final| as well. 
+
+%------------------------------------------------------------------------------
 
 \subsection{\lstinline|clone()|}\label{sec:Clone}
-Per \autocite{ORACLE_DOC_OBJECT:clone}, the method \lstinline|java.lang.Object::clone| returns a copy of the current object.
+Per \autocite{ORACLE_DOC_OBJECT:clone}, the method \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} returns a copy of the current object.
 
-Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS} when called.
+Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportedException} when called.
 
-When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, and then you need to override the method \lstinline|clone()|.
+When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, and then you need to override the method \lstinline|clone()|\index{java.lang!Object!clone()}.
 
-The simpliest implementation looks like this:
+The simplest implementation looks like this:
 \begin{lstlisting}[numbers=left,caption={A simple clone() Method}]
 public final MyClass implements Cloneable
 {
@@ -10165,9 +10175,9 @@ Together with \lstinline|try-with-resources|, a new feature was introduced to th
 
 So if the \lstinline|try| block throws an exception (for our example, it would be most probably an \lstinline|IOException|) and the \lstinline|AutoCloseable.close()| will fail with an exception, too, the latter one will be added to the first one as a “suppressed exception” by the JVM.
 
-For this purpose, the API of the class \lstinline|java.lang.Throwable| was extended by the methods \lstinline|addSuppressed()| and \lstinline|getSuppressed()|.\footnote{see \autocite{ORACLE_DOC_THROWABLE_CLASS}}
+For this purpose, the API of the class \lstinline|java.lang.Throwable|\index{java.lang!Throwable} was extended by the methods \lstinline|addSuppressed()|\index{java.lang!Throwable!addSuppressed()} and \lstinline|getSuppressed()|\index{java.lang!Throwable!getSuppressed()}.\footnote{see \autocite{ORACLE_DOC_THROWABLE_CLASS}}
 
-Using \lstinline|Throwable.printStackTrace()| an output like that below will be produced:
+When using \lstinline|Throwable.printStackTrace()|\index{java.lang!Throwable!printStackTrace()}, an output like that below will be produced:
 \begin{lstlisting}
 java.lang.Error
   at TryWithResources.main(TryWithResources.java:175)

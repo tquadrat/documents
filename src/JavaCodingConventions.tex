@@ -9108,28 +9108,6 @@ Obviously, the resulting box is even smaller than a regular matchbox~…
 Another advantage is that you have to change your code only at one single location if you have to support also inch and foot as valid units: you just add the appropriate enum values to \lstinline|Length.Dimension|.
 
 %------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
 
 \section{Generics}\label{sec:GenericTypes}
 
@@ -9158,56 +9136,6 @@ Another advantage is that you have to change your code only at one single locati
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
 First of all, you should avoid to use Reflection whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
@@ -9327,29 +9255,33 @@ This allows you to call the method \lstinline|MyClass::myMethod| nearly directly
 
 \lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
 
-\section{Implementing the Object Methods}
-In Java all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT:finalize} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
+\section{Implementing the \lstinline|Object| Methods}\label{sec:ImplementObjectMethods}
+In Java, all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}\index{java.lang!Object}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
 \begin{itemize}[nosep]
-\item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT:clone}}
-\item{\lstinline|equals()|\autocite{ORACLE_DOC_OBJECT:equals}}
-\item{\lstinline|hashCode()|\autocite{ORACLE_DOC_OBJECT:hashCode}}
-\item{\lstinline|toString()|\autocite{ORACLE_DOC_OBJECT:toString}}
+\item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()}}
+
+\item{\lstinline|equals()|\autocite{ORACLE_DOC_OBJECT:equals}\index{java.lang!Object!equals()}}
+
+\item{\lstinline|hashCode()|\autocite{ORACLE_DOC_OBJECT:hashCode}\index{java.lang!Object!hashCode()}}
+
+\item{\lstinline|toString()|\autocite{ORACLE_DOC_OBJECT:toString}\index{java.lang!Object!toString()}}
 \end{itemize}
 
 The chapters below will provide some guidelines on how to code new implementations for these methods.
 
 \subsection{\lstinline|equals()| and \lstinline|hashCode()|}\label{sec:EqualsAndHashCode}
-Overriding the method \lstinline|java.lang.Object::equals|\autocite{ORACLE_DOC_OBJECT:equals} always requires to override the method \lstinline|java.lang.Object::hashCode|\autocite{ORACLE_DOC_OBJECT:hashCode}, too – and vice versa.
+Overriding the method \lstinline|java.lang.Object::equals|\autocite{ORACLE_DOC_OBJECT:equals}\index{java.lang!Object!equals()} always requires to override the method \lstinline|java.lang.Object::hashCode|\autocite{ORACLE_DOC_OBJECT:hashCode}\index{java.lang!Object!hashCode()}, too – and vice versa.
 
 \textit{This is not optional!}
 
-The method \lstinline|equals()| returns \lstinline|true| if the given reference to refers to an object to is equals to the current one, according to \textit{your criteria what “being equal” means} in this context, and – obviously – \lstinline| false| otherwise.
+The method \lstinline|equals()|\index{java.lang!Object!equals()} returns \lstinline|true| if the given reference refers to an object that is equal to the current one, according to \textit{your criteria what “being equal” means} in this context, and – obviously – \lstinline|false| otherwise.
 
-So two objects can be considered to be equal when they both have the same unique id, or you require for equality that all attributes do have the same values (are also equal), or something in between. The default implementation of \lstinline|java.lang.Object.equals()| returns \lstinline|true| only if the two objects are identical\footnote{This means that both objects are the \textit{same}; the given reference points to the current object itself.}.
+So two objects can be considered to be equal when they both have the same unique id, or you require for equality that all attributes do have the same values (are also equal), or something in between. The default implementation of \lstinline|java.lang.Object.equals()|\index{java.lang!Object!equals()} returns \lstinline|true| only if the two objects are identical\footnote{This means that both objects are the \textit{same}; the given reference points to the current object itself.}.
 
-If two objects are equal, the result of \lstinline|hashCode()| has to be the same for both objects, but that the hash values for two objects are the same does not necessarily imply that the two objects are equal.
+If two objects are equal, the result of \lstinline|hashCode()|\index{java.lang!Object!hashCode()} has to be the same for both objects, but that the hash values for two objects are the same does not necessarily imply that these two objects are equal.\footnote{Mainly this is the reason why you always have to provide implementations for both methods.}
 
 An implementation for the two methods should look like this:
+\index{java.lang!Object!equals()}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!equals()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!getClass()}
 \begin{lstlisting}[numbers=left,caption={Methods equals() and hashCode()}]
 public class MyClass
 {
@@ -9383,35 +9315,18 @@ public class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final|. If that check is omitted for a non-\lstinline|final| class, it means that instances of derived classes can be equal to an instance of the superclass – something that is rarely wanted, especially because it would break the rule that any implementation of \lstinline|equals()| has to guarantee that
+The check in line~10 can be omitted if \lstinline|MyClass| is \lstinline|final|. If that check is omitted for a non-\lstinline|final| class, it means that instances of derived classes can be equal to an instance of the superclass – something that is rarely wanted, especially because it would break the rule that any implementation of \lstinline|equals()|\index{java.lang!Object!equals()} has to guarantee that
 \begin{lstlisting}
 a.equals( b ) == b.equals( a )
 \end{lstlisting}
 is always valid.
 
-The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()| to calculate the hash value.
+The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()|\index{java.lang!Object!hashcode()} to calculate the hash value.
 
-When both a superclass and its derived classes implement \lstinline|java.lang.Object::equals| and \lstinline|java.lang.Object::hashCode|, the implementation of the derived class may call the superclass implementations of \lstinline|equals()| and \lstinline|hashCode()|:
+When both a superclass and its derived classes implement \lstinline|java.lang.Object::hashCode|\index{java.lang!Object!hashCode()}, the implementation of the derived class \textit{may} call the superclass implementation of \lstinline|hashCode()|\index{java.lang!Object!hashCode()}:
 \begin{lstlisting}[numbers=left]
 public class OtherClass extends MyClass
 {
-    /**
-     *  {@inheritDoc}
-     */
-    public boolean equals( final Object o )
-    {
-        var retValue = o == this;
-        if( !retValue && o instanceof OtherClass other
-            && super.equals( other ) )
-        {
-            retValue = Objects.equals( <attribute>, other.<attribute> )
-                && Objects.equals( < … >, other.< … > );
-        }
-            
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  equals()
-    
     /**
      *  {@inheritDoc}
      */
@@ -9425,28 +9340,30 @@ public class OtherClass extends MyClass
 }
 //  class OtherClass
 \end{lstlisting}
-Obviously, both methods consider only the attributes that comes with the definition of the derived class; the attributes of the superclass are already covered.
+Obviously, \lstinline|OtherClass.hashCode()|\index{java.lang!Object!hashCode()} considers only the attributes that comes with the definition of the derived class; the attributes of the superclass are already covered.
+
+This does not work that well with \lstinline|equals()|\index{java.lang!Object!equals()}.
 
 \subsection{\lstinline|toString()|}\label{sec:ToString}
-According to \autocite{ORACLE_DOC_OBJECT:toString}, the method \lstinline|toString()|
+According to \autocite{ORACLE_DOC_OBJECT:toString}, the method \lstinline|toString()|\index{java.lang!Object!toString()}
 \begin{quotation}
 “Returns a string representation of the object.
 
-In general, the \lstinline|toString()| method returns a string that ‘textually represents’ this object. The result should be a concise but informative representation that is easy for a person to read. It is recommended that all subclasses override this method. […]”
+In general, the \lstinline|toString()|\index{java.lang!Object!toString()} method returns a string that ‘textually represents’ this object. The result should be a concise but informative representation that is easy for a person to read. It is recommended that all subclasses override this method. […]”
 \end{quotation}
 
 What does “textually represents” mean?
 
-The implementation for \lstinline|java.lang.Object::toString|~…
+The implementation for \lstinline|java.lang.Object::toString|\index{java.lang!Object!toString()}~…
 \begin{quotation}
 “[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
 \lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|”
 \end{quotation}
 But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, it is the current contents of the buffer.
 
-For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}, \lstinline|toString()| is even the method that provides the result.
+For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}\index{java.util!StringJoiner}, \lstinline|toString()|\index{java.util!StringJoiner!toString()} is even the method that provides the result.
 
-Originally, the textual representation of an object as provided by the \lstinline|toString()| method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|, \lstinline|java.util.UUID| or \lstinline|java.time.Instant|.
+Originally, the textual representation of an object as provided by the \lstinline|toString()|\index{java.lang!Object!toString()} method was meant only for debugging purposes, but soon it was also used for the conversion of the object's value to a string, as you can see for classes like \lstinline|java.lang.Integer|, \lstinline|java.util.UUID| or \lstinline|java.time.Instant|.
 
 So how to implement the method \lstinline|toString()| for your method?
 

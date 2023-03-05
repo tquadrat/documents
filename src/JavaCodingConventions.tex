@@ -152,10 +152,10 @@ So what you want is code that helps you with being modified – you want to have
 
 From a magazine dealing with software development tools, I found the following statement\footnote{I noted down the statement, but forgot to note the source – so if you know that source, I would appreciate if you would share it with me.}:
 
-\begin{quotation}
+\begin{quote}
 “If you compare software development with the Apollo program, most programmers would be very successful bringing man to the moon, but never will get them back alive because of their common incapability to deliver software that can be maintained over a longer period of time with reasonable costs.” \\
-\autocite{UnknownSource1}
-\end{quotation}
+\textit{Unknown Source}\autocite{UnknownSource1}
+\end{quote}
 
 Maintainability has a lot of facets, and I will discuss several of them in the run of this document. But before you can even think of modifying the code – either for fixing a bug, optimising the memory consumption, or adding new functionality – you need to identify the location.  
 
@@ -165,16 +165,16 @@ No matter whether your code will meet all the other criteria that would make it 
 
 \paragraph{Readable Code}\index{readable code} can be easily consumed by a human.
 
-\begin{quotation}
+\begin{quote}
 “[…], programs must be written for people to read, and only incidentally for machines to execute.”\\
 Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
 \autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
-\end{quotation}
+\end{quote}
 
-\begin{quotation}
+\begin{quote}
 “Everybody can write code that can be read by a computer, but only good developers will write code that can be read by humans.”\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
 Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code}\autocite{Fowler:Refactoring}
-\end{quotation}
+\end{quote}
 
 Reading code is more important than writing code.\autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
 
@@ -427,12 +427,12 @@ An article may have sections with headlines in bold face, the paragraphs are sep
 
 This chapter deals with the proper formatting of source files and their structure with the goal to get readable \textit{documents}.
 
-\begin{quotation}
+\begin{quote}
 “[…], we want to establish the idea that a computer language is not just a way of getting a computer to perform operations but rather that it is a novel formal medium for expressing ideas
 about methodology.”\\
 Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
 \autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
-\end{quotation}
+\end{quote}
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
@@ -812,8 +812,7 @@ final var alpha = (aLongBooleanExpression)
 
 And finally a bad sample for a statement that should be broken into multiple statements; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
 
-\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time
-!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left]
 /**
  *  <p>{@summary This method calculates the date of Easter Sunday 
@@ -2989,7 +2988,7 @@ For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where
 %------------------------------------------------------------------------------
 
 \section{Constants}\label{sec:Constants}
-Constants in Java are fields of primitive or immutable types that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+Constants in Java are fields of primitive or immutable types\index{immutable type} that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
 
 Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”\index{magic number}, static configuration values and texts.
 
@@ -4728,13 +4727,13 @@ Extensions written in Java are also possible for programs that are not written i
 
 \section{Swap Logic Errors for Compiler Errors}\label{sec:SwapToCompilerErrors}
 From a book about Java programming:
-\begin{quotation}
+\begin{quote}
 “One fundamental principle of programming is that, generally, it is best to swap a logic error for a compiler error. Compiler errors tend to be found in seconds and are corrected just as fast. Syntax errors are a good example […]
 
 Logic errors, on the other hand, are the bane of all programmers. They hide and hate to reveal themselves. Logic errors seem to have minds of their own, constantly evading detection and dodging your efforts to pin down their cause. They can easily take a thousand times more effort to solve than the worst compiler errors. Worst of all, many logic errors are not found at all and occur only intermittently in sensitive places, which causes your customer to scream for a fix. Logic errors often require you to throw thousands of man-hours at them, only to finally discover that they are minor typos.”
 
 Robert Simmons Jr.: \textit{Hardcore Java}\autocite{Simmons:HARDCORE_JAVA}
-\end{quotation}
+\end{quote}
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
@@ -6731,7 +6730,7 @@ Regarding other validations, you can decide that your code will either perform t
 
 \subsection{Assertions}\label{sec:Assertions}
 Java~1.4 introduced the new keyword \lstinline|assert|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert} to the language. At first glance, this looks like the appropriate argument-checking feature – but~… 
-\begin{quotation}
+\begin{quote}
 “[…]Java's assert keyword is unique in two very interesting ways:
 
 \begin{enumerate}
@@ -6739,16 +6738,16 @@ Java~1.4 introduced the new keyword \lstinline|assert|\autocite{ORACLE_DOC_LANGU
 \item{The Java assert keyword is ignored when the Java Virtual Machine (JVM) is run using a default configuration. At startup, a special enableassertions runtime variable must be passed to the JVM as a command-line argument in order for code associated with with a Java assert to be executed. There is no other keyword in the Java language that is disabled by default at runtime.}
 \end{enumerate}
 […]”\\ Cameron McKenzie, TechTarget\autocite{SERVERSIDE:JavaAssert}
-\end{quotation}
+\end{quote}
 
 The validation of arguments and return values has to be active also in production, not only during test, and it should not be possible to switch off that validation. Therefore \lstinline|assert| is not suitable for general validation. 
 
 As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Assert}:
-\begin{quotation}
+\begin{quote}
 “[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
 
 A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
-\end{quotation}
+\end{quote}
 
 Because it is acceptable to omit the validation for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid, you should add \lstinline|assert| statements here that check the arguments\autocite{ORACLE_DOC_ASSERTIONS}. These are active during the testing phase, verifying that the caller will really invoke the method with valid arguments only, but switched off in production.
 
@@ -7641,7 +7640,7 @@ public final class MyClass
 }
 //  classMyClass
 \end{lstlisting}
-In the samples above, I used lists of \lstinline|java.lang.String|, and \lstinline|String| is an immutable type – meaning that it would not be required to copy the contents of the list, too. But if it would be a mutable type, a deep copy is required:
+In the samples above, I used lists of \lstinline|java.lang.String|, and \lstinline|String| is an immutable type\index{immutable type} – meaning that it would not be required to copy the contents of the list, too. But if it would be a mutable type, a deep copy is required:
 \index{java.util!List}\index{java.util!List!add()}\index{java.util!ArrayList}\index{java.lang!StringBuilder}
 \begin{lstlisting}
 public final class MyClass
@@ -8123,7 +8122,7 @@ Only when a concrete class or a more specialised interface provides features tha
 
 One difference is in regard of methods returning strings: here you should \textit{not} use \lstinline|CharSequence|\index{java.lang!CharSequence} as the return type! In nearly all cases where a method returns a string this value will really be an instance of \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} anyway – not to mention that \lstinline|String|\index{java.lang!String} implements \lstinline|CharSequence|\index{java.lang!CharSequence}.
 
-Another reason is that the interface \lstinline|CharSequence|\index{java.lang!CharSequence} is implemented by immutable types (link \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
+Another reason is that the interface \lstinline|CharSequence|\index{java.lang!CharSequence} is implemented by immutable types\index{immutable type} (see \lstinline|java.lang.String|\index{java.lang!String}) and mutable types (e.g. \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder}) as well. Depending on how the caller wants to use the return value, it may have to check for the concrete type first\footnote{…~just to find out that it is a \lstinline|String| in most cases.}.
 
 In general, the idiom to prefer an abstraction over a concrete implementation is usually referred to as “Programming to the Interface”\index{programming to the interface}; it will be discussed in more detail in chapter \tqvref{sec:ProgrammingToTheInterface}.
 
@@ -8241,7 +8240,7 @@ The utility class \lstinline|java.util.Collections|\index{java.util!Collections}
 
 \paragraph{Line~14} basically combines lines~10 and 12, eliminating the shortcoming of the solutions from lines~8 and 10.
 
-\paragraph{Line~16} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportException}.\\[1\baselineskip]
+\paragraph{Line~16} ‘clones’\index{java.lang!Object!clone()} \lstinline|m_Attribute|; obviously this works only for instances that implement \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, but although collections (and arrays) are cloneable themselves, they may contain elements that are not cloneable, causing a \lstinline|CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportedException}.\\[1\baselineskip]
 
 Remember that arrays are not immutable; you can always assign a new value to an existing array element. Therefore you have to take the same precautions when your method should return an array attribute as for returning a collection.
 \index{java.lang!Object!clone()}\index{java.lang!System!arraycopy()}\index{java.util!Arrays!copyOf()}\index{java.util!Arrays!stream()}\index{java.util.stream!Stream!toArray()}
@@ -8274,7 +8273,7 @@ public final class MyClass
 //  class MyClass    
 \end{lstlisting}
 
-In the examples, the element type for both, the collections and the arrays, is immutable\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy of the collection or the array.
+In the examples, the element type for both, the collections and the arrays, is immutable\index{immutable type}\footnote{\lstinline|java.lang.String|\index{java.lang!String} is immutable.}; if the elements would be mutable, you need to take the corresponding precautions for them, too. Basically that would mean a deep copy of the collection or the array.
 
 In general you have to take care that you will not return a reference to an attribute with a mutable type that would allow to modify the internal state of the owning object. This clearly does not affect just collections – although this is the most common case – but for example also instances of \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date}\footnote{Another good reason to abandon \lstinline|java.util.Date| and to use the classes from the \lstinline|java.time|\autocite{ORACLE_DOC_TIME_PACKAGE}\index{java.time} package instead.}. Obviously, for other types the details on how to create a copy or to make them immutable will differ.
 
@@ -8401,6 +8400,41 @@ public final void onSuccess( final Consumer<Data> processor )
 }   //  onSuccess()
 …
 \end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{Implementing Immutable Types}\label{sec:ImmutableTypes}
+Immutable types\index{immutable type}
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 
@@ -8779,7 +8813,7 @@ final String retValue = strings.stream()
 \end{lstlisting}
 
 This code is correct, but it is potentially confusing, as it looks like a single stream pipeline. In fact, it’s a short stream, followed by a second stream over the result of the first stream, followed by a mapping of the \lstinline|Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}\index{java.util!Optional} result of the second stream. The most readable way to express this code would have been as two or three statements; first group entries into a map, then reduce over that map, then extract the key from the result (if present), as shown below:
-\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Optional}\index{java.util!Map.Entry!getKey()}
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util!Map}\index{java.util!Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Optional}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 // BETTER READABLE
 final Map<String, Long> freqMap = strings.stream()
@@ -8791,7 +8825,7 @@ final String retValue = maxEntryOpt.map( Map.Entry::getKey );
 \end{lstlisting}
 
 But you probably resisted doing that because writing the types of the intermediate variables seemed too burdensome, so instead they distorted the control flow. Using \lstinline|var| here allows you to express the code more naturally without paying the high price of explicitly declaring the types of the intermediate variables:
-\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util.Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
+\index{java.util!Collection!stream()}\index{java.util.stream!Stream!stream()}\index{java.util.stream!Collectors!groupingBy()}\index{java.util.stream!Collectors!counting()}\index{java.util!Map!entrySet()}\index{java.util.stream!Stream!max()}\index{java.util!Map.Entry!comparingByValue()}\index{java.util!Optional!map()}\index{java.util!Map.Entry!getKey()}
 \begin{lstlisting}
 // EVEN BETTER READABLE
 final var freqMap = strings.stream()
@@ -8846,7 +8880,7 @@ Basically, we distinguish two types of ‘Value Types’: first there are the �
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{Value types are immutable.
+\item{Value types are immutable\index{immutable type}.
 
 Once created, a value type instance cannot be modified, like a number.}
 
@@ -8868,7 +8902,7 @@ public Person( final String id, final String lastName, final String firstName, f
     m_LastName = requireNotBlankArgument( lastName, "lastName" );
     m_FirstName = requireNotBlankArgument( firstName, "firstName" );
     var counter = 0;
-    for( final var contactId : requiredNonNullArgument( contactIds, "contactIds" ) )
+    for( final var contactId : requireNonNullArgument( contactIds, "contactIds" ) )
     {
         m_ContactIds.add( requiredValidArgument( contactId, format( "contactIds [%d]", counter++ ), this::validatePersonId ) );
     }
@@ -9175,7 +9209,7 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 The test class:
-\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invode()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!requiredNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
+\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
 \begin{lstlisting}[numbers=left]
 /**
  *  This class provides some unit tests for
@@ -9352,19 +9386,19 @@ This does not work that well with \lstinline|equals()|\index{java.lang!Object!eq
 
 \subsection{\lstinline|toString()|}\label{sec:ToString}
 According to \autocite{ORACLE_DOC_OBJECT:toString}, the method \lstinline|toString()|\index{java.lang!Object!toString()}
-\begin{quotation}
+\begin{quote}
 “Returns a string representation of the object.
 
 In general, the \lstinline|toString()|\index{java.lang!Object!toString()} method returns a string that ‘textually represents’ this object. The result should be a concise but informative representation that is easy for a person to read. It is recommended that all subclasses override this method. […]”
-\end{quotation}
+\end{quote}
 
 What does “textually represents” mean?
 
 The implementation for \lstinline|java.lang.Object::toString|\index{java.lang!Object!toString()}~…
-\begin{quotation}
+\begin{quote}
 “[…] returns a string consisting of the name of the class of which the object is an instance, the at-sign character ‘@’, and the unsigned hexadecimal representation of the hash code of the object. In other words, this method returns a string equal to the value of:\
 \lstinline|getClass().getName() + '@' + Integer.toHexString( hashCode() )|\index{java.lang!Object!getClass()}\index{java.lang!Object!hashCode()}\index{java.lang!Integer!toHexString()}”
-\end{quotation}
+\end{quote}
 But for an instance of \lstinline|java.lang.Integer|\autocite{ORACLE_DOC_INTEGER_CLASS}\index{java.lang!Integer}\index{java.lang!Integer!toString()}, that ‘string representation’ is just a string containing the digits for the numerical value of that object, and for an instance of \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder}\index{java.lang!StringBuilder!toString()}, it is the current contents of the buffer.
 
 For the class \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}\index{java.util!StringJoiner}, \lstinline|toString()|\index{java.util!StringJoiner!toString()} is even the method that provides the result.
@@ -9467,13 +9501,39 @@ If your class is not \lstinline|final|, the method \lstinline|toString()|\index{
 %------------------------------------------------------------------------------
 
 \subsection{\lstinline|clone()|}\label{sec:Clone}
-Per \autocite{ORACLE_DOC_OBJECT:clone}, the method \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} returns a copy of the current object.
+The JavaDoc for \lstinline|java.lang.Object::clone|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()} says:
 
-Usually, this method is \lstinline|protected| and the default implementation throws a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportedException} when called.
+\begin{quote}
+“Creates and returns a copy of this object. The precise meaning of ‘copy’ may depend on the class of the object. The general intent is that, for any object \lstinline|x|, the expression:
+\begin{lstlisting}
+x.clone() != x
+\end{lstlisting}
 
-When instances of your class should support to be cloned, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, and then you need to override the method \lstinline|clone()|\index{java.lang!Object!clone()}.
+will be \lstinline|true|, and that the expression:
+\begin{lstlisting}
+x.clone().getClass() == x.getClass()
+\end{lstlisting}
 
-The simplest implementation looks like this:
+will be \lstinline|true|, but these are not absolute requirements. While it is typically the case that:
+\begin{lstlisting}
+x.clone().equals(x)
+\end{lstlisting}
+will be \lstinline|true|, this is not an absolute requirement.
+
+By convention, the returned object should be obtained by calling \lstinline|super::clone|. If a class and all of its superclasses (except \lstinline|java.lang.Object|\index{java.lang!Object}) obey this convention, it will be the case that 
+\begin{lstlisting}
+x.clone().getClass() == x.getClass()
+\end{lstlisting}
+
+is \lstinline|true|.
+
+By convention, the object returned by this method should be independent of this object (which is being cloned). To achieve this independence, it may be necessary to modify one or more fields of the object returned by \lstinline|super::clone| before returning it. Typically, this means copying any mutable objects that comprise the internal ‘deep structure’ of the object being cloned and replacing the references to these objects with references to the copies. If a class contains only primitive fields or references to immutable objects\index{immutable type}, then it is usually the case that no fields in the object returned by \lstinline|super::clone| need to be modified.”
+\end{quote}
+
+When instances of your class should be cloneable, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, and then you need to override the method \lstinline|clone()|\index{java.lang!Object!clone()}; usually, this method is \lstinline|protected| and it declares to throw a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportedException}. The default implementation does nothing else that throwing that exception when called.
+
+A simple implementation may look like this:
+\index{java.lang!Override}\index{java.lang!Cloneable}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}
 \begin{lstlisting}[numbers=left,caption={A simple clone() Method}]
 public final MyClass implements Cloneable
 {
@@ -9499,22 +9559,35 @@ public final MyClass implements Cloneable
 }
 //  class MyClass
 \end{lstlisting}
-This works despite the fact that the class \lstinline|java.lang.Object| \textit{does not} implement \lstinline|java.lang.Cloneable|!
+This works despite the fact that the class \lstinline|java.lang.Object|\index{java.lang!Object} itself \textit{does not} implement \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable}!
 
-But it fails in case your class extends a class (other than \lstinline|java.lang.Object|) that does not implement \lstinline|java.lang.Cloneable|.
+But it may fail in case your class extends a class other than \lstinline|java.lang.Object|\index{java.lang!Object} that does not implement \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable}.
 
-The implementation of \lstinline|java.lang.Object::clone| uses native code to make a shallow copy of the current object. If all attributes of the class are either immutable or primitives, the implementation shown above is sufficient.
+And because we know that \lstinline|super.clone()|\index{java.lang!Object!clone()} will work in this case, our implementation does not declare to throw \lstinline|java.lang.CloneNotSupportedException|\index{java.lang!CloneNotSupportedException}; instead it will swallow it\footnote{But to protect us from problems that may come our way when someone decides to extend another class than \lstinline|java.lang.Object|\index{java.lang!Object}, we wrap that \lstinline|CloneNotSupportedException|\index{java.lang!CloneNotSupportedException} into an \lstinline|UnexpectedExceptionError|\autocite{TQUADRAT_ORG_FOUNDATION_UNEXPECTEDEXCEPTIONERROR}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}.}.
 
-But if any of the attributes are collections, arrays or mutable types, there is some
-more work to do; in this case, your implementation of \lstinline|clone()| should declare the \lstinline|java.lang.CloneNotSupportedException|.
+The implementation of \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} (that one we have called with \lstinline|super.clone()|\index{java.lang!Object!clone()} uses native code to make a shallow copy of the current object. If all attributes of the class are either primitives or immutable\index{immutable type}, the implementation shown above is sufficient, also for properly implemented immutable types (refer to chapter \tqfullvref{sec:ImmutableTypes} that elaborates on this topic).
 
-Such an extended implementation of \lstinline|clone()| may look like below; it is assumed that \lstinline|T| is not immutable\footnote{If \lstinline|T| will not implement  \lstinline|java.lang.Cloneable|, we can reduce the implementation of \lstinline|clone()| to just throw \lstinline|java.lang.CloneNotSupportedException|. But even if \lstinline|T| implements \lstinline|java.lang.Cloneable|, \lstinline|T::clone| can still throw that exception.}.
-\begin{lstlisting}[numbers=left,caption={An extended clone() Method}]
-public final MyClass<T extends Cloneable> implements Cloneable
+But if any of the attributes are collections, arrays or generally mutable types, there is some more work to do; in this case, your implementation of \lstinline|clone()| should declare the \lstinline|java.lang.CloneNotSupportedException|\index{java.lang!CloneNotSupportedException}.
+
+Such an extended implementation of \lstinline|clone()|\index{java.lang!Object!clone()} may look like below; sometimes this pattern is referred to as ‘Deep Cloning’. It is assumed that the class \lstinline|T| is \textit{not} immutable but implements \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable}. If \lstinline|T| will not implement \lstinline|Cloneable|\index{java.lang!Cloneable}, we could reduce the implementation of \lstinline|clone()|\index{java.lang!Object!clone()} for this class to just
+\index{java.lang!Override}\index{java.lang!CloneNotSupportedException}\index{java.lang!Object!clone()}
+\begin{lstlisting}
+@Override
+public final MyClass clone() throws CloneNotSupportedException
 {
-    private final T [] m_Array;
-    private final Collection<T> m_Collection;
-    private T m_Mutable; // MAY NOT BE FINAL!!
+    throw new CloneNotSupportedException();
+}   //  clone()
+\end{lstlisting}
+
+But even if \lstinline|T| implements \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable}, the method \lstinline|T::clone| can still throw an \lstinline|CloneNotSupportedException|\index{java.lang!CloneNotSupportedException}, so our implementation has to declare to throw that exception.\footnote{You may have noticed that I did not declare \lstinline|MyClass| as generic (like “\lstinline|MyClass<T extends Cloneable>|”). I will come back to that later in this chapter.}
+\index{java.lang!Override}\index{java.lang!Cloneable}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{java.util!List}\index{org.tquadrat.foundation.lang!Objects!nonNull()}\index{java.util!ArrayList}\index{java.util!List!add()}
+\begin{lstlisting}[numbers=left]
+public final MyClass implements Cloneable
+{
+    // NONE OF THE ATTRIBUTES MAY BE FINAL!!
+    private T [] m_Array;
+    private List<T> m_List;
+    private T m_Mutable;
     
     /**
      *  {@inheritDoc}
@@ -9523,15 +9596,30 @@ public final MyClass<T extends Cloneable> implements Cloneable
     public final MyClass clone() throws CloneNotSupportedException
     {
         final var retValue = (MyClass) super.clone();
-        for( var i = 0; i < m_Array.size; ++i )
+        
+        if( nonNull( m_Array ) )
         {
-            retValue.m_Array [i] = nonNull( m_Array [i] ) 
-                ? m_Array [i].clone() 
-                : null;
+            retValue.m_Array = m_Array.clone();
+            for( var i = 0; i < m_Array.size; ++i )
+            {
+                retValue.m_Array [i] = nonNull( m_Array [i] ) 
+                    ? m_Array [i].clone() 
+                    : null;
+            }
         }
-        retValue.m_Collection.clear();
-        for( final var t : m_Collection ) retValue.m_Collection.add( t.clone() );
-        retValue.m_Mutable = m_Mutable.clone();
+        
+        if( nonNull( m_List ) )
+        {
+            retValue.m_List = new ArrayList<>();
+            for( final var t : m_List )
+            {
+                retValue.m_List.add( nonNull( t ) ? t.clone() : null );
+            }
+        }
+        
+        retValue.m_Mutable = nonNull( m_Mutable ) 
+            ? m_Mutable.clone()
+            : null;
         
         //---* Done *------------------------------------------------
         return retValue;
@@ -9540,80 +9628,169 @@ public final MyClass<T extends Cloneable> implements Cloneable
 //  class MyClass
 \end{lstlisting}
 
-The code in line~21 supposes that the collection does not contain any \lstinline|null| values. And obviously, the collection has to be mutable, otherwise already the attempt to clear it in line~20 would throw an exception.
-
-Unfortunately, the interface \lstinline|java.lang.Cloneable| does not declare the method \lstinline|clone()|, therefore the code below will not work:
+If one of the attributes that are requiring ‘special treatment’ is \lstinline|final|, this implementation does not work any longer! In that case, you need to implement a “copy constructor”\index{copy constructor}:
+\index{java.lang!Override}\index{java.lang!Cloneable}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{java.util!List}\index{org.tquadrat.foundation.lang!Objects!nonNull()}\index{java.util!ArrayList}\index{java.util!List!add()}\index{java.util!Map}\index{java.util!HashMap}\index{java.util!Map!put()}\index{java.util!Map!entrySet()}
 \begin{lstlisting}
-// WILL NOT WORK!!
-CloneLoop: for( final var t : m_Collection ) 
+public final MyClass implements Cloneable
 {
-    if( isNull( t ) ) continue CloneLoop;
-    if( t instanceof Cloneable c )
-    {
-        retValue.m_Collection.add( c.clone() );
-    }
-    else
-    {
-        throw new CloneNotSupportedException( t.toString() );
-    }    
-}   //  CloneLoop:
-\end{lstlisting}
-
-So in case a collection (or an array) may contain components that can or cannot be cloned, the test is a bit more complex:
-\begin{lstlisting}
-CloneLoop: for( final var t : m_Collection ) 
-{
-    if( isNull( t ) ) continue CloneLoop;
-    boolean isCloneable = false;
-    if( t instanceof Cloneable )
-    {
-    	isCloneable = stream( getClass().getMethods() )
-    	    .filter( m -> m.getParameterCount() == 0 )
-    	    .map( Method::getName )
-    	    .filter( n -> n.equals( "clone" ) )
-    	    .count() == 1;
-    }
+    private final T [] m_Array;
+    private final List<T> m_List;
+    private final Map<String,T> m_Map = new HashMap();
+    private final T m_Mutable;
     
-    if( isCloneable )
-    {
-        retValue.m_Collection.add( c.clone() );
-    }
-    else
-    {
-        throw new CloneNotSupportedException( t.toString() );
-    }    
-}   //  CloneLoop:
-\end{lstlisting}
-Instead of the stream operation, you can also use \lstinline|java.lang.Class::getMethod| and respond to the \lstinline|java.lang.NoSuchMethodException| for the check.
-
-If you have to implement the method \lstinline|java.lang.Object::clone| for lots of classes, it could make sense to implement your own \lstinline|Cloneable| interface that then can be used with the \lstinline|instanceof| operator and the pattern:
-\begin{lstlisting}
-public interface Cloneable<T> extends java.lang.Cloneable
-{
     /**
-     *  Forces the implementation of
-     *  {@link Object#clone()}
-     *
-     *  @returns The cloned object.
-     *  @throws  CloneNotSupportedException One of the mutable
-     *      attributes is not cloneable.
+     *  Creates a new instance of {@code MyClass}.
      */
-    public T clone() throws CloneNotSupportedException; 
+    public MyClass( … )
+    {
+        // The regular constructor.
+        …
+	}   //  MyClass()    
+    
+    /**
+     *  Creates a new instance of {@code MyClass} from the provided
+     *  other instance.
+     *
+     *  @note Used by the implementation of {@code clone()}.
+     *
+     *  @param  other   The other instance.
+     *  @throws CloneNotSupportedException  One of the attributes do
+     *      not allow to be cloned.
+     */
+    private MyClass( final MyClass other ) throws CloneNotSupportedException
+    {
+        if( nonNull( other.m_Array ) )
+        {
+            m_Array = other.m_Array.clone();
+            for( var i = 0; i < other.m_Array.size; ++i )
+            {
+                m_Array [i] = nonNull( other.m_Array [i] ) 
+                    ? m_Array [i].clone() 
+                    : null;
+            }
+        }
+        
+        if( nonNull( other.m_List ) )
+        {
+            m_List = new ArrayList<>();
+            for( final var t : other.m_List )
+            {
+                m_List.add( nonNull( t ) ? t.clone() : null );
+            }
+        }
+                
+        for( final var entry : other.m_Map.entrySet() )
+        {
+            m_Map.put( entry.getKey(), entry.getValue.clone() );
+        }
+        
+        m_Mutable = nonNull( other.m_Mutable )
+            ? other.m_Mutable.clone()
+            : null;
+	}   //  MyClass()    
+    
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final MyClass clone() throws CloneNotSupportedException
+    {
+        final var retValue = new MyClass( this );
+        
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  clone() 
 }
-//  interface Cloneable
+//  class MyClass
 \end{lstlisting}
 
-There are several ongoing discussions whether the API that was defined through the \lstinline|java.lang.Object::clone| is generally usefull or more a pain in the ass, and as far as I am aware, these discussions will last for some more time.
+Such a copy constructor\index{copy constructor} may be required for all super classes of your \lstinline|MyClass|, too.
 
-I am not a friend of \lstinline|clone()| and I try to avoid its implementation whenever possible. This means that sometimes it is not possible to circumvent the implementation of that method.
+Unfortunately, the interface \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable} does not declare the method \lstinline|clone()| and \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone} is \lstinline|protected|, therefore the code below will not work – it will not even compile:
+\index{java.util!List}\index{java.lang!Cloneable}\index{java.lang!CloneNotSupportedException}\index{java.util!ArrayList}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.util!List!add()}\index{java.lang!Object!clone()}
+\begin{lstlisting}
+// WILL NOT COMPILE!!
+public static final <T extends Cloneable> List<T> deepCloneList( final List<T> list ) throws CloneNotSupportedException
+{
+	final var retValue = new ArrayList<T>();
+	for( final var t : requireNonNullArgument( list, "list" ) 
+    {
+        if( isNull( t ) )
+        {
+            retValue.add( null );
+        }
+        else    
+        {
+            // Cloneable does not declare clone()!
+            retValue.add( t.clone() );
+        }
+    } 
 
-My recommendation is to ignore the method \lstinline|java.lang.Object::clone| unless there is a strict requirement to use it.
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  deepCloneList()
+\end{lstlisting}
+
+A method that would allow to clone an arbitrary instance of a class that supports cloning must look like this:\footnote{This is one of the rare cases where you cannot avoid the use of reflection.}
+\index{java.lang!Cloneable}\index{java.lang!CloneNotSupportedException}\index{java.lang!NoSuchMethodException}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!Class!getMethod()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!IllegalAccessException}\index{java.lang!IllegalArgumentException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang.reflect!InvocationTargetException}\index{java.lang.reflect!InvocationTargetException!getCause()}\index{java.lang!CloneNotSupportedException!initCause()}\index{java.lang!RuntimeException}\index{java.lang.Error}
+\begin{lstlisting}
+public static final <T extends Cloneable> T cloneArbitrary( final T instance ) throws CloneNotSupportedException, NoSuchMethodException
+{
+    final var cloneMethod = requireNonNullArgument( instance, "instance" )
+        .getMethod( "clone" );
+        
+    final T retValue;
+    try
+    {
+        retValue = (T) cloneMethod.invoke( instance );
+    }    
+    catch( final IllegalAccessException | IllegalArgumentException e )
+    {
+        throw new UnexpectedExceptionError( e );
+    }
+    catch( final InvocationTargetException e )
+    {
+        final var cause = e.getCause();
+        switch( cause )
+        {
+            case null -> 
+            {
+                final var cnse = new CloneNotSupportedException( "clone() caused Exception" );
+                cnse.initCause( e );
+                throw cnse;
+            }
+            
+            case CloneNotSupportedException cnse -> throw cnse;
+            
+            case RuntimeException rte -> throw rte;
+            
+            case Error error -> throw error;
+
+            default -> throw new UnexpectedExceptionError( cause );
+        }
+    }
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  cloneArbitrary()
+\end{lstlisting}
+
+There are several ongoing discussions whether the API that was defined through the \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} is generally usefull or more a pain in the ass, and as far as I am aware, these discussions will last for some more time. But I assume that after the explanations above, you got an idea why this discussions arose.
+
+I am not a friend of \lstinline|clone()| and I try to avoid its implementation whenever possible. Instead I provide a \lstinline|public| copy constructor\index{copy constructor} or a parameterless \lstinline|copy()| method if I need to ‘clone’ an object.
+
+Therefore my recommendation is to ignore the method \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} unless there is a strict requirement to use it.
+
+%------------------------------------------------------------------------------
 
 \section{String Concatenation}
 How to concatenate strings has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
 
+%------------------------------------------------------------------------------
+
 \subsection{The Basics}
-The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}: it is immutable. This means that
+The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}: it is immutable\index{immutable type}. This means that
 \begin{lstlisting}
 String a = "part1";
 String b = "part2";

@@ -8404,13 +8404,26 @@ public final void onSuccess( final Consumer<Data> processor )
 %------------------------------------------------------------------------------
 
 \section{Implementing Immutable Types}\label{sec:ImmutableTypes}
-Immutable types\index{immutable type}
+In Java,  an immutable type\index{immutable type} does not allow that the internal state of one of its instances can be modified after creation. But to achieve that is more difficult than it sounds.
+
+%------------------------------------------------------------------------------
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
+\item{To be immutable, all attributes of the class have to be \lstinline|final|.
+
+Even without a proper mutator method, non-\lstinline|final| attributes could be changed, at least via reflection.}
+
+\item{For an immutable type, all attribute \textit{values} have to be immutable, too.
+
+Otherwise, they could be modified externally, again by using (abusing?) reflection. But this does not necessarily means that the type of the attributes must be an immutable type.}
+
+\item{The class for the immutable type has to be \lstinline|final|.
+
+This is to prevent the creation of a mutable subclass whose instancea can be used instead of the (apparently) immutable base class.}
 \end{enumerate}
+
+%------------------------------------------------------------------------------
 
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}

@@ -8404,24 +8404,67 @@ public final void onSuccess( final Consumer<Data> processor )
 %------------------------------------------------------------------------------
 
 \section{Implementing Immutable Types}\label{sec:ImmutableTypes}
-In Java,  an immutable type\index{immutable type} does not allow that the internal state of one of its instances can be modified after creation. But to achieve that is more difficult than it sounds.
+In Java\footnote{And most probable, in any other programming language, too},  an immutable type\index{immutable type} does not allow that the internal state of one of its instances can be modified after creation. But to achieve that is more difficult than it sounds.
 
 %------------------------------------------------------------------------------
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{To be immutable, all attributes of the class have to be \lstinline|final|.
+\item{To be immutable, all attributes of a class have to be \lstinline|private| and \lstinline|final|.
 
 Even without a proper mutator method, non-\lstinline|final| attributes could be changed, at least via reflection.}
 
 \item{For an immutable type, all attribute \textit{values} have to be immutable, too.
 
-Otherwise, they could be modified externally, again by using (abusing?) reflection. But this does not necessarily means that the type of the attributes must be an immutable type.}
+Otherwise, they could be modified externally, again by using (abusing?) reflection. But this does not necessarily mean that the type of the attributes must be an immutable type.}
 
 \item{The class for the immutable type has to be \lstinline|final|.
 
-This is to prevent the creation of a mutable subclass whose instancea can be used instead of the (apparently) immutable base class.}
+This is to prevent the creation of a mutable subclass whose instances can be used instead of the (apparently) immutable base class.}
 \end{enumerate}
+
+\subsection{The \lstinline|final| Keyword in Java}
+In Java, variables are mutable by default, meaning you can change the value they hold.
+
+By using the \lstinline|final| keyword when declaring a variable, the Java compiler won't let you change the value of that variable; Instead, a compile-time error will be issued:
+\begin{lstlisting}
+final String name = "Java";
+name = "Borneo"; // does not compile
+\end{lstlisting}
+In order to understand this it is necessary to remember that \lstinline|name| \textit{is technically not a variable of type 'String'}, but a variable of type 'Reference to String'\footnote{Although the general usage of course corresponds to the first variant.}.
+So \lstinline|final| only forbids you from changing the reference a variable holds, it doesn't protect you from changing the internal state of the object it refers to by using its public API:
+\begin{lstlisting}
+final List<String> strings = new ArrayList<>();
+assertEquals( 0, strings.size() );
+strings.add( "Java" );
+assertEquals( 0, strings.size() );
+\end{lstlisting}
+The second call to \lstinline|assertEquals()| fails because adding an element to the list changes its size, therefore, it isn't an immutable object. The \lstinline|final| keyword \textit{does not prevent} you from calling \lstinline|add()| on the list.
+
+This is different from the behaviour of the \lstinline|const| keyword in C++; a declaration like
+\begin{lstlisting}[language=C++]
+const MyClass object;
+\end{lstlisting}
+would mean that you cannot call any methods on \lstinline|object| that would change the internal state of the instance. ‘Safe’ methods are marked as \lstinline|const|:
+\begin{lstlisting}[language=C++]
+class MyClass
+{
+    int safeMethod() const;
+    int unsafeMethod();
+}
+\end{lstlisting}
+Therefore the call to \lstinline|unsafeMethod()|
+\begin{lstlisting}[numbers=left,language=C++]
+const MyClass object;
+object.unsafeMethod(); // does not compile
+\end{lstlisting}
+in line~2 does not work, but this variant will do:
+\begin{lstlisting}[numbers=left,language=C++]
+MyClass object;
+object.unsafeMethod();
+\end{lstlisting}
+Unfortunately, it is not that simple in Java.
+
 
 %------------------------------------------------------------------------------
 

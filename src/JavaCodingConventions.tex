@@ -8431,8 +8431,9 @@ By using the \lstinline|final| keyword when declaring a variable, the Java compi
 final String name = "Java";
 name = "Borneo"; // does not compile
 \end{lstlisting}
-In order to understand this it is necessary to remember that \lstinline|name| \textit{is technically not a variable of type 'String'}, but a variable of type 'Reference to String'\footnote{Although the general usage of course corresponds to the first variant.}.
-So \lstinline|final| only forbids you from changing the reference a variable holds, it doesn't protect you from changing the internal state of the object it refers to by using its public API:
+In order to understand this it is necessary to remember that \lstinline|name| \textit{is technically not a variable of type 'String'}, but a variable of type 'Reference to String'\footnote{Although the general wording corresponds to the first variant: when Java programmers talk about a ‘String variable \lstinline|name|’, they mean of course \lstinline|String name|.}.
+
+So \lstinline|final| only forbids you from changing the reference a variable \textit{holds}, it doesn't protect you from changing the internal state of the object it \textit{refers} to by using its public API:
 \begin{lstlisting}
 final List<String> strings = new ArrayList<>();
 assertEquals( 0, strings.size() );
@@ -8441,11 +8442,11 @@ assertEquals( 0, strings.size() );
 \end{lstlisting}
 The second call to \lstinline|assertEquals()| fails because adding an element to the list changes its size, therefore, it isn't an immutable object. The \lstinline|final| keyword \textit{does not prevent} you from calling \lstinline|add()| on the list.
 
-This is different from the behaviour of the \lstinline|const| keyword in C++; a declaration like
+This is different from the behaviour of the \lstinline|const| keyword in C++\index{C++}; a declaration like
 \begin{lstlisting}[language=C++]
 const MyClass object;
 \end{lstlisting}
-would mean that you cannot call any methods on \lstinline|object| that would change the internal state of the instance. ‘Safe’ methods are marked as \lstinline|const|:
+would mean that you cannot call any methods on \lstinline|object| that would change the internal state of the instance. ‘Safe’ methods are marked as \lstinline|const|\footnote{Unfortunately the C++ compiler\index{C++} does not detect if a \lstinline|const| method will change the internal state; at least it will not abort the compilation.}:
 \begin{lstlisting}[language=C++]
 class MyClass
 {
@@ -8453,18 +8454,30 @@ class MyClass
     int unsafeMethod();
 }
 \end{lstlisting}
-Therefore the call to \lstinline|unsafeMethod()|
+
+Therefore the code below does not compile because of the call to \lstinline|unsafeMethod()| in line~2:
 \begin{lstlisting}[numbers=left,language=C++]
 const MyClass object;
 object.unsafeMethod(); // does not compile
 \end{lstlisting}
-in line~2 does not work, but this variant will do:
-\begin{lstlisting}[numbers=left,language=C++]
+But this code variant will work:
+\begin{lstlisting}[language=C++]
 MyClass object;
 object.unsafeMethod();
-\end{lstlisting}
-Unfortunately, it is not that simple in Java.
 
+const MyClass constObject;
+constObject.safeMethod();
+\end{lstlisting}
+
+Unfortunately, it is not that simple in Java; we all know that
+\index{java.util!List}\index{java.util!ArrayList}
+\begin{lstlisting}[numbers=left]
+final List<String> list = new ArrayList<>();
+list.add( "Message" );
+\end{lstlisting}
+works fine – in fact, that is a general pattern.
+
+Nevertheless, you should use \lstinline|final| wherever you do not intend to alter a (reference) variable, not only for properties.
 
 %------------------------------------------------------------------------------
 
@@ -8492,6 +8505,121 @@ Unfortunately, it is not that simple in Java.
 \end{lstlisting}
 %------------------------------------------------------------------------------
 
+\subsubsection{\textit{Apparently} immutable Types}
+That a type is immutable does not necessarily imply that this type is also quite simple. Such a type can be still fairly complex, and when its instances are used as keys in maps, or their string representations are used quite often, you may think about an implementation like this:
+\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Objects!toString()}
+\begin{lstlisting}[numbers=left]
+public final MyClass
+{
+    private final T1 m_Attribute1;
+    private final T2 m_Attribute2;
+    …
+    private final Tn m_AttributeN;
+    
+    private transient Integer m_HashValue = null;
+    private transient String m_StringRepresentation = null;
+
+    public MyClass( final T1 attribute1, final T2 attribute2, …, Tn attributeN )
+    {
+        m_Attribute1 = attribut1;
+        m_Attribute2 = attribut2;
+        …
+        m_AttributeN = attributeN;
+    }   //  MyClass()
+    
+    @Override    
+    public final int hashCode() // DISCOURAGED!
+    {
+        if( isNull( m_HashValue ) )
+        {
+            m_HashValue = Integer.valueOf( Objects.hash( m_Attribute1, m_Attribute2, …, m_AttributeN );
+        }    
+        
+        //---* Done *------------------------------------------------
+        return m_HashValue;
+    }   //  hashCode()
+    
+    @Override
+    public final String toString() // DISCOURAGED!
+    {
+        if( isNull( m_StringRepresentation ) )
+        {
+            m_StringRepresentation = …
+        }
+        
+        //---* Done *------------------------------------------------
+        return m_StringRepresentation;
+    }   // toString()
+}
+//  MyClass    
+\end{lstlisting}
+
+As all methods will return alwas the same values (we assume that there are only \lstinline|equals()| and the getters for the attributes …), objects of this type \textit{appears} to be immutable.
+
+For most cases, it does not matter that they are \textit{technically} not immutable, but if it matters, this may cause some errors that are really difficult to track down.
+
+But caching the values for the hash and for the string representation is still a good idea\footnote{…~although it is in a grey area in regards of ‘prematue optimisations’ – refer to \autocite{Knuth:PrematureOptimization}.} for an immutable type, you should just implement it differently\footnote{If \lstinline|MyClass| is serialisable, \lstinline|m_HashValue| and \lstinline|m_StringRepresentation| can be \lstinline|transient|; you just need to implement \lstinline|readObject()| that it will reconstruct them properly.}: 
+\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Objects!toString()}
+\begin{lstlisting}[numbers=left]
+public final MyClass
+{
+    private final T1 m_Attribute1;
+    private final T2 m_Attribute2;
+    …
+    private final Tn m_AttributeN;
+    
+    private final Integer m_HashValue;
+    private final String m_StringRepresentation;
+
+    public MyClass( final T1 attribute1, final T2 attribute2, …, Tn attributeN )
+    {
+        m_Attribute1 = attribut1;
+        m_Attribute2 = attribut2;
+        …
+        m_AttributeN = attributeN;
+        
+        m_HashValue = Integer.valueOf( Objects.hash( m_Attribute1, m_Attribute2, …, m_AttributeN );
+        m_StringRepresentation = …
+    }   //  MyClass()
+    
+    @Override    
+    public final int hashCode() { return m_HashValue; }
+    
+    @Override
+    public final String toString() { return m_StringRepresentation; }
+}
+//  MyClass    
+\end{lstlisting}
+
+The methods \lstinline|hashCode()|\index{java.lang!Object!hashCode()} and \lstinline|toString()|\index{java.lang!Object!toString()} are just samples here; you class can have lots of other methods that will follow that same or a similar pattern, allowing to pregenerate their results: if you will do this, it should happen in the constructor!
+
+%------------------------------------------------------------------------------
+
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 %------------------------------------------------------------------------------
 
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}

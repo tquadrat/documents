@@ -1,0 +1,10 @@
+% Adds a capital letter before each group in the index
+headings_flag 1 % enables headers
+ 
+heading_prefix "{\\bfseries "
+heading_suffix "\\hrulefill}\\nopagebreak\n"
+ 
+%heading_prefix "{\\bfseries\\Large\\hfill{}"
+%heading_suffix "\\hfill{}}\\nopagebreak\n"
+ 
+delim_0 "\\dotfill " delim_1 "\\dotfill " delim_2 "\\dotfill "

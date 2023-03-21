@@ -8575,7 +8575,7 @@ second look
 
 \subsubsection{\textit{Apparently} immutable Types}
 That a type is immutable does not necessarily imply that this type is also quite simple. Such a type can be still fairly complex, and when its instances are used as keys in maps, or their string representations are used quite often, you may think about an implementation like this:
-\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Objects!toString()}
+\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!toString()}
 \begin{lstlisting}[numbers=left]
 public final MyClass
 {
@@ -8627,7 +8627,7 @@ As all methods will return alwas the same values (we assume that there are only 
 For most cases, it does not matter that they are \textit{technically} not immutable, but if it matters, this may cause some errors that are really difficult to track down.
 
 But caching the values for the hash and for the string representation is still a good idea\footnote{…~although it is in a grey area in regards of ‘prematue optimisations’ – refer to \autocite{Knuth:PrematureOptimization}.} for an immutable type, you just should implement it differently\footnote{If \lstinline|MyClass| is serialisable, \lstinline|m_HashValue| and \lstinline|m_StringRepresentation| can be \lstinline|transient|; you just need to implement \lstinline|readObject()| that it will reconstruct them properly.}: 
-\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Objects!toString()}
+\index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!toString()}
 \begin{lstlisting}[numbers=left]
 public final MyClass
 {
@@ -10052,7 +10052,7 @@ public static final <T extends Cloneable> List<T> deepCloneList( final List<T> l
 \end{lstlisting}
 
 A method that would allow to clone an arbitrary instance of a class that supports cloning must look like this:\footnote{This is one of the rare cases where you cannot avoid the use of reflection.}
-\index{java.lang!Cloneable}\index{java.lang!CloneNotSupportedException}\index{java.lang!NoSuchMethodException}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!Class!getMethod()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!IllegalAccessException}\index{java.lang!IllegalArgumentException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang.reflect!InvocationTargetException}\index{java.lang.reflect!InvocationTargetException!getCause()}\index{java.lang!CloneNotSupportedException!initCause()}\index{java.lang!RuntimeException}\index{java.lang.Error}
+\index{java.lang!Cloneable}\index{java.lang!CloneNotSupportedException}\index{java.lang!NoSuchMethodException}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!Class!getMethod()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!IllegalAccessException}\index{java.lang!IllegalArgumentException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang.reflect!InvocationTargetException}\index{java.lang.reflect!InvocationTargetException!getCause()}\index{java.lang!CloneNotSupportedException!initCause()}\index{java.lang!RuntimeException}\index{java.lang!Error}
 \begin{lstlisting}
 public static final <T extends Cloneable> T cloneArbitrary( final T instance ) throws CloneNotSupportedException, NoSuchMethodException
 {

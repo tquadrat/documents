@@ -8481,6 +8481,74 @@ Nevertheless, you should use \lstinline|final| wherever you do not intend to alt
 
 %------------------------------------------------------------------------------
 
+\subsubsection{Property Types, Constructor Arguments and Return Values for Accessors}
+Basically, this was already discussed in the chapters \tqfullvref{sec:MutableTypesForArguments} and \tqfullvref{sec:MutableReturnTypes}: 
+
+\begin{itemize}
+\item{A constructor argument value of a mutable type needs to be copied before stored to the property; and it should by converted to an immutable type.}
+\item{The return value of a getter should be a copy of the property value if that is mutable.}
+\end{itemize}
+
+In particular the latter sounds simple: the attributes have to immutable, so we can just return them~…
+
+Let's see this code:
+\index{java.util!Date}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!Arrays!copyOfRange()}
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    private final Date m_Date;
+    private final String [] m_Names;
+    
+    public MyClass( final String [] names, final Date date )
+    {
+        m_Date = requireNonNullArgument( date, "date" );
+        m_Names = copyOfRange( requireNonNullArgument( names, "names" ), 0, names.length );
+    }   //  MyClass()
+    
+    public final Date getDate() { return m_Date; }
+    
+    public final String [] getNames() { return copyOfRange( m_Names, 0, m_Names.length ); }
+}
+//  class MyClass
+\end{lstlisting}
+
+Unfortunately, the class \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date} is \textit{not} immutable. And the although we copied the array, it can still be modified through reflection.
+
+A better implementation would look like this, assuming we cannot get rid of \lstinline|java.util.Date|\index{java.util!Date}\footnote{Otherwise, we would replace it by a type from the \lstinline|java.time|\index{java.time} package\autocite{ORACLE_DOC_TIME_PACKAGE}; these are immutable.}:
+\index{java.util!Date}\index{java.util!Date!getTime()}\index{java.util!Date!setTime()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!List}\index{java.util!List!of()}\index{java.util!List!toArray()}
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    private final long m_Date;
+    private final List<String> m_Names;
+    
+    public MyClass( final String [] names, final Date date )
+    {
+        m_Date = requireNonNullArgument( date, "date" ).getTime();
+        m_Names = List.of( requireNonNullArgument( names, "names" ) );
+    }   //  MyClass()
+    
+    public final Date getDate() { return new Date( m_Date ); }
+    
+    public final String [] getNames() { return m_Names.toArray( String []::new ); }
+}
+//  class MyClass
+\end{lstlisting}
+The implementation of \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util!List} that is returned by \lstinline|List::of|\autocite{ORACLE_DOC_LIST:of}\index{java.util!List!of()} does not provide any API that would allow to modify it. Nevertheless, it is not safe from being modified through reflection, if someone would spent enough time and effort to research how to do it. This means that it is difficult to get a collection really secured against this kind of abuse, but on the other side, you should not make it \textit{too} easy!
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Mutators for Immutable Types}
+\lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} and \lstinline|java.math.BigInteger|\autocite{ORACLE_DOC_BIGINTEGER_CLASS}\index{java.math!BigInteger} are two prominent immutable types in Java. Both classes provide methods that \textit{appear} to allow the modification of the current instance – for example:
+\begin{itemize}[nosep]
+\item{\lstinline|String::replace|\autocite{ORACLE_DOC_STRING:replace}\index{java.lang!String!replace()}}
+\item{\lstinline|BigInteger::clearBit|\autocite{ORACLE_DOC_BIGINTEGER:clearBit}\index{java.math!BigInteger!clearBit()}}
+\end{itemize}
+
+second look
+
+%------------------------------------------------------------------------------
+
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
@@ -8558,7 +8626,7 @@ As all methods will return alwas the same values (we assume that there are only 
 
 For most cases, it does not matter that they are \textit{technically} not immutable, but if it matters, this may cause some errors that are really difficult to track down.
 
-But caching the values for the hash and for the string representation is still a good idea\footnote{…~although it is in a grey area in regards of ‘prematue optimisations’ – refer to \autocite{Knuth:PrematureOptimization}.} for an immutable type, you should just implement it differently\footnote{If \lstinline|MyClass| is serialisable, \lstinline|m_HashValue| and \lstinline|m_StringRepresentation| can be \lstinline|transient|; you just need to implement \lstinline|readObject()| that it will reconstruct them properly.}: 
+But caching the values for the hash and for the string representation is still a good idea\footnote{…~although it is in a grey area in regards of ‘prematue optimisations’ – refer to \autocite{Knuth:PrematureOptimization}.} for an immutable type, you just should implement it differently\footnote{If \lstinline|MyClass| is serialisable, \lstinline|m_HashValue| and \lstinline|m_StringRepresentation| can be \lstinline|transient|; you just need to implement \lstinline|readObject()| that it will reconstruct them properly.}: 
 \index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Objects!toString()}
 \begin{lstlisting}[numbers=left]
 public final MyClass
@@ -8592,6 +8660,73 @@ public final MyClass
 \end{lstlisting}
 
 The methods \lstinline|hashCode()|\index{java.lang!Object!hashCode()} and \lstinline|toString()|\index{java.lang!Object!toString()} are just samples here; you class can have lots of other methods that will follow that same or a similar pattern, allowing to pregenerate their results: if you will do this, it should happen in the constructor!
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Changes through Reflection}
+Confessed, protecting your code against data modification through reflection seems paranoid at a first glance: in order exploit such a weakness, someone needs to have access to the system in a way that would allow them to do much worse things~…
+
+But you do not need to think about malicious code introduced by hackers; too often your own colleagues can be worse!
+
+Assume the following implementation for a class that is \textit{intended} to be immutable:
+\index{java.util!Date}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!Date!clone()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!equals()}\index{java.lang!Object!hashCode()}\index{java.util!Date!equals()}\index{java.lang!Override}
+\begin{lstlisting}[numbers=left]
+public final class MyClass
+{
+    private final Date m_ContractEnd;
+    
+    public MyClass( final Date contractEnd )
+    {
+        m_ContractEnd = requireNonNullArgument( contractEnd, "contractEnd" ).clone();
+    }   //  myClass()
+    
+    @Override
+    public final boolean equals( final Object o )
+    {
+        var retValue = this == o;
+        if( !retValue && o instanceof MyClass other )
+        {
+            retValue = m_ContractEnd.equals( o.m_ContractEnd );
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  equals()
+    
+    public final Date getContractEnd() { return m_ContractEnd; }
+    
+    @Override
+    public final int hashCode() { return Objects.hash( m_ContractDate ); }
+}
+//  class MyClass()
+\end{lstlisting}
+
+Of course that class had some other data than just the date for the end of the contract, but this is not relevant for the scenario here. But you can assume that the design of this class was according the business specification.
+
+Instances of this class had been given from the backend layer to the frontend layer (in fact,  the backend returned them on request from the frontend) as attributes of another object that was not immutable. And when the frontend returned that container object, this had been persisted completely, including the incorporated \lstinline|MyClass| instance\footnote{Of course the real names had been different, but that does not matter here.}, although this had not been necessary.
+
+As it was not possible to modify those \lstinline|MyClass| instance, it was required to create a new instance in case of a contract extension – and this was desired that way by the backend, for some business reasons.
+
+But the guys from the frontend team had a different idea: they just want to change the end date as this was much, much easier for them to implement. So they implemented the following code\footnote{I omitted all the required error handling stuff, as it does not add more clarity.}:
+\index{java.lang!Class!getClass()}\index{java.lang!Class!getDeclaredField()}\index{java.lang.reflect!Field}\index{java.lang.reflect!Field!setAccessible()}\index{java.lang.reflect!Field!get()}\index{java.util!Date}\index{java.util!Date!getTime()}\index{java.util!Date!setTime()}
+\begin{lstlisting}[numbers=left]
+public final void extendContract( final MyClass value, final Date newContractEnd )
+{
+	final var valueClass = value.getClass();
+	final var contractField = valueClass.getDeclaredField( "m_ContractEnd" );
+	contractField.setAccessible( true );
+	final var currentContractEnd = (Date) contractField.get( value );
+	currentContractEnd.setTime( newContractEnd.getTime() );
+}   //  extendContract()
+\end{lstlisting}
+
+Everyone was happy with this solution: the frontend team because of their simple, straightforward implementation of the contract extension, and the backend team because they did not know about it~…
+
+Sometime later, the procedure for new contracts was changed; additional data was required, and amongst that the acceptance of the GDPR. It was decided that no special action should be taken for the existing customers because when their contracts ends, a new contract will be created that automatically requires that new data. Only that the hack above avoid the creation of these new contracts.
+
+It took some time before someone detected that nearly none of the old clients accepted the GDPR, and some more time before the reason why was found. Of course no one was responsible for the problem, the developers that created the code had left the company already some time ago~…
+
+That the objects of the ‘immutable’ class \lstinline|MyClass| could be manipulated through reflection was not the only fault in this scenario, but that one that made it possible.
 
 %------------------------------------------------------------------------------
 

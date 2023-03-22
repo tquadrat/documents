@@ -4747,7 +4747,7 @@ The \verb#javac# in its standard configuration emits already several warnings, b
 
 \item{Avoid to outsmart the compiler!
 
-Casting an object to another type is a sample for this, invoking methods through reflection is another.\footnote{Thanks to the creators of Java that you cannot invoke a method through a pointer, as it is non uncommon in C and C++~…}}
+Casting an object to another type is a sample for this, invoking methods through Reflection\index{reflection} is another.\footnote{Thanks to the creators of Java that you cannot invoke a method through a pointer, as it is non uncommon in C and C++~…}}
 \end{enumerate}
 
 A quite simple example for swapping a potential logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
@@ -4766,7 +4766,7 @@ The best thing about compiler errors is, that they usually show up early during 
 
 See also chapter \tqvref{sec:CompilerWarningsAndErrors} about compiler warnings and errors.
 
-In this regard the use of \lstinline|java.lang.Class::forName|\autocite{ORACLE_DOC_CLASS:forName}\index{java.lang!Class!forName()} and the use of reflection in general are another nasty source for bugs that might be difficult to identify.
+In this regard the use of \lstinline|java.lang.Class::forName|\autocite{ORACLE_DOC_CLASS:forName}\index{java.lang!Class!forName()} and the use of Reflection\index{reflection} in general are another nasty source for bugs that might be difficult to identify.
 
 Basically, \lstinline|Class.forName()|\index{java.lang!Class!forName()} takes a string as its argument that is the fully qualified name of a class. If there is at least one instance of \lstinline|Class|\index{java.lang!Class} on the current classpath, the method will return that object – otherwise it will throw a \lstinline|ClassNotFoundException|\autocite{ORACLE_DOC_CLASSNOTFOUNDEXCEPTION_CLASS}\index{java.lang!ClassNotFoundException}. This will not happen at compile time, but only during the execution of the program, depending on the execution path of your program – meaning the bug that you introduced by having a typo in the class or package name may remain undetected for a long time.
 
@@ -4774,7 +4774,7 @@ So if you want to access a class object that you expect to be there, always use 
 
 Only if a class is optional for your application (for example, it may come with a plugin), use “\lstinline|Class.forName( <ClassName> )|”\index{java.lang!Class!forName()}; of course you also have to add the proper error handling for the case that the class is not there.
 
-For reflection, the situation is similar: you refer to the class element that you want to get access to by its name, provided as a string. The compiler is unable to validate that name, so a potential error will surface earliest at runtime. Refer to the chapter \tqfullvref{sec:Reflection} for more details about reflection and its alternatives.
+For Reflection\index{reflection}, the situation is similar: you refer to the class element that you want to get access to by its name, provided as a string. The compiler is unable to validate that name, so a potential error will surface earliest at runtime. Refer to the chapter \tqfullvref{sec:Reflection} for more details about Reflection\index{reflection} and its alternatives.
 
 %------------------------------------------------------------------------------
 
@@ -8412,11 +8412,11 @@ In Java\footnote{And most probable, in any other programming language, too},  an
 \begin{enumerate}[label=P\arabic*.]
 \item{To be immutable, all attributes of a class have to be \lstinline|private| and \lstinline|final|.
 
-Even without a proper mutator method, non-\lstinline|final| attributes could be changed, at least via reflection.}
+Even without a proper mutator method, non-\lstinline|final| attributes could be changed, at least via Reflection\index{reflection}.}
 
 \item{For an immutable type, all attribute \textit{values} have to be immutable, too.
 
-Otherwise, they could be modified externally, again by using (abusing?) reflection. But this does not necessarily mean that the type of the attributes must be an immutable type.}
+Otherwise, they could be modified externally, again by using (abusing?) Reflection\index{reflection}. But this does not necessarily mean that the type of the attributes must be an immutable type.}
 
 \item{The class for the immutable type has to be \lstinline|final|.
 
@@ -8481,7 +8481,7 @@ Nevertheless, you should use \lstinline|final| wherever you do not intend to alt
 
 %------------------------------------------------------------------------------
 
-\subsubsection{Property Types, Constructor Arguments and Return Values for Accessors}
+\subsection{Property Types, Constructor Arguments and Return Values for Accessors}
 Basically, this was already discussed in the chapters \tqfullvref{sec:MutableTypesForArguments} and \tqfullvref{sec:MutableReturnTypes}: 
 
 \begin{itemize}
@@ -8512,7 +8512,7 @@ public final class MyClass
 //  class MyClass
 \end{lstlisting}
 
-Unfortunately, the class \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date} is \textit{not} immutable. And the although we copied the array, it can still be modified through reflection.
+Unfortunately, the class \lstinline|java.util.Date|\autocite{ORACLE_DOC_DATE_CLASS}\index{java.util!Date} is \textit{not} immutable. And the although we copied the array, it can still be modified through Reflection\index{reflection}.
 
 A better implementation would look like this, assuming we cannot get rid of \lstinline|java.util.Date|\index{java.util!Date}\footnote{Otherwise, we would replace it by a type from the \lstinline|java.time|\index{java.time} package\autocite{ORACLE_DOC_TIME_PACKAGE}; these are immutable.}:
 \index{java.util!Date}\index{java.util!Date!getTime()}\index{java.util!Date!setTime()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!List}\index{java.util!List!of()}\index{java.util!List!toArray()}
@@ -8534,46 +8534,32 @@ public final class MyClass
 }
 //  class MyClass
 \end{lstlisting}
-The implementation of \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util!List} that is returned by \lstinline|List::of|\autocite{ORACLE_DOC_LIST:of}\index{java.util!List!of()} does not provide any API that would allow to modify it. Nevertheless, it is not safe from being modified through reflection, if someone would spent enough time and effort to research how to do it. This means that it is difficult to get a collection really secured against this kind of abuse, but on the other side, you should not make it \textit{too} easy!
+The implementation of \lstinline|java.util.List|\autocite{ORACLE_DOC_LIST_INTERFACE}\index{java.util!List} that is returned by \lstinline|List::of|\autocite{ORACLE_DOC_LIST:of}\index{java.util!List!of()} does not provide any API that would allow to modify it. Nevertheless, it is not safe from being modified through Reflection\index{reflection}, if someone would spent enough time and effort to research how to do it. This means that it is difficult to get a collection really secured against this kind of abuse, but on the other side, you should not make it \textit{too} easy!
 
 %------------------------------------------------------------------------------
 
-\subsubsection{Mutators for Immutable Types}
+\subsection{Mutators for Immutable Types}
 \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} and \lstinline|java.math.BigInteger|\autocite{ORACLE_DOC_BIGINTEGER_CLASS}\index{java.math!BigInteger} are two prominent immutable types in Java. Both classes provide methods that \textit{appear} to allow the modification of the current instance – for example:
 \begin{itemize}[nosep]
 \item{\lstinline|String::replace|\autocite{ORACLE_DOC_STRING:replace}\index{java.lang!String!replace()}}
 \item{\lstinline|BigInteger::clearBit|\autocite{ORACLE_DOC_BIGINTEGER:clearBit}\index{java.math!BigInteger!clearBit()}}
 \end{itemize}
 
-second look
-
-%------------------------------------------------------------------------------
-
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{APIGUARDIAN}
-\autocite{APIGUARDIAN:API}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
+On a second look you will find that both methods will have a return value other than \lstinline|void| as one might expect for a mutator method. And the documentation tells you that these methods will return a new instance of the respective class with the modified status:
+\index{java.lang!String!}\index{java.lang!String!replace()}\index{java.math!BigInteger}\index{java.math!BigInteger!clearBit()}
 \begin{lstlisting}[numbers=left]
+final var s1 = "Ping";
+final var s2 = s1.replace( "P", "Str" );
+var isSame = s1 == s2; // Will be false
+
+final var b1 = new BigInteger( "1234" );
+final var b2 = b1.clearBit( 2 );
+isSame = b1 == b2; // Will be false;
 \end{lstlisting}
+
 %------------------------------------------------------------------------------
 
-\subsubsection{\textit{Apparently} immutable Types}
+\subsection{\textit{Apparently} immutable Types}
 That a type is immutable does not necessarily imply that this type is also quite simple. Such a type can be still fairly complex, and when its instances are used as keys in maps, or their string representations are used quite often, you may think about an implementation like this:
 \index{java.lang!Override}\index{java.lang!Object!hashCode()}\index{org.tquadrat.foundation.lang!Objects!isNull()}\index{java.lang!Integer!valueOf()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!toString()}
 \begin{lstlisting}[numbers=left]
@@ -8663,10 +8649,10 @@ The methods \lstinline|hashCode()|\index{java.lang!Object!hashCode()} and \lstin
 
 %------------------------------------------------------------------------------
 
-\subsubsection{Changes through Reflection}
-Confessed, protecting your code against data modification through reflection seems paranoid at a first glance: in order exploit such a weakness, someone needs to have access to the system in a way that would allow them to do much worse things~…
+\subsection{Changes through Reflection}\label{sec:ChangesThroughReflection}
+Confessed, protecting your code against data modification through Reflection\index{reflection} seems paranoid at a first glance: in order exploit such a weakness, someone needs to have access to the system in a way that would allow them to do much worse things~…
 
-But you do not need to think about malicious code introduced by hackers; too often your own colleagues can be worse!
+But you do not need to think about malicious code introduced by hackers; too often your own colleagues are similarly dangerous!
 
 Assume the following implementation for a class that is \textit{intended} to be immutable:
 \index{java.util!Date}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.util!Date!clone()}\index{org.tquadrat.foundation.lang!Objects!hash()}\index{java.lang!Object!equals()}\index{java.lang!Object!hashCode()}\index{java.util!Date!equals()}\index{java.lang!Override}
@@ -8722,39 +8708,14 @@ public final void extendContract( final MyClass value, final Date newContractEnd
 
 Everyone was happy with this solution: the frontend team because of their simple, straightforward implementation of the contract extension, and the backend team because they did not know about it~…
 
-Sometime later, the procedure for new contracts was changed; additional data was required, and amongst that the acceptance of the GDPR. It was decided that no special action should be taken for the existing customers because when their contracts ends, a new contract will be created that automatically requires that new data. Only that the hack above avoid the creation of these new contracts.
+Sometime later, the procedure for new contracts was changed; additional data was required, and amongst that the acceptance of the GDPR. It was decided that no special action should be taken for the existing customers because when their contracts ends, a new contract will be created that automatically requires that new data. Only that the hack above avoid the creation of these new contracts~…
 
 It took some time before someone detected that nearly none of the old clients accepted the GDPR, and some more time before the reason why was found. Of course no one was responsible for the problem, the developers that created the code had left the company already some time ago~…
 
-That the objects of the ‘immutable’ class \lstinline|MyClass| could be manipulated through reflection was not the only fault in this scenario, but that one that made it possible.
+That the objects of the ‘immutable’ class \lstinline|MyClass| could be manipulated through Reflection\index{reflection} was not the only fault in this scenario, but that one that made the whole thing possible.
 
-%------------------------------------------------------------------------------
+Refer to the chapter \tqfullref{sec:Reflection} for some more details about Reflection\index{reflection}.
 
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{APIGUARDIAN}
-\autocite{APIGUARDIAN:API}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
 %------------------------------------------------------------------------------
 
 \section{Local Variable Type Inference}\label{sec:LocalVariableTypeInference}
@@ -9490,18 +9451,248 @@ Another advantage is that you have to change your code only at one single locati
 
 %------------------------------------------------------------------------------
 
-\section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
-First of all, you should avoid to use Reflection whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
+%------------------------------------------------------------------------------
 
-One reason is that accessing a field or a method via reflection causes some overhead that decreases a program’s performance. 
+\section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
+“Reflection”\index{reflection} is a feature in the Java programming language that allows an executing Java program to examine or “\textit{introspect}”\index{introspection|see {reflection}} upon itself, and manipulate internal properties of the program. For example, it's possible for a Java class to obtain the names of all its members and display them.
+
+The ability to examine and manipulate a Java class from within itself may not sound like very much, but in other programming languages this feature simply doesn't exist. For example, there is no way in a Pascal\index{Pascal}, C\index{C}, or C++\index{C++} program to obtain information about the functions defined within that program.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{First of all, in production code you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!
+
+One reason is that accessing a field or a method via Reflection\index{reflection} causes some overhead that decreases a program’s performance. 
 
 Next, such code is usually not easy to read or to understand, not only because of all the necessary error handling code around it.
 
-And with modularisation, it is quite often not even possible to access methods and fields of an object via Reflection, even if they are \lstinline|public|; they are not even visible in some cases.
+But as always, there are a few exceptions: if your project is to write a programming tool – a code generator, an IDE, a code checker – or an annotation processor, you cannot avoid Reflection\index{reflection}. It is also useful for the implementation of some unit tests\footnote{Although one could argue that tests are not production code.}.
 
-Of course, there are some patterns whose implementation in Java requires the use of Reflection, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference} are quite often a very good replacement for an implementation based on Reflection.
+Next, some factory methods for arrays and/or generic types also require the use of Reflection\index{reflection}.}
 
-Reflection also allows you to access non-\lstinline|public| member of a class that are usually not accessible by your code. This is considered a “dirty hack” and may not be used in production code. In particular as it may not work properly with modules.
+\item{The Reflection\index{reflection} types may cause errors that are difficult to debug when used in public APIs.
+
+Most problems with instances of these types will reveal only at runtime; also refer \tqfullvref{sec:SwapToCompilerErrors}), therefore they should not be used as parameter or return types. Of course this restriction does not apply for programming tools or test code.}
+
+\item{Do not use Reflection\index{reflection} to circumvent access restrictions.
+
+The designer of a class made a method \lstinline|private| for some reason, so it is usually a bad idea to use Reflection\index{reflection} to invoke this method from the outside. Again, unit tests could be an exception. Refer to chapter \tqvref{sec:ChangesThroughReflection} that discusses a scenario where this went wrong.}
+
+\item{When using modules\autocite{OPENJDK:ProjectJigsaw}, the results of calls to the Reflection\index{reflection} APIs get unpredictable.
+
+As long as these calls refer to classes within the same module, they behave as expected (mainly as before Java~9), but for classes from foreign modules, some results can be fairly surprising. Of course these results are not random, they still follow some strict rules. Nevertheless, they depend on the module definitions and on some command line arguments that can override those definitions.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Callback Methods}
+A callback is used by a server to report an event to a client; in Java, you will usually implement this through dedicated interfaces. A common pattern for this is the listener pattern that can be implemented in Java like this\footnote{I omitted all error handling code, and some synchronisation would be required, too, but both would not help to understand the pattern}:
+
+\begin{lstlisting}
+public interface AnEventListener extends EventListener
+{
+    /**
+     *  The callback method.
+     *
+     *  @param  event   The event.
+     */
+    public void receiveEvent( final MyEvent event );
+}
+//  interface AnEventListener
+\end{lstlisting}
+
+\begin{lstlisting}
+public interface AnEventSource
+{
+    public void addListener( final AnEventListener listener );
+    public void removeListener( final AnEventListener listener );
+}
+//  interface AnEventSource
+\end{lstlisting}
+
+\begin{lstlisting}
+public final class MyEvent extends EventObject
+{
+    public MyEvent( final AnEventSource source )
+    {
+        super( source );
+    }   MyEvent()
+}
+//  class MyEvent
+\end{lstlisting}
+A real event object would have some payload in addition to the source, but for the purpose to explain the basic pattern, I omitted that, too.
+
+\begin{lstlisting}
+public final class MyEventSource implements AnEventSource
+{
+    private final List<AnEventListener> m_Listeners = new ArrayList<>();
+    
+    @Override
+    public final void addListener( final AnEventListener listener )
+    {
+        m_Listeners.add( listener );
+    }   //  addListener()
+    
+    @Override
+    public final void removeListener( final AnEventListener listener )
+    {
+        m_Listeners.remove( listener );
+    }   //  removeListener()
+    
+    private final void sendEvent()
+    {
+        final var event = new MyEvent( this );
+        for( final var listener : m_Listeners )
+        {
+            listener.receiveEvent( event );
+        }
+    }   //  sendEvent()
+}
+//  class MyEventSource
+\end{lstlisting}
+
+\begin{lstlisting}
+public final class MyEventListener implements AnEventListener
+{
+    public final void registerToSource( final AnEventSource source )
+    {
+        source.addListener( this );
+    }	//	registerToSource()
+
+    @Override    
+    public final void receiveEvent( final MyEvent event )
+    {
+        // Respond to the event …
+    }   // receiveEvent()
+}
+//  class MyEventListener
+\end{lstlisting}
+
+A lot of code~… but the good thing is, that problems with the definition will be detected by the compiler.
+
+But what if instances of already existing classes should be used as the event listener? Classes that do not share a common superclass and that does not expose the callback method in a convenient interface\footnote{Another scenario would be that your are too lazy to write all that code~…}. In C\index{C} and C++\index{C++}, you could solve this with a method pointer, and in Java, Reflection\index{reflection} seems to be the solution.
+
+A “listener” class may look like this:
+\begin{lstlisting}
+public final class AListener
+{
+    /**
+     *  The method that we want to use as the callback method.
+     */
+    public final void update() { /* Do something */ }
+}
+//  class AListener
+\end{lstlisting}
+
+And the “event source” class could be this:
+\begin{lstlisting}
+public final class MySource
+{
+    private final Map<Object,Method> m_Listeners = new IdentityHashMap<>();
+    
+    public final void addListener( final Object listener )
+    {
+        try
+        {
+            final var method = listener.getClass().getMethod( "update" );
+            m_Listeners.put( object, method );
+        }
+        catch( final NoSuchMethodException e )
+        {
+            throw new IllegalargumentException( "Not a valid listener!" );
+        }
+    }   //  addListener()
+    
+    private final void sendEvent()
+    {
+        // Error handling is omitted!!
+        for( final var entry : m_Listeners.entrySet() )
+        {
+            entry.getValue().invoke( entry.getKey() );
+        }
+    }   //  sendEvent()
+}
+//  class MySource
+\end{lstlisting}
+
+Unfortunately, the compiler cannot check anything here, if something is wrong, you will get to know it during runtime – if ever.
+
+But since Java~8, there is an alternative; you can write the class \lstinline|MySource| like this:
+\begin{lstlisting}
+public final class MySource
+{
+    private final List<Runnable> m_Listeners = new ArrayList<>();
+    
+    public final void addListener( final Object listener )
+    {
+        switch( listener )
+        {
+            case null -> throw new NullArgumentException( "listener" );
+            case AListener aListener -> m_Listeners.add( aListener::update );
+            default -> throw new IllegalargumentException( "Not a valid listener!" );
+        }
+    }   //  addListener()
+    
+    private final void sendEvent()
+    {
+        // No error handling required!!
+        for( final var listener : m_Listeners )
+        {
+            listener.run();
+        }
+    }   //  sendEvent()
+}
+//  class MySource
+\end{lstlisting}
+This implementation uses method references that can be checked at compile time.
+
+But although this works, for the listener pattern you should prefer the first approach. For other cases, the last one is a good alternative to the use of Reflection\index{reflection}.
+
+%------------------------------------------------------------------------------
+
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+This affects mainly the types
+    \begin{itemize}[nosep]
+    \item{\lstinline|java.lang.reflect.Constructor|}
+    \item{\lstinline|java.lang.reflect.Method|}
+    \item{\lstinline|java.lang.reflect.Field|}
+    \item{\lstinline|java.lang.reflect.Array|}
+    \end{itemize}
+and their superclasses. Problems with their instances will often reveal only at runtime (see \tqfullvref{sec:SwapToCompilerErrors}).
+
+
+First of all, you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
+
+
+And with modularisation, it is quite often not even possible to access methods and fields of an object via Reflection\index{reflection}, even if they are \lstinline|public|; they are not even visible in some cases.
+
+Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
+
+Reflection\index{reflection} also allows you to access non-\lstinline|public| members of a class that are usually not accessible by your code. This is considered a “dirty hack” and may not be used in production code. In particular as it may not work properly with modules.
 
 But there are useful applications for this, too: you can and should used it in unit tests for \lstinline|private| or \lstinline|protected| methods that are not \lstinline|public| for good reasons, and if these methods cannot be tested indirectly.\footnote{The alternative would be to make the method at least \lstinline|protected|, but this would make it (more) visible to the consumers of the API, and perhaps even accessible – but there was a reason why that method was originally \lstinline|private|.}
 
@@ -10051,7 +10242,7 @@ public static final <T extends Cloneable> List<T> deepCloneList( final List<T> l
 }   //  deepCloneList()
 \end{lstlisting}
 
-A method that would allow to clone an arbitrary instance of a class that supports cloning must look like this:\footnote{This is one of the rare cases where you cannot avoid the use of reflection.}
+A method that would allow to clone an arbitrary instance of a class that supports cloning must look like this:\footnote{This is one of the rare cases where you cannot avoid the use of Reflection\index{reflection}.}
 \index{java.lang!Cloneable}\index{java.lang!CloneNotSupportedException}\index{java.lang!NoSuchMethodException}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!Class!getMethod()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!IllegalAccessException}\index{java.lang!IllegalArgumentException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang.reflect!InvocationTargetException}\index{java.lang.reflect!InvocationTargetException!getCause()}\index{java.lang!CloneNotSupportedException!initCause()}\index{java.lang!RuntimeException}\index{java.lang!Error}
 \begin{lstlisting}
 public static final <T extends Cloneable> T cloneArbitrary( final T instance ) throws CloneNotSupportedException, NoSuchMethodException

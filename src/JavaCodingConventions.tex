@@ -9668,13 +9668,103 @@ public final class MySource
 }
 //  class MySource
 \end{lstlisting}
-This implementation uses method references that can be checked at compile time.
+This implementation uses method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} that can be checked at compile time.
 
 But although this works, for the listener pattern you should prefer the first approach, because it shows your intent in a much better way. For other cases, the last one is a good alternative to be used instead of Reflection\index{reflection}.
 
 %------------------------------------------------------------------------------
 
 \subsection{Factory Methods with Reflection}
+Assume you have a class \lstinline|RingBuffer<T>| that has a method \lstinline|RingBuffer::toArray|.
+
+A straight forward implementation of that method would look like this – and it would not compile:
+
+\begin{lstlisting}[numbers=left]
+public final class RingBuffer<T>
+{
+    public final Iterator<T> iterator() { … }
+    public final int size() { … }
+    
+    public final T [] toArray()
+    {
+        // DOES NOT COMPILE!
+        final T [] retValue = new T [size()];
+        var index = 0;
+        for( var iterator = iterator(); iterator.hasNext; ++index )
+        {
+            retValue [index] = iterator.next();
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toArray()
+}
+//  class RingBuffer
+\end{lstlisting}
+The compiler will complain about line~9 because you cannot instantiate a type variable directly. You can now change the return value of \lstinline|toArray()| to \lstinline|Object []|, or you implement it like this:
+
+\begin{lstlisting}[numbers=left]
+public final class RingBuffer<T>
+{
+    public final Iterator<T> iterator() { … }
+    public final int size() { … }
+    
+    public final T [] toArray( final T [] destination )
+    {
+        final var retValue = destination.length >= size() 
+            ? destination 
+            : (T []) Array.newInstance( destination.getClass().getComponentType(), size() );
+        var index = 0;
+        for( var iterator = iterator(); iterator.hasNext; ++index )
+        {
+            retValue [index] = iterator.next();
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toArray()
+}
+//  class RingBuffer
+\end{lstlisting}
+
+In line~10, we use Reflection\index{reflection} to~…
+\begin{itemize}[nosep]
+\item{…~get the component type of the \lstinline|destination| argument, using \lstinline|Class::getComponentType|}
+\item{…~create the array of that type through a call to \lstinline|Array::newInstance|}
+\end{itemize}
+We know that \lstinline|destination| is an array, because we declared it that way. So we know also that \lstinline|Class::getComponentType| will not return \lstinline|null|. And we know that this new array will be of the right type, for the same reason, therefore the cast will be successful. This implementation of \lstinline|toArray()| will not work without the use of Reflection\index{reflection}.
+
+But why do we need the \lstinline|destination| parameter? Why do not implement it like this:
+
+\begin{lstlisting}[numbers=left]
+public final class RingBuffer<T>
+{
+    public final Iterator<T> iterator() { … }
+    public final int size() { … }
+
+    // Will compile, but sometimes, it does not work …    
+    public final T [] toArray()
+    {
+        final T [] retValue;
+        var index = 0;
+        for( var iterator = iterator(); iterator.hasNext; ++index )
+        {
+            final var entry = iterator.next();
+            if( index == 0 )
+            {
+                retValue = (T []) Array.newInstance( entry.getClass(), size() );
+            }
+            retValue [index] = entry;
+        }
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  toArray()
+}
+//  class RingBuffer
+\end{lstlisting}
+
+It would work fine for \lstinline|RingBuffer<String>|, but for \lstinline|RingBuffer<CharSequence>| it will crash – not always, but everytime it should not~… – because 
 
 %------------------------------------------------------------------------------
 
@@ -9718,7 +9808,7 @@ First of all, you should avoid to use Reflection\index{reflection} whenever poss
 
 And with modularisation, it is quite often not even possible to access methods and fields of an object via Reflection\index{reflection}, even if they are \lstinline|public|; they are not even visible in some cases.
 
-Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
+Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
 
 Reflection\index{reflection} also allows you to access non-\lstinline|public| members of a class that are usually not accessible by your code. This is considered a “dirty hack” and may not be used in production code. In particular as it may not work properly with modules.
 
@@ -10641,8 +10731,7 @@ Most lambdas are just one liners, and if they return something, it will be the r
 n -> (n + 1) * 4; 
 \end{lstlisting}
 
-If the code for the lambda will be more complex, you should consider to place it to a method and
-refer to it with a method reference:
+If the code for the lambda will be more complex, you should consider to place it to a method and refer to it with a method reference\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference}:
 \begin{lstlisting}
 public final class MyClass
 {

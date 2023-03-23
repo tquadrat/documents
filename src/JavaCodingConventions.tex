@@ -9487,7 +9487,7 @@ As long as these calls refer to classes within the same module, they behave as e
 
 \subsection{Callback Methods}
 A callback is used by a server to report an event to a client; in Java, you will usually implement this through dedicated interfaces. A common pattern for this is the listener pattern that can be implemented in Java like this\footnote{I omitted all error handling code, and some synchronisation would be required, too, but both would not help to understand the pattern}:
-
+\index{java.util!EventListener}
 \begin{lstlisting}
 public interface AnEventListener extends EventListener
 {
@@ -9510,6 +9510,7 @@ public interface AnEventSource
 //  interface AnEventSource
 \end{lstlisting}
 
+\index{java.util!EventObject}
 \begin{lstlisting}
 public final class MyEvent extends EventObject
 {
@@ -9522,6 +9523,7 @@ public final class MyEvent extends EventObject
 \end{lstlisting}
 A real event object would have some payload in addition to the source, but for the purpose to explain the basic pattern, I omitted that, too.
 
+\index{java.util!List}\index{java.util!List!add()}\index{java.util!ArrayList}\index{java.lang!Override}\index{java.util!List!remove()}
 \begin{lstlisting}
 public final class MyEventSource implements AnEventSource
 {
@@ -9551,6 +9553,7 @@ public final class MyEventSource implements AnEventSource
 //  class MyEventSource
 \end{lstlisting}
 
+\index{java.lang!Override}
 \begin{lstlisting}
 public final class MyEventListener implements AnEventListener
 {
@@ -9572,7 +9575,7 @@ A lot of code~… but the good thing is, that problems with the definition will 
 
 But what if instances of already existing classes should be used as the event listener? Classes that do not share a common superclass and that does not expose the callback method in a convenient interface\footnote{Another scenario would be that your are too lazy to write all that code~…}. In C\index{C} and C++\index{C++}, you could solve this with a method pointer, and in Java, Reflection\index{reflection} seems to be the solution.
 
-A “listener” class may look like this:
+Such an already existing “listener” class may look like this:
 \begin{lstlisting}
 public final class AListener
 {
@@ -9584,7 +9587,8 @@ public final class AListener
 //  class AListener
 \end{lstlisting}
 
-And the “event source” class could be this:
+And you could implement the “event source” class like this:
+\index{java.util!Map}\index{java.util!Map!put()}\index{java.util!Map!entrySet()}\index{java.util!IdentityHashMap}\index{java.lang!Object}\index{java.lang.reflect!Method}\index{java.lang!Object!getClass()}\index{java.lang!Class!getMethod()}\index{java.lang!NoSuchMethodException}\index{java.lang!IllegalArgumentException}\index{java.util!Map.Entry!getKey()}\index{java.util!Map.Entry!getValue()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}
 \begin{lstlisting}
 public final class MySource
 {
@@ -9599,16 +9603,35 @@ public final class MySource
         }
         catch( final NoSuchMethodException e )
         {
-            throw new IllegalargumentException( "Not a valid listener!" );
+            throw new IllegalArgumentException( "Not a valid listener!" );
         }
     }   //  addListener()
     
     private final void sendEvent()
     {
-        // Error handling is omitted!!
         for( final var entry : m_Listeners.entrySet() )
         {
-            entry.getValue().invoke( entry.getKey() );
+            try
+            {
+                entry.getValue().invoke( entry.getKey() );
+            }
+            catch( final IllegalAccessException e )
+            {
+                /*
+                 * update() is public.
+                 */
+                throw new UnexpectedExceptionError( e );
+            }
+            catch( final InvocationTargetException e )
+            {
+                switch( e.getCause() )
+                {
+                    case null -> throw new UnexpectedExceptionError( e );
+                    case RuntimeException re -> throw re;
+                    case Error error -> throw error;
+                    default -> throw new UnexpectedExceptionError( e.getCause() );
+                }
+            }
         }
     }   //  sendEvent()
 }
@@ -9618,6 +9641,7 @@ public final class MySource
 Unfortunately, the compiler cannot check anything here, if something is wrong, you will get to know it during runtime – if ever.
 
 But since Java~8, there is an alternative; you can write the class \lstinline|MySource| like this:
+\index{java.util!List}\index{java.util!List!add()}\index{java.util!ArrayList}\index{java.lang!Runnable}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{java.lang!IllegalArgumentException}\index{java.lang!Runnable!run()}
 \begin{lstlisting}
 public final class MySource
 {
@@ -9629,13 +9653,13 @@ public final class MySource
         {
             case null -> throw new NullArgumentException( "listener" );
             case AListener aListener -> m_Listeners.add( aListener::update );
-            default -> throw new IllegalargumentException( "Not a valid listener!" );
+            default -> throw new IllegalArgumentException( "Not a valid listener!" );
         }
     }   //  addListener()
     
     private final void sendEvent()
     {
-        // No error handling required!!
+        // No boiler plate error handling required!!
         for( final var listener : m_Listeners )
         {
             listener.run();
@@ -9646,7 +9670,11 @@ public final class MySource
 \end{lstlisting}
 This implementation uses method references that can be checked at compile time.
 
-But although this works, for the listener pattern you should prefer the first approach. For other cases, the last one is a good alternative to the use of Reflection\index{reflection}.
+But although this works, for the listener pattern you should prefer the first approach, because it shows your intent in a much better way. For other cases, the last one is a good alternative to be used instead of Reflection\index{reflection}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Factory Methods with Reflection}
 
 %------------------------------------------------------------------------------
 

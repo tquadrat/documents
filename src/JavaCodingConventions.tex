@@ -9670,7 +9670,7 @@ public final class MySource
 \end{lstlisting}
 This implementation uses method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} that can be checked at compile time.
 
-But although this works, for the listener pattern you should prefer the first approach, because it shows your intent in a much better way. For other cases, the last one is a good alternative to be used instead of Reflection\index{reflection}.
+But although this works, for the listener pattern you should prefer the first approach, because it shows your intent in a much better way. For other use cases, the last one is a good alternative to be used instead of Reflection\index{reflection}.
 
 %------------------------------------------------------------------------------
 
@@ -9678,7 +9678,7 @@ But although this works, for the listener pattern you should prefer the first ap
 Assume you have a class \lstinline|RingBuffer<T>| that has a method \lstinline|RingBuffer::toArray|.
 
 A straight forward implementation of that method would look like this – and it would not compile:
-
+\index{java.util!Iterator}\index{java.util!Iterator!hasNext()}\index{java.util!Iterator!next()}
 \begin{lstlisting}[numbers=left]
 public final class RingBuffer<T>
 {
@@ -9702,7 +9702,7 @@ public final class RingBuffer<T>
 //  class RingBuffer
 \end{lstlisting}
 The compiler will complain about line~9 because you cannot instantiate a type variable directly. You can now change the return value of \lstinline|toArray()| to \lstinline|Object []|, or you implement it like this:
-
+\index{java.util!Iterator}\index{java.util!Iterator!hasNext()}\index{java.util!Iterator!next()}\index{java.util.reflect!Array!newInstance()}\index{java.lang!Object!getClass()}\index{java.lang!Class!getComponentType()}
 \begin{lstlisting}[numbers=left]
 public final class RingBuffer<T>
 {
@@ -9729,13 +9729,14 @@ public final class RingBuffer<T>
 
 In line~10, we use Reflection\index{reflection} to~…
 \begin{itemize}[nosep]
-\item{…~get the component type of the \lstinline|destination| argument, using \lstinline|Class::getComponentType|}
-\item{…~create the array of that type through a call to \lstinline|Array::newInstance|}
+\item{…~get the component type of the \lstinline|destination| argument by calling the method \lstinline|Class::getComponentType|\autocite{ORACLE_DOC_CLASS:getComponentType}\index{java.lang!Class!getComponentType()}}
+\item{…~create the array of that type through a call to \lstinline|Array::newInstance|}\autocite{ORACLE_DOC_ARRAY:newInstance}\index{java.util.reflect!Array!newInstance()}
 \end{itemize}
+
 We know that \lstinline|destination| is an array, because we declared it that way. So we know also that \lstinline|Class::getComponentType| will not return \lstinline|null|. And we know that this new array will be of the right type, for the same reason, therefore the cast will be successful. This implementation of \lstinline|toArray()| will not work without the use of Reflection\index{reflection}.
 
-But why do we need the \lstinline|destination| parameter? Why do not implement it like this:
-
+But why do we need the \lstinline|destination| parameter? Why do not implement it this way:
+\index{java.util!Iterator}\index{java.util!Iterator!hasNext()}\index{java.util!Iterator!next()}\index{java.util.reflect!Array!newInstance()}\index{java.lang!Object!getClass()}
 \begin{lstlisting}[numbers=left]
 public final class RingBuffer<T>
 {
@@ -9764,7 +9765,17 @@ public final class RingBuffer<T>
 //  class RingBuffer
 \end{lstlisting}
 
-It would work fine for \lstinline|RingBuffer<String>|, but for \lstinline|RingBuffer<CharSequence>| it will crash – not always, but everytime it should not~… – because 
+It would work fine for \lstinline|RingBuffer<String>|, but for \lstinline|RingBuffer<CharSequence>| it will crash – because the call to \lstinline|entry.getClass()|\index{java.lang!Object!getClass()} in line~16 will never return \lstinline|java.lang.CharSequence|\autocite{ORACLE_DOC_CHARSEQUENCE_INTERFACE}\index{java.lang!CharSequence}, therefore \lstinline|Array.newInstance()|\index{java.util.reflect!Array!newInstance()} will not return an array of type \lstinline|T| (equals to \lstinline|java.lang.CharSequence|\index{java.lang!CharSequence} in this case) and the cast will fail – at runtime! This sample shows again how dangerous the use of Reflection\index{reflection} can be.
+
+Refer also to the implementations of \lstinline|Collection::toArray|\index{java.util!Collection!toArray()} here: \autocite{ORACLE_DOC_COLLECTION:toArray1, ORACLE_DOC_COLLECTION:toArray2, ORACLE_DOC_COLLECTION:toArray3}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Using Reflection to write Unit Tests}
+
+%------------------------------------------------------------------------------
+
+\subsection{Annotations and Reflection}
 
 %------------------------------------------------------------------------------
 

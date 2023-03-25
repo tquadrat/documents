@@ -506,7 +506,7 @@ public final class MyClass
 \end{lstlisting}
 
 \subsection{Indentation Size}\label{sec:IndentationSize}
-Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces\index{indentation!size|see{indentation!base unit}}\index{indentation!base unit} has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
+Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces\index{indentation!base unit} has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
 
 When you write code \textit{snippets} for a publication (for an article, as part of a program documentation, or for an answer on StackOverflow\autocite{STACKOVERFLOW}~…), sometimes using a base indentation unit of two spaces would be better, as it spares some room. But reformatting existing code for this use case is in most cases not worth the effort.
 
@@ -9903,44 +9903,54 @@ This allows you to call the method \lstinline|MyClass::myMethod| nearly directly
 %------------------------------------------------------------------------------
 
 \subsection{Annotations and Reflection}
+Annotations with their retention policy\autocite{ORACLE_DOC_RETENTIONPOLICY_CLASS,ORACLE_DOC_RETENTION_INTERFACE} set to \verb#RUNTIME# \index{retention policy} “[…] are to be recorded in the class file by the compiler and retained by the VM at run time, so they may be read reflectively.”
 
-%------------------------------------------------------------------------------
-
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{APIGUARDIAN}
-\autocite{APIGUARDIAN:API}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
+To check whether the class of the given object was annotated with a particular annotation, you will use code like that below:
+\index{java.lang.annotation!Annotation}\index{java.util!Optional}\index{java.util!Optional!ofNullable()}\index{java.lang!Object}\index{java.lang!Object!getClass()}\index{java.lang!Class}\index{java.lang!Class!getAnnotation()}\index{java.lang.reflect!AnnotatedElement}\index{java.lang.reflect!AnnotatedElement!getAnnotation()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}
+public final <T extends Annotation> Optional<T> retrieveAnnotation( final Object object, final Class<T> annotationClass )
+{
+    final AnnotatedElement annotatedElement = requireNonNullArgument( object, "object" ).getClass(); 
+    final var retValue = retrieveAnnotation( annotatedElement, annotationClass );
+		
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   // retrieveAnnotation()
+
+public final <T extends Annotation> Optional<T> retrieveAnnotation( final AnnotatedElement annotatedElement, final Class<T> annotationClass )
+{
+    final Optional<T> retValue = Optional.ofNullable( requireNonNullArgument( annotatedElement, "annotatedElement" ).getAnnotation( requireNonNullArgument( annotationClass, "annotationClass" ) );
+	
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   // retrieveAnnotation()
 \end{lstlisting}
 
-%------------------------------------------------------------------------------
+On the returned object instance you can call the ‘methods’ that had been defined for the given annotation, to get the values that were set with the annotation.
 
+This is used by various popular libraries and frameworks:
 
-First of all, you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests\index{unit test}; we will discuss that later in this chapter.}
+\begin{itemize}[nosep]
+\item{For XML parsing: JAXB and its predecessors\autocite{ORACLE_DOC_JAXB, ECLIPSE_XML_BINDING}\index{JAXB}}
+\item{For JSON parsing: GSON\autocite{GOOGLE_GSON}\index{GSON} and Jackson\autocite{FasterXML:Jackson}\index{Jackson}}
+\item{For WebServices: JAX\_WS\autocite{IBM_JAX_WS, ECLIPSE_XML_SERVICES}\index{JAX_WS}}
+\item{For ORM: JPA\autocite{IBM_JPA, ECLIPSE_JPA}\index{JPA} and Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}}
+\item{For command line handling: ARGS4J\autocite{Kawaguchi:args4j, Kawaguchi:args4j_github}\index{ARGS4J}}
+\end{itemize}
 
+In fact, these frameworks/libraries are only possible because annotations had been introduced with Java~5: the annotations allow to apply meta information to classes above the information provided by the class definition itself.
 
-Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
+All the above listed projects will somehow map external data to a Java class (\textit{unmarshalling}\index{unmarshalling}), or from a Java class into an external format (\textit{marshalling}\index{marshalling}), and annotations provide column names or field names.
+
+When your project does not focus on another tool in this category, plain attributes are a better choice in most cases.
+
+And if you have to provide a mapper from an internal data exchange format (that is not XML or JSON~…), you should consider to write an annotation processor (AP) – in particular if you are in control of the full build process for the project that is intended to use that mapper.
 
 %------------------------------------------------------------------------------
 
 \section{Implementing the Methods from ‘java.lang.Object’}\label{sec:ImplementObjectMethods}
-In Java, all \textit{classes} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}\index{java.lang!Object}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
+In Java, all \textit{classes}\footnote{This includes \textit{records} and \textit{enums}, but excludes \textit{interfaces} and \textit{annotations}.} are somehow extending the class \lstinline|java.lang.Object|\autocite{ORACLE_DOC_OBJECT_CLASS}\index{java.lang!Object}, and therefore, they inherit several methods from it. Four of these methods\footnote{In fact, it is five methods, but the method \lstinline|finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} is deprecated and should not be used anymore. Refer to chapter \tqfullvref{sec:Finalisation} for more details on this topic.} can be overridden to adjust the behaviour of your class to your needs:
+
 \begin{itemize}[nosep]
 \item{\lstinline|clone()|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()}}
 
@@ -10009,7 +10019,7 @@ is always valid.
 
 The attributes that are compared in the lines~12 and following have all to be used in \lstinline|hashCode()|\index{java.lang!Object!hashcode()} to calculate the hash value.
 
-When both a superclass and its derived classes implement \lstinline|java.lang.Object::hashCode|\index{java.lang!Object!hashCode()}, the implementation of the derived class \textit{may} call the superclass implementation of \lstinline|hashCode()|\index{java.lang!Object!hashCode()}:
+If \lstinline|java.lang.Object::hashCode|\index{java.lang!Object!hashCode()} is implemented by both a superclass and its derived classes, the implementation of the derived class \textit{may} call the superclass implementation of \lstinline|hashCode()|\index{java.lang!Object!hashCode()}:
 \begin{lstlisting}[numbers=left]
 public class OtherClass extends MyClass
 {
@@ -10437,16 +10447,30 @@ How to concatenate strings has been a topic of discussion since the very beginni
 
 %------------------------------------------------------------------------------
 
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The code that builds the resulting string should be readable.
+
+Usually, a string concatenation is quite simple and straight forward. If you need to read ist twice to understand it, it is most probably to complex.}
+
+\item{Spent \textit{some} thoughts on the efficiency of your implementation.
+
+In most cases, you will immediately come to the conclusion that the string concatenation will be fast enough. If you have doubts, think again – but the saying about “premature optimisations”\autocite{Knuth:PrematureOptimization} should not be forgotten.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
 \subsection{The Basics}
-The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}: it is immutable\index{immutable type}. This means that
+The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}\index{java.lang!String} it is immutable\index{immutable type}. This means that
 \begin{lstlisting}
 String a = "part1";
 String b = "part2";
 a += b;
 \end{lstlisting}
-will not modify \lstinline|a| but returns a new \lstinline|String| object with the concatenated contents of \lstinline|a| and \lstinline|b| and assigns a reference to that new object to \lstinline|a|.
+will not modify \lstinline|a| but returns a new \lstinline|String|\index{java.lang!String} object with the concatenated contents of \lstinline|a| and \lstinline|b| and assigns a reference to that new object to \lstinline|a|.
 
-Older sources described the internal implementation of the \lstinline|+| operator for \lstinline|java.lang.String| like this:
+Older sources described the internal implementation of the \lstinline|+| operator for \lstinline|java.lang.String|\index{java.lang!String} like this:
+index{java.lang!String}\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}\index{java.lang!StringBuffer!toString()}
 \begin{lstlisting}
 // NOT THE REAL IMPLEMENTATION!!
 private final String operatorPlus( String a, String b )
@@ -10460,13 +10484,14 @@ private final String operatorPlus( String a, String b )
 }   //  operatorPlus()
 \end{lstlisting}
 
-This means that an intermediate object of type \lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS} has to be created for each concatenation. This gets even worse if you want to append a numerical value to the String, like this:
+This means that an intermediate object of type \lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}index{java.lang!StringBuffer} would be created for each concatenation. This gets even worse if you want to append a numerical value to the String, like this:
 \begin{lstlisting}
 String a = "part1";
 a += 42;
 \end{lstlisting}
 
 The implementation for this was described as
+index{java.lang!String}\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}\index{java.lang!StringBuffer!toString()}\index{java.lang!Integer!toString()}
 \begin{lstlisting}
 // NOT THE REAL IMPLEMENTATION!!
 private final String operatorPlus( String a, int b )
@@ -10483,6 +10508,7 @@ private final String operatorPlus( String a, int b )
 meaning that two intermediate objects are created.
 
 Knowing this, the recommendation was always to write
+\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}
 \begin{lstlisting}
 String a = new StringBuffer( b )
     .append( c )
@@ -10493,6 +10519,7 @@ instead of
 String a = b + c;
 \end{lstlisting}
 and
+\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}
 \begin{lstlisting}
 String a = new StringBuffer( a )
     .append( b )
@@ -10502,23 +10529,29 @@ instead of
 \begin{lstlisting}
 a += b;
 \end{lstlisting}
-in order to increase performance.\footnote{These recommendations origin from a time when the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} did not yet exist. Java~5 introduced \lstinline|StringBuilder| as the successor/replacement for \lstinline|StringBuffer|; it is more perfomant than \lstinline|StringBuffer| because its operations are not synchronised and therefore have less overhead than that of \lstinline|StringBuffer|.}
+in order to increase performance.\footnote{These recommendations origin from a time when the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder} did not yet exist. Java~5 introduced \lstinline|StringBuilder|\index{java.lang!StringBuilder} as the successor/replacement for \lstinline|StringBuffer|\index{java.lang!StringBuffer}; it is more perfomant than \lstinline|StringBuffer|\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()} because its operations are not synchronised and therefore have less overhead than that of \lstinline|StringBuffer|\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}.}
 
 But with each Java version the \textit{real} implementation of \lstinline|+| and \lstinline|+=| for \lstinline|String| changed, so that today there is no longer just only one recommendation.
+
+%------------------------------------------------------------------------------
 
 \subsection{Concatenating String Constants}
 In your code, string literals will be always concatenated with the \verb#plus# operator:
 \begin{lstlisting}
 String a = "StringOne" + "StringTwo";
 \end{lstlisting}
-because this way, they will already be concatenated \textit{during compile time}; using \lstinline|StringBuilder| here would cause negative effects on both performance and readability. This is also true when \lstinline|static final String| variables, initialised with a literal, are concatenated with each other or with another string literal:
+because this way, they will already be concatenated \textit{during compile time}; using \lstinline|StringBuilder|\index{java.lang!StringBuilder} here would cause negative effects on both performance and readability. This is also true when \lstinline|static final String| variables, initialised with a literal, are concatenated with each other or with another string literal:
 \begin{lstlisting}
-public static final String constantA = "StringOne";
-public static final String constantB = "StringTwo";
-String a = constantA + constantB;
-String b = constantA + "StringThree";
+public static final String CONSTANT_A = "StringOne";
+public static final String CONSTANT_B = "StringTwo";
+…
+final var a = CONSTANT_A + CONSTANT_B;
+String b = CONSTANT_A + "StringThree";
 \end{lstlisting}
+
 The compiler replaces each reference to the \lstinline|static final String| variables by either the literal itself or a reference to the literal and concatenates them if required.
+
+%------------------------------------------------------------------------------
 
 \subsection{Concatenating String Variables}
 Benchmark tests showed that beginning with one of the later versions of Java~1.4 the variant
@@ -10528,24 +10561,30 @@ String b = "part2";
 String s = a + b;
 \end{lstlisting}
 is significantly faster than
+\index{java.lang!StringBuffer}\index{java.lang!StringBuffer!append()}
 \begin{lstlisting}
 String a = "part1";
 String b = "part2";
 String s = new StringBuffer( a )
     .append( b );
 \end{lstlisting}
-Even using \lstinline|StringBuilder| in Java~5 instead of \lstinline|StringBuffer| is slower than the \verb#+# operator.
+
+Even using \lstinline|StringBuilder|\index{java.lang!StringBuilder} in Java~5 instead of \lstinline|StringBuffer|\index{java.lang!StringBuffer} is slower than the \verb#+# operator.
 
 Appending non-string values to a \lstinline|String| can be done as
+\index{java.lang!Integer!toString()}
 \begin{lstlisting}
 String a = "part1";
 int b = 42;
 String s = a + Integer.toString( b );
 \end{lstlisting}
-and that is still being faster than the \lstinline|StringBu*er| versions.
+and that is still being faster than the \lstinline|StringBu*er|\index{java.lang!StringBuffer}\index{java.lang!StringBuilder} versions.
+
+%------------------------------------------------------------------------------
 
 \subsection{Concatenating Strings in Loops}
 The picture changes if strings are extended permanently in a loop:
+\index{java.lang!String!isEmpty()}
 \begin{lstlisting}
 // AVOID!!!
 public final String buildSentence( String... words )
@@ -10563,7 +10602,8 @@ public final String buildSentence( String... words )
 }   //  buildSentence()
 \end{lstlisting}
 
-Here it is the better option to use \lstinline|StringBuilder| or even \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}:
+Here it is the better option to use \lstinline|StringBuilder|\index{java.lang!StringBuilder} or even \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}\index{java.util!StringJoiner}:
+\index{java.lang!StringBuilder!append()}\index{java.lang!StringBuilder!toString()}\index{java.util!StringJoiner!add()}\index{java.util!StringJoiner!toString()}
 \begin{lstlisting}
 // BETTER
 public final String buildSentence( String... words )
@@ -10596,16 +10636,77 @@ public final String buildSentence( String... words )
 }   //  buildSentence()
 \end{lstlisting}
 
-This is faster than the first version, although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|, because the shown version will definitely create much less objects that has to be garbage collected later – what will have a negative impact on performance.
+This is faster than the first version, although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|\index{java.lang!StringBuilder}, because the shown version will definitely create much less objects that have to be garbage collected later – what will have a negative impact on performance.
+
+%------------------------------------------------------------------------------
+
+\subsection{Composing Structured Strings}\label{sec:ComposingStructuredStrings}
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 
 \subsection{Conclusion}
-The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder| or even \lstinline|StringJoiner| if strings have to be concatenated in loops or (large) a number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
+The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder|\index{java.lang!StringBuilder} or even \lstinline|StringJoiner|\index{java.lang!StringBuilder} if strings have to be concatenated in loops or (large) a number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
 
 When “adding” primitives to a string, these should be translated to a \lstinline|String| first by calling the \lstinline|static toString()| method of the appropriate wrapper class. This is not necessary if calling \lstinline|StringBuilder::append| as this exists as specialised versions each primitive type.
 
 Also when "adding" an instance of another type to a string, you should consider to first call \lstinline|toString()| on that object.This is not mandatory, as it is done implicitly anyway, but it clearly shows what you intended.
 
 Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 
 \section{The Annotation @API}\label{sec:APIAnnotation}
 \section{-------------------------------------------- Proceed from here!}
@@ -10615,8 +10716,26 @@ Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \ls
 \autocite{APIGUARDIAN:API}
 \lipsum[1]
 
-\begin{lstlisting}
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
 \end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 
 \section{‘\textit{Convention over Configuration}’}
 The phrase “Convention over Configuration” (or “Coding by Convention”) got popular with the introduction of Ruby on Rails, but it is related to earlier ideas like the concept of “Sensible Defaults” and the “Principle of Least Astonishment” in user interface design.

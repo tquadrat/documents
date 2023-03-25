@@ -1,0 +1,26 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  node          [shape=box]
+
+  accessibleObject [label="java.lang.reflect.AccessibleObject"]
+  // annotation       [label="java.lang.annotation.Annotation"]
+  annotatedElement [label="java.lang.annotation.AnnotatedElement"]
+  // array            [label="java.lang.reflect.Array"]
+  class            [label="java.lang.Class<T>"]
+  constructor      [label="java.lang.reflect.Constructor<T>"]
+  executable       [label="java.lang.reflect.Executable"]
+  field            [label="java.lang.reflect.Field"]
+  member           [label="java.lang.reflect.Member"]
+  method           [label="java.lang.reflect.Method"]
+  // modifier         [label="java.lang.reflect.Modifier"]
+  parameter        [label="java.lang.reflect.Parameter"]
+  type             [label="java.lang.reflect.Type"]
+
+  {executable,field} -> accessibleObject
+  {accessibleObject,class,constructor,executable,field,method,parameter}-> annotatedElement
+  {constructor,method} -> executable
+  {constructor,executable,field,method} -> member
+  class -> type
+  
+}

@@ -125,7 +125,7 @@ To get your “Coding Guardrails for Java in a Nutshell”\index{Coding Guardrai
 	\item{…~although never is often better than \textit{right now}.}\label{lst:ZoP:RightNow}
 	\item{If the implementation is hard to explain, it's a bad idea.}\label{lst:ZoP:BadIdea}
 	\item{If the implementation is easy to explain, it may be a good idea.}\label{lst:ZoP:GoodIdea}
-	\item{Without the unit test, it is not complete.}\label{lst:ZoP:NotCompleteWithoutTest}
+	\item{Without the unit tests\index{unit test}, the code is not complete.}\label{lst:ZoP:NotCompleteWithoutTest}
 	\item{Think about your future self and add a comment.}\label{lst:ZoP:FutureSelf}
 	\item{Always do it right in the first place!}\label{lst:ZoP:BasicRule}
 	\item{Have Fun!}\label{lst:ZoP:HaveFun}
@@ -4946,7 +4946,7 @@ static
 
 For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE:initCause}.
 
-Unfortunately, you have to test whether the exception that you have to deal with allows this workaround. And you should add this test to the unit tests for your code, to protect you from changes coming with new versions.
+Unfortunately, you have to test whether the exception that you have to deal with allows this workaround. And you should add this test to the unit tests\index{unit test} for your code, to protect you from changes coming with new versions.
 
 %------------------------------------------------------------------------------
 
@@ -6746,7 +6746,7 @@ As said in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFIC
 \begin{quote}
 “[Because they can be disabled], assertions should not be used for argument checking in \lstinline|public| methods. Argument checking is typically part of the contract of a method, and this contract must be upheld whether assertions are enabled or disabled.
 
-A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError| never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
+A secondary problem with using assertions for argument checking is that erroneous arguments should result in an appropriate run-time exception […]. An assertion failure will not throw an appropriate exception. Again, it is not illegal to use assertions for argument checking on public methods, but it is generally inappropriate. It is intended that \lstinline|AssertionError|\index{java.lang!AssertionError} never be caught, but it is possible to do so, thus the rules for \lstinline|try| statements should treat assertions appearing in a \lstinline|try| block similarly to the current treatment of throw statements.”
 \end{quote}
 
 Because it is acceptable to omit the validation for \lstinline|private| methods and constructors, when the \textit{caller} guarantees that the arguments are valid, you should add \lstinline|assert| statements here that check the arguments\autocite{ORACLE_DOC_ASSERTIONS}. These are active during the testing phase, verifying that the caller will really invoke the method with valid arguments only, but switched off in production.
@@ -9458,6 +9458,25 @@ Another advantage is that you have to change your code only at one single locati
 
 The ability to examine and manipulate a Java class from within itself may not sound like very much, but in other programming languages this feature simply doesn't exist. For example, there is no way in a Pascal\index{Pascal}, C\index{C}, or C++\index{C++} program to obtain information about the functions defined within that program.
 
+Reflection\index{reflection} is mainly implemented by the interfaces/classes
+\begin{itemize}[nosep]
+\item{\lstinline|java.lang.Class|\autocite{ORACLE_DOC_CLASS_CLASS}\index{java.lang!Class}}
+\item{\lstinline|java.lang.Package|\autocite{ORACLE_DOC_PACKAGE_CLASS}\index{java.lang!Package}}
+\item{\lstinline|java.lang.Module|\autocite{ORACLE_DOC_MODULE_CLASS}\index{java.lang!Module}}
+\item{\lstinline|java.lang.annotation.Annotation|\autocite{ORACLE_DOC_ANNOTATION_INTERFACE}\index{java.lang.annotation!Annotation}}
+\item{\lstinline|java.lang.reflect.Constructor|\autocite{ORACLE_DOC_CONSTRUCTOR_CLASS}\index{java.lang.reflect!Constructor}}
+\item{\lstinline|java.lang.reflect.Method|\autocite{ORACLE_DOC_METHOD_CLASS}\index{java.lang.reflect!Method}}
+\item{\lstinline|java.lang.reflect.Field|\autocite{ORACLE_DOC_FIELD_CLASS}\index{java.lang.reflect!Field}}
+\item{\lstinline|java.lang.reflect.Array|\autocite{ORACLE_DOC_ARRAY_CLASS}\index{java.lang.reflect!Array}}
+\end{itemize}
+and their superclasses/superinterfaces.
+
+The class diagram shows only an excerpt of the whole API:
+
+\includegraphics{reflection}
+
+%------------------------------------------------------------------------------
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{First of all, in production code you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!
@@ -9466,7 +9485,7 @@ One reason is that accessing a field or a method via Reflection\index{reflection
 
 Next, such code is usually not easy to read or to understand, not only because of all the necessary error handling code around it.
 
-But as always, there are a few exceptions: if your project is to write a programming tool – a code generator, an IDE, a code checker – or an annotation processor, you cannot avoid Reflection\index{reflection}. It is also useful for the implementation of some unit tests\footnote{Although one could argue that tests are not production code.}.
+But as always, there are a few exceptions: if your project is to write a programming tool – a code generator, an IDE, a code checker – or an annotation processor, you cannot avoid Reflection\index{reflection}. It is also useful for the implementation of some unit tests\index{unit test}\footnote{Although one could argue that tests are not production code.}.
 
 Next, some factory methods for arrays and/or generic types also require the use of Reflection\index{reflection}.}
 
@@ -9476,7 +9495,7 @@ Most problems with instances of these types will reveal only at runtime; also re
 
 \item{Do not use Reflection\index{reflection} to circumvent access restrictions.
 
-The designer of a class made a method \lstinline|private| for some reason, so it is usually a bad idea to use Reflection\index{reflection} to invoke this method from the outside. Again, unit tests could be an exception. Refer to chapter \tqvref{sec:ChangesThroughReflection} that discusses a scenario where this went wrong.}
+The designer of a class made a method \lstinline|private| for some reason, so it is usually a bad idea to use Reflection\index{reflection} to invoke this method from the outside. Again, unit tests\index{unit test} could be an exception. Refer to chapter \tqvref{sec:ChangesThroughReflection} that discusses a scenario where this went wrong.}
 
 \item{When using modules\autocite{OPENJDK:ProjectJigsaw}, the results of calls to the Reflection\index{reflection} APIs get unpredictable.
 
@@ -9772,60 +9791,11 @@ Refer also to the implementations of \lstinline|Collection::toArray|\index{java.
 %------------------------------------------------------------------------------
 
 \subsection{Using Reflection to write Unit Tests}
+Reflection\index{reflection} allows you to access non-\lstinline|public| members of a class that are usually not accessible by your code. This is considered a “dirty hack” and must not be used in production code. In particular as it may not work properly with modules.
 
-%------------------------------------------------------------------------------
+But there are useful applications for this, too: you can and should use it when writing unit tests\index{unit test} for \lstinline|private| or \lstinline|protected| methods that are not made \lstinline|public| for good reasons, and if these methods cannot be tested indirectly.\footnote{The alternative would be to make the method at least \lstinline|protected|, but this would make it (more) visible to the consumers of the API, and perhaps even accessible – but as said, there was a reason why that method was originally \lstinline|private|.}
 
-\subsection{Annotations and Reflection}
-
-%------------------------------------------------------------------------------
-
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{APIGUARDIAN}
-\autocite{APIGUARDIAN:API}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-This affects mainly the types
-    \begin{itemize}[nosep]
-    \item{\lstinline|java.lang.reflect.Constructor|}
-    \item{\lstinline|java.lang.reflect.Method|}
-    \item{\lstinline|java.lang.reflect.Field|}
-    \item{\lstinline|java.lang.reflect.Array|}
-    \end{itemize}
-and their superclasses. Problems with their instances will often reveal only at runtime (see \tqfullvref{sec:SwapToCompilerErrors}).
-
-
-First of all, you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests; we will discuss that later in this chapter.}
-
-
-And with modularisation, it is quite often not even possible to access methods and fields of an object via Reflection\index{reflection}, even if they are \lstinline|public|; they are not even visible in some cases.
-
-Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
-
-Reflection\index{reflection} also allows you to access non-\lstinline|public| members of a class that are usually not accessible by your code. This is considered a “dirty hack” and may not be used in production code. In particular as it may not work properly with modules.
-
-But there are useful applications for this, too: you can and should used it in unit tests for \lstinline|private| or \lstinline|protected| methods that are not \lstinline|public| for good reasons, and if these methods cannot be tested indirectly.\footnote{The alternative would be to make the method at least \lstinline|protected|, but this would make it (more) visible to the consumers of the API, and perhaps even accessible – but there was a reason why that method was originally \lstinline|private|.}
-
-I recommend to use the following pattern if you want to access a \lstinline|private| method in your unit tests; first the class under test:
+I recommend to use the following pattern if you want to access a \lstinline|private| method in your unit tests\index{unit test}; first the class under test (\lstinline|MyClass|):
 \index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}
 \begin{lstlisting}
 public final class MyClass
@@ -9847,6 +9817,7 @@ public final class MyClass
 }   
 //  class MyClass
 \end{lstlisting}
+
 The test class:
 \index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
 \begin{lstlisting}[numbers=left]
@@ -9924,9 +9895,47 @@ public final class TestMyClass
 }
 //  class TestMyClass  
 \end{lstlisting}
+
 This allows you to call the method \lstinline|MyClass::myMethod| nearly directly; the method \lstinline|TestMyClass::myMethod| behaves in the same way as the original method.
 
-\lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS} is the base class for the errors thrown by JUnit\autocite{JUNIT5}.
+\lstinline|java.lang.AssertionError|\autocite{ORACLE_DOC_ASSERTIONERROR_CLASS}\index{java.lang!AssertionError} is the base class for the errors thrown by JUnit\autocite{JUNIT5}\index{JUnit}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Annotations and Reflection}
+
+%------------------------------------------------------------------------------
+
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
+First of all, you should avoid to use Reflection\index{reflection} whenever possible. Just do not use it!\footnote{The only acceptable exception is for unit tests\index{unit test}; we will discuss that later in this chapter.}
+
+
+Of course, there are some patterns whose implementation in Java requires the use of Reflection\index{reflection}, because any other approach is either even less performant, much more cumbersome, or will not work at all – meaning there are occasions when it is not really possible to avoid the use of Reflection\index{reflection}. Nevertheless, you should still consider an alternative; lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} and method references\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference} are quite often a very good replacement for an implementation based on Reflection\index{reflection}.
 
 %------------------------------------------------------------------------------
 

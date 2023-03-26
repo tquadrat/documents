@@ -1,0 +1,17 @@
+digraph {
+  size="6,11"
+  rankdir="LR"
+
+  start   [shape=point]
+  end     [shape=point]
+
+  try     [label="try{}"]
+  catch   [label="catch{}"]
+  finally [label="finally{}"]
+  
+  start -> try
+  try -> catch [label="on error"] 
+  catch -> finally -> end
+  try -> finally
+  {try, catch} -> end [label="no finally"]
+}

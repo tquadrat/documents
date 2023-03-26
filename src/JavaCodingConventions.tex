@@ -61,24 +61,21 @@ breakatwhitespace=true,
 inputencoding=utf8,
 extendedchars=true,
 literate=
-  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-  {ã}{{\~a}}1 {ẽ}{{\~e}}1 {ĩ}{{\~i}}1 {õ}{{\~o}}1 {ũ}{{\~u}}1
-  {Ã}{{\~A}}1 {Ẽ}{{\~E}}1 {Ĩ}{{\~I}}1 {Õ}{{\~O}}1 {Ũ}{{\~U}}1
-  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
-  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
-  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
-  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
+  {á}{{\'a}}1 {Á}{{\'A}}1 {à}{{\`a}}1 {À}{{\`A}}1 {ä}{{\"a}}1 {Ä}{{\"A}}1 {â}{{\^a}}1 {Â}{{\^A}}1 {ã}{{\~a}}1 {Ã}{{\~A}}1 {å}{{\r a}}1 {Å}{{\r A}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 
+  {é}{{\'e}}1 {É}{{\'E}}1 {è}{{\`e}}1 {È}{{\'E}}1 {ë}{{\"e}}1 {Ë}{{\"E}}1 {ê}{{\^e}}1 {Ê}{{\^E}}1 {ẽ}{{\~e}}1 {Ẽ}{{\~E}}1 
+  {í}{{\'i}}1 {Í}{{\'I}}1 {ì}{{\`i}}1 {Ì}{{\`I}}1 {ï}{{\"i}}1 {Ï}{{\"I}}1 {î}{{\^i}}1 {Î}{{\^I}}1 {ĩ}{{\~i}}1 {Ĩ}{{\~I}}1 
+  {ñ}{{\~n}}1 {Ñ}{{\~N}}1 
+  {ó}{{\'o}}1 {Ó}{{\'O}}1 {ò}{{\`o}}1 {Ò}{{\`O}}1 {ö}{{\"o}}1 {Ö}{{\"O}}1 {ô}{{\^o}}1 {Ô}{{\^O}}1 {õ}{{\~o}}1 {Õ}{{\~O}}1 {ø}{{\o}}1 {œ}{{\oe}}1 {Œ}{{\OE}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ß}{{\ss}}1
+  {ú}{{\'u}}1 {Ú}{{\'U}}1 {ù}{{\`u}}1 {Ù}{{\`U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {û}{{\^u}}1 {Û}{{\^U}}1 {ũ}{{\~u}}1 {Ũ}{{\~U}}1 {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 
+  {€}{{\euro}}1 {£}{{\pounds}}1 
+  {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 
+  {¿}{{?`}}1 {¡}{{!`}}1
   {©}{{\copyright}}1
   {…}{{\dots }}2
   {–}{{--}}1
+  {`}{{~}}1
 }
 
 \colorlet{shadecolor}{gray!10}
@@ -551,7 +548,7 @@ An opening parameter parenthesis is \textit{never preceded} by a blank and \text
 
 Of course this is also valid for the declaration of methods and constructors.
 
-Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try| and \lstinline|switch| are treated like they are functions.\footnote{And also the keywords \lstinline|catch| and \lstinline|synchronized|, but they do not allow complex terms inside their 'argument list'.}
+Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try|\index{try-catch-finally} and \lstinline|switch| are treated like they are functions.\footnote{And also the keywords \lstinline|catch|\index{try-catch-finally} and \lstinline|synchronized|, but they do not allow complex terms inside their 'argument list'.}
 
 This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
 
@@ -2094,10 +2091,10 @@ while( <condition> );
 %------------------------------------------------------------------------------
 
 \subsection{‘try-catch’ and ‘try-catch-finally’ Statements}
-Basically, there are two different forms of \lstinline|try-catch| statements: the simple one and the \lstinline|try-with-resources| that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
+Basically, there are two different forms of \verb#try-catch#\index{try-catch-finally} statements: the simple one and the \verb#try-with-resources#\index{try-with-resources} that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
 
 \subsubsection{The simple Form}
-A simple \lstinline|try-catch| statement has the following format:
+A simple \verb#try-catch#\index{try-catch-finally} statement has the following format:
 \begin{lstlisting}
 try
 {
@@ -2108,10 +2105,11 @@ catch( <ExceptionClass> e )
     <statements>;
 }
 \end{lstlisting}
+
 For this simple form, the \lstinline|catch| block is mandatory. Additional \lstinline|catch| blocks and a \lstinline|finally| block may follow – see below.
 
 \subsubsection{‘try-with-resources’}
-A \lstinline|try-with-resources| allows to allocate resources that will be automatically released when the \lstinline|try| block is left. Something similar could be achieved also by adding a \lstinline|finally| block, but \lstinline|try-with-resources| is easier and more secure.
+A \verb#try-with-resources#\index{try-with-resources} allows to allocate resources that will be automatically released when the \lstinline|try| block is left. Something similar could be achieved also by adding a \lstinline|finally| block, but \verb#try-with-resources#\index{try-with-resources} is easier and more secure.
 
 It looks like this:
 \begin{lstlisting}[numbers=left]
@@ -2127,7 +2125,7 @@ try( final var r = resource )
 }
 \end{lstlisting}
 
-\lstinline|<ResourceClass>| must implement \lstinline|java.lang.Autocloseable|.
+\lstinline|<ResourceClass>| must implement the interface \lstinline|java.lang.Autocloseable|\autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}\index{java.lang!Autocloseable}.
 
 It is possible to allocate more than one resource in a single \lstinline|try| statement:
 \begin{lstlisting}
@@ -2141,9 +2139,9 @@ try
 }
 \end{lstlisting}
 
-One or more \lstinline|catch| blocks are optional for \lstinline|try-with-resources|, as well as a \lstinline|finally| block.
+One or more \lstinline|catch| blocks are optional for \verb#try-with-resources#\index{try-with-resources}, as well as a \lstinline|finally| block.
 
-The chapter \tqfullvref{sec:TryWithResources} handles \lstinline|try-with-resources| further.
+The chapter \tqfullvref{sec:TryWithResources} handles \verb#try-with-resources#\index{try-with-resources} further.
 
 \subsubsection{General formatting Rules for ‘try-catch’}
 \begin{itemize}
@@ -2186,7 +2184,7 @@ catch( <ExceptionClass3> e )
 }
 \end{lstlisting}}
 
-\item{Each \lstinline|try-catch| statement can also be followed by a \lstinline|finally| block, which  executes regardless of whether or not the \lstinline|try| block has completed successfully.
+\item{Each \verb#try-catch#\index{try-catch-finally} statement can also be followed by a \lstinline|finally| block, which  executes regardless of whether or not the \lstinline|try| block has completed successfully.
 
 \begin{lstlisting}
 try
@@ -2203,7 +2201,7 @@ finally
 }
 \end{lstlisting}
 
-In case a \lstinline|finally| block is present, the \lstinline|catch| block is optional even for a simple \lstinline|try-catch| statement, meaning that no exception is caught:
+In case a \lstinline|finally| block is present, the \lstinline|catch| block is optional even for a simple \verb#try-catch#\index{try-catch-finally} statement, meaning that no exception is caught:
 \begin{lstlisting}
 try
 {
@@ -9423,36 +9421,6 @@ Another advantage is that you have to change your code only at one single locati
 
 %------------------------------------------------------------------------------
 
-\section{Generics}\label{sec:GenericTypes}
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
 \section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
 “Reflection”\index{reflection} is a feature in the Java programming language that allows an executing Java program to examine or “\textit{introspect}”\index{introspection|see {reflection}} upon itself, and manipulate internal properties of the program. For example, it's possible for a Java class to obtain the names of all its members and display them.
 
@@ -9819,7 +9787,7 @@ public final class MyClass
 \end{lstlisting}
 
 The test class:
-\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{ org.junit.jupiter.api!Assertions!assertTrue()}
+\index{java.lang!String}\index{java.lang!CharSequence}\index{java.io!IOException}\index{java.lang!Class!getDeclaredMethod()}\index{java.lang.reflect!Method!setAccessible()}\index{java.lang.reflect!Method!invoke()}\index{java.lang!NoSuchMethodException}\index{java.lang!ExceptionInInitialiserError}\index{java.lang!String!formatted()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.lang!IllegalAccessException}\index{java.lang.reflect!InvocationTargetException}\index{java.lang!ClassCastException}\index{java.lang!AssertionError}\index{java.lang!Throwable!getCause()}\index{org.junit.jupiter.api!Assertions!assertTrue()}
 \begin{lstlisting}[numbers=left]
 /**
  *  This class provides some unit tests for
@@ -9933,7 +9901,7 @@ This is used by various popular libraries and frameworks:
 \begin{itemize}[nosep]
 \item{For XML parsing: JAXB and its predecessors\autocite{ORACLE_DOC_JAXB, ECLIPSE_XML_BINDING}\index{JAXB}}
 \item{For JSON parsing: GSON\autocite{GOOGLE_GSON}\index{GSON} and Jackson\autocite{FasterXML:Jackson}\index{Jackson}}
-\item{For WebServices: JAX\_WS\autocite{IBM_JAX_WS, ECLIPSE_XML_SERVICES}\index{JAX_WS}}
+\item{For WebServices: JAX\_WS\autocite{IBM_JAX_WS, ECLIPSE_XML_SERVICES}\index{JAX\_WS}}
 \item{For ORM: JPA\autocite{IBM_JPA, ECLIPSE_JPA}\index{JPA} and Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}}
 \item{For command line handling: ARGS4J\autocite{Kawaguchi:args4j, Kawaguchi:args4j_github}\index{ARGS4J}}
 \end{itemize}
@@ -10636,417 +10604,98 @@ public final String buildSentence( String... words )
 }   //  buildSentence()
 \end{lstlisting}
 
-This is faster than the first version, although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|\index{java.lang!StringBuilder}, because the shown version will definitely create much less objects that have to be garbage collected later – what will have a negative impact on performance.
+Although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|\index{java.lang!StringBuilder}, this is faster than the first version, because the shown version will definitely create much less objects that have to be garbage collected later – what will have a negative impact on performance. And the implementation with \lstinline|StringJoiner|\index{java.util!StringJoiner} is even more concise than both others.
 
 %------------------------------------------------------------------------------
 
 \subsection{Composing Structured Strings}\label{sec:ComposingStructuredStrings}
-
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
+Quite often you see code like this
+\begin{lstlisting}
+final var message = "The requested seat " + number + " is unavailable because " + reason;
 \end{lstlisting}
-%------------------------------------------------------------------------------
 
-%------------------------------------------------------------------------------
+An even more ugly version is this
+\begin{lstlisting}
+final var xmlMessage = "<note>\n" +
+    "    <script/>\n" +
+    "    <to>" + recipient + "</to>\n" +
+    "    <from>" + sender + "</from>\n" +
+    "    <heading>" + subject + "</heading>\n" +
+    "    <body>" + body + "</body>\n" +
+    "</note>";
+    
+// It could be even worse:    
+final var xmlMessage = "<note>\n    <script/>\n    <to>" + recipient +
+    "</to>\n    <from>" + sender + "</from>\n    <heading>" + subject + 
+    "</heading>\n    <body>" + body + "</body>\n</note>";
+\end{lstlisting}
+
+Obviously performance is not the issue here, but readability. And, for the first case, that the message cannot be identified for a translation into another language, if required (see the chapter \tqvref{sec:I18n} about internationalisation).
+
+For these samples, you should consider to utilize the capabilities of the class \lstinline|java.util.Formatter|\autocite{ORACLE_DOC_FORMATTER_CLASS}\index{java.util!Formatter}. Usually, you do not need to instantiate an instance of \lstinline|Formatter|\index{java.util!Formatter} yourself, instead you can use the methods \lstinline|String::format|\autocite{ORACLE_DOC_STRING:format}\index{java.lang!String!format()}, \lstinline|String::formatted|\autocite{ORACLE_DOC_STRING:formatted}\index{java.lang!String!formatted()}, \lstinline|PrintWriter::printf|\autocite{ORACLE_DOC_PRINTWRITER:printf}\index{java.io!PrintWriter!printf()} or \lstinline|PrintStream::printf|\autocite{ORACLE_DOC_PRINTSTREAM:printf}\index{java.io!PrintStream!printf()}\footnote{\lstinline|PrintWriter::format|\autocite{ORACLE_DOC_PRINTWRITER:format}\index{java.io!PrintWriter!format()} and \lstinline|PrintStream::format|\autocite{ORACLE_DOC_PRINTSTREAM:format}\index{java.io!PrintStream!format()} do exist, too, but are less often used; basically, they to the same as \lstinline|printf()|.}.
+
+To improve the readability of the second sample, you should also consider to use the new ‘text block’ feature\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks,Laskey:TextBlocks} that was introduced with Java~15.
+
+So the sample code from the beginning of this chapter should look like this:
+\begin{lstlisting}
+final var message = String.format( "The requested seat %d is unavailable because %s", number,  reason );
+
+final var xmlMessage = 
+    """
+````<note>
+````    <script/>
+````    <to>%1$s</to>
+````    <from>%2$s</from>
+````    <heading>%3$s</heading>
+````    <body>%$4s</body>
+````</note>"""
+    .formatted( recipient, sender, subject, body );
+\end{lstlisting}
+
+That's perhaps not faster, but definitely much better readable.
 
 %------------------------------------------------------------------------------
 
 \subsection{Conclusion}
-The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder|\index{java.lang!StringBuilder} or even \lstinline|StringJoiner|\index{java.lang!StringBuilder} if strings have to be concatenated in loops or (large) a number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
+The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder|\index{java.lang!StringBuilder} or even \lstinline|StringJoiner|\index{java.lang!StringJoiner} if strings have to be concatenated in loops or a (large) number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
 
-When “adding” primitives to a string, these should be translated to a \lstinline|String| first by calling the \lstinline|static toString()| method of the appropriate wrapper class. This is not necessary if calling \lstinline|StringBuilder::append| as this exists as specialised versions each primitive type.
+When “adding” primitives to a string, these should be translated to a \lstinline|String| first by calling the \lstinline|static toString()|\index{java.lang!Integer!toString()} method of the appropriate wrapper class. This is not necessary if calling \lstinline|StringBuilder::append|\index{java.lang!StringBuilder!append()} as this exists as specialised versions for each primitive type.
 
-Also when "adding" an instance of another type to a string, you should consider to first call \lstinline|toString()| on that object.This is not mandatory, as it is done implicitly anyway, but it clearly shows what you intended.
+Also when “adding” an instance of another type to a string, you should consider to first call \lstinline|toString()|\index{java.lang!Object!toString()} on that object.This is not mandatory, as it is done implicitly anyway, but it clearly shows your intent.
 
-Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.
+\lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder} should always be preferred over \lstinline|java.lang.StringBuffer|\index{java.lang!StringBuffer}. I have not yet found any use case where I could not use \lstinline|StringBuilder|\index{java.lang!StringBuilder}, but was forced to use \lstinline|StringBuffer|\index{java.lang!StringBuffer} instead.
 
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
+For multi-line text in strings, use a text block instead of concatenation, and when composing a structured string, use \lstinline|format()|\index{java.util!Formatter!format()}.
 
 %------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\section{The Annotation @API}\label{sec:APIAnnotation}
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{APIGUARDIAN}
-\autocite{APIGUARDIAN:API}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\section{‘\textit{Convention over Configuration}’}
-The phrase “Convention over Configuration” (or “Coding by Convention”) got popular with the introduction of Ruby on Rails, but it is related to earlier ideas like the concept of “Sensible Defaults” and the “Principle of Least Astonishment” in user interface design.
-
-Basically it means that an object instance can be created and used properly with only minimal configuration because all not absolutely mandatory settings will have meaningful – and useful! – default values.
-
-On the other hand, there is that number~\ref{lst:ZoP:ExplicitVsImplicit} from the “Zen of Python”, saying “Explicit is better than implicit”~…
-
-These are obviously contradictory statements – so whose right?
-
-Both, to some extent!
-
-Your design should support “Convention over Configuration”, but your code should rely on defaults only when a change of these defaults in unlikely, or such a change will not have an effect to your code.
-
-So assume that you are using a 3\textsuperscript{rd}~party library that creates reports in HTML format; the default format was HTML3 with the previous version, but in the current version – that one used by you – it is HTML5. The generated reports are consumed by a tool that converts HTML5 input into PDF.
-
-According to “Convention over Configuration”, you are fine: the convention is HTML5, you do not need to set the HTML version for the output format explicitly.
-
-But what happens, if in a few years the next version of that report creator library will support HTML7 as the default, but your PDF generator stucks still with HTML5 for its input? Nothing happens until your successor as the maintainer of your software decides to use that new library~… afterwards you may see funny things in the generated PDF documents.
-
-So the recommendation is: do not always rely on conventions! Whenever possible, provide an explicit configuration! At least leave a comment when you rely on the defaults, and that comment should describe what the anticipated defaults are.
-
-\section{-------------------------------------------- Proceed from here!}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\section{Compiler Warnings and Errors}\label{sec:CompilerWarningsAndErrors}
-It is not allowed to commit any code that emits warnings or even errors on a compiler run to the SCCS. It is also not allowed to switch off any compiler warning globally.
-
-In fact, warnings should even not show up in the development environment, also with the most aggressive settings.
-
-It is allowed to use the annotation \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} to locally deactivate a warning. This is often necessary when dealing with legacy APIs that does not use Generics. So this sample would emit an “unchecked” warning for line 3:
-\begin{lstlisting}[numbers=left]
-public final Map<K,V> clone()
-{
-    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
-    return retValue;
-}
-\end{lstlisting}
-
-To avoid this, the annotation \lstinline|@SuppressWarnings| with the value “unchecked” can be applied – preferably not to the method as a whole, but only to the problematic assignment, even if this means that an additional temporary variable is required (but not in this sample):
-\begin{lstlisting}
-// RECOMMENDED
-public final Map<K,V> clone()
-{
-    @SuppressWarnings( "unchecked" ) 
-    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
-    return retValue;
-}
-
-// AVOID!!!
-@SuppressWarnings( "unchecked" ) 
-public final Map<K,V> clone()
-{
-    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
-    return retValue;
-}
-\end{lstlisting}
-
-As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
-
-\section{Terminating a Method and returning Values}\label{sec:ReturningValues}
-A method will have only \textit{one single regular} exit point, and that is (after) its last line! Irregular or \textit{exceptional} exit points are always exceptions that will be thrown as the result of an error condition.
-
-This means that a method, that does not return something, does not have a \lstinline|return| statement.
-
-If there is a \lstinline|return| statement in a method, it is \textit{always} the last statement of the method.
-
-\begin{lstlisting}
-// AVOID!!!
-public final long myMethod( final int a )
-{
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    if( a == 0 ) return 1;
-    if( a == 1 ) return 1;
-    return a * myMethod( a - 1 );
-}   //  myMethod()
-\end{lstlisting}
-
-As already said in chapter \tqfullvref{sec:NamesForLocalVariables}, the name of the local variable that holds the return value is always \lstinline|retValue|; only when the method returns an attribute, the field name could be used instead. And it is also not necessary to assign \lstinline|this| to \lstinline|retValue| for method chaining. 
-
-Then the recommended code would be:
-\begin{lstlisting}
-// RECOMMENDED
-public final long myMethod( final int a )
-{
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    final var retValue = (a > 1) ? myMethod( a - 1L) : 1L;
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  myMethod()
-
-// Still OK
-public final long myMethod( final int a )
-{
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    var retValue = 1L;
-    if( a > 1 ) retValue = myMethod( a - 1 );
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  myMethod()
-\end{lstlisting}
-
-It is much easier to grasp what a method is doing when the program flow is always from top to bottom, and if there are not any side exits (other than the ‘emergency exits’, marked by a \lstinline|throw| statement when issuing an exception.
-
-This will supported by always using the same name for the return value – just that \lstinline|retValue|.
-
-\subsection{Lambda Results}\label{sec:LambdaResults}
-Most lambdas are just one liners, and if they return something, it will be the return value of that line:
-\begin{lstlisting}
-n -> (n + 1) * 4; 
-\end{lstlisting}
-
-If the code for the lambda will be more complex, you should consider to place it to a method and refer to it with a method reference\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference}:
-\begin{lstlisting}
-public final class MyClass
-{
-    private final String format( final String name )
-    {
-        final var buffer = new StringJoiner( "}, {", "{", "}" );
-        if( nonNull( name ) )
-        {
-            for( final var s: name.split( " " ) )
-            {
-                buffer.add( s );
-            }
-        }
-        else
-        {
-            buffer.setEmptyValue( "No Name" );
-        }
-        final var retValue = buffer.toString();
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  format()
-    
-    public final String myMethod()
-    {
-        final var retValue = retrieveNames().stream()
-            .map( this::format )
-            .filter( n -> !n.equals( "No Name" ) )
-            .collect( joining( "}, Name={", "Names={Name={", "}}"
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
-
-Only if a complex lambda needs to refer to local variables, it has to be defined locally:
-\begin{lstlisting}
-public final class MyClass
-{
-    public final String myMethod( final String longTemplate, final String shortTemplate, final String nullText )
-    {
-        final var retValue = retrieveNames().stream()
-            .map( n ->
-            {
-                final var result = nullText;
-                if( n != null )
-                {
-                    result = n.length() > 15 
-                        ? longTemplate.formatted( n ) 
-                        : shortTemplate.formatted( n );
-                }
-                return result;
-            } )
-            .filter( n -> !n.equals( "No Name" ) )
-            .collect( joining( "}, Name={", "Names={Name={", "}}"
-        
-        //---* Done *------------------------------------------------
-        return retValue;
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
-The lambda cannot use the name \lstinline|retValue| for its return value, because that is already defined in the surrounding method\footnote{And even if it is not (yet) defined, the lambda should not use it anyway, as it may collide with future code modifications.}. Instead, lambdas use the name \lstinline|result| for their return values.
-
-\subsection{‘case’ Results}\label{sec:CaseResults}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\lipsum[5]
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\section{The Ternary Operator ‘?’}\label{sec:TheTernaryOperator}
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\section{Programming to the Interface}\label{sec:ProgrammingToTheInterface}
-\index{programming to the interface}
-A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
-
-\begin{lstlisting}
-// Original
-List<String> list = new ArrayList<>();
-If var is used, however, the concrete type is inferred instead of the interface:
-
-// Inferred type of list is ArrayList<String>
-var list = new ArrayList<String>();
-\end{lstlisting}
-
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{Cymerman:SmarterJavaDevelopment}
-\autocite{Fejer:ProgramToInterfaces}
-\autocite{Pavlutin:ProgrammingToInterface}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\lipsum[5]
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\section{The "switch" Statement}\label{sec:TheSwitchStatement}
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-\ref{sec:SwitchStatements}
-
-\begin{lstlisting}
-\end{lstlisting}
-
-\section{Encapsulation}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
-\subsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\section{Lambdas}\label{sec:Lambdas}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\subsection{Functional Interfaces}\label{sec:FunctionalInterfaces}
-\subsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\section{The Interface \lstinline|java.util.Formattable|}\label{sec:FormattableInterface}
-\section{-------------------------------------------- Proceed from here!}
-
-\autocite{ORACLE_DOC_STRING_CLASS}
-\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
-\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
-\autocite{ORACLE_DOC_STRINGJOINER_CLASS}
-\autocite{ORACLE_DOC_FORMATTER_CLASS}
-\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
-
-\lipsum[1]
-
-\section{The Interface \lstinline|java.lang.Comparable|}\label{sec:ComparableInterface}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[5]
-
-\section{Utility Classes}\label{sec:UtilityClasses}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[5]
 
 \section{try-with-resources}\label{sec:TryWithResources}
-The feature \lstinline|try-with-resources| was introduced with Java~7; it can help to make programs more stable and less error prone.
+The feature \verb#try-with-resources#\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TryWithResources}\index{try-with-resources} was introduced with Java~7; it can help to make programs more stable and less error prone.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{(External) resources should be released where they had been acquired.
+
+Java and the JVM allows you to be lazy in this regard, as there are mechanisms in place that do the housekeeping once an object representing an external resource (a file, a database connection, a network socket,~…) gets garbage collected. The resource will be freed in the ende – latest when the JVM goes down. To this topic, refer also to the chapter \tqfullvref{sec:Finalisation}.
+
+But releasing a resource immediately after it is no longer used will increase the liveliness of a program dramatically, and in case of a lock, it is even crucial.}
+
+\item{Code should be made stable against slips.
+
+To often closing of files or releasing locks will be forgotten, the respective code will be removed erroneously or – at worst case – new code will be added that prevents the returning of the external resource.
+
+\verb#try-with-resources#\index{try-with-resources} can help with this.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
 
 \subsection{Basics}
-Basically, \lstinline|try-with-resources|\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TryWithResources} is an extension of the previously existing \lstinline|try-catch-finally| feature.
+Basically, \verb#try-with-resources#\index{try-with-resources} is an extension of the previously existing \verb#try-catch-finally#\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Try}\index{try-catch-finally}\index{try-catch|see{try-catch-finally}}\index{try-finally|see{try-catch-finally}} feature.
 
 Instead of writing
+\index{java.io!InputStream}\index{java.io!InputStream!close()}\index{java.io!FileInputStream}\index{java.io!IOException}
 \begin{lstlisting}[numbers=left]
 InputStream input = null;
 try
@@ -11072,7 +10721,7 @@ finally
 \end{lstlisting}
 
 the new feature allows you to write
-
+\index{java.io!FileInputStream}\index{java.io!IOException}
 \begin{lstlisting}[numbers=left]
 try( final var input = new FileInputStream( file ); )
 {
@@ -11084,21 +10733,22 @@ catch( final IOException e )
 }
 \end{lstlisting}
 
-It works because the interface \lstinline|java.lang.AutoCloseable|\footnote{In fact, \lstinline|InputStream| will still implement just \lstinline|java.io.Closeable|, as already before Java~7, but this interface will now extend the new interface \lstinline|java.lang.AutoCloseable|.} is implemented by the class \lstinline|java.io.InputStream|. For details refer to \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}.
+It works because the interface \lstinline|java.lang.AutoCloseable|\index{java.lang!AutoCloseable} is implemented by the class \lstinline|java.io.InputStream|\autocite{ORACLE_DOC_INPUTSTREAM_CLASS}\index{java.io!InputStream}\footnote{In fact, \lstinline|InputStream|\index{java.io!InputStream} still implements just \lstinline|java.io.Closeable|\autocite{ORACLE_DOC_CLOSEABLE_INTERFACE}\index{java.io!Closeable}, as already before Java~7, but this interface will now extend the new interface \lstinline|java.lang.AutoCloseable|\index{java.lang!AutoCloseable}.}. For more details refer to \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}.
 
-This interface defines just one method, \lstinline|close()|, that declares to throw an exception of type \lstinline|java.lang.Exception|.
+The interface \lstinline|java.lang.AutoCloseable|\index{java.lang!AutoCloseable} defines just one method, \lstinline|close()|\index{java.lang!AutoCloseable!close()}, that declares to throw an exception of type \lstinline|java.lang.Exception|\index{java.lang!Exception}.
 
-\lstinline|close()| is called automatically on all instances of \lstinline|AutoClosable| that were declared and defined in the ‘arguments list’ of the new \lstinline|try| when the scope of the \lstinline|try| block is left. If there is more than one resource defined, the sequence is reversed to that of the definition: the last assigned resource will be closed first.
+\lstinline|close()|\index{java.lang!AutoCloseable!close()} is called automatically on all instances of \lstinline|AutoClosable|\index{java.lang!AutoCloseable} that were declared and defined in the ‘arguments list’ of the new \lstinline|try| when the scope of the \lstinline|try| block is left. If there is more than one resource defined, the sequence is reversed to that of the definition: the last assigned resource will be closed first.
 
-So a code snippet to copy data from an input stream to an output stream may look like this\footnote{This is obviously not a very good implementation, but it illustrates how to use \lstinline|try-with-resources| quite well.}:
+So a code snippet to copy data from an input stream to an output stream may look like below; this is obviously not a very good implementation, but it illustrates quite well how to use \verb#try-with-resources#:
+\index{java.io!InputStream}\index{java.io!FileInputStream}\index{java.io!InputStream!read()}\index{java.io!OutputStream}\index{java.io!FileOutputStream}\index{java.io!OutputStream!write()}\index{java.io!IOException}\index{java.lang!Error}
 \begin{lstlisting}[numbers=left]
 try
 ( 
-    InputStream input = new FileInputStream( infile );
-    OutputStream output = new FileOutputStream( outfile ) 
+    final var input = new FileInputStream( infile );
+    final var output = new FileOutputStream( outfile ) 
 )
 {
-	int value = EOF;
+	var value = EOF;
 	
     //---* Read the input, write to the output *---------------------
     while( (value = input.read()) != EOF )
@@ -11106,21 +10756,27 @@ try
         output.write( value );
     }
 }
+catch( final IOException e )
+{
+    throw new Error( "Copy failed!", e );
+}
 \end{lstlisting}
 Both streams will be closed properly in case of a problem or the work is done.
 
+%------------------------------------------------------------------------------
+
 \subsection{Error Handling}
-What will happen if the code in the \lstinline|try| block throws an exception and closing the resource will throw one, too?
+What will happen if the code in the \lstinline|try| block throws an exception and closing the resource will throw one, too? Remember, \lstinline|AutoCloseable::close|\autocite{ORACLE_DOC_AUTOCLOSEABLE:close}\index{java.lang!AutoCloseable!close()} declares to throw \lstinline|Exception|\index{java.lang!Exception}!
 
-For the ‘traditional’ pattern this could mean that the first exception would be ‘supplanted’ by the exception from the close. For sure, in a \lstinline|catch| block the original cause could be logged, but usually only checked exceptions (and “expected“ ones) are covered this way.
+For the ‘traditional’ pattern (using \verb#try-catch-finally#\index{try-catch-finally} as shown in the first example of the previous chapter) this could mean that the first exception would be ‘supplanted’ by the exception issued by \lstinline|close()|, called in the \lstinline|finally| block. For sure, in a \lstinline|catch| block the original cause could be logged before the code in the \lstinline|finally| block will be executed, but usually only checked exceptions (and “expected“ ones) are covered this way.
 
-Together with \lstinline|try-with-resources|, a new feature was introduced to the language: the \textit{suppressed} exception. This deals with the problem described above.
+Together with \verb#try-with-resources#\index{try-with-resources}, a new feature was introduced to the language: the \textit{suppressed} exception\index{suppressed exception}. This deals with the problem described above.
 
-So if the \lstinline|try| block throws an exception (for our example, it would be most probably an \lstinline|IOException|) and the \lstinline|AutoCloseable.close()| will fail with an exception, too, the latter one will be added to the first one as a “suppressed exception” by the JVM.
+So if the \lstinline|try| block throws an exception (for our example, it would be most probably an \lstinline|IOException|\index{java.io!IOException}) and the \lstinline|AutoCloseable.close()|\index{java.lang!AutoCloseable!close()} will fail with an exception, too, the latter one will be added to the first one as a “suppressed exception”\index{suppressed exception} by the JVM.
 
-For this purpose, the API of the class \lstinline|java.lang.Throwable|\index{java.lang!Throwable} was extended by the methods \lstinline|addSuppressed()|\index{java.lang!Throwable!addSuppressed()} and \lstinline|getSuppressed()|\index{java.lang!Throwable!getSuppressed()}.\footnote{see \autocite{ORACLE_DOC_THROWABLE_CLASS}}
+For this purpose, the API of the class \lstinline|java.lang.Throwable|\index{java.lang!Throwable} was extended by the methods \lstinline|addSuppressed()|\autocite{ORACLE_DOC_THROWABLE:addSuppressed}\index{java.lang!Throwable!addSuppressed()} and \lstinline|getSuppressed()|\autocite{ORACLE_DOC_THROWABLE:getSuppressed}\index{java.lang!Throwable!getSuppressed()}.\footnote{see \autocite{ORACLE_DOC_THROWABLE_CLASS} for more details.}
 
-When using \lstinline|Throwable.printStackTrace()|\index{java.lang!Throwable!printStackTrace()}, an output like that below will be produced:
+When using \lstinline|Throwable.printStackTrace()|\autocite{ORACLE_DOC_THROWABLE:printStackTrace}\index{java.lang!Throwable!printStackTrace()}, an output like that below will be produced:
 \begin{lstlisting}
 java.lang.Error
   at TryWithResources.main(TryWithResources.java:175)
@@ -11129,19 +10785,21 @@ java.lang.Error
     at TryWithResources.main(TryWithResources.java:176)
 \end{lstlisting}
 
-\subsection{Execution Sequence}\label{sec:ExecutionSequence}
-It is important to know how the execution sequence looks like when using \lstinline|try-with-resources|. For the traditional pattern it is\\
-\begin{center}
-\verb#try{}->[catch{}]->finally{}#
-\end{center} 
-for \lstinline|try-with-resources| it will be\\ 
-\begin{center}
-\verb#try{}->AutoCloseable.close()->[catch{}]->[finally{}]#
-\end{center}
+%------------------------------------------------------------------------------
 
-This means that the method \lstinline|close()| on the \lstinline|AutoClosable| objects will be called \textit{before} any code in an optional \lstinline|catch| and/or \lstinline|finally| block that is attached to the \lstinline|try| block. For the sample we used above this means that the \lstinline|InputStream input| is already closed when the code in the \lstinline|catch| block that handles the \lstinline|IOException| will be executed.
+\subsection{Execution Sequence}\label{sec:ExecutionSequence}
+It is important to know how the execution sequence looks like when using \verb#try-with-resources#\index{try-with-resources}. For the traditional pattern\index{try-catch-finally} the execution sequence is
+
+\includegraphics{trycatchfinally}
+
+For \verb#try-with-resources#\index{try-with-resources} the execution sequence looks like 
+
+\includegraphics{trywithresources}
+
+This means that the method \lstinline|close()|\index{java.lang!AutoCloseable!close()} on the \lstinline|AutoClosable|\index{java.lang!AutoCloseable} objects is called \textit{before} any code in an optional \lstinline|catch| and/or \lstinline|finally| block that would be attached to the \lstinline|try| block. For the sample we used above this means that the \lstinline|InputStream input|\index{java.io!InputStream} is already closed when the code in the \lstinline|catch| block that handles the \lstinline|IOException|\index{java.io!IOException} will be executed.
 
 Therefore the code below will not work as expected in case an exception is thrown in the \lstinline|try| block:
+\index{java.io!FileOutputStream}\index{java.io!FileInputStream}\index{java.io!FileOutputStream!write()}\index{java.io!FileInputStream!read()}\index{java.io!IOException}\index{java.lang!String!getBytes()}
 \begin{lstlisting}
 // WILL NOT WORK!
 final var logStream = new FileOutputStream( logfile )
@@ -11152,7 +10810,7 @@ try
     final var log = logStream 
 )
 {
-	int value = EOF;
+	var value = EOF;
 	
     //---* Read the input, write to the output *---------------------
     while( (value = input.read()) != EOF )
@@ -11169,6 +10827,36 @@ catch( final IOException e )
 
 Refer also to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ExtendedTryWithResources}.
 
+%------------------------------------------------------------------------------
+
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+
 \subsection{When to use?}
 \lstinline|try-with-resources| is a very powerful feature that should be used whenever possible. Definitively it should be used with all the Java classes that already implement \lstinline|java.lang.AutoCloseable| or \lstinline|java.io.Closeable|:
 
@@ -11178,6 +10866,8 @@ Refer also to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ExtendedTryWithResourc
 \item{\lstinline|java.sql.Connection|, \lstinline|java.sql.Statement|, \lstinline|java.sql.ResultSet|}
 \item{\lstinline|java.jms.Connection|}
 \end{itemize}
+
+%------------------------------------------------------------------------------
 
 \subsubsection{Lifecycle}\label{sec:Lifecycle}
 In C++, it is a very common pattern to “wrap” the lifecycle of a resource into the lifecycle of an object:
@@ -11261,6 +10951,8 @@ try( final var unused = m_AutoLock.lock() )
 }
 \end{lstlisting}
 
+%------------------------------------------------------------------------------
+
 \subsubsection{Post-Processing}
 Together with lambdas, \lstinline|try-with-resources| can be (ab)used also to enforce a unconditional post-processing when a code block is left. This may look like this:
 \begin{lstlisting}[numbers=left]
@@ -11312,42 +11004,181 @@ try( final var p = new PostProcessor( forceSorting ) )
 \end{lstlisting}
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
-\section{Date and Time Values}\label{sec:DateAndTimeValues}
+%------------------------------------------------------------------------------
+
+\section{Terminating a Method and returning Values}\label{sec:ReturningValues}
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
 
-\section{Unique Ids}\label{sec:UniqueIds}
-Data records stored to a database require a unique identifier in most cases. Sometimes, this identifier is provided externally – a social security number, an account number, or a tax id – but usually not. 
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
 
-When the database will be accessed (and updated) from different locations, this identifier has to be \textit{universally} unique; alternatively, you can introduce a global service that provides such identifiers. But usually, this does make sense only when these identifiers are not only just technical – like the already mentioned social security numbers, account numbers, or tax ids.
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
 
-How to get universally unique ids (UUID) is defined in RFC~4122\autocite{Leach:RFC4122}, among others. Java provides an implementation for these UUIDs with the class \lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}. Unfortunately, the class provides only one method that creates new arbitrary UUIDs (\lstinline|java.util.UUID::randomUUID()|\autocite{ORACLE_DOC_UUID:randomUUID}), and these are version~3 pseudo-random UUIDs.
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
 
-These are large enough that collisions are unlikely, but when used as primary keys on a database table, the database indexing can get quite inefficient (lack of locality in the indexes). This is discussed in more detail in \autocite{Mihalcea:UUID_Database_Primary_Key}.
+%------------------------------------------------------------------------------
 
-Partially, this is addressed by timebased UUIDs (version~1), and new formats will be discussed (see \autocite{Davis:NewUUIDs, Leach:RFC4122bis}), but another issue is that these UUIDs occupy at least 128~bit – when you use the binary format. But usually, the textual representation is used (mainly because the Java class \lstinline|UUID| does not provide a method to get the binary format), and that has even 288~bit (36~bytes or characters). I provide a utility class \lstinline|UniqueIdUtils|\autocite{TQUADRAT_ORG_FOUNDATION_UNIQUEIDUTILS} that provides some tools to address these issues. So it allows you to create timebased UUIDs or to get the binary representation from a UUID.
+%------------------------------------------------------------------------------
 
-The already mentioned article in \autocite{Mihalcea:UUID_Database_Primary_Key} suggests to use shorter unique ids that should be timebased; the article refers to a the \verb#TSID_CREATOR# library\autocite{Lima:TSID_CREATOR}, but alternatively, my \lstinline|UniqueIdUtils| do also provide a \lstinline|TSID| type with 64~bit length.
+A method will have only \textit{one single regular} exit point, and that is (after) its last line! Irregular or \textit{exceptional} exit points are always exceptions that will be thrown as the result of an error condition.
 
-Another issue with UUIDs is that it should not be \textit{too} easy to guess a valid instance. This means that a database sequence\autocite{TOAD_WORLD_BLOG:DatabaseSequence} that just increments a counter in order to get a new identifier is the worst choice in this regard.
+This means that a method, that does not return something, does not have a \lstinline|return| statement.
 
-\section{Utilising JMX}\label{sec:UtilisingJMX}
-\section{-------------------------------------------- Proceed from here!}
-See \ref{sec:Logging}, and there the part about warnings! Keeping track about failed logins.!!!
-\lipsum[1]
+If there is a \lstinline|return| statement in a method, it is \textit{always} the last statement of the method.
 
+\begin{lstlisting}
+// AVOID!!!
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    if( a == 0 ) return 1;
+    if( a == 1 ) return 1;
+    return a * myMethod( a - 1 );
+}   //  myMethod()
+\end{lstlisting}
 
-\section{Finalisation}\label{sec:Finalisation}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+As already said in chapter \tqfullvref{sec:NamesForLocalVariables}, the name of the local variable that holds the return value is always \lstinline|retValue|; only when the method returns an attribute, the field name could be used instead. And it is also not necessary to assign \lstinline|this| to \lstinline|retValue| for method chaining. 
 
-\section{Deprecation of Elements}\label{sec:DeprecationOfElements}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+Then the recommended code would be:
+\begin{lstlisting}
+// RECOMMENDED
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    final var retValue = (a > 1) ? myMethod( a - 1L) : 1L;
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
 
-\section{Multi-Threading and Synchronisation}\label{sec:MultiThreading}
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+// Still OK
+public final long myMethod( final int a )
+{
+    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
+    var retValue = 1L;
+    if( a > 1 ) retValue = myMethod( a - 1 );
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+
+It is much easier to grasp what a method is doing when the program flow is always from top to bottom, and if there are not any side exits (other than the ‘emergency exits’, marked by a \lstinline|throw| statement when issuing an exception.
+
+This will supported by always using the same name for the return value – just that \lstinline|retValue|.
+
+%------------------------------------------------------------------------------
+
+\subsection{Lambda Results}\label{sec:LambdaResults}
+Most lambdas are just one liners, and if they return something, it will be the return value of that line:
+\begin{lstlisting}
+n -> (n + 1) * 4; 
+\end{lstlisting}
+
+If the code for the lambda will be more complex, you should consider to place it to a method and refer to it with a method reference\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference}:
+\begin{lstlisting}
+public final class MyClass
+{
+    private final String format( final String name )
+    {
+        final var buffer = new StringJoiner( "}, {", "{", "}" );
+        if( nonNull( name ) )
+        {
+            for( final var s: name.split( " " ) )
+            {
+                buffer.add( s );
+            }
+        }
+        else
+        {
+            buffer.setEmptyValue( "No Name" );
+        }
+        final var retValue = buffer.toString();
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  format()
+    
+    public final String myMethod()
+    {
+        final var retValue = retrieveNames().stream()
+            .map( this::format )
+            .filter( n -> !n.equals( "No Name" ) )
+            .collect( joining( "}, Name={", "Names={Name={", "}}"
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+Only if a complex lambda needs to refer to local variables, it has to be defined locally:
+\begin{lstlisting}
+public final class MyClass
+{
+    public final String myMethod( final String longTemplate, final String shortTemplate, final String nullText )
+    {
+        final var retValue = retrieveNames().stream()
+            .map( n ->
+            {
+                final var result = nullText;
+                if( n != null )
+                {
+                    result = n.length() > 15 
+                        ? longTemplate.formatted( n ) 
+                        : shortTemplate.formatted( n );
+                }
+                return result;
+            } )
+            .filter( n -> !n.equals( "No Name" ) )
+            .collect( joining( "}, Name={", "Names={Name={", "}}"
+        
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+The lambda cannot use the name \lstinline|retValue| for its return value, because that is already defined in the surrounding method\footnote{And even if it is not (yet) defined, the lambda should not use it anyway, as it may collide with future code modifications.}. Instead, lambdas use the name \lstinline|result| for their return values.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\subsection{‘case’ Results}\label{sec:CaseResults}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{Generics}\label{sec:GenericTypes}
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -11371,10 +11202,365 @@ See \ref{sec:Logging}, and there the part about warnings! Keeping track about fa
 \end{lstlisting}
 %------------------------------------------------------------------------------
 
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\section{Internationalisation}\label{sec:I18n}
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{The Annotation @API}\label{sec:APIAnnotation}
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{‘\textit{Convention over Configuration}’}
+The phrase “Convention over Configuration” (or “Coding by Convention”) got popular with the introduction of Ruby on Rails, but it is related to earlier ideas like the concept of “Sensible Defaults” and the “Principle of Least Astonishment” in user interface design.
+
+Basically it means that an object instance can be created and used properly with only minimal configuration because all not absolutely mandatory settings will have meaningful – and useful! – default values.
+
+On the other hand, there is that number~\ref{lst:ZoP:ExplicitVsImplicit} from the “Zen of Python”, saying “Explicit is better than implicit”~…
+
+These are obviously contradictory statements – so whose right?
+
+Both, to some extent!
+
+Your design should support “Convention over Configuration”, but your code should rely on defaults only when a change of these defaults in unlikely, or such a change will not have an effect to your code.
+
+So assume that you are using a 3\textsuperscript{rd}~party library that creates reports in HTML format; the default format was HTML3 with the previous version, but in the current version – that one used by you – it is HTML5. The generated reports are consumed by a tool that converts HTML5 input into PDF.
+
+According to “Convention over Configuration”, you are fine: the convention is HTML5, you do not need to set the HTML version for the output format explicitly.
+
+But what happens, if in a few years the next version of that report creator library will support HTML7 as the default, but your PDF generator stucks still with HTML5 for its input? Nothing happens until your successor as the maintainer of your software decides to use that new library~… afterwards you may see funny things in the generated PDF documents.
+
+So the recommendation is: do not always rely on conventions! Whenever possible, provide an explicit configuration! At least leave a comment when you rely on the defaults, and that comment should describe what the anticipated defaults are.
+
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{APIGUARDIAN}
+\autocite{APIGUARDIAN:API}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{Compiler Warnings and Errors}\label{sec:CompilerWarningsAndErrors}
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+It is not allowed to commit any code that emits warnings or even errors on a compiler run to the SCCS. It is also not allowed to switch off any compiler warning globally.
+
+In fact, warnings should even not show up in the development environment, also with the most aggressive settings.
+
+It is allowed to use the annotation \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} to locally deactivate a warning. This is often necessary when dealing with legacy APIs that does not use Generics. So this sample would emit an “unchecked” warning for line 3:
+\begin{lstlisting}[numbers=left]
+public final Map<K,V> clone()
+{
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+\end{lstlisting}
+
+To avoid this, the annotation \lstinline|@SuppressWarnings| with the value “unchecked” can be applied – preferably not to the method as a whole, but only to the problematic assignment, even if this means that an additional temporary variable is required (but not in this sample):
+\begin{lstlisting}
+// RECOMMENDED
+public final Map<K,V> clone()
+{
+    @SuppressWarnings( "unchecked" ) 
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+
+// AVOID!!!
+@SuppressWarnings( "unchecked" ) 
+public final Map<K,V> clone()
+{
+    HashMap<K,V> retValue = (HashMap<K,V>) this.clone();
+    return retValue;
+}
+\end{lstlisting}
+
+As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{The Ternary Operator ‘?’}\label{sec:TheTernaryOperator}
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{Programming to the Interface}\label{sec:ProgrammingToTheInterface}
+\index{programming to the interface}
+A common idiom in Java programming is to construct an instance of a concrete type but to assign it to a variable of an interface type. This binds the code to the abstraction instead of the implementation, which preserves flexibility during future maintenance of the code. For example:
+
+\begin{lstlisting}
+// Original
+List<String> list = new ArrayList<>();
+If var is used, however, the concrete type is inferred instead of the interface:
+
+// Inferred type of list is ArrayList<String>
+var list = new ArrayList<String>();
+\end{lstlisting}
+
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\autocite{Cymerman:SmarterJavaDevelopment}
+\autocite{Fejer:ProgramToInterfaces}
+\autocite{Pavlutin:ProgrammingToInterface}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\autocite{}
+\lipsum[5]
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{The "switch" Statement}\label{sec:TheSwitchStatement}
+\section{-------------------------------------------- Proceed from here!}
+\subsection{-------------------------------------------- Proceed from here!}
+\subsubsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+\ref{sec:SwitchStatements}
+
+\begin{lstlisting}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{Encapsulation}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+\subsection{Encapsulation with Modules}\label{sec:EncapsulationWithModules}
+\subsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+\section{Lambdas}\label{sec:Lambdas}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+\subsection{Functional Interfaces}\label{sec:FunctionalInterfaces}
+\subsection{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+\section{The Interface \lstinline|java.util.Formattable|}\label{sec:FormattableInterface}
+\section{-------------------------------------------- Proceed from here!}
+
+\autocite{ORACLE_DOC_STRING_CLASS}
+\autocite{ORACLE_DOC_STRINGBUFFER_CLASS}
+\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}
+\autocite{ORACLE_DOC_STRINGJOINER_CLASS}
+\autocite{ORACLE_DOC_FORMATTER_CLASS}
+\autocite{ORACLE_DOC_FORMATTABLE_INTERFACE}
+
+\lipsum[1]
+
+%------------------------------------------------------------------------------
+
+\section{The Interface \lstinline|java.lang.Comparable|}\label{sec:ComparableInterface}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+\section{Utility Classes}\label{sec:UtilityClasses}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{Date and Time Values}\label{sec:DateAndTimeValues}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%------------------------------------------------------------------------------
+
+\section{Unique Ids}\label{sec:UniqueIds}
+Data records stored to a database require a unique identifier in most cases. Sometimes, this identifier is provided externally – a social security number, an account number, or a tax id – but usually not. 
+
+When the database will be accessed (and updated) from different locations, this identifier has to be \textit{universally} unique; alternatively, you can introduce a global service that provides such identifiers. But usually, this does make sense only when these identifiers are not only just technical – like the already mentioned social security numbers, account numbers, or tax ids.
+
+How to get universally unique ids (UUID) is defined in RFC~4122\autocite{Leach:RFC4122}, among others. Java provides an implementation for these UUIDs with the class \lstinline|java.util.UUID|\autocite{ORACLE_DOC_UUID_CLASS}. Unfortunately, the class provides only one method that creates new arbitrary UUIDs (\lstinline|java.util.UUID::randomUUID()|\autocite{ORACLE_DOC_UUID:randomUUID}), and these are version~3 pseudo-random UUIDs.
+
+These are large enough that collisions are unlikely, but when used as primary keys on a database table, the database indexing can get quite inefficient (lack of locality in the indexes). This is discussed in more detail in \autocite{Mihalcea:UUID_Database_Primary_Key}.
+
+Partially, this is addressed by timebased UUIDs (version~1), and new formats will be discussed (see \autocite{Davis:NewUUIDs, Leach:RFC4122bis}), but another issue is that these UUIDs occupy at least 128~bit – when you use the binary format. But usually, the textual representation is used (mainly because the Java class \lstinline|UUID| does not provide a method to get the binary format), and that has even 288~bit (36~bytes or characters). I provide a utility class \lstinline|UniqueIdUtils|\autocite{TQUADRAT_ORG_FOUNDATION_UNIQUEIDUTILS} that provides some tools to address these issues. So it allows you to create timebased UUIDs or to get the binary representation from a UUID.
+
+The already mentioned article in \autocite{Mihalcea:UUID_Database_Primary_Key} suggests to use shorter unique ids that should be timebased; the article refers to a the \verb#TSID_CREATOR# library\autocite{Lima:TSID_CREATOR}, but alternatively, my \lstinline|UniqueIdUtils| do also provide a \lstinline|TSID| type with 64~bit length.
+
+Another issue with UUIDs is that it should not be \textit{too} easy to guess a valid instance. This means that a database sequence\autocite{TOAD_WORLD_BLOG:DatabaseSequence} that just increments a counter in order to get a new identifier is the worst choice in this regard.
+
+%------------------------------------------------------------------------------
+
+\section{Utilising JMX}\label{sec:UtilisingJMX}
+\section{-------------------------------------------- Proceed from here!}
+See \ref{sec:Logging}, and there the part about warnings! Keeping track about failed logins.!!!
+\lipsum[1]
+
+%------------------------------------------------------------------------------
+
+\section{Finalisation}\label{sec:Finalisation}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%------------------------------------------------------------------------------
+
+\section{Deprecation of Elements}\label{sec:DeprecationOfElements}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%------------------------------------------------------------------------------
+
+\section{Multi-Threading and Synchronisation}\label{sec:MultiThreading}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
 \section{Chaining Constructors}\label{sec:ChainingConstructors}
 The DRY (“Don’t repeat yourself”) principle should be also used for constructors. Basically there are two different scenarios. In the first, you have constructors with a different number of arguments, reflecting to amount of default settings for the new object. We call this the “Primary Constructor” pattern.
 In the other case you have constructors with different arguments, what we want to call the “Common Constructor” pattern. Both patterns are discussed below.
 Obviously there are situations where you have hybrids of these patterns, and sometimes you have to decide which one is better for the current design.
+
+%------------------------------------------------------------------------------
+
 \subsection{The “Primary Constructor” Pattern}
 Refer to the sample class below:\footnote{I took the example from \autocite{Simmons:HARDCORE_JAVA} and adopted is to my needs. As usual, I omitted the comments that are otherwise required for productive code.}
 \begin{lstlisting}
@@ -11437,6 +11623,9 @@ public ChainedConstructors( String text )
 …
 \end{lstlisting}
 that in turn will call the primary constructor. Now the code for the other constructors is limited to what they do differently.
+
+%------------------------------------------------------------------------------
+
 \subsection{The “Common Constructor” Pattern}
 Again, we want to look at a bad sample first:
 \begin{lstlisting}
@@ -11559,6 +11748,8 @@ If required you can also introduce a private constructor with an artifical forma
 \begin{lstlisting}
 private ChainedConstructor( final boolean ignored ) { … }
 \end{lstlisting}
+
+%------------------------------------------------------------------------------
 
 \subsection{Constructor Helpers}
 In the sample for the ChainedConstructors class in chapter 5.19.1 above we have a constructor like this:
@@ -12034,10 +12225,16 @@ Example:
 
 
 
+%------------------------------------------------------------------------------
+
 \chapter{Appendices}\label{sec:Appendices}
+
+%------------------------------------------------------------------------------
 
 \section{The Naming Dictionary}\label{sec:TheNamingDictionary}
 The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
+
+%------------------------------------------------------------------------------
 
 \subsection{Verbs}
 This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’~…} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
@@ -12047,29 +12244,45 @@ This chapter provides a list of verbs\footnote{Ok, some names or prefixes are no
 
 That a method name is built using one of the verbs above does not free you from providing a proper JavaDoc comment that describes the purpose of the method in detail, together with the arguments, return values and exceptions.
 
+%------------------------------------------------------------------------------
+
 \subsection{Suffixes for Class Names}\label{sec:SuffixesForClassNames}
 This chapter lists defined suffixes for class names and their function.
 
 \renewcommand{\cellalign}{tl}
 \LTXtable{\linewidth}{ClassNameSuffixes.tbl.tex}
 
+%------------------------------------------------------------------------------
+
 \section{Configurable Errors and Warnings}\label{sec:ConfigurableErrorsAndWarnings}
 A very convenient feature of most IDE's is the capability to configure additional warnings and even errors for the compilation.
+
+%------------------------------------------------------------------------------
 
 \subsection{Eclipse}\label{sec:EclipseErrorsAndWarnings}
 tdb
 
+%------------------------------------------------------------------------------
+
 \subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJErrorsAndWarnings}
 tdb
+
+%------------------------------------------------------------------------------
 
 \section{IDE Configuration}\label{sec:IDEConfiguration}
 This chapter provides samples of configuration files for some IDEs. See also the chapter \tqvref{sec:ConfigurableErrorsAndWarnings} about the errors and warnings that can be configured in Eclipse and IntelliJ IDEA.
 
+%------------------------------------------------------------------------------
+
 \subsection{Eclipse}\label{sec:EclipseConfiguration}
 tbd
 
+%------------------------------------------------------------------------------
+
 \subsubsection{Snippets}
 This chapter provides the XML code for Eclipse snippets.
+
+%------------------------------------------------------------------------------
 
 \paragraph{Structuring Comments}\label{sec:SnippetStructuringComments}
 The snippets for the structuring comments as defined in chapter \tqfullvref{sec:StructuringComments}.
@@ -12179,19 +12392,31 @@ The snippets for the structuring comments as defined in chapter \tqfullvref{sec:
 </snippets>
 \end{lstlisting}
 
+%------------------------------------------------------------------------------
+
 \subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJConfiguration}
 tbd
+
+%------------------------------------------------------------------------------
 
 \section{Embedded Code}
 Sometimes, it is necessary to embed code inside the Java source code. Most often, these are SQL statements, but sometimes it could be also fragments of HTML or XML documents.
 
+%------------------------------------------------------------------------------
+
 \subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+
+%------------------------------------------------------------------------------
 
 \subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
 You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
 
+%------------------------------------------------------------------------------
+
 \subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
 Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
+
+%------------------------------------------------------------------------------
 
 \section{The Reason why Prefix Notation should be preferred over Postfix Notation}
 At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \verb#++# and \verb#--#. As a C++ method, the prefix implementation may look like this:
@@ -12217,18 +12442,28 @@ I confess that there are other possible locations where one can save more CPU cy
 
 As said also already, most Java compilers (and not only these) will optimise the particular code, but different Java compilers optimises this pattern differently (meaning some even do not touch it – for example that one for the LEGO® Mindstorms Controller\index{LEGO Mindstorms}~…), and even the runtime optimisation will treat it differently, so just from this point of view I would recommend this simple change of one's personal habits.
 
+%------------------------------------------------------------------------------
+
 \section{Examples}\label{sec:Examples}
+
+%------------------------------------------------------------------------------
 
 \subsection{AutoLock}\label{sec:AutoLock}
 This class is a sample implementation of the idea described in chapter \tqfullvref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={AutoLock.java}]{AutoLock.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{Illegal Argument Exceptions}\label{sec:IllegalArgumentExceptions}
 As said in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, a \lstinline|NullPointerException| that is thrown from your code has to be seen as a coding bug: a value was not properly checked before it was used. Nevertheless, values can be \lstinline|null|, for various reasons, and this still can be an error that needs to be signalled.
 
 For that, I suggested a bunch of custom exceptions that are shown here; they are also part of my Foundation Library: for \lstinline|ValidationException| see \autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, the \lstinline|NullArgumentException| can be found at \autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}, the \lstinline|EmptyArgumentException| is documented at \autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}, and finally the documentation for \lstinline|BlankArgumentException| is at \autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}.
+
+%------------------------------------------------------------------------------
 
 \paragraph{The Code}\
 \lstinputlisting[numbers=left,caption={ValidationException.java}]{ValidationException.java}
@@ -12238,6 +12473,8 @@ For that, I suggested a bunch of custom exceptions that are shown here; they are
 \lstinputlisting[numbers=left,caption={EmptyArgumentException.java}]{EmptyArgumentException.java}
 
 \lstinputlisting[numbers=left,caption={BlankArgumentException.java}]{BlankArgumentException.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{Lazy}\label{sec:Lazy}
 The interface \lstinline|Lazy| and the associated implementation \lstinline|LazyImpl| provide a holder for a lazy initialised object instance. The initialisation happens on the first call to the method \lstinline|Lazy::get| through a call to the \lstinline|Supplier| instance the \lstinline|Lazy| instance was created with.
@@ -12266,10 +12503,14 @@ public final class MyClass
 
 \lstinline|Lazy| is part of my Foundation Library and can be found at \autocite{TQUADRAT_ORG_FOUNDATION_LAZY}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code}\
 \lstinputlisting[numbers=left,caption={Lazy.java}]{Lazy.java}
 
 \lstinputlisting[numbers=left,caption={LazyImpl.java}]{LazyImpl.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{Load JDK~Logging Configuration}\label{sec:LoadJDKLoggingConfiguration}
 The default configuration for the JDK~Logging can be found in the configuration file \verb#${JAVA_HOME}/conf/logging.properties#; if you want to use a different file, you can announce that by providing the JVM command line argument \verb#-Djava.util.logging.config.file=<filename># . This also allows you to easily replace one logging configuration by another.
@@ -12349,13 +12590,19 @@ static
 \end{lstlisting}
 The method \lstinline|LogManager::readConfiguration|\autocite{ORACLE_DOC_LOGMANAGER:readConfiguration} should be invoked before the first logger is configured, so the code above should be placed in the static initialisation part of that class of your application that is loaded first – usually this is the class that contains the method \lstinline|main()|.
 
+%------------------------------------------------------------------------------
+
 \subsection{MountPoint}\label{sec:MountPoint}
 The annotation \lstinline|@MountPoint| and how to use it is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}.
 
 The annotation is part of my foundation library, refer to \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code}\
 \lstinputlisting[numbers=left,caption={MountPoint.java}]{MountPoint.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{Patch Identification}\label{sec:PatchIdentification}
 The chapter \tqfullvref{sec:MaintenanceComments} discussed how to mark areas in the code that has been changed to fix a bug. There I suggested to use annotations for this task.
@@ -12388,16 +12635,24 @@ That the same annotation can be applied multiple times to the same element requi
 
 The annotations \lstinline|@BUG| and \lstinline|@FixList| (the “container annotation”) are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_BUG, TQUADRAT_ORG_FOUNDATION_FIXLIST}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={FixList.java}]{FixList.java}
 
 \lstinputlisting[numbers=left,caption={BUG.java}]{BUG.java}
 
+%------------------------------------------------------------------------------
+
 \subsection{PostProcessor}\label{sec:PostProcessor}
 This implementation is basically a PoC; currently it is not part of any library.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={PostProcessor.java}]{PostProcessor.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{ThreadGroup}\label{sec:ThreadGroup}
 The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.
@@ -12418,8 +12673,12 @@ Unfortunately, the class \lstinline|java.lang.ThreadGroup| itself does not provi
 
 Below you find an implementation of \lstinline|ThreadGroup| that fixes that. A similar class is also part of my Foundation library – see \autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_THREADGROUP}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={ThreadGroupExt.java}]{ThreadGroupExt.java}
+
+%------------------------------------------------------------------------------
 
 \subsection{UnsupportedEnumError}\label{sec:UnsupportedEnumError}
 This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \tqfullvref{sec:SwitchStatements}), in cases where the selector is an enum.
@@ -12469,19 +12728,33 @@ var result = switch( color )
 
 Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
 
+%------------------------------------------------------------------------------
+
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={UnsupportedEnumError.java}]{UnsupportedEnumError.java}
+
+%------------------------------------------------------------------------------
 
 \addcontentsline{toc}{chapter}{Tables}
 \listoftables
 
+%------------------------------------------------------------------------------
+
 \addcontentsline{toc}{chapter}{Listings}
 \lstlistoflistings
+
+%------------------------------------------------------------------------------
 
 \begin{FlushLeft}
 \addcontentsline{toc}{chapter}{References}\printbibliography
 \end{FlushLeft}
 
+%------------------------------------------------------------------------------
+
 \addcontentsline{toc}{chapter}{\indexname}
 \printindex
 \end{document}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

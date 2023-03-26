@@ -1,0 +1,18 @@
+digraph {
+  size="6,11"
+  rankdir="LR"
+
+  start   [shape=point]
+  end     [shape=point]
+
+  try     [label="try{}"]
+  close   [label="AutoCloseable.close()",shape=box]
+  catch   [label="catch{}"]
+  finally [label="finally{}"]
+  
+  start -> try -> close
+  close -> catch [label="on error"] 
+  catch -> finally -> end
+  close -> finally
+  {close, catch} -> end [label="no finally"]
+}

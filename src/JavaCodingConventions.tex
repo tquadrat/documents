@@ -10829,48 +10829,22 @@ Refer also to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ExtendedTryWithResourc
 
 %------------------------------------------------------------------------------
 
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-
-%------------------------------------------------------------------------------
-
 \subsection{When to use?}
-\lstinline|try-with-resources| is a very powerful feature that should be used whenever possible. Definitively it should be used with all the Java classes that already implement \lstinline|java.lang.AutoCloseable| or \lstinline|java.io.Closeable|:
+\verb#try-with-resources#\index{try-with-resources} is a very powerful feature that should be used whenever possible. Definitively it should be used with all the Java classes that already implement \lstinline|java.lang.AutoCloseable|\index{java.lang!AutoCloseable} or \lstinline|java.io.Closeable|\index{java.io!Closeable}:
 
 \begin{itemize}
-\item{The \lstinline|java.io| streams}
-\item{Sockets}
-\item{\lstinline|java.sql.Connection|, \lstinline|java.sql.Statement|, \lstinline|java.sql.ResultSet|}
-\item{\lstinline|java.jms.Connection|}
+\item{The \lstinline|java.io|\index{java.io} streams}
+\item{Sockets (\lstinline|java.net.Socket|\autocite{ORACLE_DOC_SOCKET_CLASS}\index{java.net!Socket} and \lstinline|java.net.ServerSocket|\autocite{ORACLE_DOC_SERVERSOCKET_CLASS}\index{java.net!ServerSocket})}
+\item{\lstinline|java.sql.Connection|\autocite{ORACLE_DOC_CONNECTION_INTERFACE}\index{java.sql!Connection}, \lstinline|java.sql.Statement|\autocite{ORACLE_DOC_STATEMENT_INTERFACE}\index{java.sql!Statement}, \lstinline|java.sql.ResultSet|\autocite{ORACLE_DOC_RESULTSET_INTERFACE}}
+\item{\lstinline|jakarta.jms.Connection|\autocite{JAKARTA_JMS:Connection}\index{jakarta.jms!Connection}}
 \end{itemize}
+
+IDEs like Eclipse and IntelliJ IDEA can be configured to issue a warning when an instance of a class that implements \lstinline|AutoCloseable|\index{java.lang!AutoCloseable} or \lstinline|Closeable|\index{java.io!Closeable} without \verb#try-with-resources#\index{try-with-resources}.
 
 %------------------------------------------------------------------------------
 
 \subsubsection{Lifecycle}\label{sec:Lifecycle}
-In C++, it is a very common pattern to “wrap” the lifecycle of a resource into the lifecycle of an object:
+In C++\index{C++}, it is a very common pattern to “wrap” the lifecycle of a resource into the lifecycle of an object:
 \begin{lstlisting}[language=C++]
 class Resource
 {
@@ -10893,6 +10867,7 @@ class Resource
     …
 }
 \end{lstlisting}
+
 A use of that class might look like this:
 \begin{lstlisting}[language=c++]
 …
@@ -10904,31 +10879,37 @@ A use of that class might look like this:
 }
 …
 \end{lstlisting}
+
 The instance of \lstinline|Resource| will be constructed and \lstinline|open()| is called on \lstinline|r| on the declaration of the variable \lstinline|resource|. On leaving the scope the destructor of \lstinline|Resource| is called implicitly and \lstinline|close()| will be called on \lstinline|r|.
 
-The C++~STL is using a very similar pattern for smart pointers.
+The C++~STL\index{C++}\index{C++!STL} is using a very similar pattern for smart pointers.
 
-Unfortunately, Java does not know destructors\footnote{The deprecated method \lstinline|java.lang.Object.finalizer()| that is part of each Java class is not and was never a replacement for or an alternative to a destructor as it could never be predicted when it is called (just “sometime before the JVM terminates” – if ever).}, so this pattern could not be used.
+Unfortunately, Java does not know destructors\footnote{The deprecated method \lstinline|java.lang.Object.finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} that is part of each Java class is not and was never a replacement for or an alternative to a destructor as it could never be predicted when it is called (just “sometime before the JVM terminates” – if ever).}, so this pattern could not be used in Java programs.
 
-A workaround is to use a \lstinline|try-finally| block with the cleanup (usually a call to \lstinline|close()|) in the \lstinline|finally| block. But to often we have seen that in the run of modifications and/or corrections (refactorings) suddenly the \lstinline|finally| block and/or its contents had been removed (“optimised away”).
+A workaround is to use a \verb#try-finally#\index{try-catch-finally} block with the cleanup (usually a call to a method \lstinline|close()|) in the \lstinline|finally| block. But to often we have seen that in the run of modifications and/or corrections (refactorings) suddenly the \lstinline|finally| block and/or its contents had been removed (“optimised away”). Another problem were exceptions that are triggered from within a finally block.
 
-Now, with the \lstinline|try-with-resources| feature, we can have “Lifecycle” classes; they are still not that easy to use that with real destructors, but we can come close.
+Now, with the \verb#try-with-resources# feature, we can have “Lifecycle” classes; they are still not that easy to use than a C++\index{C++} class with real destructors, but we can come close.
 
-A sample would be the Class \lstinline|AutoLock|; for the full code, see chapter \tqfullvref{sec:AutoLock}; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
+A sample would be the class \lstinline|AutoLock|; for the full code, see the chapter \tqfullvref{sec:AutoLock}\index{org.tquadrat.foundation.lang!AutoLock}; \lstinline|org.tquadrat.foundation.lang.AutoLock|\index{org.tquadrat.foundation.lang!AutoLock} is a real life implementation that can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
-In programs that use \lstinline|java.util.concurrent.locks.Lock| or one of its implementations for thread synchronisation, you will find quite often code like this:
-\begin{lstlisting}[numbers=left]
+In programs that use \lstinline|java.util.concurrent.locks.Lock|\autocite{ORACLE_DOC_LOCK_INTERFACE}\index{java.util.concurrent.locks!Lock} or one of its implementations for thread synchronisation, you will find quite often code like this:
+\index{java.util.concurrent.locks!Lock!lock()}\index{java.util.concurrent.locks!Lock!unlock()}
+\begin{lstlisting}
 m_Lock.lock();
 try
 {
     // Do something
     …
 }
-finally { m_Lock.unlock(); }
+finally 
+{ 
+    m_Lock.unlock(); 
+}
 \end{lstlisting}
 
 This calls for a lifecycle class. Unfortunately the code below will not work, due to several reasons:
-\begin{lstlisting}[numbers=left]
+\index{java.util.concurrent.locks!Lock}
+\begin{lstlisting}
 // Does not work!!
 try( final var unused = new Lock() )
 {
@@ -10937,12 +10918,13 @@ try( final var unused = new Lock() )
 }
 \end{lstlisting}
 
-First, \lstinline|java.util.concurrent.locks.Lock| will not implement \lstinline|java.lang.AutoCloseable|, and second – much more important – we cannot create a new instance of \lstinline|Lock| each time we enter the critical section.\footnote{Not to mention that \lstinline|java.util.concurrent.locks.Lock| is an interface so that \lstinline|new Lock()| cannot work at all.}
+First, \lstinline|Lock|\index{java.util.concurrent.locks!Lock} will not implement \lstinline|java.lang.AutoCloseable|\index{java.lang!AutoCloseable}, and second – much more important – we cannot create a new instance of \lstinline|Lock|\index{java.util.concurrent.locks!Lock} each time we enter the critical section.\footnote{Not to mention that \lstinline|java.util.concurrent.locks.Lock|\index{java.util.concurrent.locks!Lock} is an interface so that \lstinline|new Lock()| cannot work at all.}
 
-Fortunately, the \lstinline|try-with-resources| feature will not call \lstinline|close()| on the newly created object, but on the local reference (that is the reason why \lstinline|try-with-resources| will not work with anonymous instances like \lstinline|try( new Lock() )|). If we would now wrap the \lstinline|Lock| instance into a class that implements \lstinline|AutoCloseable|, we can write something like this:
+Fortunately, the \verb#try-with-resources#\index{try-with-resources} feature will not call \lstinline|close()|\index{java.lang!AutoCloseable!close()} on the newly created object, but on the local reference to it (that is the reason why \verb#try-with-resources#\index{try-with-resources} will not work with anonymous instances like in \lstinline|try( new Lock() )|). If we would now wrap the \lstinline|Lock|\index{java.util.concurrent.locks!Lock} instance into a class that implements \lstinline|AutoCloseable|\index{java.lang!AutoCloseable}, we can write something like this:
+\index{org.tquadrat.foundation.lang!AutoLock}\index{org.tquadrat.foundation.lang!AutoLock!of()}\index{java.util.concurrent.locks!ReentrantLock}\index{org.tquadrat.foundation.lang!AutoLock!lock()}
 \begin{lstlisting}[numbers=left]
 …
-AutoLock m_AutoLock = new AutoLock( m_Lock );
+AutoLock m_AutoLock = AutoLock.of( new ReentrantLock() );
 …
 try( final var unused = m_AutoLock.lock() )
 {
@@ -10954,7 +10936,8 @@ try( final var unused = m_AutoLock.lock() )
 %------------------------------------------------------------------------------
 
 \subsubsection{Post-Processing}
-Together with lambdas, \lstinline|try-with-resources| can be (ab)used also to enforce a unconditional post-processing when a code block is left. This may look like this:
+Together with lambdas, \verb#try-with-resources#\index{try-with-resources} can be (ab)used also to enforce a unconditional post-processing when a code block is left. This may look like this:
+\index{java.lang!Runnable}
 \begin{lstlisting}[numbers=left]
 …
 Runnable doAfter = …;
@@ -10965,13 +10948,15 @@ try( final var p = new PostProcessor( doAfter ) )
     …
 }
 \end{lstlisting}
-The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run} in its \lstinline|close()| method when the \lstinline|try| block is left. Chapter \tqfullref{sec:PostProcessor} in the Appendices provides the source for the class.
 
-‘Unconditional’ means here that the post-processing will be executed if the block terminates regularly or by a thrown exception. Other conditions can be injected into the \lstinline|Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE} implementation.
+The \lstinline|PostProcessor| instance will call \lstinline|Runnable::run|\autocite{ORACLE_DOC_RUNNABLE:run}\index{java.lang!Runnable!run()} in its \lstinline|close()|\index{java.lang!AutoCloseable!close()} method when the \lstinline|try| block is left. Chapter \tqfullref{sec:PostProcessor} in the Appendices provides the source for the class.
 
-The difference between this approach and simply calling \lstinline|doAfter.run()| in a \lstinline|finally| block is that the \lstinline|close()| method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \tqfullref{sec:ExecutionSequence}).
+‘Unconditional’ means here that the post-processing will be executed if the block terminates regularly or by a thrown exception. But conditions can be injected into the \lstinline|Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE}\index{java.lang!Runnable} implementation.
+
+The difference between this approach and simply calling \lstinline|doAfter.run()|\index{java.lang!Runnable!run()} in a \lstinline|finally| block is that the \lstinline|close()|\index{java.lang!AutoCloseable!close()} method of \lstinline|PostProcessor| is invoked before any code in a \lstinline|catch| block (refer to chapter \tqfullref{sec:ExecutionSequence}).
 
 The following code snippet could be a real-life example for where this is useful:
+\index{java.lang!StringBuilder}\index{java.lang!Runnable}
 \begin{lstlisting}[numbers=left]
 final var builder = new StringBuilder();
 
@@ -10984,9 +10969,11 @@ try( final var p = new PostProcessor( addTrailer ) )
     …
 }
 \end{lstlisting}
-This ensures that the string in \lstinline|builder| always terminates with a closing curly brace followed by a linefeed.
+
+This ensures that the string in \lstinline|builder| terminates \textit{always} with a closing curly brace followed by a linefeed.
 
 Another sample is this code snippet:
+\index{java.util!List}\index{java.util!LinkedList}\index{java.lang!Runnable}\index{java.util!List!sort()}\index{java.util!List!add()}
 \begin{lstlisting}[numbers=left]
 final List<String> list = new LinkedList();
 
@@ -11002,6 +10989,7 @@ try( final var p = new PostProcessor( forceSorting ) )
     }
 }
 \end{lstlisting}
+
 Here the \lstinline|PostProcessor| forces that the given list is always sorted after the values had been added.
 
 %------------------------------------------------------------------------------

@@ -4,6 +4,7 @@ digraph {
 
   start   [shape=point]
   end     [shape=point]
+  x1      [shape=point]
 
   try     [label="try{}"]
   catch   [label="catch{}"]
@@ -13,5 +14,6 @@ digraph {
   try -> catch [label="on error"] 
   catch -> finally -> end
   try -> finally
-  {try, catch} -> end [label="no finally"]
+  {try, catch} -> x1 [label="no finally",arrowhead=none]
+  x1 -> end
 }

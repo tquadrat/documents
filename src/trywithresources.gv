@@ -4,6 +4,8 @@ digraph {
 
   start   [shape=point]
   end     [shape=point]
+  x1      [shape=point]
+  
 
   try     [label="try{}"]
   close   [label="AutoCloseable.close()",shape=box]
@@ -14,5 +16,6 @@ digraph {
   close -> catch [label="on error"] 
   catch -> finally -> end
   close -> finally
-  {close, catch} -> end [label="no finally"]
+  {close, catch} -> x1 [label="no finally",arrowhead=none]
+  x1 -> end
 }

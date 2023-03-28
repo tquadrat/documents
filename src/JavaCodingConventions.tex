@@ -131,11 +131,11 @@ To get your “Coding Guardrails for Java in a Nutshell”\index{Coding Guardrai
 \section{The Goals}
 The main goal of coding conventions in general is to help you writing better code.
 
-So what is good code?
+So what is \textit{good code}?
 
 \paragraph{Good Code} does not have bugs and is running fast, without wasting valuable resources.
 
-“Does not have bugs” also means that the code is doing what it is intended to do. We all know that it is nearly impossible to produce completely bug free code, for several reasons. An important reason is that already the specification, used as the base for the implementation, is often faulty. So the code is doing what it should do according to the specification, but it is not doing what it is meant to do~…
+“Does not have bugs” also means that the code is doing what it is intended to do. We all know that it is nearly impossible to produce completely bug free code, for several reasons. One important reason is that already the specification, used as the base for the implementation, is often faulty. So the code is doing what it should do according to the specification, but it is not doing what it is meant to do~…
 
 However, we should not forget that there is still the possibility for \textit{real} bugs.
 
@@ -156,7 +156,7 @@ From a magazine dealing with software development tools, I found the following s
 
 Maintainability has a lot of facets, and I will discuss several of them in the run of this document. But before you can even think of modifying the code – either for fixing a bug, optimising the memory consumption, or adding new functionality – you need to identify the location.  
 
-For that you have to read the already existing code, and of course, you have to understand what you are reading. So a crucial quality of maintainable code is that it is easy to read and \textit{basically} understandable\footnote{Ok, the requirement should be ‘easy to understand’, but that is a relative term. If something is ‘easily’ understandable depends from the experience level of the reader, and here we talk not only about their coding experience, but also about their familiarity with the problem domain. And you cannot always code for the rookies}.
+For that you have to read the already existing code, and of course, you have to understand what you are reading. So a crucial quality of maintainable code is that it is easy to read and \textit{basically} understandable\footnote{Ok, the requirement should be ‘easy to understand’, but that is a relative term. If something is ‘easily’ understandable depends on the experience level of the reader, and here we talk not only about their coding experience, but also about their familiarity with the problem domain. And you cannot always code for the rookies}.
 
 No matter whether your code will meet all the other criteria that would make it maintainable: if it is not readable, it is not really maintainable. 
 
@@ -185,7 +185,7 @@ Several guidelines and recommendations in this document, in particular regarding
 
 But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Average values for a trained typist are around 200 CPM, peak values are at 500 to 900 CPM.}
 
-Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
+Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to code (documentation, meeting notes, emails, specification documents,~…).
 
 Also, modern IDEs do a lot of the typing for you, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
 
@@ -204,10 +204,10 @@ To summarize from above, the goal for these coding conventions is to help you to
 \end{itemize}
 …~Java source code.
 
-As a side effect, all source code looks familiar to all members of the team. That conformity supports readability, but such a common look also identifies the source code as written by the team, as its trademark.
+As a side effect, all source code looks familiar to all members of the team. That conformity further supports readability, but such a common look also identifies the source code as written by the team, as its trademark.
 
 \section{About this Document}
-This document was compiled using \TeX/\LaTeX\index{TeX}\index{LaTeX}\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}\index{github}. The diagrams were generated with Graphviz\index{graphviz}.
+This document was compiled using \TeX/\LaTeX\index{TeX}\index{LaTeX}\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}\index{github}. The diagrams were generated with Graphviz\autocite{Graphviz}\index{graphviz}.
 
 \subsection{The Document Structure}
 This document itself consists of four major parts, aside of this \nameref{sec:Introduction} and the \nameref{sec:Appendices} (containing additional information, references and examples).
@@ -218,14 +218,14 @@ This document itself consists of four major parts, aside of this \nameref{sec:In
 
 \paragraph{\nameref{sec:WritingProperComments}} discusses some guidelines for writing proper comments.
 
-\paragraph{\nameref{sec:CodingGuidelines}} is the biggest part and provides guidelines on how to use various language features, based on best practices.
+\paragraph{\nameref{sec:CodingGuidelines}} is the biggest part and provides guidelines on how to use various language features, based on best practices. The chapters here are in no particular order.
 
 \subsection{Sample Code}
-The code samples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guideline or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing.
+The code samples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guidelines or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing.
 
-The source code samples in chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implement all recommendations.
+The source code examples in the chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implement all recommendations.
 
-All the rules, guidelines and recommendations in this document assume that you use at least Java~17\footnote{see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}} to write and to compile your code. I used that version also for the samples.
+All the rules, guidelines and recommendations in this document assume that you use at least Java~17 – see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION} – to write and to compile your code.  Of course this version was also used for the examples.
 
 \subsection{References}
 Instead of adding URLs directly into the document, I provided them in the “Bibliography” section. In the text, you will find references to it like this: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}. If you read the electronic version of the document, the reference is clickable and brings you to the respective entry. There you can click on the URL.
@@ -244,7 +244,7 @@ I wrote a lot of code using the rules, guidelines and recommendations from this 
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
 Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
-Obviously there are some common rules that are valid for every programming language\footnote{E.g. the request to use meaningful names.}, but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in language \verb#B#. On the other side, it should always be proved whether something that worked fine for one language would not be a great idea to be applied to code in another language, too.
+Obviously there are some common rules that are valid for every programming language (e.g. the request to use meaningful names), but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in programming language \verb#B#. On the other side, it should always be proved whether something that worked fine for one programming language would not be a great idea to be applied to code written in another language, too.
 
 In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\index{Zen of Python}\footnote{I added the ellipsis.} and used it for this document:
 
@@ -270,15 +270,15 @@ In this sense, I stole the “Zen of Python”\autocite{WIKIPEDIA:ZenOfPython,PY
 	\item Namespaces are one honking great idea – let's do more of those!
 \end{itemize}
 
-Only the last one regarding “Namespaces” does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module”~…).
+Only the last one, regarding “Namespaces”, does not work for code written in Java, unless you translate “Namespace” to “Package” (or “Module”~…).
 
-A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc\index{javadoc} to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C/C++, JavaScript and PL/SQL.\footnote{Although I have to confess that the commenting style is not part of the specification of these languages but only supported by external tools; one of these tools is doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen}.} Obviously, if you want to benefit from that adopted feature, you have to write your C++ (JavaScript, PL/SQL,~…) code (more precise, your documentation comments) according to coding conventions similar to those defined here.
+A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc\index{javadoc} to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C\index{C}/C++\index{C++}, JavaScript\index{JavaScript} and PL/SQL\index{PL/SQL}.\footnote{Although I have to confess that the commenting style does not get part of the specification of these languages, instead it is only supported by external tools; one of these tools is doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen}.} Obviously, if you want to benefit from that adopted feature, you have to write your C++\index{C++} (JavaScript\index{JavaScript}, PL/SQL\index{PL/SQL},~…) code (more precise, your documentation comments) according to coding conventions similar to those defined here.
 
-A sample for code conventions for JavaScript can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
+A sample for code conventions for JavaScript\index{JavaScript} can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
 
-Coding conventions for C\# are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation}, another source can be found on GitHub\autocite{Taranov:CsharpCodingStandards}.
+Coding conventions for C\#\index{C\#} are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation}, another source can be found on GitHub\autocite{Taranov:CsharpCodingStandards}.
 
-The number of documents dealing with coding standards, naming conventions and style guides for C++ is close to infinite. A starting point could be the ISO page\autocite{ISO:CppCodingStandards} or Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
+The number of documents dealing with coding standards, naming conventions and style guides for C++\index{C++} is close to infinite. A good starting point could be the ISO page\autocite{ISO:CppCodingStandards}, another one would be Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
 
 \section{Code Generators}
 Java code that is automatically generated by another piece of software should implement this coding conventions in the same way as “hand crafted” code. Most generators are highly configurable and/or allow to use code templates that are customisable.\footnote{Perhaps you want to have a look to \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}.}

@@ -10841,6 +10841,8 @@ Refer also to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ExtendedTryWithResourc
 
 IDEs like Eclipse and IntelliJ IDEA can be configured to issue a warning when an instance of a class that implements \lstinline|AutoCloseable|\index{java.lang!AutoCloseable} or \lstinline|Closeable|\index{java.io!Closeable} without \verb#try-with-resources#\index{try-with-resources}.
 
+The two following chapters (“\nameref{sec:Lifecycle}” and “\nameref{sec:PostProcessing}”) show some additional ways to make use of \verb#try-with-resources#\index{try-with-resources}.
+
 %------------------------------------------------------------------------------
 
 \subsubsection{Lifecycle}\label{sec:Lifecycle}
@@ -10935,7 +10937,7 @@ try( final var unused = m_AutoLock.lock() )
 
 %------------------------------------------------------------------------------
 
-\subsubsection{Post-Processing}
+\subsubsection{Post-Processing}\label{sec:PostProcessing}
 Together with lambdas, \verb#try-with-resources#\index{try-with-resources} can be (ab)used also to enforce a unconditional post-processing when a code block is left. This may look like this:
 \index{java.lang!Runnable}
 \begin{lstlisting}[numbers=left]

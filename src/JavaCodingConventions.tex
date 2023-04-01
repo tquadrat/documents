@@ -11300,6 +11300,60 @@ Basically, a \lstinline|switch| expression looks like this\footnote{Also refer t
 
 Of course an expression can also throw an exception.
 
+A concrete example may look like this:
+\begin{lstlisting}[numbers=left]
+public final <T> boolean isEmpty( final T arg )
+{
+    final var retValue = switch( arg )
+    {
+        case null -> true;
+        case CharSequence charSequence -> charSequence.isEmpty();
+        case Collection<?> collection -> collection.isEmpty();
+        case Map<?,?> map -> map.isEmpty();
+        case Enumeration<?> enumeration -> !enumeration.hasMoreElements();
+        case Optional<?> optional -> optional.isEmpty();
+        case Iterator<?> iterator -> !iterator.hasNext();
+        case Throwable throwable -> isNull( throwable.getCause() );
+        
+        case File file ->
+        {
+            var result = file.exists();
+            if( result )
+            {
+                if( file.isDirectory() )
+                {
+                    result = isEmpty( file.list() );
+                }
+                else if( file.isFile() )
+                {
+                    result = file.length() == 0;
+                }
+                else
+                {
+                    throw new IllegalArgumentException();
+                }
+            }
+            
+            yield result;
+        }        
+        
+        default ->
+        {
+            if( !arg.getClass().isArray() ) throw new IllegalArgumentException();
+            
+            final var result = Array.getLength( arg ) == 0;
+            
+            yield result;
+        }
+    }
+
+    //---* Done *----------------------------------------------------
+    return arg;
+}   //  isEmpty()
+\end{lstlisting}
+
+
+
 
 
 

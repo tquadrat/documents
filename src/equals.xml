@@ -1,0 +1,13 @@
+<diagram title="boolean equals( Object o )">
+    <block>var retValue = this == o</block>
+    <branch condition="!retValue &amp;&amp; o instanceof MyClass other">
+        <left label="yes">
+            <block>
+              retValue = getClass() == other.getClass() )
+	        &amp;&amp; m_Boolean == other.m_Boolean 
+	        &amp;&amp; Objects.equals( m_String, other.m_String )            
+	    </block>
+        </left>
+    </branch>
+    <block>return retValue</block>
+</diagram>

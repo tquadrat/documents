@@ -37,6 +37,7 @@
 \usepackage[colorlinks=true]{hyperref}
 
 \addbibresource{JavaCodingConventions.bib}
+%To generate the references: "biber JavaCodingConventions"
 
 \automark[section]{chapter}
 \lehead*[]{\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}~~\headmark}
@@ -80,6 +81,7 @@ literate=
 
 \colorlet{shadecolor}{gray!10}
 \makeindex
+%To generate the index: "makeindex -s idxhdr.ist JavaCodingConventions"
 
 %---* New Commands *-----------------------------------------------------------
 \newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”}}
@@ -207,7 +209,7 @@ To summarize from above, the goal for these coding conventions is to help you to
 As a side effect, all source code looks familiar to all members of the team. That conformity further supports readability, but such a common look also identifies the source code as written by the team, as its trademark.
 
 \section{About this Document}
-This document was compiled using \TeX/\LaTeX\index{TeX}\index{LaTeX}\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}\index{github}. The diagrams were generated with Graphviz\autocite{Graphviz}\index{graphviz}.
+This document was compiled using \TeX/\LaTeX\index{TeX}\index{LaTeX}\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}\index{github}. The diagrams were generated with Graphviz\autocite{Graphviz}\index{graphviz} and GreenLightning's ‘Nassi-Shneiderman Diagram Generator’\autocite{NDSG, NDSG:Download}\index{Nassi-Shneiderman Diagram Generator}\index{NDSG|see{Nassi-Shneiderman Diagram Generator}}.
 
 \subsection{The Document Structure}
 This document itself consists of four major parts, aside of this \nameref{sec:Introduction} and the \nameref{sec:Appendices} (containing additional information, references and examples).
@@ -1627,7 +1629,7 @@ final var names = customers.stream()
 %------------------------------------------------------------------------------
 
 \subsection{‘return’ and ‘yield’ Statements}
-The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield| statement has to be the last statement of a \lstinline|case| block; refer to the chapter \ref{sec:ReturningValues} for more details on this.
+The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield| statement has to be the last statement of a \lstinline|case| block; refer to the chapter \tqfullvref{sec:ReturningValues} for more details on this.
 
 When \lstinline|return| is always the last statement of a method, it means that the simple form
 \begin{lstlisting}
@@ -1832,13 +1834,15 @@ switch( <selector> )
     case <switchlabel2>:
         <statements2>;
         break;
-…
+
+    default: …
+}
 \end{lstlisting}
-Or you put the common code into a \lstinline|private| method and call that from the two branches. 
+Or you put the common code into a \lstinline|private| method and call that from both branches. 
 
 Different to the case shown in lines~3 to 9, no comment is required in the case shown in lines~19 and 20: here we have two \lstinline|case| clauses that triggers \textit{exactly the same} action, and we can even omit the blank line between them (and also the comment from line~19).
 
-For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to use always a label with \lstinline|break|; see chapter \tqfullref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
+For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to always use a label with \lstinline|break|; see chapter \tqfullref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
 \begin{lstlisting}
 final Color color;
 ColorSelector: switch( colorIndex )
@@ -1860,9 +1864,9 @@ ColorSelector: switch( colorIndex )
 }   //  ColorSelector:
 \end{lstlisting}
 
-The \lstinline|break| in the \lstinline|default| branch is redundant, but it prevents a fall-through error if later another \lstinline|case| branch is added – although it should be assured that the \lstinline|default| branch is always the last branch in the \lstinline|switch| statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.\footnote{A \lstinline|break| would be also obsolete when the branch is left through a \lstinline|return| statement, but in that case, the \lstinline|case| would not be the last statement in the method, and this is another requirement!}
+The \lstinline|break| in the \lstinline|default| branch is redundant, but it prevents a fall-through error if later another \lstinline|case| branch is added – although it should be assured that the \lstinline|default| branch is always the last branch in the \lstinline|switch| statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.\footnote{A \lstinline|break| would be also obsolete when the branch is left through a \lstinline|return| statement, but in that case, the \lstinline|return| would not be the last statement in the method, and this is another requirement!}
 
-\subsubsection{The new Form of ‘switch’}
+\subsubsection{The new Form of ‘switch’}\label{sec:NewSwitch}
 The alternative syntax for \lstinline|switch| comes in two flavours (as \textit{statement} and \textit{expression}) and looks like this:
 
 \begin{lstlisting}[numbers=left]
@@ -4888,8 +4892,11 @@ For the Java programming language, an exception is an instance of a class that i
 \item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}\index{java.lang!RuntimeException}}
 \item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}\index{java.lang!Error}}
 \end{itemize}
-\includegraphics{exception}
-\newline
+
+\begin{center}
+% Generated by "dot -Tjpg -y exception.gv > exception.jpg"
+\includegraphics[scale=1.0]{exception}
+\end{center}
 
 The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
 
@@ -7677,9 +7684,11 @@ This approach allows a method to be called with a wider range of valid arguments
 \subsubsection{Choose the proper Collection Type}\label{sec:ChooseTheProperCollectionType}
 The diagram below shows the relevant class hierarchy for the collection types (we will discuss the map types later).
 \index{java.lang!Iterable}\index{java.util!Collection}\index{java.util!List}\index{java.util!Set}\index{java.util!ArrayList}\index{java.util!LinkedList}\index{java.util!Vector}\index{java.util!HashSet}\index{java.util!LinkedHashSet}\index{java.util!SortedSet}\index{java.util!EnumSet}\index{java.util!TreeSet}
-\newline
-\includegraphics{collection}
-\newline
+
+\begin{center}
+% Generated by "dot -Tjpg -y collection.gv > collection.jpg"
+\includegraphics[scale=1.0]{collection}
+\end{center}
 
 If your method will only iterate over the contents of a collection, the argument type of choice would be \lstinline|java.util.Collection|\autocite{ORACLE_DOC_COLLECTION_INTERFACE}\index{java.util!Collection}. It even allows to add and to remove entries.
 
@@ -7705,12 +7714,14 @@ are rarely used as argument types, with the exception of \lstinline|LinkedHashSe
 
 The corresponding class hierarchy for a map looks like this:
 \index{java.util!Map}\index{java.util!HashMap}\index{java.util!SortedMap}\index{java.util!LinkedHashMap}\index{java.util!Hashtable}\index{java.util!EnumMap}\index{java.util!TreeMap}
-\newline
-\includegraphics{map}
-\newline
+
+\begin{center}
+% Generated by "dot -Tjpg -y map.gv > map.jpg"
+\includegraphics[scale=1.0]{map}
+\end{center}
 
 In most cases you use \lstinline|java.util.Map|\autocite{ORACLE_DOC_MAP_INTERFACE}\index{java.util!Map} for the type of a method's formal parameter, or \lstinline|java.util.SortedMap|\autocite{ORACLE_DOC_SORTEDMAP_INTERFACE}\index{java.util!SortedMap} if a defined sequence is relevant on iterating over the entries. The concrete implementation \lstinline|java.util.LinkedHashMap|\autocite{ORACLE_DOC_LINKEDHASHMAP_CLASS}\index{java.util!LinkedHashMap} can be used if the insertion order has to be maintained somehow, but the other implementations
-\begin{itemize}
+\begin{itemize}[nosep]
 \item{\lstinline|java.util.HashMap|\autocite{ORACLE_DOC_HASHMAP_CLASS}\index{java.util!HashMap}}
 \item{\lstinline|java.util.Hashtable|\autocite{ORACLE_DOC_HASHTABLE_CLASS}\index{java.util!Hashtable}}
 \item{\lstinline|java.util.EnumMap|\autocite{ORACLE_DOC_ENUMMAP_CLASS}\index{java.util!EnumMap}}
@@ -9424,7 +9435,7 @@ Another advantage is that you have to change your code only at one single locati
 \section{Accessing Fields or Methods using Reflection}\label{sec:Reflection}
 “Reflection”\index{reflection} is a feature in the Java programming language that allows an executing Java program to examine or “\textit{introspect}”\index{introspection|see {reflection}} upon itself, and manipulate internal properties of the program. For example, it's possible for a Java class to obtain the names of all its members and display them.
 
-The ability to examine and manipulate a Java class from within itself may not sound like very much, but in other programming languages this feature simply doesn't exist. For example, there is no way in a Pascal\index{Pascal}, C\index{C}, or C++\index{C++} program to obtain information about the functions defined within that program.
+The ability to examine and manipulate a Java class from within itself may not sound like very much, but in other programming languages this feature simply doesn't exist. For example, there is no way in a PASCAL\index{PASCAL}, C\index{C}, or C++\index{C++} program to obtain information about the functions defined within that program.
 
 Reflection\index{reflection} is mainly implemented by the interfaces/classes
 \begin{itemize}[nosep]
@@ -9441,7 +9452,10 @@ and their superclasses/superinterfaces.
 
 The class diagram shows only an excerpt of the whole API:
 
-\includegraphics{reflection}
+\begin{center}
+% Generated by "dot -Tjpg -y reflection.gv > reflection.jpg"
+\includegraphics[scale=1.0]{reflection}
+\end{center}
 
 %------------------------------------------------------------------------------
 
@@ -10790,11 +10804,17 @@ java.lang.Error
 \subsection{Execution Sequence}\label{sec:ExecutionSequence}
 It is important to know how the execution sequence looks like when using \verb#try-with-resources#\index{try-with-resources}. For the traditional pattern\index{try-catch-finally} the execution sequence is
 
-\includegraphics{trycatchfinally}
+\begin{center}
+% Generated by "dot -Tjpg -y trycatchfinally.gv > trycatchfinally.jpg"
+\includegraphics[scale=1.0]{trycatchfinally}
+\end{center}
 
 For \verb#try-with-resources#\index{try-with-resources} the execution sequence looks like 
 
-\includegraphics{trywithresources}
+\begin{center}
+% Generated by "dot -Tjpg -y trywithresources.gv > trywithresources.jpg"
+\includegraphics[scale=1.0]{trywithresources}
+\end{center}
 
 This means that the method \lstinline|close()|\index{java.lang!AutoCloseable!close()} on the \lstinline|AutoClosable|\index{java.lang!AutoCloseable} objects is called \textit{before} any code in an optional \lstinline|catch| and/or \lstinline|finally| block that would be attached to the \lstinline|try| block. For the sample we used above this means that the \lstinline|InputStream input|\index{java.io!InputStream} is already closed when the code in the \lstinline|catch| block that handles the \lstinline|IOException|\index{java.io!IOException} will be executed.
 
@@ -10997,91 +11017,190 @@ Here the \lstinline|PostProcessor| forces that the given list is always sorted a
 %------------------------------------------------------------------------------
 
 \section{Terminating a Method and returning Values}\label{sec:ReturningValues}
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
+A consistent structure for methods does not only support the readability of the code, it also protects from unwanted side effects of modifications of that code.
 
-%\subsubsection{Principles}
+%------------------------------------------------------------------------------
+
+\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
+\item{A method has just one single \textit{regular} return point\footnote{Sometimes also referred to as “exit point”}\index{return point}\index{exit point|see{return point}}.
+
+This is either \textit{after} the last statement for a \lstinline|void| method (in PASCAL\index{PASCAL}, such a method was called a ‘procedure’\index{procedure}), or the very last statement of the method is the \lstinline|return| statement with the return value (a ‘function’\index{function} in PASCAL\index{PASCAL}).}
+
+\item{Additional \textit{irregular} exit points\index{return point} have to be thrown exceptions.
+
+That's the reason why exceptions have been introduced.}
+
+\item{The name of the variable that holds the return value is always \lstinline|retValue|.
+
+Only when a method (usually a getter or an accesor method) returns just a property value, that property can be used directly.}
 \end{enumerate}
 
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
+%------------------------------------------------------------------------------
 
+In those ancient times when I learned programming, we were forced by our teachers to provide a flow-chart of the code before we really started with coding it. This could look like this:
+
+\begin{center}
+% Generated by "dot -Tjpg -y FlowChart.gv > FlowChart.jpg"
+\includegraphics[scale=1.0]{FlowChart}
+\end{center}
+
+This is a relatively simple function (method) that has only one regular exit point\index{return point}, but it is nevertheless quite confusing when presented as a standard flow-chart. In particular it is not easy to follow the program flow, and you cannot see immediately that there is really only one return point\index{return point} in it.
+
+So we soon started to use ‘structograms’\index{structogram} or Nassi-Shneiderman diagrams\autocite{WIKIPEDIA:NSD}\index{Nassi-Shneiderman diagram|see{structogram}}. As such a structogram, the same code looks like this:
+
+\begin{center}
+% Generated by "java -jar nsdg.jar ./NassiShneiderman.xml"
+\includegraphics[scale=0.38]{NassiShneiderman}
+\end{center}
+
+The biggest advantage of such a ‘structogram’\index{structogram} is that you can take the code directly out of the diagram, because you have to read it strictly from top to bottom, and hence they have just one exit point\index{return point}\footnote{Exceptions did not yet exist when these diagrams had been invented, but as shown, they can be easily implemented.} at the bottom. The resulting Java code looks like this:
+\index{org.tquadrat.foundation.util!StringUtils!breakText}\index{java.util.stream!Stream}\index{java.lang!String}\index{java.lang!CharSequence}\index{org.tquadrat.foundation.exception!ValidationException}\index{java.util.stream!Stream.Builder}\index{java.util.stream!Stream!builder()}\index{org.tquadrat.foundation.util!StringUtils!splitString()}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{org.tquadrat.foundation.util!StringUtils!isEmptyOrBlank()}\index{java.util.stream!Stream.Builder!add()}\index{java.lang!StringBuilder}\index{java.lang!String!split()}\index{java.lang!String!isEmpty()}\index{org.tquadrat.foundation.util!StringUtils!isNotEmpty()}\index{java.lang!StringBuilder!add()}\index{java.lang!StringBuilder!setLength()}\index{java.util.stream!Stream.Builder!build()}
+\begin{lstlisting}[numbers=left,caption={StringUtils::breakText}]
+public static final Stream<String> breakText( final CharSequence text, final int lineLength )
+{
+    if( lineLength < 1 ) 
+        throw new ValidationException( format( "Line length size must not be zero or a negative number: %d", lineLength ) );
+
+    final Builder<String> builder = Stream.builder();
+
+    for( final var line : splitString( requireNonNullArgument( text, "text" ), '\n' ) )
+    {
+        if( isEmptyOrBlank( line ) )
+        {
+            builder.add( EMPTY_STRING );
+        }
+        else
+        {
+            final var buffer = new StringBuilder();
+            final var chunks = line.split( "\\s" );
+            SplitLoop: for( final var c : chunks )
+            {
+                if( c.isEmpty() ) continue SplitLoop;
+                if( (buffer.length() + 1 + c.length()) < lineLength )
+                {
+                    if( isNotEmpty( buffer) ) buffer.append( ' ' );
+                }
+                else
+                {
+                    if( isNotEmpty( buffer ) )
+                    {
+                        builder.add( buffer.toString() );
+                        buffer.setLength( 0 );
+                    }
+                }
+                buffer.append( c );
+            }   //  SplitLoop:
+            if( isNotEmpty( buffer ) ) builder.add( buffer.toString() );
+        }
+    }
+
+    final var retValue = builder.build();
+
+    //---* Done *----------------------------------------------------------
+    return retValue;
+}   //  breakText()
+\end{lstlisting}
+
+It is easy to recognise where the elements of structogram\index{structogram} ends up in the code. Therefore it is also quite easy to see in the structogram which impact a modification of the code would have, while the usual flow-chart would not help here.
+
+So thinking how your code would look like as a Nassi-Shneiderman diagram\index{structogram} helps to protect it from bugs that are introduced by code changes. One requirement for code that can be represented as a structogram\index{structogram} is, that there is just one single regular exit point\index{return point}.\footnote{IntelliJ IDEA can be configured to emit an error for methods with more than a configured number (the default is 1) of return points.}
+
+A bad sample are the \lstinline|equals()|\autocite{ORACLE_DOC_OBJECT:equals}\index{java.lang!Object!equals()} methods that are generated by the IDEs:
+\index{java.lang!Object!getClass()}\index{org.tquadrat.foundation.lang!Objects!equals()}
 \begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-A method will have only \textit{one single regular} exit point, and that is (after) its last line! Irregular or \textit{exceptional} exit points are always exceptions that will be thrown as the result of an error condition.
-
-This means that a method, that does not return something, does not have a \lstinline|return| statement.
-
-If there is a \lstinline|return| statement in a method, it is \textit{always} the last statement of the method.
-
-\begin{lstlisting}
-// AVOID!!!
-public final long myMethod( final int a )
+\\ DISCOURAGED!!
+@Override
+public boolean equals( final Object o )
 {
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    if( a == 0 ) return 1;
-    if( a == 1 ) return 1;
-    return a * myMethod( a - 1 );
-}   //  myMethod()
+    if( this == o ) return true;
+    if( o == null || getClass() != o.getClass() ) return false;
+
+    final var other = (MyClass) o;
+    return m_Boolean == other.m_Boolean && Objects.equals( m_String, other.m_String );
+}
 \end{lstlisting}
 
-As already said in chapter \tqfullvref{sec:NamesForLocalVariables}, the name of the local variable that holds the return value is always \lstinline|retValue|; only when the method returns an attribute, the field name could be used instead. And it is also not necessary to assign \lstinline|this| to \lstinline|retValue| for method chaining. 
+Obviously you cannot create a structogram\index{structogram} for the code above.
 
-Then the recommended code would be:
-\begin{lstlisting}
-// RECOMMENDED
-public final long myMethod( final int a )
+The chapter \tqvref{sec:EqualsAndHashCode} describes how to implement \lstinline|Object::equals|\index{java.lang!Object!equals()}; according to that description, the code above would look like this:
+\index{java.lang!Object!getClass()}\index{org.tquadrat.foundation.lang!Objects!equals()}
+\begin{lstlisting}[numbers=left]
+@Override
+public final boolean equals( final Object o )
 {
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    final var retValue = (a > 1) ? myMethod( a - 1L) : 1L;
+    var retValue = this == o;
+    if( !retValue && o instanceof MyClass other )
+    {
+        retValue = getClass() == other.getClass() )
+            && m_Boolean == other.m_Boolean 
+            && Objects.equals( m_String, other.m_String );
+    }
+
+    //---* Done *-------------------------------------------------------
+    return retValue;
+}   //  equals()
+\end{lstlisting}
+
+The structogram for this code looks like this:
+
+\begin{center}
+% Generated by "java -jar nsdg.jar ./equals.xml"
+\includegraphics[scale=0.5]{equals}
+\end{center}
+
+As already said in chapter \tqfullvref{sec:NamesForLocalVariables}, the name of the local variable that holds the return value is always \lstinline|retValue|; only when the method returns just an attribute, the field name could be used instead. And it is also not necessary to assign \lstinline|this| to \lstinline|retValue| for method chaining. Hence these are all valid samples:
+\index{java.lang!String!formatted()}\index{java.io!PrintStream}\index{java.io!PrintStream!print()}
+\begin{lstlisting}[numbers=left]
+// A Getter method
+public final String getAttribute() { return m_Attribute; }
+
+// An accessor method
+public final String attribute() { return m_Attribute; }
+
+// Returning 'this' for method chaining
+public final MyClass attribute( final String value )
+{
+    m_Attribute = value;
+    
+    //---* Done *----------------------------------------------------
+    return this;
+}   //  attribute()
+
+// Any other methods
+public final String compose( final String pattern )
+{
+    final var retValue = pattern.formatted( m_Attribute );
     
     //---* Done *----------------------------------------------------
     return retValue;
-}   //  myMethod()
+}   //  compose()
 
-// Still OK
-public final long myMethod( final int a )
+public final void print( final PrintStream destination )
 {
-    if( a < 0 ) throw new IllegalArgumentException( "a < 0" );
-    var retValue = 1L;
-    if( a > 1 ) retValue = myMethod( a - 1 );
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  myMethod()
+    destination.print( m_Attribute );
+}   //  print()
 \end{lstlisting}
-
-It is much easier to grasp what a method is doing when the program flow is always from top to bottom, and if there are not any side exits (other than the ‘emergency exits’, marked by a \lstinline|throw| statement when issuing an exception.
-
-This will supported by always using the same name for the return value – just that \lstinline|retValue|.
 
 %------------------------------------------------------------------------------
 
 \subsection{Lambda Results}\label{sec:LambdaResults}
-Most lambdas are just one liners, and if they return something, it will be the return value of that line:
+Most lambdas\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LambdaExpressions} are just one liners, and if they return something, it will be the return value of that line:
 \begin{lstlisting}
-n -> (n + 1) * 4; 
+n -> (n + 1) * 4; // returns 20 for n=4
 \end{lstlisting}
 
 If the code for the lambda will be more complex, you should consider to place it to a method and refer to it with a method reference\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodReference}\index{method reference}:
 \begin{lstlisting}
 public final class MyClass
 {
+    /**
+     *  Formatter function; implements
+     *  {@link java.util.function.UnaryOperator}.
+     *
+     *  @param  name    The name to format.
+     *  @return The formatted name.
+     */
     private final String format( final String name )
     {
         final var buffer = new StringJoiner( "}, {", "{", "}" );
@@ -11143,16 +11262,79 @@ public final class MyClass
 }
 //  class MyClass
 \end{lstlisting}
+
 The lambda cannot use the name \lstinline|retValue| for its return value, because that is already defined in the surrounding method\footnote{And even if it is not (yet) defined, the lambda should not use it anyway, as it may collide with future code modifications.}. Instead, lambdas use the name \lstinline|result| for their return values.
 
-%------------------------------------------------------------------------------
+And you should write those complex lambdas also with just a single return point\index{return point}!
 
 %------------------------------------------------------------------------------
 
 \subsection{‘case’ Results}\label{sec:CaseResults}
+With Java~12, \lstinline|switch| expressions\autocite{ORACLE_DOC_SWITCHEXPRESSIONS} have been introduced into the language. Additional details can be found in chapter \ref{sec:TheSwitchStatement}.
+
+Basically, a \lstinline|switch| expression looks like this\footnote{Also refer to chapter \tqvref{sec:NewSwitch}.}:
+\begin{lstlisting}[numbers=left]
+<result> = switch( <selector> )
+{
+    case null -> <nullExpression>;
+    
+    case <switchlabel1> -> <expression1>;
+
+    case <switchlabel2>, <switchlabel3> -> <expression2>;
+
+    case <switchlabel4> ->
+    {
+        <expressions>;
+        yield <value1>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <expressions>;
+        yield <value2>;
+    }
+
+    default -> <defaultExpression>;
+}
+\end{lstlisting}
+
+Of course an expression can also throw an exception.
+
+
+
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
 \autocite{}
 \autocite{}
 \autocite{}
@@ -11416,11 +11598,34 @@ var list = new ArrayList<String>();
 \section{-------------------------------------------- Proceed from here!}
 \subsection{-------------------------------------------- Proceed from here!}
 \subsubsection{-------------------------------------------- Proceed from here!}
-\lipsum[5]
 \ref{sec:SwitchStatements}
 
-\begin{lstlisting}
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
 \end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 

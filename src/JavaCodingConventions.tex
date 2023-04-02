@@ -4,7 +4,7 @@
 \usepackage{dejavu}
 %\usepackage[T1]{fontenc}
 \usepackage{scrhack}
-\usepackage{graphicx} 
+\usepackage[pdftex]{graphicx} 
 \usepackage[manualmark]{scrlayer-scrpage}
 \usepackage[utf8]{inputenc}
 \usepackage{tocbasic}
@@ -90,7 +90,7 @@ literate=
 \newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page~\pageref{#1}}
 \newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
 
-\dedication{For Rasa Kuodienė: She deserved better~… in life and in death \newline\newline\includegraphics[height=14cm]{Rasa} \newline*1969-07-13 †2022-12-21}
+\dedication{For Rasa Kuodienė:\newline She deserved better~… in life and in death \newline\newline\includegraphics[height=14cm]{Rasa} \newline*1969-07-13~~~†2022-12-21}
 
 \begin{document}
 \isodate
@@ -223,7 +223,7 @@ This document itself consists of four major parts, aside of this \nameref{sec:In
 \paragraph{\nameref{sec:CodingGuidelines}} is the biggest part and provides guidelines on how to use various language features, based on best practices. The chapters here are in no particular order.
 
 \subsection{Sample Code}
-The code samples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guidelines or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing.
+The code examples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guidelines or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing. Often the code as given will not compile, and it may also be not particularly useful for other purposes than demonstrating a feature.
 
 The source code examples in the chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implement all recommendations.
 
@@ -5132,26 +5132,35 @@ If an exception was not caught in your code, it ”bubbles up” until it reache
 When we execute the Java program below, the \lstinline|Error| is printed to the console:
 \lstinputlisting[numbers=left,caption={Test Abort main()}]{TestAbortMain.java}
 
-\begin{verbatim}
-$ java TestAbortMain.java
-Exception in thread "main" java.lang.Error: Aborted
-    at TestAbortMain.main(TestAbortMain.java:5)
-$ 
-\end{verbatim}
+\begin{center}
+\includegraphics[scale=0.6]{TestAbortMain}
+\end{center}
+
+%\begin{verbatim}
+%$ java TestAbortMain.java
+%Exception in thread "main" java.lang.Error: Aborted
+%    at TestAbortMain.main(TestAbortMain.java:5)
+%$ 
+%\end{verbatim}
 
 In the sample below, we abort a secondary thread:
 \lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
 
-The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown at all.}
-\begin{verbatim}
-$ java TestAbortRun.java
-Exception in thread "Thread-0" java.lang.Error: run() aborted!
-    at TestAbortRun.run(TestAbortRun.java:5)
-    at java.base/java.lang.Thread.run(Thread.java:833)
-Exception in thread "main" java.lang.Error: main() aborted!
-    at TestAbortRun.main(TestAbortRun.java:20)
-$ 
-\end{verbatim}
+The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown at all.}:
+
+\begin{center}
+\includegraphics[scale=0.5]{TestAbortRun}
+\end{center}
+
+%\begin{verbatim}
+%$ java TestAbortRun.java
+%Exception in thread "Thread-0" java.lang.Error: run() aborted!
+%    at TestAbortRun.run(TestAbortRun.java:5)
+%    at java.base/java.lang.Thread.run(Thread.java:833)
+%Exception in thread "main" java.lang.Error: main() aborted!
+%    at TestAbortRun.main(TestAbortRun.java:20)
+%$ 
+%\end{verbatim}
 
 This behaviour is sufficient for a tool in most cases, but not for a standalone application and not for a feature library. A function library usually relies on the a caller, while serverbase applications and extensions use the facilities provided by the host applications.
 

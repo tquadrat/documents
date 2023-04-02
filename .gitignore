@@ -278,6 +278,9 @@ TSWLatexianTemp*
 # temporary generated files
 *.tbl
 
+# thumbspdf output
+*.tpt
+
 # joe's backup files
 *~
 

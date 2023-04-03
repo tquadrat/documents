@@ -1629,20 +1629,18 @@ final var names = customers.stream()
 %------------------------------------------------------------------------------
 
 \subsection{‘return’ and ‘yield’ Statements}
-The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield| statement has to be the last statement of a \lstinline|case| block; refer to the chapter \tqfullvref{sec:ReturningValues} for more details on this.
+The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield|\index{yield} statement has to be the last statement of a \lstinline|case| block; refer to the chapter \tqfullvref{sec:ReturningValues} for more details on this.
 
 When \lstinline|return| is always the last statement of a method, it means that the simple form
 \begin{lstlisting}
 return;
 \end{lstlisting}
-is obsolete. Same for the simple form of the \lstinline|yield| statement:
-\begin{lstlisting}
-yield;
-\end{lstlisting}
+is obsolete\footnote{\lstinline|yield|\index{yield} alone (without a return value) in a \lstinline|case| block will always cause a compiler error.}.
 
-The use of parentheses with the \lstinline|return| or \lstinline|yield| statement is not required unless they make the return value more obvious in some way.
+The use of parentheses with the \lstinline|return| or \lstinline|yield|\index{yield} statement is not required unless they make the return value more obvious in some way.
 
 The recommended forms are shown in lines~15 and 22/23, below:
+\index{java.util!Arrays!stream()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.utils!StringUtils!abbreviate()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!length()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!collect()}\index{java.util.stream!Collectors!joining()}\index{org.tquadrat.foundation.exception!UnsupportedEnumError}
 \begin{lstlisting}[numbers=left]
 public final String myMethod( final InputType inputType, final String... input )
 {
@@ -1675,7 +1673,7 @@ public final String myMethod( final InputType inputType, final String... input )
 \subsection{‘if’, ‘if-else’, ‘if-else~if-else’ Statements}\label{sec:IfStatements}
 The base forms for the \lstinline|if| statement are the following ones:
 \begin{itemize}
-\item{This is the simplest form has not \lstinline|else| clause:
+\item{This is the simplest form that does not have an \lstinline|else| clause:
 \begin{lstlisting}
 if( <condition> )
 {
@@ -1698,7 +1696,7 @@ else
     <statements>;
 }
 \end{lstlisting}
-Even if may fit into a single line, do not write an \lstinline|if-else| statement like below:
+Even if may fit into a single line, do not write an \verb#if-else# statement like below:
 \begin{lstlisting}
 // STRONGLY DISCOURAGED!!!
 if( <condition> ) <singleStatement>; else <otherStatement>;
@@ -1731,29 +1729,27 @@ else
     <statements>;
 }
 \end{lstlisting}
-Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic. }
+Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.}
 
 \item{Avoid an empty code block:
 \begin{lstlisting}
 // AVOID!!!
 if( <condition>)
-{ /* Empty! }
+{ /* Empty! */ }
 else
 {
     <statements>;
 }
 \end{lstlisting}
 
-Instead negate the condition and place the statements to the \lstinline|then| block:
+Instead negate the condition and place the statements to the “then” block:
 \begin{lstlisting}
 // BETTER
 if( !<condition>)
 {
     <statements>;
 }
-\end{lstlisting}
-
-}
+\end{lstlisting}}
 \end{itemize}
 
 As said already above, an \lstinline|if| statement does not need the curly braces (“\{\}”) only if there is just a single statement on the same line as the \lstinline|if| clause, and if there is no \lstinline|else| clause:
@@ -1774,9 +1770,9 @@ else
     <statement>;
 \end{lstlisting}
 
-If the \lstinline|if| statement takes more than one single line, curly braces have to be used around all statements, even if there is just one. This makes it easier to add statements without accidentally introducing bugs due to forgetting to add braces.
+If the \lstinline|if| statement takes more than one single line, curly braces have to be used around all statements, even if there is just one. This makes it easier to add statements without accidentally introducing bugs due to forget adding braces.
 
-Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “?” operator.
+Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “\verb#?#” operator.
 
 %------------------------------------------------------------------------------
 
@@ -1784,6 +1780,8 @@ Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses 
 This chapter describes how to format a \lstinline|switch| statement together with the related \lstinline|case| and \lstinline|default| statements.
 
 Beginning with the first preview in Java~12, an alternative syntax for \lstinline|switch| was introduced, so that we have now two (in fact, three) different forms of that construct. When to use which form and how is covered by chapter \tqfullvref{sec:TheSwitchStatement}.
+
+%------------------------------------------------------------------------------
 
 \subsubsection{The traditional Form of ‘switch’}
 Originally, a \lstinline|switch| statement in Java looked like this:
@@ -1865,6 +1863,8 @@ ColorSelector: switch( colorIndex )
 \end{lstlisting}
 
 The \lstinline|break| in the \lstinline|default| branch is redundant, but it prevents a fall-through error if later another \lstinline|case| branch is added – although it should be assured that the \lstinline|default| branch is always the last branch in the \lstinline|switch| statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.\footnote{A \lstinline|break| would be also obsolete when the branch is left through a \lstinline|return| statement, but in that case, the \lstinline|return| would not be the last statement in the method, and this is another requirement!}
+
+%------------------------------------------------------------------------------
 
 \subsubsection{The new Form of ‘switch’}\label{sec:NewSwitch}
 The alternative syntax for \lstinline|switch| comes in two flavours (as \textit{statement} and \textit{expression}) and looks like this:
@@ -1955,6 +1955,8 @@ var result = switch( selector )
 Same as for the \lstinline|default| branch, the \lstinline|case null| branch can be a statement block or a complex expression.
 
 And an expression can also be always a \lstinline|throw|.
+
+%------------------------------------------------------------------------------
 
 \subsubsection{General formatting Rules for ’switch’}
 \begin{itemize}
@@ -11326,8 +11328,8 @@ public final <T> boolean isEmpty( final T arg )
         
         case File file ->
         {
-            var result = file.exists();
-            if( result )
+            var result = !file.exists();
+            if( !result )
             {
                 if( file.isDirectory() )
                 {
@@ -11361,55 +11363,9 @@ public final <T> boolean isEmpty( final T arg )
 }   //  isEmpty()
 \end{lstlisting}
 
+Same as for a lambda, you use \lstinline|result| as the name of the local variable that holds the return value. This means that a collision could occur when using a complex lambda within a \lstinline|case| block~… – if you really encounter this problem, you need to think about the structure of your code anyways – refer to \tqfullvref{sec:TheSwitchStatement} for more details.
 
-
-
-
-
-%------------------------------------------------------------------------------
-\hrulefill\newpage 
-\section{-------------------------------------------- Proceed from here!}
-\lipsum[1]
-
-%\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
-\end{enumerate}
-
-\begin{itemize}[nosep]
-\item{one}
-\item{two}
-\item{three}
-\end{itemize}
-
-\begin{lstlisting}[numbers=left]
-\end{lstlisting}
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\lipsum[5]
-
-\begin{lstlisting}
-\end{lstlisting}
+And of course, there is only one \lstinline|yield|\index{yield} statement per \lstinline|case|block, and it has to be the last statement in that block.
 
 %------------------------------------------------------------------------------
 
@@ -11658,13 +11614,101 @@ var list = new ArrayList<String>();
 %------------------------------------------------------------------------------
 
 \section{The "switch" Statement}\label{sec:TheSwitchStatement}
-\section{-------------------------------------------- Proceed from here!}
-\subsection{-------------------------------------------- Proceed from here!}
-\subsubsection{-------------------------------------------- Proceed from here!}
-\ref{sec:SwitchStatements}
+In this document, I mentioned the \lstinline|switch| statement\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Switch} a first time in chapter \tqfullvref{sec:SwitchStatements}, where the formatting of the source code is discussed, and a second time in chapter \tqvref{sec:CaseResults} that deals with return values.
+
+Java inherited the problematic syntax of the \lstinline|switch| statement from C\index{C}; whether, when and how it should or could be used was always discussed controversally. There are projects that even banned the use of \lstinline|switch| completely in their coding guidelines, because it is error prone.
+
+Finally, a series of JEPs were launched to address the issues with the \lstinline|switch| statement (JEP~325\autocite{JEP325}, JEP~354\autocite{JEP354} and JEP~361\autocite{JEP361}). Java~12 introduced the ‘new’ \lstinline|switch| as a preview\autocite{JEP325:Specification}, since Java~14 it is an official part of the language.
+
+\begin{tabular}{ll}
+\rule[-1ex]{0pt}{2.5ex} ‘Old’ \lstinline|switch| & ‘New’ \lstinline|switch| \\ 
+\rule[-1ex]{0pt}{2.5ex}
+\begin{minipage}{0.48\textwidth}
+\begin{lstlisting}[numbers=left]
+switch( <selector> )
+{
+    case <label1>:
+        <expression1>; 
+        break;
+    
+    case <label2a>:
+    case <label2b>: 
+        <expression2>; 
+        break;
+    
+    default: <expression>; break;
+}
+\end{lstlisting}
+\end{minipage} & 
+
+\begin{minipage}{0.48\textwidth}
+\begin{lstlisting}
+switch( <selector> )
+{
+    case <label1> -> <expression1>;
+    
+    
+        
+    case <label2a>, <label2b> 
+        -> <expression2>;
+
+
+    
+    default -> <expression>
+}
+\end{lstlisting}
+\end{minipage} \\ 
+\end{tabular} 
+
+As we have two different forms the \lstinline|switch| statement now, it is worth to define some coding guidelines for it.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Prefer the ‘new’ \lstinline|switch| over the ‘old’ one.
+
+A reason for the JPEs had been the error prone syntax of the original \lstinline|switch| statement; this is fixed by the new form – but only when it is used.}
+
+\item{Using \lstinline|switch| \textit{expressions} can make your code much more concise.}
+
+\item{\lstinline|case| blocks should be short.
+
+No matter if you are using the old or the new form, keep the code in the \lstinline|case| blocks short and simple. Move the code to a \lstinline|private| method, if it gets too long or too complex or both.}
+
+\item{Avoid ‘fall-through’!
+
+The new form does not allow ‘fall-through’, hence this is only relevant for the old form; ‘fall-through’ is the main reason why the old \lstinline|switch| is considered to be error prone.}
+
+\item{Although it looks like one, a \verb#switch rule# is no lambda.
+
+That means that local variables that are referenced in a \verb#switch rule# expression do not have to be effectively \lstinline|final|.}
+
+\item{Never use the old \lstinline|switch| form for a \lstinline|switch| expression!
+
+Although it works, you should just not do it, because in that case the result will be returned as an ‘argument’ of the \lstinline|break| statement – and can be easily mixed up with a \lstinline|break| label.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Advantages of the new Syntax}
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\ref{sec:SwitchStatements}
+\ref{sec:CaseResults}
+\autocite{ORACLE_DOC_PATTERNMATCHING}
+\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
+
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression}
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock}
+
+
+
+
+\autocite{}
+
 \lipsum[1]
 
 %\subsubsection{Principles}
@@ -11682,6 +11726,290 @@ var list = new ArrayList<String>();
 
 \begin{lstlisting}[numbers=left]
 \end{lstlisting}
+%------------------------------------------------------------------------------
+
+\subsection{‘switch’ Expressions}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\ref{sec:SwitchStatements}
+\ref{sec:CaseResults}
+\autocite{ORACLE_DOC_PATTERNMATCHING}
+\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
+
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression}
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock}
+
+
+
+
+\autocite{}
+
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+\subsection{More Enhancements}
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\ref{sec:SwitchStatements}
+\ref{sec:CaseResults}
+\autocite{ORACLE_DOC_PATTERNMATCHING}
+\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
+
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression}
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock}
+
+
+
+
+\autocite{}
+
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+\subsection{‘switch’ Statements}
+This chapter describes how to format a \lstinline|switch| statement together with the related \lstinline|case| and \lstinline|default| statements.
+
+Beginning with the first preview in Java~12, an alternative syntax for \lstinline|switch| was introduced, so that we have now two (in fact, three) different forms of that construct. When to use which form and how is covered by chapter \tqfullvref{sec:TheSwitchStatement}.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The traditional Form of ‘switch’}
+Originally, a \lstinline|switch| statement in Java looked like this:
+\begin{lstlisting}[numbers=left]
+switch( <selector> )
+{
+    case <switchlabel1>:
+        <statements1>;
+        // Falls through!
+
+    case <switchlabel2>:
+        <statements2>;
+        break;
+
+    case <switchlabel3>: <singleStatement>; break;
+
+    case <switchlabel4>:
+    {
+        <statements>;
+        break;
+    }
+
+    case <switchlabel5>: // Also a fall-through
+    case <switchlabel6>:
+    {
+        <statements>;
+        break;
+    }
+
+    default:
+       <statements>;
+       break;
+}
+\end{lstlisting}
+
+First, these coding conventions make the blank line above each \lstinline|case| (except the very first one) and above \lstinline|default| mandatory!
+  
+If a \lstinline|case| falls through, like in lines~3 to 9, a comment “\lstinline|// Falls through!|” as in line~5 of the sample is required! But basically, such constructs should be avoided when possible, because it also forces that the sequence of the \lstinline|case| clauses cannot be changed, and that fact requires an additional comment to the \lstinline|switch| itself. In fact here you should consider to ignore the “DRY~Principle” – we will see this later – and repeat the code for the second \lstinline|case| on the first one:
+\begin{lstlisting}
+// BETTER
+switch( <selector> )
+{
+    case <switchlabel1>:
+        <statements1>;
+        <statements2>;
+        break;
+
+    case <switchlabel2>:
+        <statements2>;
+        break;
+
+    default: …
+}
+\end{lstlisting}
+Or you put the common code into a \lstinline|private| method and call that from both branches. 
+
+Different to the case shown in lines~3 to 9, no comment is required in the case shown in lines~19 and 20: here we have two \lstinline|case| clauses that triggers \textit{exactly the same} action, and we can even omit the blank line between them (and also the comment from line~19).
+
+For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to always use a label with \lstinline|break|; see chapter \tqfullref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
+\begin{lstlisting}
+final Color color;
+ColorSelector: switch( colorIndex )
+{
+    case 1: color = RED; 
+        break ColorSelector;
+        
+    case 2: color = BLUE; 
+        break ColorSelector;
+        
+    case 3: color = YELLOW; 
+        break ColorSelector;
+        
+    case 4: color = GREEN; 
+        break ColorSelector;
+        
+    default: color = NONE; 
+        break ColorSelector;
+}   //  ColorSelector:
+\end{lstlisting}
+
+The \lstinline|break| in the \lstinline|default| branch is redundant, but it prevents a fall-through error if later another \lstinline|case| branch is added – although it should be assured that the \lstinline|default| branch is always the last branch in the \lstinline|switch| statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.\footnote{A \lstinline|break| would be also obsolete when the branch is left through a \lstinline|return| statement, but in that case, the \lstinline|return| would not be the last statement in the method, and this is another requirement!}
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The new Form of ‘switch’}
+The alternative syntax for \lstinline|switch| comes in two flavours (as \textit{statement} and \textit{expression}) and looks like this:
+
+\begin{lstlisting}[numbers=left]
+// switch statement
+switch( <selector> )
+{
+    case <switchlabel1> -> <singleStatement>;
+
+    case <switchlabel2>, <switchlabel3> -> <singleStatement>;
+
+    case <switchlabel4> ->
+    {
+        <statements>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+
+// switch expression
+var result = switch( <selector> )
+{
+    case <switchlabel1> -> <expression>;
+
+    case <switchlabel2>, <switchlabel3> -> <expression>;
+
+    case <switchlabel4> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Of course the \lstinline|default| in line~18 can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~40 can have a complex expression like the \lstinline|case| in line~28.
+
+As this format does not allow a fall-through in cases where the branches for two or more labels are doing the same stuff, it is possible here to have more than one switch label per \lstinline|case|, as shown in lines~6, 13, 26 and 34.
+
+If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}), a \lstinline|switch| looks like this:
+\begin{lstlisting}[numbers=left]
+var selector = <anObject>
+// switch statement
+switch( selector )
+{
+    case null -> <singleStatement>;
+    
+    case <class1> <name1> -> <singleStatement>;
+
+    case <class2> <name2> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+
+// switch statement
+var result = switch( selector )
+{
+    case null -> <expression>;
+
+    case <class1> <name1> -> <expression>;
+
+    case <class2> <name2> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Same as for the \lstinline|default| branch, the \lstinline|case null| branch can be a statement block or a complex expression.
+
+And an expression can also be always a \lstinline|throw|.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{General formatting Rules for ’switch’}
+\begin{itemize}
+\item{Every \lstinline|switch| statement should include a \lstinline|default| branch, even when the \lstinline|case| labels are exhaustive.}
+
+\item{If really all possible values for the \lstinline|case| labels are covered, the \lstinline|default| branch should throw an exception about an unknown/unexpected value.\footnote{Refer to chapter \tqfullref{sec:UnsupportedEnumError}\autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR} for a sample.}  Refer to chapter \tqfullvref{sec:TheSwitchStatement} for additional details.}
+
+\item{The \lstinline|default| branch should be always the last branch.}
+
+\item{A \lstinline|switch| with pattern matching should always have a \lstinline|case null| branch as it first branch.}
+
+\item{Syntactically, the use of curly braces in the branches is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.}
+
+\item{As already mentioned before, the blank line separating the branches is mandatory.}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------

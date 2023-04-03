@@ -185,9 +185,20 @@ And from my experience I found that verbosity is your friend!\footnote{Refer to 
 
 Several guidelines and recommendations in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that verbosity – but as said: that's not generally bad!
 
-But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Average values for a trained typist are around 200 CPM, peak values are at 500 to 900 CPM.}
+But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Just for your comparison: average values for a typist or secretary are around 200 CPM, peak values are at 500 to 900 CPM (the world record is 955~CPM). See also \autocite{RATATYPE}.}
 
-Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to code (documentation, meeting notes, emails, specification documents,~…).
+Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to code (documentation, meeting notes, emails, specification documents,~…) – from a site that offers typing courses\autocite{RATATYPE}:
+\begin{quote}
+“\textbf{WHEN TO START LEARNING}
+
+Developed typing skills can help young people get better study results in school or college, and get better job offers once they have finished school. 65\% of people who learn how to touch type faster are under the age of 24. The main goal of learning to touch type or improving touch typing skills, after age 25 is to become more successful in current job.
+
+\textbf{MOTIVATION}
+
+Improving touch typing skills is a must for every person under 18, but everyone can benefit from some time spent practicing. Average typing speed is one of the key skills listed on your resume. Spend some more time practicing and get better results […].”
+\end{quote}
+
+That they do marketing to sell their product does not make their statements wrong.
 
 Also, modern IDEs do a lot of the typing for you, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
 
@@ -923,7 +934,7 @@ The first non-comment line of a Java source file is the \lstinline|package| stat
 For the names of packages, see chapter \tqfullvref{sec:Packages}.
 
 \subsection{Import Statements}\label{sec:ImportStatements}
-Next, usually several \lstinline|import| statements will follow\footnote{Only very basic code will not import other stuff that that from \lstinline|java.lang|; a sample for that are marker interfaces.}. 
+Next, usually several \lstinline|import| statements will follow\footnote{Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package; a sample for that are marker interfaces.}. 
 
 For example:
 
@@ -947,7 +958,7 @@ import static java.lang.String.*;
 import java.util.*;
 …
 \end{lstlisting}
-are not allowed.
+are not allowed and should not even be used for throwaway code.
 
 Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this is properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
 

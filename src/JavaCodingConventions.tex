@@ -11703,6 +11703,73 @@ Although it works, you should just not do it, because in that case the result wi
 %------------------------------------------------------------------------------
 
 \subsection{Advantages of the new Syntax}
+The biggest advantage of the new syntax is that it allows to avoid the problems of the original syntax; previously, you wrote
+\begin{lstlisting}[numbers=left]
+switch( selector )
+{
+    case 1: 
+        executeOne();
+        break;
+        
+    case 2:
+        executeTwo();
+        break;
+    
+    default:
+        executeDefault();
+}
+\end{lstlisting}
+Paranoid people (like me) would have added a \lstinline|break| after \lstinline|executeDefault()|, but the syntax rules does not require that.
+
+If – for whatever reason – the \lstinline|break| in line~5 will get lost, it means that for \lstinline|selector == 1|, both \lstinline|executeOne()| and \lstinline|executeTwo()| are invoked. Same if you add
+\begin{lstlisting}[numbers=left,firstnumber=13]
+
+    case 3:
+        executeThree();
+        break;
+}
+\end{lstlisting}
+for all values that are not \verb#1#, \verb#2#, or \verb#3# (without being paranoid, of course): after \lstinline|executeDefault(), \lstinline|executeThree()| is called.
+
+With the new syntax, you do not need the \lstinline|break| statement anylonger:
+\begin{lstlisting}[numbers=left]
+switch( selector )
+{
+    case 1 -> executeOne();
+        
+    case 2 -> executeTwo();
+    
+    default -> executeDefault();
+}
+\end{lstlisting}
+
+Another advantage of the new syntax is that it looks much neater …
+
+The \lstinline|switch| expressions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS} came with the new syntax, too, but it is not dependend on it; you can write as well
+\begin{lstlisting}
+// AVOID!!
+final var result = switch( selector )
+{
+    case 1: break retrieveOne();
+    
+    case 2: break retrieveTwo();
+    
+    default: break retrieveDefault();
+}
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+// RECOMMENDED!!
+final var result = switch( selector )
+{
+    case 1 -> retrieveOne();
+    
+    case 2 -> retrieveTwo();
+    
+    default -> retrieveDefault();
+}
+\end{lstlisting}
+I recommend to use always the new syntax, at least for \lstinline|switch| expressions.
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -11710,12 +11777,8 @@ Although it works, you should just not do it, because in that case the result wi
 \ref{sec:SwitchStatements}
 \ref{sec:CaseResults}
 \autocite{ORACLE_DOC_PATTERNMATCHING}
-\autocite{ORACLE_DOC_SWITCHEXPRESSIONS}
 
-\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression}
-\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock}
-
-
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS}
 
 
 \autocite{}

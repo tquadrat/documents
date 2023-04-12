@@ -11631,8 +11631,10 @@ Java inherited the problematic syntax of the \lstinline|switch| statement from C
 
 Finally, a series of JEPs were launched to address the issues with the \lstinline|switch| statement (JEP~325\autocite{JEP325}, JEP~354\autocite{JEP354} and JEP~361\autocite{JEP361}). Java~12 introduced the ‘new’ \lstinline|switch| as a preview\autocite{JEP325:Specification}, since Java~14 it is an official part of the language.
 
+Some sources (e.g. \autocite{ORACLE_DOC_SWITCHEXPRESSIONS}) refer to the different syntax variants by the form of the \lstinline|switch| labels as “\verb#case L:#” (‘old’) and “\verb#case L ->#” (‘new’). 
+
 \begin{tabular}{ll}
-\rule[-1ex]{0pt}{2.5ex} ‘Old’ \lstinline|switch| & ‘New’ \lstinline|switch| \\ 
+\rule[-1ex]{0pt}{2.5ex} “\verb#case L:#” or ‘old’ \lstinline|switch| & “\verb#case L ->#” or ‘new’ \lstinline|switch| \\ 
 \rule[-1ex]{0pt}{2.5ex}
 \begin{minipage}{0.48\textwidth}
 \begin{lstlisting}[numbers=left]
@@ -11671,7 +11673,7 @@ switch( <selector> )
 \end{minipage} \\ 
 \end{tabular} 
 
-As we have two different forms the \lstinline|switch| statement now, it is worth to define some coding guidelines for it.
+As we have two different forms of the \lstinline|switch| statement now, it is worth to define some coding guidelines for it.
 
 %------------------------------------------------------------------------------
 
@@ -11679,7 +11681,7 @@ As we have two different forms the \lstinline|switch| statement now, it is worth
 \begin{enumerate}[label=P\arabic*.]
 \item{Prefer the ‘new’ \lstinline|switch| over the ‘old’ one.
 
-A reason for the JPEs had been the error prone syntax of the original \lstinline|switch| statement; this is fixed by the new form – but only when it is used.}
+One motiviation for the JEPs had been the error prone syntax of the original “\verb#case L:#” \lstinline|switch| statement; this is fixed by the new “\verb#case L ->#”form – but only when it is used.}
 
 \item{Using \lstinline|switch| \textit{expressions} can make your code much more concise.}
 
@@ -11689,21 +11691,21 @@ No matter if you are using the old or the new form, keep the code in the \lstinl
 
 \item{Avoid ‘fall-through’!
 
-The new form does not allow ‘fall-through’, hence this is only relevant for the old form; ‘fall-through’ is the main reason why the old \lstinline|switch| is considered to be error prone.}
+The new form does not allow ‘fall-through’, hence this is only relevant for the “\verb#case L:#” form; ‘fall-through’ is the main reason why the old \lstinline|switch| is considered to be error prone.}
 
 \item{Although it looks like one, a \verb#switch rule# is no lambda.
 
 That means that local variables that are referenced in a \verb#switch rule# expression do not have to be effectively \lstinline|final|.}
 
-\item{Never use the old \lstinline|switch| form for a \lstinline|switch| expression!
+\item{Never use the “\verb#case L:#” label for a \lstinline|switch| expression!
 
-Although it works, you should just not do it, because in that case the result will be returned as an ‘argument’ of the \lstinline|break| statement – and can be easily mixed up with a \lstinline|break| label.}
+Although it works, the old label form for a \lstinline|switch| expression looks just confusing – and is in a similar way error prone as for a regular \lstinline|switch| statement.}
 \end{enumerate}
 
 %------------------------------------------------------------------------------
 
 \subsection{Advantages of the new Syntax}
-The biggest advantage of the new syntax is that it allows to avoid the problems of the original syntax; previously, you wrote
+The biggest advantage of the new syntax with the “\verb#case L ->#” label is that it allows to avoid the problems of the original syntax with the “\verb#case L:#” labels; previously, you wrote
 \begin{lstlisting}[numbers=left]
 switch( selector )
 {
@@ -11729,9 +11731,9 @@ If – for whatever reason – the \lstinline|break| in line~5 will get lost, it
         break;
 }
 \end{lstlisting}
-for all values that are not \verb#1#, \verb#2#, or \verb#3# (without being paranoid, of course): after \lstinline|executeDefault(), \lstinline|executeThree()| is called.
+for all values that are not \verb#1#, \verb#2#, or \verb#3# (without being paranoid, of course): after \lstinline|executeDefault()|, \lstinline|executeThree()| is called.
 
-With the new syntax, you do not need the \lstinline|break| statement anylonger:
+With the new syntax, you do not need the \lstinline|break| statement any longer:
 \begin{lstlisting}[numbers=left]
 switch( selector )
 {
@@ -11745,19 +11747,8 @@ switch( selector )
 
 Another advantage of the new syntax is that it looks much neater …
 
-The \lstinline|switch| expressions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS} came with the new syntax, too, but it is not dependend on it; you can write as well
-\begin{lstlisting}
-// AVOID!!
-final var result = switch( selector )
-{
-    case 1: break retrieveOne();
-    
-    case 2: break retrieveTwo();
-    
-    default: break retrieveDefault();
-}
-\end{lstlisting}
-instead of
+The \lstinline|switch| expressions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS} came with the new syntax, too, but it is not dependend on it; instead of writing
+
 \begin{lstlisting}
 // RECOMMENDED!!
 final var result = switch( selector )
@@ -11769,7 +11760,40 @@ final var result = switch( selector )
     default -> retrieveDefault();
 }
 \end{lstlisting}
-I recommend to use always the new syntax, at least for \lstinline|switch| expressions.
+
+you can write as well
+\begin{lstlisting}
+// AVOID!!
+final var result = switch( selector )
+{
+    case 1: yield retrieveOne();
+    
+    case 2: yield retrieveTwo();
+    
+    default: yield retrieveDefault();
+}
+\end{lstlisting}
+
+replacing the \lstinline|break| that usually terminates a branch by \lstinline|yield| with the result value.
+
+For \lstinline|switch| expressions, my recommendation is to use always the “\verb#case L ->#” syntax.
+
+%------------------------------------------------------------------------------
+
+\subsection{‘switch’ Expressions}
+As already mentioned before, you can now have a \lstinline|switch| expressions\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS}; that means that each \lstinline|case| block returns a result value. Based on the recommendation from the previous chapter, that looks like this:
+\begin{lstlisting}
+final var result = switch( selector )
+{
+    case 1 -> retrieveOne();
+    
+    case 2 -> retrieveTwo();
+    
+    default -> retrieveDefault();
+}
+\end{lstlisting}
+
+Obviously the result type of each branch has to be compatible to those of the other branches (if it is not even always the same). If that is not really visible from your code, you should consider to use a concrete type for the receiving variable instead of \lstinline|var|. 
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -11800,9 +11824,6 @@ I recommend to use always the new syntax, at least for \lstinline|switch| expres
 
 \begin{lstlisting}[numbers=left]
 \end{lstlisting}
-%------------------------------------------------------------------------------
-
-\subsection{‘switch’ Expressions}
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 

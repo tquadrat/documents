@@ -670,12 +670,12 @@ Several sources (including the original Sun Code Conventions for the Java\textsu
 
 This had been true at the time those documents were written\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} were published in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.\index{line length}
 
-\textbf{Note:} Sample code for the use in documentations, articles or alike should have a limited line length – generally not more than 70~characters.\index{line length!articles and documentation}
+\textbf{Note:} Sample code for the use in documentations, articles or alike \textit{should have} a limited line length – generally not more than 70~characters.\index{line length!articles and documentation}
 
-Different to that, comment lines are limited to 80~characters – or more precise, they have to end at column~80\index{line length!comments}. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
+Different to lines with program code, \textit{comment lines} are limited to 80~characters – or more precise, they have to end at column~80\index{line length!comments}. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
 
 \subsubsection{Wrapping Lines}\label{sec:WrappingLines}
-As we have an unlimited line length, it will not happen that an expression does not fit into a single line. But you should break long lines to improve the readability. In this case, you should follow these general principles:
+As we have an unlimited line length, it will not happen that an expression does not fit into a single line. But you might consider to break long lines to improve the readability. In this case, you should follow these general principles:
 \begin{itemize}
 \item{Only one statement per line!}
 \item{Break after a comma.}
@@ -743,7 +743,7 @@ longName1 = longName2 * (longName3 + longName4
 Then we have a few examples for the indentation on long method declarations. First the conventional case.  Next, a \lstinline|throws| clause that will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
 
 
-The second would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final one uses a single line for each argument.
+The second example would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final example uses a single line for each argument.
 
 \begin{lstlisting}[numbers=left]
 //  CONVENTIONAL INDENTATION
@@ -820,7 +820,7 @@ final var alpha = (aLongBooleanExpression)
     : gamma;
 \end{lstlisting}
 
-And finally a bad sample for a statement that should be broken into multiple statements; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
+And finally a bad example; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
 
 \index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left]
@@ -872,9 +872,11 @@ Even proper breaking of the term in line~37 will not help much to understand wha
 %------------------------------------------------------------------------------
 
 \section{Java Source File Structure}
-Source files with more than 2000~lines\footnote{I have to confess that the number~2000 is just a ballpark figure; set a different value if you like.} are cumbersome to handle and should be avoided. Nevertheless, there are some well known scenarios where it is difficult to adhere with this limit.
+Above a certain number of lines, source code files become unwieldy, but it is difficult to specify a concrete value for the maximum size of a Java source file.  First, generated source files tend to have lots of lines because it is often much easier to use boiler-plate code here than to generate methods and call them instead. And in particular when dynamically generated code is used\footnote{Code that is regenerated for each build.}, it would not even hurt the DRY principle: a change to the repeated code can be performed on one single place, the generator.
 
-The first is with generated code, the other one is with classes having lots of attributes: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute. Nearly one hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class the reflected the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes.
+Second, classes that have lots of attributes usually end up with lots of lines, too: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute.  One hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class that should reflect the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes, bringing you to about 2200~lines of code without any methods other than the already mentioned getters and setters.
+
+I found a limit of about 2000~lines to be feasible; if a class becomes larger than this number of lines, you should consider to move some of the code into other classes. This could be a utility class\index{utility class}, a parent class (probably abstract), or the functionality would be better placed with another entity in general. Also externalising some functionality by implementing the command pattern\autocite{Gamma:DesignPatterns} might be an idea. 
 
 Java source code files basically have five parts, in the given order:
 \begin{enumerate}[nosep]
@@ -884,7 +886,7 @@ Java source code files basically have five parts, in the given order:
 \item{\nameref{sec:ClassAndInterfaceDeclarations}}
 \item{\nameref{sec:ClosingComment}}
 \end{enumerate}
-And in general, this sequence is ordered by the syntax for Java source files, also the comments are not mandatory, and the package defintion and the imports are optional~…
+And in general, this sequence is ordered by the syntax for Java source files, although the comments are not mandatory, and the package defintion and the imports are optional~…
 
 \subsection{Beginning Comment}\label{sec:BeginningComment}
 All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
@@ -934,10 +936,9 @@ The first non-comment line of a Java source file is the \lstinline|package| stat
 For the names of packages, see chapter \tqfullvref{sec:Packages}.
 
 \subsection{Import Statements}\label{sec:ImportStatements}
-Next, usually several \lstinline|import| statements will follow\footnote{Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package; a sample for that are marker interfaces.}. 
+Next, usually several \lstinline|import| statements will follow. Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package. But interfaces with only one method (a so-called “functional interface”\index{functional interface}) may not need any imports at all, same for “marker interfaces” that does not declare any methods at all. Sometimes you may have also (abstract) parent classes without methods that do not need any \lstinline|import| statements.
 
-For example:
-
+But in general, that part of a source file would look like this:
 \index{java.lang!String}\index{java.lang!String!format()}\index{java.lang!System}\index{java.lang!System!out}\index{java.awt.peer!CanvasPeer}\index{java.io!InputStream}
 \begin{lstlisting}
 import static java.lang.String.format;
@@ -965,13 +966,13 @@ Eclipse users can use the function \verb#Source|Organize Imports# from the menu,
 At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
 
 \subsection{Class and Interface Declarations}\label{sec:ClassAndInterfaceDeclarations}
-Each Java source file contains at least one class declaration; in most cases, it is just one.
+Each Java source file contains at least one top level class or interface declaration; in most cases, it is just one. And it is strongly discouraged that it would be more than one!
 
-Only one of these classes can be \lstinline|public|, the others have to be package-local (meaning the modifiers \lstinline|private| and \lstinline|protected| are not allowed). Nevertheless, having more than one class in a single source file is not recommended. But if you have more than one class in source file, the \lstinline|public| one should be the first entry, all others are sorted alphabetically by their names.
+Only one of these classes or interfaces can be \lstinline|public|, the others have to be package-local (meaning the modifiers \lstinline|private| and \lstinline|protected| are not allowed). If you really have more than one class in a single source file, the \lstinline|public| one should be the first entry, all others will follow, sorted alphabetically by their names.
 
 If you need classes or interfaces that are closer related to a top-level class, you should consider to define these as \textit{inner} classes or interfaces. Inner classes can be \lstinline|public|, \lstinline|private| or \lstinline|protected|. An inner class is part of the top level class, but when defined as \lstinline|static|, it can be used independent from the enclosing class.
 
-At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. We have
+At least since Java~5, there are not only classes and interfaces that are declared in a Java source file. Today, we have
 
 \begin{itemize}[nosep]
 \item{classes (keyword \lstinline|class|)}
@@ -980,6 +981,8 @@ At least since Java~5, there are not only classes and interfaces that are declar
 \item{records (keyword \lstinline|record|)}
 \item{annotations (keyword \lstinline|@interface|)}
 \end{itemize}
+
+Technically, records and enums are special types of classes, while an annotation is somehow a special interface.
 
 Each of these allows different sections in their declarations; the following tables describe the various sections and the order they should appear in. Each section has a header comment, and inside each section, the elements are ordered alphabetically.
 

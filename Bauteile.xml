@@ -1,0 +1,518 @@
+<catalog folder="DokumnetationBauteile">
+  <component partnumber="HD44780 2004"
+             vendor="AZ-Delivery">
+    <description>LCD Display Bundle 4x20 Zeichen mit I2C Schnittstelle</description>
+    <link>https://www.az-delivery.de/products/hd44780-2004-lcd-display-bundle-4x20-zeichen-mit-i2c-schnittstelle</link>
+    <ebook>LCD Display 16x02 - 20x04 allinone.pdf</ebook>
+   <datasheet>HD44780_2004_Blaues_LCD_Display_mit_I2C_Serielle_Schnittstelle_Bundle_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+   <pinout>20x04_LCD_with_I2C_Pinout.pdf</pinout>
+   <schema>
+     <arduino>20x04_Blue_LCD_I2C_adapter_with_Uno.pdf</arduino>
+     <raspi>20x04_Blue_LCD_Screen_I2C_adapter_with_RPi.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="GY-BME280"
+             vendor="AZ-Delivery">
+    <description>Barometrischer Sensor für Temperatur, Luftfeuchtigkeit und Luftdruck</description>
+    <link>https://www.az-delivery.de/products/gy-bme280</link>
+    <ebook>BME280 Sensor Module_DE.pdf</ebook>
+   <datasheet>BME280_Barometrischer_Sensor_Modul_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+   <pinout>BME-280_Barometrischer_Sensor_Pinout.pdf</pinout>
+   <library>
+     <arduino>BME280_Arduino.rar</arduino>
+     <raspi>GY-BME280_Ras_Pi.rar</raspi>
+   </library>
+   <schema>
+     <arduino>BME-280_Barometrischer_Sensor_Connection_Diagrams.pdf</arduino>
+     <raspi>BME-280_Barometrischer_Sensor_Connection_Diagrams.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KY-009"
+             vendor="AZ-Delivery">
+    <description>RGB LED SMD Modul Sensor</description>
+    <link>https://www.az-delivery.de/products/smd-rgb-modul</link>
+    <ebook>10. SMD RGB LED Modul.pdf</ebook>
+   <datasheet>SMD_RGB_Modul_Datenblatt.pdf</datasheet>
+   <pinout></pinout>
+   <library>
+     <arduino>SMD_RGB_Arduino.rar</arduino>
+     <raspi>SMD_RGB_Ras_Pi.rar</raspi>
+   </library>
+   <schema>
+     <arduino>KY-009_SMD_RGB_Modul_Arduino_Schematic.pdf</arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="NodeMCU Lua Lolin V3 Module ESP8266 ESP-12F WIFI"
+             vendor="AZ-Delivery">
+    <description>ESP8266 ESP-12F Wifi Development Board mit CH340</description>
+    <link>https://www.az-delivery.de/products/nodemcu-lolin-v3-modul-mit-esp8266</link>
+    <ebook>NodeMCU Lolin V3.pdf</ebook>
+   <datasheet>NodeMCU_Lua_Lolin_V3_Modul_mit_ESP8266_12E_Datenblatt.pdf</datasheet>
+   <pinout>NodeMCU_Lua_Lolin_V3_Pinout_Diagram.pdf</pinout>
+   <samples>
+     <code>Lua_Lolin.part1.rar</code>
+     <code>Lua_Lolin.part2.rar</code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <nodemcu>NodeMCU_Lua_Lolin_V3_Schematics.pdf</nodemcu>
+     <arduino></arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="18650"
+             vendor="AZ-Delivery">
+    <description>Dual USB 5V 2.4A Mobilmodul 18650-Lithium-Batterie-Ladegerät-Board mit Überladungs- und Kurzschlussschutz DIY USB-Board</description>
+    <link>https://www.az-delivery.de/products/18650-board-dual-usb-5v-mobilmodul-lithium-batterie-ladegerat-board</link>
+    <ebook>Battery Expansion Modul 18650 V3_EN.pdf</ebook>
+   <datasheet></datasheet>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino></arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KY-023"
+             vendor="AZ-Delivery">
+    <description>Joystick Modul für UNO R3</description>
+    <link>https://www.az-delivery.de/products/joystick-modul</link>
+    <ebook>1. Joystick.pdf</ebook>
+   <datasheet>Joystick_Modul_Datenblatt.pdf</datasheet>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino>ky-023_joystick_Arduino.rar</arduino>
+     <raspi>ky-023_joystick_Ras_Pi.zip</raspi>
+   </library>
+   <schema>
+     <arduino>KY-023_Joystick_Modul_Arduino_Schematic.pdf</arduino>
+     <raspi>KY-023_Joystick_Modul_Raspberry_Pi_Schematic.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="ESP8266 ESP-12F"
+             vendor="AZ-Delivery">
+    <description>ESP-12F verbesserte Version zu ESP-12E, Wireless remote serielles WLAN WIFI Modul für Raspberry Pi und Mikrocontroller mit Adapter Board</description>
+    <link>https://www.az-delivery.de/products/esp8266-12e</link>
+    <ebook>ESP8266-12E.pdf</ebook>
+   <datasheet></datasheet>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino>Arduino-master.rar</arduino>
+     <raspi>blynk-library-master.zip</raspi>
+   </library>
+   <schema>
+     <arduino>ESP8266-01S_Schematic.webp</arduino>
+     <raspi>ESP8266-01S_Raspi.webp</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="SW420"
+             vendor="AZ-Delivery">
+    <description>Vibration Schüttel Erschütterung Sensor Modul</description>
+    <link>https://www.az-delivery.de/products/sw420-vibration-schuttel-erschutterung-sensor-modul</link>
+    <ebook>SW420 Vibration Schüttel Erschütterung Sensor Modul_DE.pdf</ebook>
+   <datasheet>SW420_Vibration_Schuttel_Erschutterung_Sensor_Modul_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+   <pinout>SW420_Vibration_Schuttel_Erschutterung_Sensor_Modul_Pinout.pdf</pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino>SW420_Vibration_Schuttel_Erschutterung_Sensor_Modul_Arduino_Schematic.pdf</arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KF-301"
+             vendor="AZ-Delivery">
+    <description>1-Relais 5V Modul Low-Level-Trigger</description>
+    <link>https://www.az-delivery.de/products/kf-301-relais-modul-mit-low-level-trigger</link>
+    <ebook>KF-301 Relais Modul mit Low-Level Trigger DE (1).pdf</ebook>
+   <datasheet>KF-301_1-Relais_Modul_Datenblatt_AZ-Delivery_Vertriebs_GmbH_2fbfb0f0-d405-4fd8-b04e-1c3ae81a242f.pdf</datasheet>
+   <pinout>KF-301_1-Relais_Modul_Pinout.pdf</pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino>Relay_Arduino.rar</arduino>
+     <raspi>Relay_Ras_Pi.rar</raspi>
+   </library>
+   <schema>
+     <arduino>KF-301_1-Relais_Modul_Connection_Diagrams.pdf</arduino>
+     <raspi>KF-301_1-Relais_Modul_Connection_Diagrams.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="WS2812B"
+             vendor="AZ-Delivery">
+    <description>LED Ring 5V RGB 12-Bit 50mm</description>
+    <link>https://www.az-delivery.de/products/kopie-von-rgb-led-ring-ws2812-mit-12-rgb-leds-5v-fuer-arduino</link>
+    <ebook></ebook>
+   <datasheet>RGB_LED_Ring_50mm_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+   <pinout>RGB_LED_Ring_50mm_Pinout.pdf</pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino>RGB_LED_Ring_50mm_Connection_Diagrams.pdf</arduino>
+     <raspi>RGB_LED_Ring_50mm_Connection_Diagrams.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="LED Ampel Modul"
+             vendor="AZ-Delivery">
+    <description>LED Ampel Modul kompatibel mit Arduino</description>
+    <link>https://www.az-delivery.de/products/led-ampel-modul</link>
+    <ebook></ebook>
+   <datasheet>LED_Ampel_Modul_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+   <pinout>LED_ampel_modul_pinout.pdf</pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino>LED_Ampel_Modul_Connection_diagrams.pdf</arduino>
+     <raspi>LED_Ampel_Modul_Connection_diagrams.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KY-037"
+             vendor="AZ-Delivery">
+    <description>Hochempfindliches Mikrofon</description>
+    <link>https://www.az-delivery.de/products/mikrofon-modul-gross</link>
+    <ebook>3. Großes Mikrofonmodul.pdf</ebook>
+   <datasheet>Mikrofon_Modul_gross_Datenblatt.pdf</datasheet>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino>Mic_Arduino.rar</arduino>
+     <raspi>Mic_Ras_Pi.rar</raspi>
+   </library>
+   <schema>
+     <arduino>KY-037_Mikrofon_Modul_gross_Arduino_Schematic.pdf</arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="HDMI to CSI-2"
+             vendor="Geekworm">
+    <description>Raspberry Pi HDMI to CSI-2 C779 Adapter Board with 15 pin FFC cable
+This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI input supports up to 1080p25fps. PiKVM OS supported.</description>
+    <link>https://geekworm.com/products/raspberry-pi-hdmi-to-csi-2-adapter-board-with-15-pin-ffc-cable</link>
+    <link>https://wiki.geekworm.com/C779</link>
+    <ebook></ebook>
+    <video>https://youtu.be/L5qbZPrpPp0</video>
+   <datasheet>TC358743XBG_datasheet_en_20171026.pdf</datasheet>
+   <install>https://forums.raspberrypi.com//viewtopic.php?f=38&t=281972</install>
+   <install>https://wiki.geekworm.com/C779-Software>/install>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino></arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KY-001"
+             vendor="AZ-Delivery">
+    <description>DS18B20 Breakout Modul mit Platine, Jumper Wire Kabel Temperatursensor Temperaturfühler</description>
+    <link></link>
+    <ebook>KY-001_DS18B20 Ger.pdf</ebook>
+   <datasheet></datasheet>
+   <pinout></pinout>
+   <samples>
+     <code></code>
+   </samples>
+   <library>
+     <arduino></arduino>
+     <raspi></raspi>
+   </library>
+   <schema>
+     <arduino></arduino>
+     <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="KY-002"
+             vendor="AZ-Delivery">
+    <description>Erschütterung Schalter Schock Sensor</description>
+    <link>https://www.az-delivery.de/products/schock-sensor-modul</link>
+    <ebook>14. Shock Sensor Modul.pdf</ebook>
+    <datasheet>KY-002_Schock_Sensor_Modul_Datenblatt.pdf</datasheet>
+    <pinout>KY-002_Schock_Sensor_Modul_Pinout.pdf</pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>Vibration_Sensor_Arduino.rar</arduino>
+      <raspi>Vibration_Sensor_Ras_Pi.rar</raspi>
+    </library>
+    <schema>
+      <arduino>KY-002_Schock_Sensor_Modul_Arduino_Schematic.pdf</arduino>
+      <raspi></raspi>
+     </schema>
+  </component>
+
+  <component partnumber="KY-003"
+             vendor="AZ-Delivery">
+    <description>Digitaler Hall Effekt Sensor Transistor</description>
+    <link>https://www.az-delivery.de/products/hall-sensor-modul-digital</link>
+    <ebook>20. Digitaler Hallsensor.pdf</ebook>
+    <datasheet>Hall_Sensor_Modul_Digital_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>Hall_Sensor_Arduino.rar</arduino>
+      <raspi>ky-024_Raspberry_Pi.zip</raspi>
+    </library>
+    <schema>
+      <arduino>KY-003_Hall_Sensor_Magnetisch_Modul_digital_Arduino_Schematic.pdf</arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber="KY-004"
+             vendor="AZ-Delivery">
+    <description>Taster Modul Sensor Taste Kopf Schalter Schlüsselschalter</description>
+    <link>https://www.az-delivery.de/products/button-modul</link>
+    <ebook>7. Taster.pdf</ebook>
+    <datasheet>Button_Modul_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>Button_Module_Arduino.zip</arduino>
+      <raspi>button-shim-master.zip</raspi>
+    </library>
+    <schema>
+      <arduino>KY-004_Button_Modul_Arduino_Schematic.pdf</arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber="KY-005"
+             vendor="AZ-Delivery">
+    <description>IR Infrarot Sender Transceiver Modul</description>
+    <link>https://www.az-delivery.de/products/ir-sende-modul</link>
+    <ebook>KY-005 Infrared LED Module DE.pdf</ebook>
+    <datasheet>IR-Sende_Modul_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>IR_Emitter_Arduino.rar</arduino>
+      <raspi>IR_Emitter_Ras_Pi.zip</raspi>
+    </library>
+    <schema>
+      <arduino>KY-005_IR-Sende_Modul_Arduino_Schematic.pdf</arduino>
+      <raspi></raspi>
+     </schema>
+     <comment>Als Betriebsspannung sind 3,3V angegeben, aber im Schema ist da Modul mit 5V verbunden. Das Datenblatt spricht allerdings auch von 5V Versorgungsspannung.</comment>
+   </component>
+
+  <component partnumber="MAX7219"
+             vendor="AZ-Delivery">
+    <description>8x32 4 in 1 Dot Matrix LED Anzeigemodul kompatibel mit Arduino und Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/4-x-64er-led-matrix-display</link>
+    <ebook>4 x 64er LED Matrix Display DE.pdf</ebook>
+    <datasheet></datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>LED_MAtrix_4x64.zip</arduino>
+      <raspi>rpi-rgb-led-matrix-master.zip</raspi>
+    </library>
+    <schema>
+      <arduino>MAX7219_8x32_LED_Matrix_Connection_Diagrams.pdf</arduino>
+      <raspi>MAX7219_8x32_LED_Matrix_Connection_Diagrams.pdf</raspi>
+     </schema>
+   </component>
+
+  <component partnumber="HC-SR04"
+             vendor="AZ-Delivery">
+    <description>Ultraschall Modul Entfernungsmesser Sensor für Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/3er-set-hc-sr04-ultraschallmodule</link>
+    <ebook>HC-SR04 Ultraschallmodul DE (1).pdf</ebook>
+    <datasheet>HC-SR04_Ultraschallmodule_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>Ultrasonic-HC-SR04-master.zip</arduino>
+      <raspi>HC-SR04.zip</raspi>
+    </library>
+    <schema>
+      <arduino>HC-SR04_Ultraschallmodul_Arduino_Schematic.pdf</arduino>
+      <raspi>HC-SR04_Ultraschallmodul_Raspberry_Pi_Schematic.pdf</raspi>
+     </schema>
+   </component>
+
+  <component partnumber="TM1637"
+             vendor="AZ-Delivery">
+    <description>4 Digit 7-Segment Display Modul kompatibel mit Arduino und Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/4-digit-display</link>
+    <ebook>4 Digits 7 Segment Display DE.pdf</ebook>
+    <datasheet>4-Bit_7-Segment_LED_Display_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>TM1637-master.zip</arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino>4-Digit_7_Segment_Display_Connection_Diagrams.pdf</arduino>
+      <raspi>4-Digit_7_Segment_Display_Connection_Diagrams.pdf</raspi>
+     </schema>
+   </component>
+
+  <component partnumber="GY-271"
+             vendor="AZ-Delivery">
+    <description>Kompassmodul Kompass Magnet Sensor für Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/gy-271-kompassmodul-kompass-magnet-sensor-fuer-arduino-und-raspberry-pi</link>
+    <ebook>GY-271 Compass Magnetic Module ENG.pdf</ebook>
+    <datasheet>GY-_271_Triple_Axis_Compass_Datenblatt.pdf</datasheet>
+    <pinout>GY-271_Kompassmodul_Kompass_Magnet_Sensor_Pinout.pdf</pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <generic>GY-271_Kompassmodul_Kompass_Magnet_Sensor_Schematic.pdf</generic>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber="GY-61 ADXL335"
+             vendor="AZ-Delivery">
+    <description>Beschleunigungssensor 3-Axis Neigungswinkel Modul</description>
+    <link>https://www.az-delivery.de/products/gy-61-adxl335-beschleunigungssensor-3-axis-neigungswinkel-modul-1</link>
+    <ebook>GY-61 ADXL335 Beschleunigungssensor 3-Axis Neigungswinkel Modul DE.pdf</ebook>
+    <datasheet></datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+     <comment>Der GY-61 ADXL335 ist ein Beschleunigungssensor, der für die Messung von Beschleunigungen in drei Achsen (X, Y und Z) entlang der Erdoberfläche entwickelt wurde. Er verwendet einen 3-Achsen-MEMS-Beschleunigungsmesser, der auf dem Piezoelektrischen-Effekt basiert. Der ADXL335 gibt seine Messwerte in Form von analogen Spannungen aus, die proportional zu den gemessenen Beschleunigungen sind. Der GY-61 ADXL335 ist in der Regel als modulares System erhältlich, das den ADXL335 auf einem Trägerboard mit einer Vielzahl von Peripheriegeräten integriert hat, darunter eine Spannungsversorgung, Signalverarbeitung und Anschlüsse für externe Geräte. Er kann verwendet werden, um Bewegungen, Neigungen und Erschütterungen zu messen und ist häufig in Anwendungen wie Steuerungen, Navigationen und Spielen zu finden.</comment>
+   </component>
+
+  <component partnumber="KY-039"
+             vendor="AZ-Delivery">
+    <description>Herzschlag Sensor Modul Finger Heartbeat Detektor</description>
+    <link>https://www.az-delivery.de/products/ir-lichtschranke-sender-empfanger-modul</link>
+    <ebook></ebook>
+    <datasheet>KY-039_Heartbeat_Sensor_Modul_Datenblatt_AZ-Delivery_Vertriebs_GmbH.pdf</datasheet>
+    <pinout>KY-039_Heartbeat_Sensor_Modul_Pinout.pdf</pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>heartbeat.rar</arduino>
+      <raspi>heartbeat_raspi.rar</raspi>
+    </library>
+    <schema>
+      <arduino>KY-039_Heartbeat_Sensor_Modul_Arduino_Schematic.pdf</arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber=""
+             vendor="">
+    <description></description>
+    <link></link>
+    <ebook></ebook>
+    <datasheet></datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber=""
+             vendor="">
+    <description></description>
+    <link></link>
+    <ebook></ebook>
+    <datasheet></datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+</catalog>

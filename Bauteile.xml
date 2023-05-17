@@ -603,27 +603,6 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
     <comment>Basiert auf MAX7219</comment>  
   </component>
 
-  <component partnumber=""
-             vendor="">
-    <description></description>
-    <link></link>
-    <resource></resource>
-    <ebook></ebook>
-    <datasheet></datasheet>
-    <pinout></pinout>
-    <samples>
-      <code></code>
-    </samples>
-    <library>
-      <arduino></arduino>
-      <raspi></raspi>
-    </library>
-    <schema>
-      <arduino></arduino>
-      <raspi></raspi>
-     </schema>
-   </component>
-
   <component partnumber="RB-LCD-16x2"
              vendor="Joy-IT">
     <description>LCD Display mit Button PCB</description>
@@ -665,6 +644,95 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
       <raspi></raspi>
      </schema>
    </component>
+
+  <component partnumber="DHT11"
+             vendor="AZ-Delivery">
+    <description>Breakout Modul mit Platine und Kabel Temperatursensor und Luftfeuchtigkeitssensor kompatibel mit Arduino und Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/dht11-temperatursensor-modul</link>
+    <resource>DHT11 Temperatursensor DE.pdf</resource>
+    <resource>DHT11 Temperatursensor Modul DE (1).pdf</resource>
+    <ebook></ebook>
+    <datasheet>DHT_11_Temperatursensor_Modul_Datenblatt_a59ef62a-ee56-4c72-918f-00cb97f71f64.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>DHT_11_Arduino.rar</arduino>
+      <raspi>DHT_11_RasPi.rar</raspi>
+    </library>
+    <schema>
+      <arduino>DHT_11_Temperatursensor_Modul_Arduino_Schematic_4977a09e-5c3d-42e4-b20b-e4c2c0ca5bc3.pdf</arduino>
+      <raspi>DHT_11_Temperatursensor_Modul_Raspberry_Pi_Schematic.pdf</raspi>
+    </schema>
+    <comment>Die zwei vorhandenen Module scheinen unterschiedlich verlötet zu sein! Unbedingt die Pins kontrollieren!!</comment>
+  </component>
+
+  <component partnumber="XY-FST und XY-MK"
+             vendor="MakerShop">
+    <description>433 Mhz Sender Empfänger RF Funk Modul</description>
+    <link>https://www.makershop.de/module/funk/433-sender-empfaenger/</link>
+    <resource>433MHz-Connection.pdf</resource>
+    <ebook></ebook>
+    <datasheet>FS1000A_DB_DE.pdf</datasheet>
+    <pinout>fs1000a-XY-MK-5V-433mhz-module-pinout.jpg</pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+    </schema>
+    <comment></comment>       
+  </component>
+
+  <component partnumber="HC-SR501"
+             vendor="AZ-Delivery">
+    <description>Bewegungssensor/Bewegungsmelder Modul PIR kompatibel mit Arduino und Raspberry Pi</description>
+    <link>https://www.az-delivery.de/products/bewegungsmelde-modul</link>
+    <resource>PIR.pdf</resource>
+    <ebook></ebook>
+    <datasheet>Bewegungsmelder_Modul_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>Bewegungsmelder_Arduino.rar</arduino>
+      <raspi>Bewegungsmelder_RasPi.rar</raspi>
+    </library>
+    <schema>
+      <arduino>Bewegungsmelder_Modul_Arduino_Schematic.pdf</arduino>
+      <raspi>Bewegungsmelder_Modul_Raspberry_Pi_Schematic.pdf</raspi>
+    </schema>
+    <comment></comment>       
+  </component>
+
+  <component partnumber="DS1302"
+             vendor="AZ-Delivery">
+    <description>Serial Real Time Clock RTC Echtzeituhr Clock Modul für Raspberry PI</description>
+    <link>https://www.az-delivery.de/products/rtc-modul</link>
+    <resource>RTC Modul DS1302 DE.pdf</resource>
+    <ebook></ebook>
+    <datasheet>RTC_Modul_DS1302_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>ArduinoRTClibrary-master.zip</arduino>
+      <raspi>rpi.rtc-master.zip</raspi>
+    </library>
+    <schema>
+      <arduino>RTC_Modul_DS1302_Arduino_Schematics_b94773a4-3ba0-4741-889a-737e8d305d47.pdf</arduino>
+      <raspi>RTC_Modul_DS1302_Raspberry_Pi_Schematics_b86fe38c-d828-422a-b45e-e9ec72d16827.pdf</raspi>
+    </schema>
+    <comment></comment>       
+  </component>
 
   <component partnumber=""
              vendor="">

@@ -587,7 +587,7 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
     <link>https://www.waveshare.com/rpi-led-matrix.htm</link>
     <ebook></ebook>
     <datasheet>MAX7219en.pdf</datasheet>
-    <pinout></pinout>
+    <pinout>Pinout RPI LED Matrix.png</pinout>
     <samples>
       <code></code>
     </samples>
@@ -597,6 +597,70 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
     </library>
     <schema>
       <generic>RPi-LED-Matrix-Schematic.pdf</generic>
+      <arduino></arduino>
+      <raspi></raspi>
+    </schema>
+    <comment>Basiert auf MAX7219</comment>  
+  </component>
+
+  <component partnumber=""
+             vendor="">
+    <description></description>
+    <link></link>
+    <resource></resource>
+    <ebook></ebook>
+    <datasheet></datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber="RB-LCD-16x2"
+             vendor="Joy-IT">
+    <description>LCD Display mit Button PCB</description>
+    <link>https://www.joy-it.net/de/products/RB-LCD-16x2</link>
+    <resource>RB-LCD-16x2-20x4_Anleitung_2022-02-22.pdf</resource>
+    <ebook></ebook>
+    <datasheet>RB-LCD16x2-Datenblatt_2022-03-08.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+    
+  <component partnumber="TSOP4838"
+             vendor="">
+    <description>IR-Empfänger-Module, 38kHz, 90°, Side-View</description>
+    <link></link>
+    <resource>https://www.einplatinencomputer.com/raspberry-pi-infrarot-empfaenger-und-fernbedienung-einrichten/</resource>
+    <ebook></ebook>
+    <datasheet>TSOP48XX.PDF</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
       <arduino></arduino>
       <raspi></raspi>
      </schema>
@@ -622,4 +686,5 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
       <raspi></raspi>
      </schema>
    </component>
+
 </catalog>

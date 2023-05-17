@@ -476,12 +476,96 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
      </schema>
    </component>
 
-  <component partnumber=""
-             vendor="">
-    <description></description>
-    <link></link>
+  <component partnumber="RPi Relay Board"
+             vendor="Waveshare"
+             sku="11638">
+    <description>Raspberry Pi Expansion Board, Power Relay</description>
+    <link>https://www.waveshare.com/rpi-relay-board.htm</link>
     <ebook></ebook>
     <datasheet></datasheet>
+    <pinout></pinout>
+    <resources>https://www.waveshare.com/wiki/RPi_Relay_Board</resources>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+  <component partnumber="RFID Kit RC522"
+             vendor="AZ-Delivery">
+    <description>RFID Kit RC522 mit Reader, Chip und Card für Raspberry Pi und Co. (13,56MHz)</description>
+    <link>https://www.azdelivery.de/products/rfid-set</link>
+    <ebook></ebook>
+    <datasheet>RFID_RC522_Set_mit_Reader_Chip_und_Card_13_56MHz_Datenblatt.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>RFID_RC522_Arduino.rar</arduino>
+      <raspi>pi-rc522-master.zip</raspi>
+    </library>
+    <schema>
+      <arduino>RFID_RC522_Set_mit_Reader_Chip_und_Card_13_56MHz_Arduino_Schematic.pdf</arduino>
+      <raspi>RZE278_4.pdf</raspi>
+     </schema>
+   </component>
+
+  <component partnumber="SPI OLED SSH1106"
+             vendor="AZ-Delivery">
+    <description>1,3 Zoll OLED I2C 128 x 64 Pixel Display kompatibel mit Arduino und Raspberry Pi (4-pin)</description>
+    <link>https://www.azdelivery.de/products/1-3zoll-i2c-oled-display</link>
+    <ebook></ebook>
+    <datasheet>1_3_Zoll_Display_Datenblatt_AZ-Delivery_Vertriebs_GmbH_rev.pdf</datasheet>
+    <pinout>1.3_inch_OLED_I2C_Display_-_pinout.pdf</pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>u8glib-master.zip</arduino>
+      <raspi>0_91_OLED_Display_am_Raspberry_Pi.zip</raspi>
+    </library>
+    <schema>
+      <arduino>1.3_Zoll_OLED_Connection_Diagrams.pdf</arduino>
+      <raspi>1.3_Zoll_OLED_Connection_Diagrams.pdf</raspi>
+    </schema>
+  </component>
+
+  <component partnumber="SPI OLED SSH1106"
+             vendor="Smart Prototyping">
+    <description>1.3 INCH OLED DISPLAY (SH1106, SPI/I2C, 128X64)</description>
+    <link>https://www.smart-prototyping.com/1_3-inch-OLED-Display-SH1106-SPI-I2C-128-64</link>
+    <ebook></ebook>
+    <resource>SH1106.pdf</resource>
+    <datasheet>Datasheet.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino>https://github.com/olikraus/U8glib_Arduino/</arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+    </schema>
+  </component>
+
+  <component partnumber="EB5753"
+             vendor="Joy-IT">
+    <description>LED Matrix Modul</description>
+    <link>https://joy-it.net/de/products/RB-LEDMatrix</link>
+    <resource>RB-LEDMatrix Anleitung Deutsch.pdf</resource>
+    <ebook></ebook>
+    <datasheet>RB-LEDMatrix Datenblatt Deutsch.pdf</datasheet>
     <pinout></pinout>
     <samples>
       <code></code>
@@ -496,10 +580,33 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
      </schema>
    </component>
 
+  <component partnumber="RPi LED Matrix"
+             vendor="Waveshare"
+             sku="9862">
+    <description>LED Matrix Designed For Raspberry Pi</description>
+    <link>https://www.waveshare.com/rpi-led-matrix.htm</link>
+    <ebook></ebook>
+    <datasheet>MAX7219en.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <generic>RPi-LED-Matrix-Schematic.pdf</generic>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
   <component partnumber=""
              vendor="">
     <description></description>
     <link></link>
+    <resource></resource>
     <ebook></ebook>
     <datasheet></datasheet>
     <pinout></pinout>

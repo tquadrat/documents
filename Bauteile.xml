@@ -502,7 +502,7 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
              vendor="AZ-Delivery">
     <description>RFID Kit RC522 mit Reader, Chip und Card für Raspberry Pi und Co. (13,56MHz)</description>
     <link>https://www.azdelivery.de/products/rfid-set</link>
-    <ebook></ebook>
+    <ebook>RFID RC522 Reader with RFID Chip and RFID Card (13.56MHz)_DE_.pdf</ebook>
     <datasheet>RFID_RC522_Set_mit_Reader_Chip_und_Card_13_56MHz_Datenblatt.pdf</datasheet>
     <pinout></pinout>
     <samples>
@@ -522,7 +522,7 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
              vendor="AZ-Delivery">
     <description>1,3 Zoll OLED I2C 128 x 64 Pixel Display kompatibel mit Arduino und Raspberry Pi (4-pin)</description>
     <link>https://www.azdelivery.de/products/1-3zoll-i2c-oled-display</link>
-    <ebook></ebook>
+    <ebook>1,3 OLED Ger (1).pdf</ebook>
     <datasheet>1_3_Zoll_Display_Datenblatt_AZ-Delivery_Vertriebs_GmbH_rev.pdf</datasheet>
     <pinout>1.3_inch_OLED_I2C_Display_-_pinout.pdf</pinout>
     <samples>

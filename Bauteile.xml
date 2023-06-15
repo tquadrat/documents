@@ -734,6 +734,28 @@ This is a raspberry pi HDMI to CSI-2 Module with Toshiba TC358743XBG chip, HDMI 
     <comment></comment>       
   </component>
 
+  <component partnumber="LGT8F328P"
+             vendor="AZ-Delivery">
+    <description>Mikrocontroller Board LGT8F328P mit CH340 kompatibel mit Arduino IDE</description>
+    <link>https://www.az-delivery.de/products/mikrocontroller-board-lgt8f328p</link>
+    <resource></resource>
+    <ebook>Microcontroller_LGT8F_DE.pdf</ebook>
+    <datasheet>Microcontroller-LGT8F328P.pdf</datasheet>
+    <pinout></pinout>
+    <samples>
+      <code></code>
+    </samples>
+    <library>
+      <arduino></arduino>
+      <raspi></raspi>
+    </library>
+    <schema>
+      <arduino></arduino>
+      <raspi></raspi>
+     </schema>
+   </component>
+
+
   <component partnumber=""
              vendor="">
     <description></description>

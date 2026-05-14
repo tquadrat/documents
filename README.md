@@ -1,2 +1,2 @@
 # documents
-The TeX/LaTeX sources for various technical documents
+The sources (TeX/LaTeX or other) for various documents I wrote.

@@ -1,0 +1,67 @@
+<diagram title="Stream&lt;String&gt; breakText( String text, int lineLength )">
+    <branch condition="lineLength \l 1">
+        <left label="no">
+            <block>Builder&lt;String&gt; builder = Stream.builder()</block>
+
+            <loop condition="for line : splitString( text, '\\n' ) ">
+                <branch condition="isEmptyOrBlank( line )">
+                    <left label="yes">
+                        <block>builder.add( EMPTY_STRING )</block>
+                    </left>
+
+                    <right label="no">
+                        <block>
+                          var buffer = new StringBuilder();
+                          var chunks = line.split( "\\\\s" );
+                        </block>
+                        
+                        <loop condition="for c : chunks">
+                            <branch condition="c.isEmpty()">
+                                <left label="no">
+                                    <branch condition="buffer.length() + 1 + c.length() \l lineLength">
+                                        <left label="yes">
+                                            <branch condition="isNotEmpty( buffer )">
+                                                <left label="yes">
+                                                    <block>buffer.append( ' ' )</block>
+                                                </left>
+                                            </branch>        
+                                        </left>
+                                        
+                                        <right label="no">
+                                            <branch condition="isNotEmpty( buffer )">
+                                                <left label="yes">
+                                                    <block>
+                                                      builder.add( buffer.toString() );
+                                                      buffer.setLength( 0 );
+                                                    </block>
+                                                </left>
+                                            </branch>
+                                        </right>
+                                    </branch>
+                                </left>
+                            </branch>
+                            
+                            <block>buffer.append( c )</block>
+                        </loop>
+                        
+                        <branch condition="isNotEmpty( buffer )">
+                            <left label="yes">
+                                <block>builder.add( buffer.toString() )</block>
+                            </left>
+                        </branch>
+                    </right>
+                </branch>
+            </loop>
+    
+            <block>
+              var retValue = builder.build()
+              return retValue
+            </block>
+        </left>
+      
+        <right label="yes">
+           <block>throw ValidationException</block>
+        </right>
+    </branch>
+</diagram>
+

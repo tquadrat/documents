@@ -1,0 +1,172 @@
+\section{String Concatenation}
+How to concatenate strings has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
+
+\subsection{The Basics}
+The implementation of the concatenation of two (or more) strings – or other data types to create their representation as a text – is a trade off between readability and performance. This is due to one important characteristic of the class \lstinline|java.lang.String|\autocite{ORACLE_DOC_STRING_CLASS}: it is immutable. This means that
+\begin{lstlisting}
+String a = "part1";
+String b = "part2";
+a += b;
+\end{lstlisting}
+will not modify \lstinline|a| but returns a new \lstinline|String| object with the concatenated contents of \lstinline|a| and \lstinline|b| and assigns a reference to that new object to \lstinline|a|.
+
+Older sources described the internal implementation of the \lstinline|+| operator for \lstinline|java.lang.String| like this:
+\begin{lstlisting}
+// NOT THE REAL IMPLEMENTATION!!
+private final String operatorPlus( String a, String b )
+{
+    final var buffer = new StringBuffer( a )
+        .append( b );
+    final var retValue = buffer.toString();
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  operatorPlus()
+\end{lstlisting}
+
+This means that an intermediate object of type \lstinline|java.lang.StringBuffer|\autocite{ORACLE_DOC_STRINGBUFFER_CLASS} has to be created for each concatenation. This gets even worse if you want to append a numerical value to the String, like this:
+\begin{lstlisting}
+String a = "part1";
+a += 42;
+\end{lstlisting}
+
+The implementation for this was described as
+\begin{lstlisting}
+// NOT THE REAL IMPLEMENTATION!!
+private final String operatorPlus( String a, int b )
+{
+    StringBuffer buffer = new StringBuffer( a );
+    String bString = Integer.toString( b );
+    buffer.append( bString );
+    final var retValue = buffer.toString();
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  operatorPlus()
+\end{lstlisting}
+meaning that two intermediate objects are created.
+
+Knowing this, the recommendation was always to write
+\begin{lstlisting}
+String a = new StringBuffer( b )
+    .append( c )
+    .toString();
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+String a = b + c;
+\end{lstlisting}
+and
+\begin{lstlisting}
+String a = new StringBuffer( a )
+    .append( b )
+    .toString();
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+a += b;
+\end{lstlisting}
+in order to increase performance.\footnote{These recommendations origin from a time when the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS} did not yet exist. Java~5 introduced \lstinline|StringBuilder| as the successor/replacement for \lstinline|StringBuffer|; it is more perfomant than \lstinline|StringBuffer| because its operations are not synchronised and therefore have less overhead than that of \lstinline|StringBuffer|.}
+
+But with each Java version the \textit{real} implementation of \lstinline|+| and \lstinline|+=| for \lstinline|String| changed, so that today there is no longer just only one recommendation.
+
+\subsection{Concatenating String Constants}
+In your code, string literals will be always concatenated with the \verb#plus# operator:
+\begin{lstlisting}
+String a = "StringOne" + "StringTwo";
+\end{lstlisting}
+because this way, they will already be concatenated \textit{during compile time}; using \lstinline|StringBuilder| here would cause negative effects on both performance and readability. This is also true when \lstinline|static final String| variables, initialised with a literal, are concatenated with each other or with another string literal:
+\begin{lstlisting}
+public static final String constantA = "StringOne";
+public static final String constantB = "StringTwo";
+String a = constantA + constantB;
+String b = constantA + "StringThree";
+\end{lstlisting}
+The compiler replaces each reference to the \lstinline|static final String| variables by either the literal itself or a reference to the literal and concatenates them if required.
+
+\subsection{Concatenating String Variables}
+Benchmark tests showed that beginning with one of the later versions of Java~1.4 the variant
+\begin{lstlisting}
+String a = "part1";
+String b = "part2";
+String s = a + b;
+\end{lstlisting}
+is significantly faster than
+\begin{lstlisting}
+String a = "part1";
+String b = "part2";
+String s = new StringBuffer( a )
+    .append( b );
+\end{lstlisting}
+Even using \lstinline|StringBuilder| in Java~5 instead of \lstinline|StringBuffer| is slower than the \verb#+# operator.
+
+Appending non-string values to a \lstinline|String| can be done as
+\begin{lstlisting}
+String a = "part1";
+int b = 42;
+String s = a + Integer.toString( b );
+\end{lstlisting}
+and that is still being faster than the \lstinline|StringBu*er| versions.
+
+\subsection{Concatenating Strings in Loops}
+The picture changes if strings are extended permanently in a loop:
+\begin{lstlisting}
+// AVOID!!!
+public final String buildSentence( String... words )
+{
+    var retValue = "";
+    for( final var s : words )
+    {
+        if( !retValue.isEmpty() ) retValue += " ";
+        retValue += s;
+    }
+    retValue += ".";
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  buildSentence()
+\end{lstlisting}
+
+Here it is the better option to use \lstinline|StringBuilder| or even \lstinline|java.util.StringJoiner|\autocite{ORACLE_DOC_STRINGJOINER_CLASS}:
+\begin{lstlisting}
+// BETTER
+public final String buildSentence( String... words )
+{
+    final var buffer = new StringBuilder()
+    for( final var s : words )
+    {
+        if( buffer.length() > 0 ) buffer.append( " " );
+        buffer.append( s );
+    }
+    buffer.append( "." );
+    final var retValue = buffer.toString();
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  buildSentence()
+
+// RECOMMENDED
+public final String buildSentence( String... words )
+{
+    final var buffer = new StringJoiner( " ", "", "." );
+    for( final var s : words )
+    {
+        buffer.add( s );
+    }
+    final var retValue = buffer.toString();
+    
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  buildSentence()
+\end{lstlisting}
+
+This is faster than the first version, although the concatenation with \verb#+# is usually faster than using \lstinline|StringBuilder|, because the shown version will definitely create much less objects that has to be garbage collected later – what will have a negative impact on performance.
+
+\subsection{Conclusion}
+The recommendation is to use the \verb#+# operator for strings where to combine literals, \lstinline|String| constants and/or String variables in a single, standalone statement, but to consider \lstinline|StringBuilder| or even \lstinline|StringJoiner| if strings have to be concatenated in loops or (large) a number of consecutive statements.\footnote{But keep \autocite{Knuth:PrematureOptimization} in mind, where Donald E. Knuth said something about “premature optimisation”.}
+
+When “adding” primitives to a string, these should be translated to a \lstinline|String| first by calling the \lstinline|static toString()| method of the appropriate wrapper class. This is not necessary if calling \lstinline|StringBuilder::append| as this exists as specialised versions each primitive type.
+
+Also when "adding" an instance of another type to a string, you should consider to first call \lstinline|toString()| on that object.This is not mandatory, as it is done implicitly anyway, but it clearly shows what you intended.
+
+Finally, \lstinline|java.lang.StringBuilder| should always be preferred over \lstinline|java.lang.StringBuffer|. I have not found any use case where I could not use \lstinline|StringBuilder| and was forced to use \lstinline|StringBuffer| instead.

@@ -1,0 +1,24 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  node          [shape=box]
+  collection    [label="java.util.Collection"]
+  iterable      [label="java.lang.Iterable"]
+  list          [label="java.util.List"]
+  set           [label="java.util.Set"]
+  arraylist     [label="java.util.ArrayList"]
+  linkedlist    [label="java.util.LinkedList"]
+  vector        [label="java.util.Vector"]
+  hashset       [label="java.util.HashSet"]
+  linkedhashset [label="java.util.LinkedHashSet"]
+  sortedset     [label="java.util.SortedSet"]
+  treeset       [label="java.util.TreeSet"]
+  enumset       [label="java.util.EnumSet"]
+  
+  collection -> iterable
+  {list, set} -> collection
+  {arraylist,linkedlist,vector} -> list
+  {hashset,sortedset,enumset} -> set
+  treeset -> sortedset
+  linkedhashset -> hashset
+}

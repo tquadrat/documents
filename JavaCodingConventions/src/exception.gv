@@ -1,0 +1,12 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  node          [shape=box]
+  throwable        [label="java.lang.Throwable"]
+  error            [label="java.lang.Error"]
+  exception        [label="java.lang.Exception"]
+  runtimeexception [label="java.lang.RuntimeException"]
+  
+  {error,exception} -> throwable
+  runtimeexception -> exception
+}

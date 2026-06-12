@@ -1,0 +1,58 @@
+\begin{longtable}{|l|X|}
+  \caption{Suffixes for Class Names} \\
+  \hline
+  Suffix & Description \\
+  \hline
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+  \hline
+  Suffix & Description \\
+  \hline
+  \endhead
+  \multicolumn{2}{r}{\textit{Continued on next page}} \\ 
+  \endfoot
+  \endlastfoot
+
+  \verb#…Adapter# & A class that simplifies the implementation of an interface; refer to chapter \tqfullvref{sec:Adapter} for some details. \\
+  \hline
+
+  \verb#…Base# & A base class of an interface implementation, usually abstract. Usually, it is either published as part of the SPI for a module, or it is only visible inside that module. \\
+  \hline
+
+  \verb#…Command# & An implementation of a command for the Command pattern; user either this or ‘\verb#Operation#’ as the suffix. \\
+  \hline
+
+  \verb#…DAO# & … \\
+  \hline
+
+  \verb#…Entity# & … \\
+  \hline
+
+  \verb#…Error# & An implementation of \lstinline|java.lang.Error|; basically an unchecked exception that is thrown in case of an unrecoverable error that should never be caught nor handled internally. \\
+  \hline
+
+  \verb#…Exception# & An implementation of either \lstinline|java.lang.Exception| (for a checked exception) or \lstinline|java.lang.RuntimeException| (for an unchecked exception). \\
+  \hline
+
+  \verb#…Handler# & … \\
+  \hline
+
+  \verb#…Impl# & The (default) implementation for an interface or an abstract base class, usually not visible outside of the current module.  \\
+  \hline
+
+  \verb#…Listener# & An implementation of a listener for the Observer\footnote{sometimes also referred to as the “Listener” pattern} pattern. \\
+  \hline
+
+  \verb#…Operation# & An implementation of a command for the Command pattern; use either this or ‘\verb#Command#’ as the suffix. \\
+  \hline
+
+  \verb#…Service# & … \\
+  \hline
+
+  \verb#…Visitor# & The implementation of a visitor for the Visitor pattern. \\
+  \hline
+
+  {} & t.b.c. \\
+  \hline
+\end{longtable}

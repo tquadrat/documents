@@ -1,0 +1,59 @@
+digraph {
+  size="6,6"
+  rankdir="TB"
+
+  node [shape="box"]
+  
+  start [label="Stream<String> breakText( String text, int lineLength )", shape="oval"]
+  cond1 [label="lineLength < 1", shape="diamond"]
+  cond2 [label="index1 < lines.length", shape="diamond"]
+  cond3 [label="isEmptyOrBlank( line )", shape="diamond"]
+  cond4 [label="index2 < chunks.length", shape="diamond"]
+  cond5 [label="c.isEmpty()", shape="diamond"]
+  cond6 [label="buffer.length() + 1 + c.length() < lineLength", shape="diamond"]
+  cond7 [label="buffer.isEmpty()", shape="diamond"]
+  cond8 [label="buffer.isEmpty()", shape="diamond"]
+  block1 [label="Builder<String> builder = Stream.builder()\nlines = splitString( text, '\\n' )\nindex1 = 0"]
+  block2 [label="retValue = builder.build()"]
+  block3 [label="line = lines [index1]"]
+  block4 [label="builder.add( EMPTY_STRING )"]
+  block5 [label="index1 = index1 + 1"]
+  block6 [label="buffer = new StringBuilder()\nchunks = line.split( '\\\\s' )\nindex2 = 0"]
+  block7 [label="c = chunks [index2]"]
+  block8 [label="index2 = index2 + 1"]
+  block9 [label="buffer.append( ' ' )"]
+  block10 [label="buffer.append( c )"]
+  block11 [label="builder.add( buffer )\nbuffer.setLength( 0 )"]
+  end   [label="return retValue",  shape="oval"]
+
+  start -> cond1
+
+  block1 -> cond2
+  block2 -> end
+  block3 -> cond3
+  block4 -> block5 
+  block5 -> cond2
+  block6 -> cond4
+  block7 -> cond5
+  block8 -> cond4
+  block9 -> block10
+  block10 -> block8
+  block11 -> block5
+
+  cond1 -> "throw ValidationException" [label="Yes"]
+  cond1 -> block1 [label="No"] 
+  cond2 -> block2 [label="No"]
+  cond2 -> block3 [label="Yes"]
+  cond3 -> block4 [label="Yes"]
+  cond3 -> block6 [label="No"]
+  cond4 -> block7 [label="Yes"]
+  cond4 -> cond8 [label="No"]
+  cond5 -> cond6 [label="No"]
+  cond5 -> block8 [label="Yes"]
+  cond6 -> cond8 [label="No"]
+  cond6 -> cond7 [label="Yes"]
+  cond7 -> block9 [label="No"]
+  cond7 -> block10 [label="Yes"]
+  cond8 -> block5 [label="Yes"]
+  cond8 -> block11 [label="No"]
+}

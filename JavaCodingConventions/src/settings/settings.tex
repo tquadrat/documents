@@ -1,0 +1,95 @@
+%\RequirePackage{lmodern}
+\documentclass[11pt,a4paper, titlepage, parskip=half, headsepline, footsepline, cleardoublepage=current, headheight=1cm]{scrbook}
+%\usepackage{DejaVuSansMono}
+\usepackage{dejavu}
+%\usepackage[T1]{fontenc}
+\usepackage{scrhack}
+\usepackage[pdftex]{graphicx} 
+\usepackage[manualmark]{scrlayer-scrpage}
+\usepackage[utf8]{inputenc}
+\usepackage{tocbasic}
+%\usepackage{siunitx}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{eurosym}
+\usepackage{ragged2e}
+\usepackage{textcomp}
+\usepackage{framed}
+\usepackage{ltxtable}
+\usepackage{filecontents}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage[table,gray]{xcolor}
+\usepackage{listings}
+\usepackage[inline]{enumitem}
+\usepackage{varioref}
+\usepackage[iso,english]{isodate}
+\usepackage{makecell}
+\usepackage[english]{babel}
+\usepackage[babel]{csquotes}
+
+\usepackage{lipsum}
+
+\usepackage[style=numeric, urldate=iso, date=iso, seconds=true, backend=biber]{biblatex}
+\usepackage{nameref}
+\usepackage[colorlinks=true]{hyperref}
+
+\addbibresource{JavaCodingConventions.bib}
+%To generate the references: "biber JavaCodingConventions"
+
+\automark[section]{chapter}
+\lehead*[]{\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}~~\headmark}
+\rohead*[\headmark~~\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}]{\headmark~~\raisebox{-\dp\strutbox}{\includegraphics[height=1cm]{Logo_klein}}}
+
+\lstset{
+language=Java,
+%morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield},
+morekeywords={var,yield},
+backgroundcolor=\color[gray]{.9},
+frame=single,
+framerule=0.2pt,
+basicstyle=\ttfamily\footnotesize,
+commentstyle=\color[gray]{.2}\itshape,
+keywordstyle=\color[gray]{.4}\bfseries,
+identifierstyle=\bfseries,
+stringstyle=\itshape,
+xleftmargin=.2cm,
+xrightmargin=.2cm,
+breaklines=true,
+breakatwhitespace=true,
+inputencoding=utf8,
+extendedchars=true,
+literate=
+  {á}{{\'a}}1 {Á}{{\'A}}1 {à}{{\`a}}1 {À}{{\`A}}1 {ä}{{\"a}}1 {Ä}{{\"A}}1 {â}{{\^a}}1 {Â}{{\^A}}1 {ã}{{\~a}}1 {Ã}{{\~A}}1 {å}{{\r a}}1 {Å}{{\r A}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 
+  {é}{{\'e}}1 {É}{{\'E}}1 {è}{{\`e}}1 {È}{{\'E}}1 {ë}{{\"e}}1 {Ë}{{\"E}}1 {ê}{{\^e}}1 {Ê}{{\^E}}1 {ẽ}{{\~e}}1 {Ẽ}{{\~E}}1 
+  {í}{{\'i}}1 {Í}{{\'I}}1 {ì}{{\`i}}1 {Ì}{{\`I}}1 {ï}{{\"i}}1 {Ï}{{\"I}}1 {î}{{\^i}}1 {Î}{{\^I}}1 {ĩ}{{\~i}}1 {Ĩ}{{\~I}}1 
+  {ñ}{{\~n}}1 {Ñ}{{\~N}}1 
+  {ó}{{\'o}}1 {Ó}{{\'O}}1 {ò}{{\`o}}1 {Ò}{{\`O}}1 {ö}{{\"o}}1 {Ö}{{\"O}}1 {ô}{{\^o}}1 {Ô}{{\^O}}1 {õ}{{\~o}}1 {Õ}{{\~O}}1 {ø}{{\o}}1 {œ}{{\oe}}1 {Œ}{{\OE}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ß}{{\ss}}1
+  {ú}{{\'u}}1 {Ú}{{\'U}}1 {ù}{{\`u}}1 {Ù}{{\`U}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1 {û}{{\^u}}1 {Û}{{\^U}}1 {ũ}{{\~u}}1 {Ũ}{{\~U}}1 {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 
+  {€}{{\euro}}1 {£}{{\pounds}}1 
+  {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1 
+  {¿}{{?`}}1 {¡}{{!`}}1
+  {©}{{\copyright}}1
+  {…}{{\dots }}2
+  {–}{{--}}1
+  {`}{{~}}1
+}
+
+\colorlet{shadecolor}{gray!10}
+\makeindex
+%To generate the index: "makeindex -s idxhdr.ist JavaCodingConventions"
+
+%---* New Commands *-----------------------------------------------------------
+\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”}}
+\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”} on page~\pageref{#1}}
+\newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
+\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page~\pageref{#1}}
+\newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

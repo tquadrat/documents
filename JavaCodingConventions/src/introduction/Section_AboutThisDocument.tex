@@ -1,0 +1,29 @@
+\section{About this Document}
+This document was compiled using \TeX/\LaTeX\index{TeX}\index{LaTeX}\footnote{In case it is relevant for you, I used ‘TexMaker’ as the editor for the \LaTeX~sources. I run it on Mac and Linux, but the software is also available for Windows; it can be downloaded from this location: \url{https://www.xm1math.net/texmaker/download.html}.}, and its source can be found on GitHub\autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}\index{github}. The diagrams were generated with Graphviz\autocite{Graphviz}\index{graphviz} and GreenLightning's ‘Nassi-Shneiderman Diagram Generator’\autocite{NDSG, NDSG:Download}\index{Nassi-Shneiderman Diagram Generator}\index{NDSG|see{Nassi-Shneiderman Diagram Generator}}.
+
+\subsection{The Document Structure}
+This document itself consists of four major parts, aside of this \nameref{sec:Introduction} and the \nameref{sec:Appendices} (containing additional information, references and examples).
+
+\paragraph{\nameref{sec:FormattingTheSourceCode}} deals with proper formatting of the Java source files additional files that are part of your project.
+
+\paragraph{\nameref{sec:NamingConventions}} covers the naming of the program elements (modules, packages, classes, methods, fields, local variables, formal parameters).
+
+\paragraph{\nameref{sec:WritingProperComments}} discusses some guidelines for writing proper comments.
+
+\paragraph{\nameref{sec:CodingGuidelines}} is the biggest part and provides guidelines on how to use various language features, based on best practices. The chapters here are in no particular order.
+
+\subsection{Sample Code}
+The code examples in this document underline some particular aspect or demonstrate a single guideline or recommendation; to stay focused on that purpose, and to keep the samples at a reasonable length, they may often hurt other guidelines or ignore other recommendations. For instance, in most cases, methods are lacking the required comments, the names are not really meaningful, or mandatory error handling is just missing. Often the code as given will not compile, and it may also be not particularly useful for other purposes than demonstrating a feature.
+
+The source code examples in the chapter \tqfullvref{sec:Examples} obey all rules, follow all guardlines and implement all recommendations.
+
+All the rules, guidelines and recommendations in this document assume that you use at least Java~25 – see the language specification in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION} – to write and to compile your code. Of course this version was also used for the examples.
+
+\subsection{References}
+Instead of adding URLs directly into the document, I provided them in the “Bibliography” section. In the text, you will find references to it like this: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}. If you read the electronic version of the document, the reference is clickable and brings you to the respective entry. There you can click on the URL.
+
+This allows me to update the URLs on one single location if they will change. 
+
+%==============================================================================
+% End of file!!
+%==============================================================================

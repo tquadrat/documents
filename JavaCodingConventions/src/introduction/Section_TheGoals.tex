@@ -43,38 +43,57 @@ Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Program
 Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code}\autocite{Fowler:Refactoring}
 \end{quote}
 
-Reading code is more important than writing code.\autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
+\begin{quote}
+\bdq{\textbf{Reading code is more important than writing code.}
+Code is read much more often than it is written. Further, when writing code, we usually have the whole context in our head, and take our time; when reading code, we are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that’s useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.}
 
-Code is read much more often than it is written. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that is useful for understanding the code. The central issue here is to find the right size for the program such that understandability is maximized.
+\bdq{We are specifically unconcerned here with the amount of keyboarding that’s necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.} \\
+Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines}\autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
+\end{quote}
 
-You should be specifically unconcerned here with the amount of keyboarding that is necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting code.
+And from my own experience I would confirm that verbosity is your friend!\footnote{Refer to the “Coding Guardrails”, bullet point \ref{lst:ZoP:ExplicitVsImplicit}.}
 
-And from my experience I found that verbosity is your friend!\footnote{Refer to the “Coding Guardrails”, bullet point \ref{lst:ZoP:ExplicitVsImplicit}.}
+Several guidelines and recommendations in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. \Java in general has the reputation to be too verbose, and this coding conventions will even add to that verbosity – but as said: that's not generally bad!
 
-Several guidelines and recommendations in this document, in particular regarding how to apply comments and how to write comments, but also those about to write a method, do require significant additional typing. Java in general has the reputation to be too verbose, and this coding conventions will even add to that verbosity – but as said: that's not generally bad!
+But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 20~WPM\footnote{WPM = \bdq{Word per Minute}} should look for a job outside of software development!\footnote{Just for your comparison: average values for a computer typist are around 41~WPM, the world record is 216~WPM, set by Stella Pajunas in 1946, using an IBM electric typewriter. See also \autocite{RATATYPE}.
 
-But if you are afraid of the keyboarding, you should learn typewriting! For my understanding, someone who does not reach at least 100~CPM\footnote{CPM = “Characters per minute”, or, in German: „Anschläge pro Minute“} should look for a job outside of software development!\footnote{Just for your comparison: average values for a typist or secretary are around 200 CPM, peak values are at 500 to 900 CPM (the world record is 955~CPM). See also \autocite{RATATYPE}.}
+According to Google, WPM roughly translates to CPM (= \bdq{Characters per Minute} or \bdq{Anschläge pro Minute} in German) by multiplying it by 5. The average secretary scores at least 200~CPM, peak values are in the 500 to 900~CPM, with a world record an 955~CPM.}
 
-Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to code (documentation, meeting notes, emails, specification documents,~…) – from a site that offers typing courses\autocite{RATATYPE}:
+Writing code is not the only area where you would benefit from mastering that important skill; it will also help you to write all the other stuff you have to deliver in addition to code (documentation, meeting notes, emails, specification documents,~…).
+
+From a site that offers typing courses\autocite{RATATYPE}:
+
 \begin{displayquote}
+\begin{samepage}
 \textbf{WHEN TO START LEARNING}
 
 Developed typing skills can help young people get better study results in school or college, and get better job offers once they have finished school. 65\% of people who learn how to touch type faster are under the age of 24. The main goal of learning to touch type or improving touch typing skills, after age 25 is to become more successful in current job.
+\end{samepage}
 
+\begin{samepage}
 \textbf{MOTIVATION}
 
 Improving touch typing skills is a must for every person under 18, but everyone can benefit from some time spent practicing. Average typing speed is one of the key skills listed on your resume. Spend some more time practicing and get better results […].
+\end{samepage}
 \end{displayquote}
 
 That they do marketing to sell their product does not make their statements wrong.
 
 Also, modern IDEs do a lot of the typing for you, as long as you take the trouble to configure them appropriately. Refer to chapter \tqfullref{sec:ToolSupport}.
 
-Code readability shouldn’t depend on IDEs.\autocite{Marks:LocalVariableTypeInference:NoIDEDependency}
+\bdq{}\autocite{}
 
-Code is often written and read within an IDE, so it is tempting to rely heavily on the code analysis features of IDEs. Unfortunately, code is at least as often read \textit{outside} an IDE. It appears in many places where IDE facilities are not available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.
+\begin{quote}
+\bdq{\textbf{Code readability shouldn't depend on IDEs.}
+Code is often written and read within an IDE, so it's tempting to rely heavily on code analysis features of IDEs. [Why not relying on that?]}
 
-Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.
+\bdq{There are two reasons. The first is that code is often read outside an IDE. Code appears in many places where IDE facilities aren’t available, such as snippets within a document, browsing a repository on the internet, or in a patch file. It is counterproductive to have to import code into an IDE simply to understand what the code does.}
+
+\bdq{The second reason is that even when one is reading code within an IDE, explicit actions are often necessary to query the IDE for further information […] This might take only a moment, but it disrupts the flow of reading.}
+
+\bdq{Code should be self-revealing. It should be understandable on its face, without the need for assistance from tools.} \\
+Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines}\autocite{Marks:LocalVariableTypeInference:NoIDEDependency}
+\end{quote}
 
 \subsection{Conclusion}
 To summarize from above, the goal for these coding conventions is to help you to write~…

@@ -1,43 +1,37 @@
 #!/bin/bash
 
-BIBER="/usr/bin/biber"
-LATEX="/usr/bin/pdflatex"
-MKIDX="/usr/bin/makeindex"
-THUMB="/usr/bin/thumbpdf"
+PROJECT_NAME="JavaCodingConventions"
+BIBER="/usr/bin/biber --quiet --sortcase=false"
+LATEX="/usr/bin/pdflatex -halt-on-error -interaction=batchmode"
+MKIDX="/usr/bin/makeindex -q"
+THUMB="/usr/bin/thumbpdf --quiet --noverbose"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOC_HOME=$(realpath "$SCRIPT_DIR/../src")
-MAIN_DOC="$DOC_HOME/JavaCodingConventions"
+TEXMFOUTPUT="$DOC_HOME"
+MAIN_DOC="$DOC_HOME/$PROJECT_NAME"
 
 cd "$DOC_HOME" || exit 1
 
-#pdflatex -draftmode JavaCodingConventions > /dev/null
 echo 1. Cycle
-$LATEX -draftmode $MAIN_DOC 
-#> /dev/null
+$LATEX -draftmode $MAIN_DOC || exit 1 
 
-#pdflatex -draftmode JavaCodingConventions > /dev/null
 echo 2. Cycle
-$LATEX -draftmode $MAIN_DOC 
-#> /dev/null
+$LATEX -draftmode $MAIN_DOC || exit 1 
 
-#biber JavaCodingConventions
 echo Running Biber
-$BIBER $MAIN_DOC
+$BIBER $MAIN_DOC || exit 1
 
-#makeindex -s idxhdr.ist JavaCodingConventions
 echo Building the index
-#$MKIDX -s idxhdr.ist $MAIN_DOC
+$MKIDX -s idxhdr.ist -o ${PROJECT_NAME}.ind ${PROJECT_NAME}.idx || exit 1
 
-#pdflatex JavaCodingConventions
 echo 3. Cycle
-#$LATEX $MAIN_DOC
+$LATEX $MAIN_DOC || exit 1
 
-#thumbpdf JavaCodingConventions > /dev/null
 echo Creating thumbnails
-#$THUMB $MAIN_DOC > /dev/null 
+$THUMB $MAIN_DOC || exit 1 
 
-#pdflatex JavaCodingConventions 
 echo Final Cycle
-#$LATEX $MAIN_DOC
+$LATEX $MAIN_DOC || exit 1
+
 echo Done!

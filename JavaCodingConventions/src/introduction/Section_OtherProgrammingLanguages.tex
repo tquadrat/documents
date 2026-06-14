@@ -1,9 +1,9 @@
 \section{Other Programming Languages}\label{sec:OtherProgrammingLanguages}
-Of course coding conventions like those described with this document are not only useful for Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
+Of course coding conventions like those described with this document are not only useful for \Java programs, but for code in any other programming language also.\footnote{Even for descriptive languages like XML and HTML they make sense, also for documents written in \TeX/\LaTeX.} But each language has its unique features and specialities, meaning that coding conventions written for one programming language do not necessarily match the requirements for another.
 
 Obviously there are some common rules that are valid for every programming language (e.g. the request to use meaningful names), but usually the differences will outweigh the similarities. So it is not a good idea to do something in language \verb#A# just and only it is done that way in programming language \verb#B#. On the other side, it should always be proved whether something that worked fine for one programming language would not be a great idea to be applied to code written in another language, too.
 
-In this sense, I stole the \bdq{Zen of Python}\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\index{Zen of Python}\footnote{I added the ellipsis.} and used it for this document:
+In this sense, I stole the \bdq{Zen of Python}\autocite{WIKIPEDIA:ZenOfPython,PYTHON_ORG_MAILING_LIST:ThePythonWay}\index{Zen of Python}\footnote{I added the ellipsis.} and used it for this document. Below the original as published by Tim Peters\index{Peters, Tim} on the Python mailing list in June~1999:
 
 \begin{itemize}[nosep]
 	\item Beautiful is better than ugly.
@@ -27,15 +27,17 @@ In this sense, I stole the \bdq{Zen of Python}\autocite{WIKIPEDIA:ZenOfPython,PY
 	\item Namespaces are one honking great idea – let's do more of those!
 \end{itemize}
 
-Only the last one, regarding \bdq{Namespaces}, does not work for code written in Java, unless you translate \bdq{Namespace} to \bdq{Package} (or \bdq{Module}~…). All other fits for Java, too – and also for most other programming languages.
+Only the last one, regarding \bdq{Namespaces}, does not work for code written in \Java, unless you translate \bdq{Namespace} to \bdq{Package} (or \bdq{Module}~…). All other fits for the \Java Programming Language, too – and also for most other programming languages.
 
-A good example for the other way round – other programming languages adopting a feature from Java – is the idea to add documentation comments to the source code and to use a tool like JavaDoc\index{javadoc} to externalise them and publish them as the API documentation. It was adopted for various other languages, including so different specimen as C\index{C}/C++\index{C++}, JavaScript\index{JavaScript} and PL/SQL\index{PL/SQL}.\footnote{Although I have to confess that the commenting style does not get part of the specification of these languages, instead it is only supported by external tools; one of these tools is doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen}.} Obviously, if you want to benefit from that adopted feature, you have to write your C++\index{C++} (JavaScript\index{JavaScript}, PL/SQL\index{PL/SQL},~…) code (more precise, your documentation comments) according to coding conventions similar to those defined here.
+A good example for the other way round – other programming languages adopting a feature from \Java – is the idea to add documentation comments to the source code and to use a tool like Javadoc\index{javadoc} to externalise and to publish them as the API documentation. It was adopted for various other languages, including so different specimen as C\index{C}/\mbox{C++}\index{C++}, JavaScript\index{JavaScript},go\index{go}\index{golang|see{go}} and \mbox{PL/SQL}\index{PL/SQL}.\footnote{Although I have to confess that the commenting style does not get part of the specification of these languages, instead it is only supported by external tools; one of these tools is doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen}.} Obviously, if you want to benefit from that adopted feature, you have to write your \mbox{C++}\index{C++} (JavaScript\index{JavaScript}, \mbox{PL/SQL}\index{PL/SQL},~…) code (more precise, your documentation comments) according to coding conventions similar to those defined here.
 
 A sample for code conventions for JavaScript\index{JavaScript} can be found in the web at \autocite{Crockford:JAVASCRIPT_CODE_CONVENTIONS}.
 
-Coding conventions for C\#\index{C\#} are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation}, another source can be found on GitHub\autocite{Taranov:CsharpCodingStandards}.
+Coding conventions for C\#\index{C\#} are part of Microsoft's documentation for C\#\autocite{MICROSOFT:CsharpDocumentation:coding-style}, another source can be found on GitHub\index{GitHub}\autocite{Taranov:CsharpCodingStandards}.
 
-The number of documents dealing with coding standards, naming conventions and style guides for C++\index{C++} is close to infinite. A good starting point could be the ISO page\autocite{ISO:CppCodingStandards}, another one would be Google's C++ Style Guide\autocite{Google:CppStyleGuide}.
+The authors of the go programming language\index{go} provided a code convention document on their website\autocite{GO_DEV:EffectiveGo}; although meanwhile outdated, it is still sufficient for the core language. A more recent document, maintained by Google\index{Google}, can be found on GitHub\autocite{Google:GoStyleGuide}
+
+The number of documents dealing with coding standards, naming conventions and style guides for \mbox{C++}\index{C++} is close to infinite. A good starting point could be the ISO\index{ISO} page\autocite{ISO:CppCodingStandards}, another one would be Google's\index{Google} \mbox{C++} Style Guide\autocite{Google:CppStyleGuide}, again available on GitHub\index{GitHub}.
 
 %==============================================================================
 % End of file!!

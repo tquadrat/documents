@@ -84,12 +84,6 @@ literate=
 %To generate the index: "makeindex -s idxhdr.ist JavaCodingConventions"
 
 %---* New Commands *-----------------------------------------------------------
-\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”}}
-\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”} on page~\pageref{#1}}
-\newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
-\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page~\pageref{#1}}
-\newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
-
 \def\bsq#1{%both single quotes
 \enquote*{#1}}
  
@@ -97,8 +91,29 @@ literate=
 \enquote{#1}}
 
 \def\Java{%Java with trademark
-{Java}\textsuperscript{TM}}
+{Java}\textsuperscript{TM}{ }}
  
+% Reference with hyperlink and name
+%\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”}}
+\newcommand*{\tqfullref}[1]{\hyperref[{#1}]{\bdq{\ref*{#1}~\nameref*{#1}}}}
+
+% Reference with hyperlink, name and page number
+%\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{“\ref*{#1}~\nameref*{#1}”} on page~\pageref{#1}}
+\newcommand*{\tqfullvref}[1]{\hyperref[{#1}]{\bdq{\ref*{#1}~\nameref*{#1}}} on page~\pageref{#1}}
+
+% Reference with only a hyperlink
+\newcommand*{\tqref}[1]{\hyperref[{#1}]{\ref*{#1}}}
+
+% Reference with hyperlink and page number
+\newcommand*{\tqvref}[1]{\hyperref[{#1}]{\ref*{#1}} on page~\pageref{#1}}
+
+% Reference to the Nutshell Guardrails
+%\newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{“Coding Guardrails for Java in a Nutshell”}}
+\newcommand*{\ngref}{\hyperref[lst:NutshellGuardrails]{\bdq{Coding Guardrails for Java in a Nutshell}}}
+
+% The SUN Coding conventions
+\newcommand*{\ccjpl}{\bdq{Code Conventions for the \Java Programming Language}\autocite{SUN_CODE_CONVENTIONS}\index{Code Conventions for the Java Programming Language}}
+
 %==============================================================================
 % End of file!!
 %==============================================================================

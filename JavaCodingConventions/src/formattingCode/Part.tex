@@ -1,0 +1,42 @@
+\part{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
+As I said already in the introduction, coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making the code better to read.
+
+In this regard, a source file is like any other text document: it benefits from having a clear structure. And that structure is supported by the formatting of the text.
+
+An article may have sections with headlines in bold face, the paragraphs are separated by blank lines and the first lines of them are indented by 0.3~cm, and there are rules regarding line length, hyphenation, and how to treat widows and orphans.
+
+This part of the document deals with the proper formatting of \Java source code files and their structure with the goal to create human readable \textit{documents}.
+
+\begin{quote}
+``[…], we want to establish the idea that a computer language is not just a way of getting a computer to perform operations but rather that it is a novel formal medium for expressing ideas
+about methodology.'' \\
+Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
+\autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
+\end{quote}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{The structure of the program text (the source code) must support the flow of reading.
+	
+	As said in the \ngref, bullet point~\ref{lst:ZoP:Readablity}: \bdq{Readability counts}.}
+	
+	\item{The formatting of the program text has to be consistent.
+	
+	Permanent changes in the way things are presented will confuse the reader.}
+	
+	\item{Navigation through the source file should be easy.
+	
+	When loaded inside an IDE, navigating inside a Java source file is easy: click on the name of the respective program element and the cursor is moved to the corresponding line in the file.
+	
+	But when using a plain text editor, the search function is often the only tool you have. A consistent structure with headlines and a defined order would help here, too.}
+	
+	\item{It does not harm when the source code also looks beautiful.
+	
+	Bullet point~\ref{lst:ZoP:BeautifulVsUgly} from the \ngref~ is also about the visual appearance of the source code. We can discuss how useful ASCII art in a source file is, but not that it can contribute to the beauty of the program text.}
+\end{enumerate}
+
+\input{formattingCode/Chapter_LinesAndSpaces}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

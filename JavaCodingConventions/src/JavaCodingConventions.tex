@@ -11,117 +11,11 @@
 \include{settings/toc}
 
 \include{introduction/Chapter}
-\include{introduction/Section_TheGoals}
-\include{introduction/Section_AboutThisDocument}
-\include{introduction/Section_HistoryAndImplementation}
-\include{introduction/Section_OtherProgrammingLanguages}
-\include{introduction/Section_CodeGenerators}
-\include{introduction/Section_CodingForSustaining}
-\include{introduction/Section_ToolSupport}
-\include{introduction/Section_HowToUseThisDocument}
-\include{introduction/Section_HowToImplement}
-\include{introduction/Section_AboutTheAuthor}
-\include{introduction/Section_TheBasicRule}
-
+\include{formattingCode/Part}
 
 %------------------------------------------------------------------------------
 
-\chapter{Formatting the Source Code}\label{sec:FormattingTheSourceCode}
-As said already coding conventions are primarily guidelines that should help making code better to maintain. Usually, this starts with making it better readable.
 
-In this regard, a source file is like any other text document, it benefits from having a clear structure, and that structure is supported by the formatting of the text.
-
-An article may have sections with headlines in bold face, the paragraphs are separated by blank lines and the first lines of them are indented by 0.3~cm, and there are rules about line length and hyphenation.
-
-This chapter deals with the proper formatting of source files and their structure with the goal to get readable \textit{documents}.
-
-\begin{quote}
-“[…], we want to establish the idea that a computer language is not just a way of getting a computer to perform operations but rather that it is a novel formal medium for expressing ideas
-about methodology.”\\
-Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
-\autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
-\end{quote}
-
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-	\item{The structure of the program text must support the flow of reading.
-	
-	As said in the \ngref, bullet point~\ref{lst:ZoP:Readablity}: “Readability counts”.}
-	
-	\item{The formatting of the program text has to be consistent.
-	
-	Permanent changes in the way things are written will confuse the reader.}
-	
-	\item{Navigation through the source file should be easy.
-	
-	When loaded inside an IDE, navigating inside a Java source file is easy: click on the name of the respective program element and the cursor is moved to the corresponding line in the file.
-	
-	But when using a plain text editor, the search function is often the only tool you have. A consistent structure with headlines and a defined order would help here, too.}
-	
-	\item{It does not harm when the source code also looks beautiful.
-	
-	Bullet point~\ref{lst:ZoP:BeautifulVsUgly} from the \ngref~ is also about the visual appearance of the source code. We can discuss how useful ASCII art in a source file is, but not that it can contribute to the beauty of the program text.}
-\end{enumerate}
-
-\section{Indentation}\label{sec:Indentation}
-Indentation\index{indentation}, together with empty lines, is the most important tool to structure any source code.
-
-\subsection{Indentation Style}\label{sec:IndentationStyle}
-For most programming languages, the indentation of code blocks increases the readability – for others, like Python\autocite{W3SCHOOLS:PythonIndentation}, the indentation is even part of the syntax rules.
-
-Obviously, “readability” is a relative term, depending from one's habits. So some people are more familiar with the Kernighan-Ritchie (K\&R) indentation style\index{Kernighan-Ritchie style}\index{K\&R style|see{Kernighan-Ritchie style}}
-
-\begin{lstlisting}
-public final void myMethod (){
-    if (flag) {
-        …
-    }
-}   //  myMethod()
-\end{lstlisting}
-
-as it is also shown in the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS}, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\index{GNU style}\index{BSD style}\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally part of code conventions for programming in C and/or C++ that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
-
-\begin{lstlisting}
-public final void myMethod()
-{
-    if( flag )
-    {
-    	…
-    }
-}   //  myMethod()
-\end{lstlisting}
-
-Both styles will work, but they look different. So as a lot of other guidelines from a code conventions document, too, this is a matter of taste. But as conformity suppports readability, a main purpose of these guidelines is to ensure that all source code looks similar, and we have to determine the style to use.
-
-I prefer the so-called GNU or BSD style\index{indentation!style} and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block than the Kernighan-Ritchie style. It demands to have the opening and closing curly braces on a line of their own, like this:
-
-\begin{lstlisting}
-public final class MyClass
-{
-    public final void myMethod()
-    {
-        if( flag )
-        {
-            /* do something */
-        }
-        
-        for( final var i = 0; i < max; ++i )
-        {
-            /* do something else */
-        } 
-    }   //  myMethod()
-}   //  class MyClass
-\end{lstlisting}
-
-\subsection{Indentation Size}\label{sec:IndentationSize}
-Again, at the very end, the size for the indentation is a matter of taste. But using four (4) spaces\index{indentation!base unit} has been established as a de~facto standard for the base unit of indentation in Java source code, also because the original Sun Code Conventions\autocite{SUN_CODE_CONVENTIONS:Indentation} stated it that way. Therefore I recommend that you also use four spaces (\lstinline|' '|, ASCII~32 or 0x20) as the base unit of indentation.
-
-When you write code \textit{snippets} for a publication (for an article, as part of a program documentation, or for an answer on StackOverflow\autocite{STACKOVERFLOW}~…), sometimes using a base indentation unit of two spaces would be better, as it spares some room. But reformatting existing code for this use case is in most cases not worth the effort.
-
-\subsection{Indentation Character}\label{sec:IndentationCharacter}
-As said, you should use four \textit{blanks}\index{indentation!character}; do \textit{not} use tabs (\lstinline|'\t'|, ASCII~9 or 0x09)! Tabs are \textit{not} allowed! This is different from the Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Indentation} that do not explicitly specify whether to use blanks or tabs.
-
-Usually both, the indentation character and the indentation base unit can be configured in your IDE; in Eclipse this is part of the \textit{Formatter} definition (\verb#Window|Preferences|Java|Code Style|Formatter#).
 
 %------------------------------------------------------------------------------
 

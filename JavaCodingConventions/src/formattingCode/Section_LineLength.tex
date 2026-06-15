@@ -1,0 +1,14 @@
+\section{Line Length}\label{sec:LineLength}
+Several sources (including the original \ccjpl) recommend to avoid code lines longer than 80~characters, because they were not handled well by many terminals and tools.
+
+This had been true at the time those documents were written\footnote{The original \ccjpl were published by SUN\index{SUN} in 1999~…}, but today's  graphical screens are much wider (sometimes even 200 and more characters can be put into one line), and modern tools do not even care about line length, so we do not want to recommend a fixed line length for source code.\index{line length}
+
+\textbf{Note:} Sample code for the use in documentations, articles or alike \textit{should have} a limited line length – generally not more than 70~characters.\index{line length!articles and documentation}
+
+Different to lines with program code, \textit{comment lines} are limited to 80~characters – or more precise, they have to end at column~80\index{line length!comments}. All lines with “ASCII graphics” are extended to that column. This is pertaining to the beginning comments (chapter \tqfullvref{sec:BeginningComment}), the structuring comments (chapter \tqfullvref{sec:StructuringComments}) and most single-line comments (chapter \tqfullref{sec:SingleLineComments}).
+
+\input{formattingCode/SubSection_WrappingLines}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

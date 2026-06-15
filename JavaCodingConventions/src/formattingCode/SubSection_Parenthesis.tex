@@ -1,0 +1,43 @@
+\subsection{Round Brackets}\label{sec:Parenthesis}
+Round Brackets (or Parentheses)\index{round brackets}\index{parentheses|see{round brackets}} are of course no whitespace characters – in the opposite, they are important syntax elements. But they trigger the use of whitespace, in particular blank spaces, and therefore, they are mentioned in this chapter.
+
+We distinguish between \textit{arithmetical} round brackets and \textit{parameter} round brackets; the first is used in (mathematical or logical) expressions to order the terms, the latter is used with method or constructor calls or in lambdas.
+
+The \bdq{Code Conventions for the \Java Programming Language}\autocite{SUN_CODE_CONVENTIONS:BlankSpaces}\index{Code Conventions for the Java Programming Language} does not make this distinction, and it handles them differently than described here (basically in the same way as described here as arithmetical round brackets).
+
+\paragraph{Arithmetical Round Brackets}\index{arithmetical round brackets}
+An opening arithmetical round bracket is always \textit{preceded} by a blank or another opening round bracket and \textit{never} followed by a blank. A closing arithmetical round bracket is \textit{never preceded} by a blank, but \textit{always followed} either by another closing round bracket, a blank, or a newline (or a semicolon, in case the statement ends).
+
+This is a sample for arithmetical round brackets: \lstinline|((5 + 7) * 9 + 3) / 4|.
+
+\paragraph{Parameter Round Brackets}\label{sec:ParameterParenthesis}\index{parameter round brackets}
+An opening parameter round bracket is \textit{never preceded} by a blank and \textit{always followed} by one, while a closing parameter parenthesis is \textit{always preceded} by a blank. The only exception is for empty arguments lists where the opening parenthesis is immediately followed by the closing parenthesis.
+
+Of course this is also valid for the declaration of methods and constructors.
+
+Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lstinline|try|\index{try-catch-finally} and \lstinline|switch| are treated like they are functions.\footnote{And also the keywords \lstinline|catch|\index{try-catch-finally} and \lstinline|synchronized|, but they do not allow complex terms inside their 'argument list'.}
+
+This rule can improve the readability of complex terms drastically, as the examples below will illustrate.
+
+\begin{lstlisting}[numbers=left]
+final int v = (a + b) * 5;
+final double d = sin( (a + b) / c );
+
+System.out.println( "Finished!" );
+set( get() );
+System.out.println( sin( ((a + b) * (c + 4) + c)) / d ) );
+if( a < b ) c = (d + e) / sin( f );
+while( ((line = reader.readLine()) != null) && (++i < capacity) )
+    processLine( line );
+\end{lstlisting}
+
+A special case are parenthesis used with a cast:
+\begin{lstlisting}
+final Object o = "Text";
+final var s = (String) o;
+\end{lstlisting}
+Here an opening parenthesis is never followed by a blank, and a closing one is never preceded by a blank.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

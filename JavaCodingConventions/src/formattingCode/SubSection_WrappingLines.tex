@@ -1,0 +1,200 @@
+\subsection{Wrapping Lines}\label{sec:WrappingLines}
+As we have an unlimited line length, it will not happen that an expression does not fit into a single line. Nevertheless you might consider to break long lines to improve the readability of the code. In this case, you should follow these general principles:
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Only one statement per line!}
+\item{Break after a comma.}
+\item{Break before an operator.}
+\item{Break before a dot.}
+\item{Break after an opening parenthesis and before a closing one.}
+\item{Prefer higher-level breaks to lower-level breaks.}
+\item{Align the new line with the beginning of the expression at the same level on the previous line.}
+\item{If the above rules lead to confusing code or to code that's squished up against the right margin, consider to break up the code into multiple parts, by introducing additional temporary variables.}
+\end{itemize}
+
+\subsubsection*{Method Calls}
+Here are some examples of breaking method calls:
+\begin{lstlisting}[numbers=left]
+//  USUAL
+final var result = myMethod( longExpression1, longExpression2, 
+    longExpression3, longExpression4, longExpression5 );
+        
+//  SINGLE LINE FOR EACH ARGUMENT
+myProcedure
+( 
+    longExpression1,
+    longExpression2,
+    longExpression3,
+    longExpression4, // some comment
+    longExpression5
+);
+
+final var result = myFunction
+    ( 
+        longExpression1,
+        longExpression2,
+        longExpression3,
+        longExpression4, // some comment
+        longExpression5
+    );
+
+//  OTHER VARIANTS
+final var result = myMethod( longExpression1,
+    someMethod( longExpression2,
+        longExpression3 ) );
+
+final var result = myMethod1( longExpression1,
+    someMethod( longExpression2,
+        longExpression3 ),
+    longExpression4,
+    otherMethod( longExpression5 ) );
+\end{lstlisting}
+
+Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument.
+
+Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
+\begin{lstlisting}[numbers=left]
+// PREFERRED
+final var longName1 = longName2 * (longName3 + longName4 - longName5)
+    + 4 * longname6;
+           
+longName1 = longName2 * (longName3 + longName4 - longName5)
+    + 4 * longname6;
+           
+// AVOID!!!           
+longName1 = longName2 * (longName3 + longName4
+                       - longName5) + 4 * longname6;
+\end{lstlisting}
+
+Then we have a few examples for the indentation on long method declarations. First the conventional case. Next, a \lstinline|throws| clause that will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
+
+The second example would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final example uses a single line for each argument.
+
+\begin{lstlisting}[numbers=left]
+//  CONVENTIONAL INDENTATION
+public final void myMethod( final int anArg, final Object anotherArg,
+    final String yetAnotherArg, final Object andStillAnother )
+{
+    …
+}   //  myMethod()
+
+private final synchronized void horkingLongMethodName( final int arg,
+   final Object anotherArg, final String yetAnotherArg, 
+   final Object andStillAnotherArg )
+{
+    …
+}   //  horkingLongMethodName()
+
+public final void myMethod( final int anArg, final Object anotherArg,
+    final String yetAnotherArg, final Object andStillAnother,
+    final Instant andTheFinalArg ) throws IllegalArgumentException
+{
+    …
+}   //  myMethod()
+
+//  ADDITIONAL INDENTATION BECAUSE OF THE throws CLAUSE
+public final void myMethod( final int anArg, final Object anotherArg,
+        final String yetAnotherArg, final Object andStillAnother )
+    throws IllegalArgumentException, IOException
+{
+    …
+}   //  myMethod()
+
+// SINGLE LINE FOR EACH ARGUMENT
+private static final synchronized anotherHorkingLongMethodLine
+(
+    final int anArg,
+    final Object anotherArg,  // a comment …
+    final String yetAnotherArg,
+    final Object andStillAnother
+)
+{
+    …
+}   //  anotherHorkingLongMethodLine()
+
+private static synchronized anotherHorkingLongMethodLineThrows
+(
+    int anArg,
+    Object anotherArg,
+    @MyAnnotation String yetAnotherArg,
+    Object andStillAnother
+) throws IllegalArgumentException, IOException
+{
+    …
+}   //  anotherHorkingLongMethodLineThrows()
+\end{lstlisting}
+
+For a method declaration, a comment for a formal argument (like in line~34) is usually obsolete, as the description for the parameters is a mandatory part of the documentation comments (see chapter \tqfullvref{sec:MethodComment} for the details).
+
+But you should think about having each formal argument in a line of it own if you have annotations on parameters, as shown in line~46. Especially when the annotation will have its own arguments.
+
+Here are the acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \tqfullvref{sec:TheTernaryOperator}.}:
+\begin{lstlisting}[numbers=left]
+alpha = (aLongBooleanExpression) ? beta : gamma;
+alpha = (aLongBooleanExpression) ? beta
+                                 : gamma;
+alpha = (aLongBooleanExpression)
+    ? beta
+    : gamma;
+
+final var alpha = (aLongBooleanExpression) ? beta : gamma;
+final var alpha = (aLongBooleanExpression) ? beta
+                                           : gamma;
+final var alpha = (aLongBooleanExpression)
+    ? beta
+    : gamma;
+\end{lstlisting}
+
+And finally a bad example; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
+
+\index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
+\begin{lstlisting}[numbers=left]
+/**
+ *  <p>{@summary This method calculates the date of Easter Sunday 
+ *  for the given year.} The year has to be in the range from 1583 
+ *  to 3900 (included).</p>
+ *  <p>The resulting date is for the Gregorian calendar.</p>
+ *  <p>The algorithm itself is not the original one published by Carl
+ *  Friedrich Gauß first in 1800 (corrected version in 1816), but
+ *  that one published by Heiner Lichtenberg in 1997.
+ *
+ *  @thanks Carl Friedrich Gauß
+ *  @thanks Heiner Lichtenberg  
+ *
+ *  @param  year    The year for which the date of Easter Sunday is 
+ *      wanted for.
+ *  @return The date of Easter Sunday in the given year.
+ *  
+ *  @see <a href="https://de.wikipedia.org/wiki/Gau%C3%9Fsche_Osterformel">Gaußsche Osterformel</a>
+ */
+public static final LocalDate calcEasterDate( final Year year )
+{
+    //---* Check the arguments *-------------------------------------    
+    if( requireNonNullArgument( year, "year" ).isBefore( Year.of( 1583 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years greater than or equal to 1583" );
+    }
+    if( year.isAfter( Year.of( 3900 ) ) )
+    {
+        throw new IllegalArgumentException( "This method will work only for years less than or equal to 3900" );
+    }
+
+    /*
+     * Initialise the return value with the last day of February and 
+     * add the calculated number of days.
+     */
+    final var retValue = LocalDate.of( year.getValue(), MARCH, 1 )
+        .minusDays( 1 )
+        .plusDays( (21 + ((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) - (((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) + (year.getValue() % 19) / 11) / 29) + (7 - ((21 + ((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) - (((19 * (year.getValue() % 19) + (15 + (3 * (year.getValue() / 100) + 3) / 4 - (8 * (year.getValue() / 100) + 13) / 25)) % 30) + (year.getValue() % 19) / 11) / 29) - (7 - (year.getValue() + year.getValue() / 4 + (2 - (3 * (year.getValue() / 100) + 3) % 4)) % 7)) % 7) );
+
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  calcEasterDate()
+\end{lstlisting}
+
+Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with “breaking up the code into multiple parts by introducing additional temporary variables”.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

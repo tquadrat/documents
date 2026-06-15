@@ -1,0 +1,96 @@
+\subsection{Blank Spaces}\label{sec:BlankSpaces}
+The principles below are in place regarding the use of blank spaces, above and beyond to what was said already.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{For a keyword like \lstinline|if|, \lstinline|while|, \lstinline|for| etc., followed by a opening round bracket, there is no blank space between the keyword and the round bracket, but  between that bracket and the argument, and another is between the argument and the closing round bracket. 
+
+As a short it can be said that the round brackets for these keywords will be treated like parameter round brackets, as already stated in \tqfullref{sec:ParameterParenthesis}.\footnote{This is in opposite to the \ccjpl; there it is recommended to have a blank between the keyword and the opening round bracket while not using it between the method name and the opening round bracket here, just to distinguish between keywords and methods calls. I think that it is more important to distinguish between round brackets in arithmetical expressions and those in method calls.}
+
+Examples:
+\begin{lstlisting} 
+while( true ) { … }
+
+for( int i = 0; i < 10; ++i ) { … }
+
+try
+{
+    …
+}
+catch( Exception e )
+{
+    e.printStackTrace();
+}
+
+if( list.isEmpty() ) { … }
+\end{lstlisting}}
+
+\item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
+
+Examples:
+\index{java.util!Map}\index{java.util!HashMap}
+\begin{lstlisting}
+Map<String,String> map1 = new HashMap<String,String>();
+
+Map<String,String> map2 = new HashMap<>(); // using the diamond operator
+
+map.put( key, value );
+\end{lstlisting}}
+
+\item{All binary operators except “\verb#.#” has to be separated from their operands by spaces.
+
+Example:
+\begin{lstlisting}
+a += c + d;
+
+a = (a + b) / (c * d);
+
+printSize( "size is " + foo + "\n" );
+\end{lstlisting}}
+
+\item{Blank spaces should never separate unary operators such as unary minus, increment (“\verb#++#”), and decrement (“\verb#--#”) from their operands.
+
+Example:
+\begin{lstlisting}
+while( d-- > s++ )
+{
+    ++n;
+}
+\end{lstlisting}}
+
+\item{The expressions in a \lstinline|for| statement has to be separated by blank spaces after the semicolon.
+
+Example:
+\begin{lstlisting}
+for( expr1; expr2; expr3 )
+{
+    …
+}
+\end{lstlisting}
+
+For an extended for loop, blank spaces has to be placed around the colon, too:
+\begin{lstlisting}
+for( String s : stringArray ) System.out.println( s );
+\end{lstlisting}}
+
+\item{For ternary statements, the question mark (“?”) and the colon (“:”) has to be surrounded by blank spaces:
+
+Example:
+\begin{lstlisting}
+int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
+\end{lstlisting}
+
+In this sample, some round bracket would be helpful to increase readability.}
+\item{Casts should be followed by a blank space. 
+
+Examples:
+\begin{lstlisting}
+myMethod( (byte) aNum, (Object) x);
+myMethod( (int) (cp + 5), ((int) (i + 3)) + 1 );
+\end{lstlisting}}
+\end{itemize}
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

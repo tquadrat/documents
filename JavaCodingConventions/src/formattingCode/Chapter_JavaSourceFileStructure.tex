@@ -1,0 +1,16 @@
+\chapter{Java Source File Structure}
+
+Basically, what we refer to as a \bdq{Java Source File} is defined by the \Java Programming Language as a \bdq{Compilation Unit}\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit}\index{compilation unit}.
+
+The Java Language Specification distinguishes between \bdq{Ordinary Compilation Units}, \bdq{Compact Compilation Units} and \bdq{Modular Compilation Units}. Here, we are only interested in the \bdq{Ordinary Compilation Units}.
+
+A \bdq{Modular Compilation Unit}\index{module-info.java} defines the module structure of an application; this is described in \tqfullvref{sec:ModuleDefinition}.
+
+\bdq{Compact Compilation Units} or \bdq{compact source files} were introduced with Java~25 and are mainly meant to support writing small scripts in Java, without the overhead of a full-flegded Java program. They should never be used in the context of a bigger Java program or application.
+
+\input{formattingCode/Section_JavaSourceFileSize}
+\input{formattingCode/Section_FileStructure}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -27,65 +27,6 @@
 
 %------------------------------------------------------------------------------
 
-\section{Java Source File Structure}
-Above a certain number of lines, source code files become unwieldy, but it is difficult to specify a concrete value for the maximum size of a Java source file.  First, generated source files tend to have lots of lines because it is often much easier to use boiler-plate code here than to generate methods and call them instead. And in particular when dynamically generated code is used\footnote{Code that is regenerated for each build.}, it would not even hurt the DRY principle: a change to the repeated code can be performed on one single place, the generator.
-
-Second, classes that have lots of attributes usually end up with lots of lines, too: the formatting style and coding guidelines proposed in this document require a least 5~lines for each attribute, 6~lines for each getter method and 11~lines for each setter method, always including all comments and blank lines. This is about 22~lines for each attribute.  One hundred attributes seems to be a lot, but I have seen more than one real life application where database tables had more than that number of columns that each needed to be reflected as an attribute of the class that should reflect the table. I do not think that this is a good design anyway, but if your new Java class has to reflect the legacy data model, it has to have that number of attributes, bringing you to about 2200~lines of code without any methods other than the already mentioned getters and setters.
-
-I found a limit of about 2000~lines to be feasible; if a class becomes larger than this number of lines, you should consider to move some of the code into other classes. This could be a utility class\index{utility class}, a parent class (probably abstract), or the functionality would be better placed with another entity in general. Also externalising some functionality by implementing the command pattern\autocite{Gamma:DesignPatterns} might be an idea. 
-
-Java source code files basically have five parts, in the given order:
-\begin{enumerate}[nosep]
-\item{\nameref{sec:BeginningComment}}
-\item{\nameref{sec:PackageStatement}}
-\item{\nameref{sec:ImportStatements}}
-\item{\nameref{sec:ClassAndInterfaceDeclarations}}
-\item{\nameref{sec:ClosingComment}}
-\end{enumerate}
-And in general, this sequence is ordered by the syntax for Java source files, although the comments are not mandatory, and the package defintion and the imports are optional~…
-
-\subsection{Beginning Comment}\label{sec:BeginningComment}
-All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information:\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}
-
-For a Java source file, that comment looks like this:
-\begin{lstlisting}[numbers=left,caption={Beginning Comment Java}]
-/*
- * ==================================================================
- * Copyright © <Year> <Copyright Notice>
- * ==================================================================
- *
- * <License Notice>
- */
-\end{lstlisting}
-
-A \textit{resource} file has the following form: 
-\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment Resource file}]
-#
-# ===================================================================
-# Copyright © <Year> <Copyright Notice>
-# ===================================================================
-#
-# <License Notice>
-#
-\end{lstlisting}
-
-Or for an XML file\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|; here it is not starting on line~1.}:
-\begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment XML}]
-<!--
-=====================================================================
- Copyright © <Year> <Copyright Notice>
-=====================================================================
-
- <License Notice>
--->
-\end{lstlisting}
-
-\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \copyright~ is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
-
-The lines with the equals signs (“===”) will end at column~80; refer to chapter \tqfullvref{sec:LineLength}.\footnote{Keep in mind that in this document the line length is set to 70~columns.}
-
-No other information should be added to this comment block.
-
 \subsection{Package Statement}\label{sec:PackageStatement}
 The first non-comment line of a Java source file is the \lstinline|package| statement. According to the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:UnnamedPackages}, it is optional (resulting in an ‘unnamed’ or default package), but this is never used for production code. So you will have a \lstinline|package| statement in each and every Java source file.
 

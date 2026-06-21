@@ -19,6 +19,8 @@ Regarding to this rule, \lstinline|if|, \lstinline|for|, \lstinline|while|, \lst
 
 Applying these rules can improve the readability of complex terms drastically, compared with the format suggested by the \ccjpl, as the examples below will illustrate.
 
+\clearpage
+
 \begin{tabular}{p{0.45\textwidth} p{0.45\textwidth}}
 \hline
 \lstinline[keepspaces=true]|final double d = sin( (a + b) / c );|
@@ -53,28 +55,30 @@ Applying these rules can improve the readability of complex terms drastically, c
 \hline
 \end{tabular}
 
-A special case are parenthesis used with a cast:
+A special case are round brackets used with a cast:
 \begin{lstlisting}
 final Object o = "Text";
 final var s = (String) o;
 \end{lstlisting}
 
-Here an opening parenthesis is never followed by a blank, and a closing one is never preceded by a blank.
+Here an opening round bracker is never followed by a blank, and a closing one is never preceded by a blank.
 
-A lambda expression with more than one argument should be written like this, according to the rules above:
+\subsubsection{Lambda Expressions}
+According to the rules above, a lambda expression\index{lambda} with more than one argument should be written like this:
 \begin{lstlisting}
 final BiFunction f1 = ( a, b ) -> (a + b) * PI;
 final BiFunction f2 = ( a, _ ) -> a * PI;
 final BiFunction f3 = ( _, _ ) -> PI;
 \end{lstlisting}
 
-It was found that 
+But it was found that it is easier to read without the blanks in the parameter list,  at least for single-letter parameter names or the unnamed variable\index{unnamed variable} (the underscore that is provided instead of the parameter):
 \begin{lstlisting}
 final BiFunction f1 = (a,b) -> (a + b) * PI;
 final BiFunction f2 = (a,_) -> a * PI;
 final BiFunction f3 = (_,_) -> PI;
 \end{lstlisting}
-is better readable, at least for single-letter parameter names or the unnamed variable\index{unnamed variable} (the underscore that is provided instead of the parameter).
+
+So I suggest this style for lambda expressions.
 
 %==============================================================================
 % End of file!!

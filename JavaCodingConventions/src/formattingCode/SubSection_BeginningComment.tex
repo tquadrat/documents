@@ -3,8 +3,8 @@ A Java project will not consist from Java source files only; aside the already m
 
 All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}, if possible at all: it should be obvious that it is sometimes difficult to add this kind of information to a binary resource like an image or a sound file.
 
-For a Java file (a file with a name ending on \lstinline|*.java|), that beginning comment looks like this:
-\begin{lstlisting}[numbers=left,caption={Beginning Comment for a Java File}]
+For a Java file (a file with a name ending on \verb#*.java#), that beginning comment looks like this:
+\begin{lstlisting}[numbers=left,caption={Beginning Comment for a Java file}]
 /*
  * ==================================================================
  * Copyright © <Year> <Copyright Notice>
@@ -12,15 +12,12 @@ For a Java file (a file with a name ending on \lstinline|*.java|), that beginnin
  *
  * <License Notice>
  */
-
 \end{lstlisting}
 
 The same comment block can be used for Groovy\index{Groovy} source files, Kotlin\index{Kotlin} source files, Gradle\index{Gradle} build files (\lstinline|build.gradle|\index{build.gradle}) and generally for all file formats that uses the pattern \lstinline|/* … */| for comments.
 
-####################\\\
-
-A \textit{resource} file has the following form: 
-\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment Resource file}]
+A \textit{resource} file\index{resource file}\autocite{ORACLE_DOC_RESOURCEBUNDLE_CLASS} can have XML format or it may contain simple key-value pairs. In the latter form, comments are prepended with the hash symbol (``\verb|#|''), and the beginning comment has the following form: 
+\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment for a Resource or a Script file}]
 #
 # ===================================================================
 # Copyright © <Year> <Copyright Notice>
@@ -30,8 +27,10 @@ A \textit{resource} file has the following form:
 #
 \end{lstlisting}
 
-Or for an XML file\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|; here it is not starting on line~1.}:
-\begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment XML}]
+Obviously, this can be used for all other file formats that use the same comment style, like Unix shell scripts\index{shell script}.
+
+For a resource file in XML\index{XML} format\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|, so it is not starting on line~1. That's similar for HTMl files.} (or any other XML file that is part of the sources), as well as for HTML\index{HTML} files, the beginning comment would look like this:
+\begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment for XML and HTML files}]
 <!--
 =====================================================================
  Copyright © <Year> <Copyright Notice>
@@ -41,11 +40,28 @@ Or for an XML file\footnote{For an XML file, the beginning comments follows the 
 -->
 \end{lstlisting}
 
-\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \copyright~ is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
+\TeX/\LaTeX\index{TeX}\index{LaTeX} uses the per cent sign (``\verb#%#'') to indicate a comment. So the beginning comment for a \TeX/\LaTeX\index{TeX}\index{LaTeX} source file would be like this:
+\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment Resource file}]
+%
+% ===================================================================
+% Copyright © <Year> <Copyright Notice>
+% ===================================================================
+%
+% <License Notice>
+%
+\end{lstlisting}
 
-The lines with the equals signs (“===”) will end at column~80; refer to chapter \tqfullvref{sec:LineLength}.\footnote{Keep in mind that in this document the line length is set to 70~columns.}
+\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \bdq{\copyright} is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
 
-No other information should be added to this comment block.
+The lines with the equals signs (“===”) will end at column~80; refer to chapter \tqfullvref{sec:LineLength}.\footnote{Keep in mind that in this document the line length is set to 70~columns; this means that you cannot just copy and paste the comment blocks into your development environment.}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Each file that is part of the sources for the program/application to build should have a beginning comment.}
+\item{That beginning comment must contain the copyright notice with the year and the copytight holder.}
+\item{It should contain a license notice (either the license itself or a reference to it).}
+\item{No other information should be added to this comment block.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

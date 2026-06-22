@@ -1,0 +1,51 @@
+\subsection{Import Statements}\label{sec:ImportStatements}
+Usually several \lstinline|import| statements will follow the \lstinline|package| statement. Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package. But interfaces with only one method (a so-called \bdq{functional interface}\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION}\index{functional interface}) may not need any imports at all, same for \bdq{marker interfaces} that does not declare any methods at all. Sometimes you may have also (abstract) parent classes without methods that do not need any \lstinline|import| statements, too.
+
+But in general, that part of a source file would look like this:
+\index{java.lang!String}\index{java.lang!String!format()}\index{java.lang!System}\index{java.lang!System!out}\index{java.awt.peer!CanvasPeer}\index{java.io!InputStream}
+\begin{lstlisting}
+import static java.lang.String.format;
+import static java.lang.System.out;
+…
+
+import java.awt.peer.CanvasPeer;
+import java.io.InputStream;
+…
+\end{lstlisting}
+Static imports (for methods and constants) have to be placed before the imports for classes. Inside these blocks, the imports should be ordered alphabetically.
+
+Wildcard imports like
+\begin{lstlisting}
+import static java.lang.String.*;
+…
+
+import java.util.*;
+…
+\end{lstlisting}
+are not allowed and should not even be used for throwaway code. 
+
+Eclipse users can use the function \verb#Source|Organize Imports# from the menu, or the short-key \verb#Shift+Ctrl+O#. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this is properly configured in the \verb#preferences# at \verb#Java|Code Style|Organize Imports#.
+
+At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
+
+Java~25 introduced a new feature, called \textit{Module Import Declarations}\autocite{JEP511}. It allows to import all public classes and interfaces of a module with a single statement: 
+\begin{lstlisting}
+…
+import module java.base;
+…
+\end{lstlisting}
+As it can cause ambiguities, module imports should be avoided.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Place \lstinline|static| imports before non-static ones.}
+\item{Sort the \lstinline|import| statements alphabetically.}
+\item{Do never use wildcard imports.}
+\item{Don't use module imports.}
+\item{Remove unused imports. If an import is only required because of a Javadoc reference, change the Javadoc reference to use the fully qualified class name and remove the import.}
+\end{enumerate}
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -1,0 +1,29 @@
+\subsection{Placement of Declarations}
+
+A declaration should be placed as close to the location where it is needed. This is mainly relevant for local variables, It means that you should wait with the declaration of variables until their first use, in particular when you need the result of an calculation for the initialisation. The \bdq{Code Conventions for the \Java Programming Language}\autocite{SUN_CODE_CONVENTIONS:Placement} recommends to put the declaration only to the beginning of a block.
+
+For small blocks (this includes small method bodies), there is not much difference. Nevertheless, I find the Sun Code Conventions recommendation impractical, and I cannot follow the reasoning for that recommendation\footnote{To wait until first use \bdq{[…] can confuse the unwary programmer and hamper code portability within the scope}.}.
+
+Some samples:
+\begin{lstlisting}
+for( var i = 0; i < limit; ++i )
+{
+    final var a = getValue( i );
+    …
+}
+\end{lstlisting}
+You declare the local variable even inside a loop; only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when possible:
+\begin{lstlisting}[numbers=left]
+// AVOID!
+for( var i = 0; i < limit; ++i )
+{
+    final var a = new VeryComplexImmutableType();
+    …
+}
+\end{lstlisting}
+In this case, line~4 should be moved before the loop header (before line~2).
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

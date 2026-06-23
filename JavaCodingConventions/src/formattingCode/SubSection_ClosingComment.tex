@@ -1,0 +1,36 @@
+\subsection{Closing Comment}\label{sec:ClosingComment}
+A closing comment like this, for a Java source file,
+\begin{lstlisting}[numbers=left, caption={Closing Comment for a Java file}]
+/*
+ *  End of File
+ */
+\end{lstlisting}
+at the end of the source file is helpful to detect whether a source file was corrupted: if missing, there is a good chance that the file is incomplete.
+
+I confess that this kind of error has got very unlikely with modern hard-drives and SSD, but it can still happen when sending around sources over the net.
+
+Below samples of closing comments for some of the most common file types that appear as sources within a Java project, in addition to \verb#*.java# files; just be creative for other file types.
+
+\clearpage
+For a resource file\index{resource file}\index{properties file}, the closing comment has the following form: 
+\begin{lstlisting}[numbers=left,language=,caption={Closing Comment for a resource or a script file}]
+#
+# End of File
+#
+\end{lstlisting}
+
+And for an XML\index{XML} or HTML\index{HTML} file:
+\begin{lstlisting}[numbers=left,language=XML,caption={Closing Comment for a HTML or an XML file}]
+<!--
+End of File
+-->
+\end{lstlisting}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Each source file must have a closing comment, where feasible.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

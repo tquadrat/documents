@@ -1,0 +1,35 @@
+\subsection{Multiple Declarations per Line}
+For local variables, it is possible to have multiple declarations in one single line, and the compiler does also not complain when you do this for attributes, too, but there it is even worse than for local variables.
+
+So you should avoid the following:
+\begin{lstlisting}
+// AVOID!!!
+int level, size;
+\end{lstlisting}
+
+It is strongly encouraged to have only one declaration per line, as it is also comforting to add some comments to the declaration. In other words, 
+\begin{lstlisting}
+int level; // indentation level
+int size;  // size of table
+\end{lstlisting}
+
+is preferred over the sample above.
+
+And by no means, you may put different types on the same line, despite the compiler does not complain about it. Example:
+\begin{lstlisting}
+// REALLY BAD!!!
+int foo, fooarray [];
+\end{lstlisting}
+
+Adding comments to local variables should not be necessary if you name them appropriately (refer to \tqfullvref{sec:NamesForLocalVariables}). For attributes, the respective Javadoc comment (see \tqfullvref{sec:DocumentationComments}) is mandatory.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{One declaration per line.}
+\item{Comments for local variables are optional.}
+\item{Documentation comments for attributes and constants are mandatory.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

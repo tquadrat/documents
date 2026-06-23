@@ -13,58 +13,8 @@
 \include{introduction/Chapter}
 \include{formattingCode/Part}
 
-%------------------------------------------------------------------------------
-
-\subsection{Closing Comment}\label{sec:ClosingComment}
-A closing comment like this, for a Java source file,
-\begin{lstlisting}[numbers=left, caption={Closing Comment Java}]
-/*
- *  End of File
- */
-\end{lstlisting}
-at the end of the source file is helpful to detect whether a source file was corrupted: if missing, there is a good chance that the file is incomplete.
-
-I confess that this kind of error has got very unlikely with modern hard-drives, but it can still happen when sending around sources over the net.
-
-For a resource file, the closing comment has the following form: 
-\begin{lstlisting}[numbers=left,language=,caption={Closing Comment Resource}]
-#
-# End of File
-#
-\end{lstlisting}
-
-And for an XML file:
-\begin{lstlisting}[numbers=left,language=XML,caption={Closing Comment XML}]
-<!--
-End of File
--->
-\end{lstlisting}
 
 %------------------------------------------------------------------------------
-
-\section{Declarations}
-This chapter describes how to format declarations of various. See chapter \tqfullvref{sec:WrappingLines} for informations on how to break up the lines for long declarations.
-
-\subsection{Multiple Declarations per Line}
-For local variables, it is possible to have multiple declarations in one single line\footnote{The compiler does also not complain when you do this for fields, but there it is even more worse.}:
-\begin{lstlisting}
-// AVOID!!!
-int level, size;
-\end{lstlisting}
-
-It is strongly encouraged to have only one declaration per line, as it is also comforting to add some comments to the declaration. In other words, 
-\begin{lstlisting}
-int level; // indentation level
-int size;  // size of table
-\end{lstlisting}
-
-is preferred over the sample above.
-
-Do not put different types on the same line, despite the compiler does not complain about it. Example:
-\begin{lstlisting}
-// REALLY BAD!!!
-int foo, fooarray [];
-\end{lstlisting}
 
 \subsection{Array Declarations}
 The brackets for an array declaration always have to be put to the type, not to the name. So it should read
@@ -84,30 +34,6 @@ This is the same way as an array has to be declared as the return value for a me
 \begin{lstlisting}
 public final static String [] getTexts() { return m_Texts; }
 \end{lstlisting}
-
-\subsection{Placement of Declarations}
-You should put declarations for local variables where there are needed; usually this means that it should be waited with the declaration of variables until their first use, in particular when you need the result of an calculation for the initialisation. The Sun Code Convention\autocite{SUN_CODE_CONVENTIONS:Placement} recommends to put the declaration only to the beginning of a block.
-
-For small blocks (this also means small method bodies), there is not much difference. Nevertheless, I find the Sun Code Conventions recommendation impractical, and I cannot follow the reasoning for that recommendation\footnote{To wait until first use “[…] can confuse the unwary programmer and hamper code portability within the scope”.}.
-
-Some samples:
-\begin{lstlisting}
-for( var i = 0; i < limit; ++i )
-{
-    final var a = getValue( i );
-    …
-}
-\end{lstlisting}
-You declare the local variable even inside a loop; only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when possible:
-\begin{lstlisting}[numbers=left]
-// AVOID!
-for( var i = 0; i < limit; ++i )
-{
-    final var a = new VeryComplexImmutableType();
-    …
-}
-\end{lstlisting}
-In this case, line~4 should be moved before the loop header (line~2).
 
 %------------------------------------------------------------------------------
 

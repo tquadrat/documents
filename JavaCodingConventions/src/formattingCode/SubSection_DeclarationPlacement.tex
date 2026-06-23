@@ -2,9 +2,100 @@
 
 A declaration should be placed as close to the location where it is needed. This is mainly relevant for local variables, It means that you should wait with the declaration of variables until their first use, in particular when you need the result of an calculation for the initialisation. The \bdq{Code Conventions for the \Java Programming Language}\autocite{SUN_CODE_CONVENTIONS:Placement} recommends to put the declaration only to the beginning of a block.
 
-For small blocks (this includes small method bodies), there is not much difference. Nevertheless, I find the Sun Code Conventions recommendation impractical, and I cannot follow the reasoning for that recommendation\footnote{To wait until first use \bdq{[…] can confuse the unwary programmer and hamper code portability within the scope}.}.
+For small blocks (this includes small method bodies), there is not much difference. Nevertheless, I find the Sun Code Conventions recommendation impractical, and I cannot follow the reasoning for that recommendation (to wait until first use \bdq{[…] can confuse the unwary programmer and hamper code portability within the scope}). Even when \bdq{code portability} should mean \bdq{cut-and-paste} having the declaration close by would be an advantage.
 
-Some samples:
+So \textit{do not} declare the local variables like this:
+\index{java.lang!String}\index{java.lang!IllegalArgumentException}\index{java.util!Map}
+\begin{lstlisting}
+// AVOID!!
+public final void myComplexMethod( final String arg )
+{
+	final String a1;
+	final String a2;
+	final int a3;
+	final double a4;
+	final Map<String,String> a5;
+	
+	if( isNull( arg ) ) throw new IllegalArgumentException( "arg is null" );
+	
+	// 50 lines of code before a1, a2, and a3 are initialised …
+	…
+	// 20 lines of code before a2 is used and a3 is initialised …
+	…
+	// 30 lines of code before a3 and a4 are used …
+	…
+	// 20 lines of code before a5 is initialised and used …
+	…
+}
+\end{lstlisting}
+
+The preferred pattern is similar to this:
+\index{java.lang!String}\index{java.lang!IllegalArgumentException}\index{java.util!Map}\index{java.util!HashMap}
+\begin{lstlisting}
+// AVOID!!
+public final void myComplexMethod( final String arg )
+{
+	if( isNull( arg ) ) throw new IllegalArgumentException( "arg is null" );
+	
+	// 50 lines of code before a1, a2, and a3 are initialised …
+	final var a1 = getInitialValueForA1();
+	final var a2 = getInitialValueForA2();
+	final var a3 = 0;
+	
+	…
+	// 20 lines of code before a2 is used and a3 is initialised …
+	final var a4 = getValueForA4( a2 );
+
+	…
+	// 30 lines of code before a3 and a4 are used …
+	…
+	// 20 lines of code before a5 is initialised and used …
+	final Map<String,String> a5 = new HashMap<>()
+	…
+}
+\end{lstlisting}
+
+Placing the declaration close to its first use would also allow to limit the scope of a variable. This can help to prevent the pollution of the namespace with too many local variables as this could happen quickly when using lambda expressions\index{lambda}:
+\begin{lstlisting}
+// AVOID!!
+var i = 0;
+
+final var i1 = ++i;
+final IntFunction f1 = arg -> arg + i1;
+
+final var i2 = ++i;
+final IntFunction f2 = arg -> arg + i2;
+
+final var i3 = ++i;
+final IntFunction f3 = arg -> arg + i3;
+\end{lstlisting}
+
+should be written like this instead:
+\index{java.util!function!IntFunction}
+\begin{lstlisting}
+var i = 0;
+
+final IntFunction f1;
+{
+	final var x = ++i;
+	f1 = arg -> arg + x;
+}
+
+final IntFunction f2;
+{
+	final var x = ++i;
+	f2 = arg -> arg + x;
+}
+
+final IntFunction f3;
+{
+	final var x = ++i;
+	f3 = arg -> arg + x;
+}
+\end{lstlisting}
+
+Declaring and initialising a local variable inside a loop is even perfectly ok, as long as the initial value is different for each loop cycle:
+
 \begin{lstlisting}
 for( var i = 0; i < limit; ++i )
 {
@@ -12,7 +103,8 @@ for( var i = 0; i < limit; ++i )
     …
 }
 \end{lstlisting}
-You declare the local variable even inside a loop; only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when possible:
+
+Only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when the value does not change:
 \begin{lstlisting}[numbers=left]
 // AVOID!
 for( var i = 0; i < limit; ++i )
@@ -21,8 +113,23 @@ for( var i = 0; i < limit; ++i )
     …
 }
 \end{lstlisting}
-In this case, line~4 should be moved before the loop header (before line~2).
+In this case, line~4 should be moved before the loop header (before line~2):
+\begin{lstlisting}
+final var a = new VeryComplexImmutableType();
+for( var i = 0; i < limit; ++i )
+{
+    …
+}
+\end{lstlisting}
 
+And yes, \lstinline|final var a = …| inside the loop body is valid!
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Declarations should be placed a close to the location where it is first used.}
+\item{Limit the scope as much as possible.}
+\item{Declaring a local variable inside a loop does not harm, but repeated initialising it with the \textit{same} value would do.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

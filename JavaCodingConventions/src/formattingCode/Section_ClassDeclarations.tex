@@ -1,4 +1,63 @@
 \section{Class Declarations}
+
+In \tqfullvref{sec:ClassAndInterfaceDeclarations} we already described the general structure of declarations for \Java classes, interfaces, enums, records, and annotations, while the use of blanks, round brackets, curly braces and linefeeds was discussed in \tqfullvref{sec:WhiteSpace}.
+
+Based on that, the declaration for a class, interface or enum starts with the respective Javadoc comment for the type, followed by the annotations for it, if any, and the line setting the name for the type, as well as the base class and implemented interfaces.
+
+If the type is sealed, the \lstinline|permits| line follows, before the next line with the opening curly brace.
+
+Basically the declaration for a record looks the same, but because it declares the attributes also on that first line, that could be longer and may require to be wrapped.
+
+Some samples\footnote{The Javadoc comments were omitted here for brevity.}:
+\begin{lstlisting}
+public final class MySimpleClass
+{
+    …
+\end{lstlisting}
+
+\begin{lstlisting}
+public interface MyInterface
+{
+    …
+\end{lstlisting}
+ 
+\begin{lstlisting}
+public enum MyEnum
+{
+    …
+\end{lstlisting}
+
+\index{java.lang!String}
+\begin{lstlisting}
+public final class MyRecord( String name, int age, boolean retirementStatus )
+{
+    …
+\end{lstlisting}
+ 
+\index{java.lang!Serializable} 
+\begin{lstlisting}
+public final class MyClass extends MyBaseClass implements MySealedInterface, Serializable
+{
+    …
+\end{lstlisting}
+
+\index{java.lang!String}\index{java.util!List}
+\begin{lstlisting}
+public sealed class MySealedInterface extends List<String>
+    permits MyClass
+{
+    …
+\end{lstlisting}
+
+\index{java.lang!FunctionalInterface}
+\begin{lstlisting}
+@FunctionalInterface
+public interface MyFunctionalInterface
+{
+    …
+\end{lstlisting}
+ 
+
 When coding \Java classes, interfaces, enums, records, and annotations, you should follow the guidelines below:
 
 

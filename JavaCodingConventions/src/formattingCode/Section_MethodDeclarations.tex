@@ -1,0 +1,80 @@
+\section{Method Declarations}
+The declaration of methods is described in the \jls, and there at two locations: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsClass} for classes and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface} for interfaces.
+
+The formatting is quite simple and straight forward: a method\footnote{All this is also valid for constructors\index{constructor}; in regard of formatting, they are just a special kind of a method} starts with the Javadoc comment followed by the line with the method's signature.
+
+If the method is not abstract, the body follows. If that body is short or empty, it can be placed on the same line, otherwise the opening curly braces follows on the next line, with the same indentation level as the line with the signature. The next line(s) have the code of the body, indented by one level, and finally the closing curly braces with a comment repeating the name of the method, with the same indentation level as the opening curly brace.
+
+As said, short methods may be written in one single line. In this case, \bdq{one single line} means exactly that: \textit{one single} line! Any line break requires the full form.
+
+A method with an empty body could be treated as very short methods, but usually you provide a comment instead of code.
+
+Some samples\footnote{I omitted the Javadoc comments from the samples for brevity.}:
+\index{java.lang!String}
+\begin{lstlisting}
+public static final void main( final String... args ) 
+{
+    // Do something …
+}   // main()
+
+public MyClass( final String arg )
+{
+	m_Arg = arg;
+}	//	MyClass()
+\end{lstlisting}
+
+For an \lstinline|interface|:
+\index{java.lang!String}
+\begin{lstlisting}
+// For an interface:
+public void myAbstractMethod( final String... args );
+
+// For a class:
+public abstract void myAbstractMethod( final String... args );
+\end{lstlisting}
+
+\index{java.lang!String}
+\begin{lstlisting}
+public String myString() { return m_String; }
+\end{lstlisting}
+
+\index{java.lang!String}
+\begin{lstlisting}
+public String myMountPoint( final String arg ) {}
+
+// BETTER:
+public String myMountPoint( final String arg ) 
+{
+	/* This implementation does nothing! */
+}   //	myMountPoint()
+\end{lstlisting}
+
+According to what we said already in \tqfullvref{sec:WhiteSpace}, there is no space between a method or constructor name and the opening round bracket (\bdq{(}) starting its formal parameters list. Basically the parenthesis in the declaration are \bdq{Parameter Round Brackets} and should be treated along the same lines as for method and constructor \textit{calls}; refer to \tqvref{sec:ParameterParenthesis}.
+
+Some modifiers are obsolete and/or redundant under some circumstances, but I recommend to add them anyway\footnote{Remember \ngref  \hyperref[lst:ZoP:ExplicitVsImplicit]{bullet point 2}: Verbosity is your friend.}
+
+\begin{itemize}
+\item{All methods of an \lstinline|interface| are public (add \lstinline|public| anyway). If not static or default, they are all abstract, but that modifier is not allowed in an interface.}
+\item{A private method is automatically final, but add \lstinline|final| nevertheless. Same for static methods.}
+\item{Of course all methods of a final class are final, but you will add \lstinline|final| to each method.}
+\item{A package-private method does not have an explicit modifier\footnote{It is not private, not public and not protected.} Add a comment instead:
+\begin{lstlisting}
+/*package-private*/ String myPackagePrivateMethod() { … }
+\end{lstlisting}}
+\end{itemize}
+
+The method's parameters are described in the respective Javadoc comment for the method. Adding comments to the parameter in the signature does not make much sense.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{No blanks between the method's name and the opening round bracket. Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{\textit{Really short} methods can be written in \textit{one single line}. Otherwise, the opening and the closing curly braces are on lines of their own, with the same indentation as the signature.}
+\item{The method body is indented one level relative to the curly braces.}
+\item{A single blank line separates the methods and constructors from each other (see chapter \tqfullref{sec:BlankLines}.}
+\item{Keep redundant modifiers for verbosity.}
+\item{If a method has more than one line, there is always a comment repeating the method's or constructor's name after the closing curly brace.} 
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

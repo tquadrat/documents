@@ -1,0 +1,107 @@
+\subsection{\bsq{if}, \bsq{if-else}, \bsq{if-else~if-else} Statements}\label{sec:IfStatements}
+The base forms for the \lstinline|if| statement are the following ones:
+\begin{itemize}
+\item{This is the simplest form that does not have an \lstinline|else| clause:
+\begin{lstlisting}
+if( <condition> )
+{
+    <statements>;
+}
+\end{lstlisting}
+It allows to omit the curly braces (“\{\}”) when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
+\begin{lstlisting}
+if( <condition> ) <singleStatement>;
+\end{lstlisting}}
+
+\item{With an \lstinline|else| clause, the curly braces (“\{\}”) are always mandatory:
+\begin{lstlisting}
+if( <condition>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+\end{lstlisting}
+Even if may fit into a single line, do not write an \verb#if-else# statement like below:
+\begin{lstlisting}
+// STRONGLY DISCOURAGED!!!
+if( <condition> ) <singleStatement>; else <otherStatement>;
+\end{lstlisting}}
+
+\item{In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use this form:
+\begin{lstlisting}
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+\end{lstlisting}}
+
+\item{Same as before, but with a final \lstinline|else| clause: 
+\begin{lstlisting}
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+else
+{
+    <statements>;
+}
+\end{lstlisting}
+Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.}
+
+\item{Avoid an empty code block:
+\begin{lstlisting}
+// AVOID!!!
+if( <condition>)
+{ /* Empty! */ }
+else
+{
+    <statements>;
+}
+\end{lstlisting}
+
+Instead negate the condition and place the statements to the “then” block:
+\begin{lstlisting}
+// BETTER
+if( !<condition>)
+{
+    <statements>;
+}
+\end{lstlisting}}
+\end{itemize}
+
+As said already above, an \lstinline|if| statement does not need the curly braces (“\{\}”) only if there is just a single statement on the same line as the \lstinline|if| clause, and if there is no \lstinline|else| clause:
+\begin{lstlisting}
+if( <condition> ) <singleStatement>;
+\end{lstlisting}
+
+In any other case the curly braces \textit{are always required}, to avoid the following error-prone forms:
+\begin{lstlisting}
+// AVOID! MISSING CURLY BRACES {}!
+if( <condition> )
+    <statement>;
+
+// AVOID!!! EVEN WORSE THAN ABOVE!!    
+if( <condition> )
+    <statement>;
+else
+    <statement>;
+\end{lstlisting}
+
+If the \lstinline|if| statement takes more than one single line, curly braces have to be used around all statements, even if there is just one. This makes it easier to add statements without accidentally introducing bugs due to forget adding braces.
+
+Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “\verb#?#” operator.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

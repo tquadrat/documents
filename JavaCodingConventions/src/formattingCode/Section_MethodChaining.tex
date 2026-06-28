@@ -1,0 +1,58 @@
+\section{Method Chaining}
+Some APIs are designed to allow \bdq{method chaining}\index{method chaining}, sometimes also referred as \bdq{Call Chaining}\index{call chaining|see {method chaining}}; you may find this in particular for implementations of the \bdq{builder} pattern\index{builder pattern}, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder} (obviously not a builder), an example for a builder class would be the class \lstinline|java.time.format.DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}\index{java.time.format!DateTimeFormatterBuilder}.
+
+A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory for the use of method chaining, as shown in the code snippet below\footnote{The example will be explained in detail in chapter \tqref{sec:LocalVariableTypeInference}}:
+
+\index{java.util!Map}\index{java.util!Map!Entry}\index{java.util!Optional}\index{java.util!Stream}
+\begin{lstlisting}
+return strings.stream()
+    .collect( groupingBy( s -> s, counting() ) ) // returns java.util.Map
+    .entrySet() 
+    .stream()
+    .max( Map.Entry.comparingByValue() ) // returns java.util.Optional
+    .map( Map.Entry::getKey );
+\end{lstlisting}
+
+Method chaining allows you to write
+
+\index{java.io!Writer}
+\begin{lstlisting}
+writer.append( "Caption\t: " ).append( value );
+\end{lstlisting}
+
+instead of
+
+\index{java.io!Writer}
+\begin{lstlisting}
+writer.append( "Caption\t: " );
+writer.append( value );
+\end{lstlisting}
+
+If the \bdq{chain} does not fit completely into a single line, each method call has to be written into a single line of its own.
+
+In fact, it is recommended to do this all the time:
+\begin{lstlisting}
+// Acceptable
+writer.append( "Caption\t: " ).append( value );
+
+// RECOMMENDED
+writer.append( "Caption\t: " )
+    .append( value );
+\end{lstlisting}
+
+The dot has to be written in front of the method's name and the methods will be indented regularly.
+
+The streams that had been introduced with Java~8 will be formatted in the same way:
+\index{java.util!Stream}
+\begin{lstlisting}
+final var names = customers.stream()
+    .filter( c -> c.getCountry().equals( GERMANY )
+    .filter( c -> c.getTurnover() > limit )
+    .map( Customer::getName )
+    .sorted()
+    .toArray( String []::new );
+\end{lstlisting}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

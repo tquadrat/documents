@@ -4,11 +4,11 @@ In \tqfullvref{sec:ClassAndInterfaceDeclarations} we already described the gener
 
 Based on that, the declaration for a class, interface or enum starts with the respective Javadoc comment for the type, followed by the annotations for it, if any, and the line setting the name for the type, as well as the base class and implemented interfaces.
 
-If the type is sealed, \lstinline|permits| is placed on the following line, with the default indentation, before finally the line with the opening curly brace follows.
+If the type is sealed\index{sealed}, the \lstinline|permits|\index{permits} clause is placed on the following line, with the default indentation, before finally the line with the opening curly brace follows.
 
 Basically the declaration for a record looks the same, but because it declares the attributes also on that first line, that could be longer and may require to be wrapped.
 
-Each type ends with a comment after the closing curly brace, repeating the name and kind of the type.
+Each type ends with a comment after the closing curly brace, followed by a comment line repeating the name and kind of the type.
 
 Some samples\footnote{I omitted the Javadoc comments from the samples for brevity.}:
 \begin{lstlisting}
@@ -19,8 +19,9 @@ public final class MySimpleClass
 //  class MySimpleClass
 \end{lstlisting}
 
+\index{java.lang!CharSequence}
 \begin{lstlisting}
-public interface MyInterface
+public interface MyInterface<T extends CharSequence>
 {
     …
 }
@@ -81,121 +82,21 @@ public @interface MyAnnotation
 //  @interface MyAnnotation
 \end{lstlisting}
 
-When coding \Java classes, interfaces, enums, records, and annotations, you should follow the guidelines below:
+Inner classes\footnote{…, interfaces, enums, records, and annotations – although the latter are rarely defined as inner classes} will follow the same pattern, but with an additional level of indentation. Inner classes are discussed in detail in chapter \tqvref{sec:InnerClasses}.
 
+The elements of the class (inner classes, constants, attributes, constructors, methods, …) are all separated from each other by a single blank line (see chapter \tqfullvref{sec:BlankLines}.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{.}
-\item{.}
-\item{.}
+\item{Only one public top-level class (interface, record, enum, …) per compilation unit. Avoid non-public top-level classes.}
+\item{Group the parts of the class as shown in \tqvref{sec:ClassAndInterfaceDeclarations}. Remove the comments for unused sections.}
+\item{Place each class annotation on a line of its own.}
+\item{The \lstinline|permits|\index{permits} gets a line of its own, too.}
+\item{No blank before the opening angle bracket for a type variable. No blanks after a comma inside the angle brackets.}
+\item{The opening curly brace is again on a line of its own.}
+\item{The closing curly brace is followed by a line with a comment repeating type and name of the class.}
+\item{A single blank line separates the elements of a class (see chapter \tqfullref{sec:BlankLines}.}
 \end{enumerate}
-
-
-
-
-
-
-
-
-\begin{itemize}
-\item{No space between a method or constructor name and the opening parenthesis “(” starting its formal parameters list. Basically the parenthesis in the declaration are “paramater parenthesis” and should be treated along the same lines as for method and constructors calls; refer to chapter “\nameref{sec:ParameterParenthesis}” on page~\pageref{sec:ParameterParenthesis}.
-
-Example:
-\begin{lstlisting}
-// WRONG!!
-public abstract void myMethod (final int param);
-
-// CORRECT
-public abstract void myMethod( final int param );
-\end{lstlisting}}
-
-\item{If using generics, no space between the name of the declared class or interface and the opening “\textless”, and no blanks between the angle brackets, only around the keywords \lstinline|super| and \lstinline|extends|. Same when using the class or interface later.
-
-Example:
-\begin{lstlisting}
-// WRONG
-public interface MyInterface < T >
-{ 
-    … 
-}
-//  interface MyInterface
-
-public OtherInterface < T, R > extends Function < T, R >, MyInterface < T >
-{
-    …
-    
-    public < U super T > U myMethod( final T arg );
-}
-//  interface OtherInterface
-
-public MyClass implements otherInterface < Instant, String >
-{
-    …
-}
-//  class MyClass
-
-// CORRECT
-public interface MyInterface<T>
-{ 
-    … 
-}
-//  interface MyInterface
-
-public OtherInterface<T,R> extends Function<T,R>, MyInterface<T>
-{
-    …
-    
-    public <U super T> U myMethod( final T arg );
-}
-//  interface OtherInterface
-
-public MyClass implements otherInterface<Instant,String>
-{
-    …
-}
-//  class MyClass
-\end{lstlisting}}
-
-\item{An opening curly brace “\{” appears at a line by itself on the same indentation level as the declaration statement; anything afterwards will be indented with one additional level.
-
-The corresponding closing curly brace “\}” starts a new line, indented to match its corresponding opening statement. For classes or interfaces, the name of the class or interface is repeated in a new line after the closing brace.
-
-Example:\footnote{I omitted the structuring comments here; refer to chapters \tqfullvref{sec:ClassAndInterfaceDeclarations} and \tqfullvref{sec:StructuringComments}. And the bad sample is \textit{really} bad!}
-\index{java.time!Instant!now()}\index{java.time!Instant!toString()}
-\begin{lstlisting}
-// AVOID!!
-public final class MyClass {
-public static InnerClass {
-public final String innerMethod {
-return Instant.now().toString(); } }
-public static final void main( final String... args ) {
-System.out.println( new InnerClass().innerMethod() ); } }
-
-// RECOMMENDED
-public final class MyClass 
-{
-    public static InnerClass 
-    {
-        public final String innerMethod 
-        {
-            return Instant.now().toString(); 
-        }   //  innerMethod()
-    }
-    //  class InnerClass
-    
-    public static final void main( final String... args ) 
-    {
-        System.out.println( new InnerClass().innerMethod() ); 
-    }   // main()
-}
-//  class MyClass    
-\end{lstlisting}
-Both versions compile properly, can be executed and will return the same result ~…}
-
-\item{Inner classes, constants, attributes, constructors, methods, they all are separated from each other by a  single blank line (see chapter \tqfullref{sec:BlankLines}.}
-\end{itemize}
-
 
 %==============================================================================
 % End of file!!

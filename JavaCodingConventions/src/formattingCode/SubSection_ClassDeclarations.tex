@@ -1,7 +1,9 @@
 \subsection{Class and Interface Declarations}\label{sec:ClassAndInterfaceDeclarations}
-Each Java source file contains at least one top level class or interface declaration; in most cases, it is just one. And it is strongly discouraged that it would be more than one!
+Each Java source file\footnote{… or compilation unit\index{compilation unit}} contains at least one top level class or interface declaration; in most cases, it is just one. And it is strongly discouraged that it would be more than one!
 
 Only one of these top level classes or interfaces can be \lstinline|public|, the others have to be package-local (meaning the modifiers \lstinline|private| and \lstinline|protected| are not allowed). If you really have more than one class in a single source file, the \lstinline|public| one should be the first entry, all others will follow, sorted alphabetically by their names.
+
+With the JPMS\index{JPMS|see {Java Platform Module System}}\index{Java Platform Module System} (Java Platform Module System) the need for non-public top-level classes got nearly obsolete and they should be avoided.
 
 If you need classes or interfaces that are closer related to a top-level class, you should consider to define these as \textit{inner} classes or interfaces. Inner classes can be \lstinline|public|, \lstinline|private| or \lstinline|protected|. An inner class is part of the top level class, but when defined as \lstinline|static|, it can be used independently from the enclosing class.
 
@@ -84,7 +86,7 @@ public class MyClass
   
   The fields should be initialised in a \lstinline|static {...}| block, not through an immediate initialiser.
   
-  This is also the right place for the serialVersionUID of a seria­lisable class. \\ 
+  This is also the right place for the \lstinline|serialVersionUID|\index{serialVersionUID} of a seria­lisable\index{java.lang!Serializable} class. \\ 
   \hline 
   Constructors (optional) & All the constructors for the class go into this part. Technically, it is optional if the class will have only an empty \lstinline|public| default constructor, but the recommendation is to code this, too. \\ 
   \hline 
@@ -327,6 +329,13 @@ public @interface MyAnnotation
  \end{longtable} 
 \end{filecontents}
 \LTXtable{\linewidth}{AnnotationParts.tbl}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Only one public top-level class (interface, record, enum, …) per compilation unit. Avoid non-public top-level classes.}
+\item{Group the parts of the class as shown above. Remove the comments for unused sections.}
+\end{enumerate}
+
 
 %==============================================================================
 % End of file!!

@@ -1,0 +1,49 @@
+
+\section{Compound Statements}\label{sec:CompoundStatements}
+Compound statements\index{compound statement} are statements that contain lists of statements enclosed in curly braces \lstinline|{ <statement, … > }|. A compound statement (also called a \bdq{code block}\index{code block|see {compound statement}} or \bdq{block statement}\index{block statement| see {compound statement}}) typically appears as the body of another statement, such as the \lstinline|if| or \lstinline|for| statements, but it may appear also on it own\footnote{In Java, a block also indicates a scope\index{scope}; a local variable lives only in the scope it was declared in, and all inner scopes contained in it.}.
+
+The block's opening curly brace \bdq{\{} appears alone at a line by itself with the same indentation as the statement it belongs to and the corresponding closing curly brace \bdq{\}} is placed at a new line with the same indentation. All code inside such a block is indented one level more than the curly braces.
+
+Large compound statements (long code blocks) should be marked with a label\index{label} and should get an end comment, like in the examples below: 
+\begin{lstlisting}
+ForeverLoop: while( true )
+{
+    … // Lots of lines
+}   //  ForeverLoop:
+
+CountrySelector: switch( countryCode )
+{
+    case DE: …
+    case EN: …
+    … // All the other countries
+    default: …
+}   //  CountrySelector:
+
+ProcessLoop: for( final var entry : entries )
+{
+    … // Lots of lines
+}   //  ProcessLoop:
+\end{lstlisting}
+
+You may have seen something like this in existing code:
+\begin{lstlisting}
+// NOT RECOMMENDED!
+if( thisConditionIsTrue )
+{
+	// Lots of lines
+	…
+}	//	if( thisConditionIsTrue ) 
+\end{lstlisting}
+As long as the \lstinline|if| clause (or whatever statement starts the block) will not change, this pattern serves the same purpose as my variant with the label. But when you change the \lstinline|if|, you have to modify the end comment accordingly – something that is forgotten much too often!
+
+As there is rarely a reason to change the label (the purpose of the block remains the same, no matter what the condition will be), it will not happen that the end comment will not match the start \bsq{comment} of the block.
+
+See the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen} for some additional details. 
+
+For more examples regarding the formatting of compound statements refer in particular to the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatements}, \tqfullref{sec:ForStatements}, and \tqfullref{sec:WhileStatements}.
+
+\input{formattingCode/SubSection_IfStatements}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

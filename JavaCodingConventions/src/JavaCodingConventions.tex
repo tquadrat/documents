@@ -13,307 +13,9 @@
 \include{introduction/Chapter}
 \include{formattingCode/Part}
 
-
 %------------------------------------------------------------------------------
 
-\subsection{Method Declarations}
-When coding Java classes and interfaces, you should follow the guidlines below:
-\begin{itemize}
-\item{The opening curly brace “\{” for the method body appears at a line by itself with the same indentation as the declaration statement and the corresponding closing curly brace “\}” starts a new line, indented to match its opening statement; in case of a method or constructor declaration, it is followed by a comment with the name of the method or the constructor.
-
-Everything inside the method body is indented one more level.
-
-That looks like this:
-\begin{lstlisting}
-public static final void main( final String... args ) 
-{
-    // Do something …
-}   // main()
-\end{lstlisting}}
-
-\item{All methods are separated by a blank line (see chapter \tqfullref{sec:BlankLines}.}
-
-\item{Short methods may be written in one single line. In this case, “one single line” means exactly that: \textit{one single} line! Any line break requires the full form as for the sample in line~10.
-
-An example:
-\begin{lstlisting}[numbers=left]
-// A SHORT METHOD
-    int getIVar1() { return ivar1; }
-    
-// AVOID!!! Not a short method!
-String composeKey( String component1, String component2,
-    String component3 ) { return component1 + component2 
-        + component3; }
-        
-// CORRECT
-String composeKey( String component1, String component2, 
-    String component3 )
-{
-    final var retValue = component1 + component2 + component3;
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  composeKey()
-\end{lstlisting}
-
-For a short method, you obviously do not add its name as a comment to the closing curly brace.}
-\end{itemize}
-
-%------------------------------------------------------------------------------
-
-\section{Statements}
-This chapter deals with the formatting of the various types of statements.
-
-\subsection{Simple Statements}
-Each line may contain at most one single statement. Or, the other way round, each (simple) statement has to be written to its own line.
-
-Example:
-\begin{lstlisting}
-// AVOID!!!
-++argv; --argc;
-
-// CORRECT
-++argv;
---argc;
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-\subsection{Compound Statements}\label{sec:CompoundStatements}
-Compound statements are statements that contain lists of statements enclosed in curly braces \lstinline|{ <statement, … > }|. A compound statement (also called a “code block“ or “block statement”) typically appears as the body of another statement, such as the \lstinline|if| or \lstinline|for| statement, but it may appear also separatly\footnote{In Java, a block also indicates a scope; a local variable lives only in the scope it was declared in, and all scopes contained in that one.}.
-
-The block's opening curly brace “\{” appears alone at a line by itself with the same indentation as the statement it belongs to and the corresponding closing curly brace “\}” is placed at a new line with the same indentation. All code inside such a block is indented one level more than the curly braces.
-
-Large compound statements (long code blocks) should be marked with a label and get an end comment, like in the example below: 
-\begin{lstlisting}
-ForeverLoop: while( true )
-{
-    … // Lots of lines
-}   //  ForeverLoop:
-
-CountrySelector: switch( countryCode )
-{
-    case DE: …
-    case EN: …
-    … // All the other countries
-    default: …
-}   //  CountrySelector:
-
-ProcessLoop: for( final var entry : entries )
-{
-    … // Lots of lines
-}   //  ProcessLoop:
-\end{lstlisting}
-See the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen} for some additional details. 
-
-For more examples regarding the formatting of compound statements refer in particular to the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatements}, \tqfullref{sec:ForStatements}, and \tqfullref{sec:WhileStatements}.
-
-%------------------------------------------------------------------------------
-
-\subsection{Method Chaining}
-Some APIs are designed to allow “method chaining”, sometimes also referred as “Call Chaining”; you may find this in particular on implementations of the “builder” pattern, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder} (obviously not a builder), an example for a builder class would be the class \lstinline|java.time.format.DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}\index{java.time.format!DateTimeFormatterBuilder}.
-
-A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory to use chaining.
-
-The example below will be explained in detail in chapter \tqref{sec:LocalVariableTypeInference}:
-\begin{lstlisting}
-return strings.stream()
-    .collect( groupingBy( s -> s, counting() ) ) // returns Map
-    .entrySet() 
-    .stream()
-    .max( Map.Entry.comparingByValue() ) // returns Optional
-    .map( Map.Entry::getKey );
-\end{lstlisting}
-
-As shown in the sample above, method chaining allows you to write
-
-\begin{lstlisting}
-writer.append( "Caption\t: " ).append( value );
-\end{lstlisting}
-
-instead of
-
-\begin{lstlisting}
-writer.append( "Caption\t: " );
-writer.append( value );
-\end{lstlisting}
-
-The formatting rules are as follows:
-\begin{itemize}
-\item{If the “chain” does not fit completely into a single line, each method call has to be written into a single line of its own.
-
-In fact, it is recommended to do this all the time:
-\begin{lstlisting}
-// Acceptable
-writer.append( "Caption\t: " ).append( value );
-
-// RECOMMENDED
-writer.append( "Caption\t: " )
-    .append( value );
-\end{lstlisting}}
-
-\item{The dot has to be written in front of the method's name.}
-
-\item{The methods will be indented regularly.}
-\end{itemize}
-
-The streams that had been introduced with Java~8 will be formatted in the same way:
-\begin{lstlisting}
-final var names = customers.stream()
-    .filter( c -> c.getCountry().equals( GERMANY )
-    .filter( c -> c.getTurnover() > limit )
-    .map( Customer::getName )
-    .sorted()
-    .toArray( String []::new );
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-\subsection{‘return’ and ‘yield’ Statements}
-The \lstinline|return| statement has to be the last statement of a method, while the \lstinline|yield|\index{yield} statement has to be the last statement of a \lstinline|case| block; refer to the chapter \tqfullvref{sec:ReturningValues} for more details on this.
-
-When \lstinline|return| is always the last statement of a method, it means that the simple form
-\begin{lstlisting}
-return;
-\end{lstlisting}
-is obsolete\footnote{\lstinline|yield|\index{yield} alone (without a return value) in a \lstinline|case| block will always cause a compiler error.}.
-
-The use of parentheses with the \lstinline|return| or \lstinline|yield|\index{yield} statement is not required unless they make the return value more obvious in some way.
-
-The recommended forms are shown in lines~15 and 22/23, below:
-\index{java.util!Arrays!stream()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.utils!StringUtils!abbreviate()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!length()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!collect()}\index{java.util.stream!Collectors!joining()}\index{org.tquadrat.foundation.exception!UnsupportedEnumError}
-\begin{lstlisting}[numbers=left]
-public final String myMethod( final InputType inputType, final String... input )
-{
-    InputSwitch: final var retValue = switch( inputType )
-    {
-        case null -> throw new NullArgumentException( "inputType" );
-        case FILE -> 
-        {
-            var result = stream( input )
-                .filter( String::isBlank )
-                .filter( s -> !s.startsWith( " " )
-                .collect( joining( "\n" );
-            result = result.length() > 80
-                ? abbreviate( result, 80 )
-                : result;
-            yield result;    
-        }
-        case REGULAR -> abbreviate( input [0], 80 );
-        case UNKNOWN -> "Unknown input";
-        default -> throw new UnsupportedEnumError( inputType );
-    }   //  InputSwitch:
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  myMethod()
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-\subsection{‘if’, ‘if-else’, ‘if-else~if-else’ Statements}\label{sec:IfStatements}
-The base forms for the \lstinline|if| statement are the following ones:
-\begin{itemize}
-\item{This is the simplest form that does not have an \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> )
-{
-    <statements>;
-}
-\end{lstlisting}
-It allows to omit the curly braces (“\{\}”) when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> ) <singleStatement>;
-\end{lstlisting}}
-
-\item{With an \lstinline|else| clause, the curly braces (“\{\}”) are always mandatory:
-\begin{lstlisting}
-if( <condition>)
-{
-    <statements>;
-}
-else
-{
-    <statements>;
-}
-\end{lstlisting}
-Even if may fit into a single line, do not write an \verb#if-else# statement like below:
-\begin{lstlisting}
-// STRONGLY DISCOURAGED!!!
-if( <condition> ) <singleStatement>; else <otherStatement>;
-\end{lstlisting}}
-
-\item{In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use this form:
-\begin{lstlisting}
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-\end{lstlisting}}
-
-\item{Same as before, but with a final \lstinline|else| clause: 
-\begin{lstlisting}
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-else
-{
-    <statements>;
-}
-\end{lstlisting}
-Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.}
-
-\item{Avoid an empty code block:
-\begin{lstlisting}
-// AVOID!!!
-if( <condition>)
-{ /* Empty! */ }
-else
-{
-    <statements>;
-}
-\end{lstlisting}
-
-Instead negate the condition and place the statements to the “then” block:
-\begin{lstlisting}
-// BETTER
-if( !<condition>)
-{
-    <statements>;
-}
-\end{lstlisting}}
-\end{itemize}
-
-As said already above, an \lstinline|if| statement does not need the curly braces (“\{\}”) only if there is just a single statement on the same line as the \lstinline|if| clause, and if there is no \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> ) <singleStatement>;
-\end{lstlisting}
-
-In any other case the curly braces \textit{are always required}, to avoid the following error-prone forms:
-\begin{lstlisting}
-// AVOID! MISSING CURLY BRACES {}!
-if( <condition> )
-    <statement>;
-
-// AVOID!!! EVEN WORSE THAN ABOVE!!    
-if( <condition> )
-    <statement>;
-else
-    <statement>;
-\end{lstlisting}
-
-If the \lstinline|if| statement takes more than one single line, curly braces have to be used around all statements, even if there is just one. This makes it easier to add statements without accidentally introducing bugs due to forget adding braces.
-
-Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “\verb#?#” operator.
+\subsection{‘if’, ‘if-else’, ‘if-else~if-else’ Statements}
 
 %------------------------------------------------------------------------------
 
@@ -914,7 +616,7 @@ The name of the label is repeated in a comment at the end of the code block, as 
 Beside the files that contain the Java source code itself (with the extension \verb#.java#), a project can contain several other files. Two (types) of these files are discussed here – interestingly, both have the \verb#.java# extension without being really valid Java source files.
 
 \subsection{The Module Definition}\label{sec:ModuleDefinition}
-Modules have been introduced to Java with version~9, as a result of the Jigsaw project\autocite{OPENJDK:ProjectJigsaw}. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
+Modules have been introduced to Java with version~9, as a result of the Jigsaw project\autocite{OPENJDK:ProjectJigsaw}\index{Project Jigsaw|see {Java Platform Module System}}\index{Java Platform Module System}. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
 
 Basically, a \verb#module-info.java# file will look like this:
 \begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
@@ -8031,7 +7733,7 @@ Most problems with instances of these types will reveal only at runtime; also re
 
 The designer of a class made a method \lstinline|private| for some reason, so it is usually a bad idea to use Reflection\index{reflection} to invoke this method from the outside. Again, unit tests\index{unit test} could be an exception. Refer to chapter \tqvref{sec:ChangesThroughReflection} that discusses a scenario where this went wrong.}
 
-\item{When using modules\autocite{OPENJDK:ProjectJigsaw}, the results of calls to the Reflection\index{reflection} APIs get unpredictable.
+\item{When using modules\autocite{OPENJDK:ProjectJigsaw}\index{Java Platform Module System}, the results of calls to the Reflection\index{reflection} APIs get unpredictable.
 
 As long as these calls refer to classes within the same module, they behave as expected (mainly as before Java~9), but for classes from foreign modules, some results can be fairly surprising. Of course these results are not random, they still follow some strict rules. Nevertheless, they depend on the module definitions and on some command line arguments that can override those definitions.}
 \end{enumerate}
@@ -10746,6 +10448,27 @@ See \ref{sec:Logging}, and there the part about warnings! Keeping track about fa
 \hrulefill\newpage 
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+\section{Inner Classes}\label{sec:InnerClasses}
+
+Inner classes are …
 
 %\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]

@@ -51,7 +51,9 @@ var result = switch( <selector> )
 }
 \end{lstlisting}
 
-Of course the \lstinline|default| in line~18 of the \textit{statement} can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~18 of the \textit{expression} can have a complex expression like the \lstinline|case| in line~8. An expression can be also a \lstinline|throw| statement.
+Again, the blank lines separating the \lstinline|case| labels and the \lstinline|default| label are mandatory.
+
+Of course the \lstinline|default| in line~18 of the \textit{statement}\index{switch!statement} can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~18 of the \textit{expression}\index{switch!expression} can have a complex expression like the \lstinline|case| in line~8. An expression can be also a \lstinline|throw|\index{throw} statement.
 
 As this format does not allow a fall-through in cases where the branches for two or more labels are doing the same stuff, it is possible here to have more than one switch label per \lstinline|case|, as shown in lines~6 and 13/14.
 

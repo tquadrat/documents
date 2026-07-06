@@ -27,12 +27,12 @@ ProcessLoop: for( final var entry : entries )
 
 You may have seen something like this in existing code:
 \begin{lstlisting}
-// NOT RECOMMENDED!
+// DISCOURAGED!
 if( thisConditionIsTrue )
 {
-	// Lots of lines
-	…
-}	//	if( thisConditionIsTrue ) 
+    // Lots of lines
+    …
+}   //	if( thisConditionIsTrue ) 
 \end{lstlisting}
 As long as the \lstinline|if| clause (or whatever statement starts the block) will not change, this pattern serves the same purpose as my variant with the label. But when you change the \lstinline|if|, you have to modify the end comment accordingly – something that is forgotten much too often!
 
@@ -42,7 +42,17 @@ See the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:Traili
 
 For more examples regarding the formatting of compound statements refer in particular to the chapters \tqfullref{sec:IfStatements}, \tqfullref{sec:SwitchStatements}, \tqfullref{sec:ForStatements}, and \tqfullref{sec:WhileStatements}.
 
+Empty compound statements are to avoid. At least a comment must be provided:
+\begin{lstlisting}
+{
+    /* Nothing to do here */
+}
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
 \input{formattingCode/SubSection_IfStatements}
+\input{formattingCode/SubSection_SwitchStatements}
 
 %==============================================================================
 % End of file!!

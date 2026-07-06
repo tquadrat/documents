@@ -1,0 +1,32 @@
+\subsection{\bsq{switch} Statements}\label{sec:SwitchStatements}
+This chapter describes how to format a \lstinline|switch|\index{switch} statement together with the related \lstinline|case|\index{case} and \lstinline|default|\index{default} statements.
+
+Beginning with the first preview in Java~12, an alternative syntax for \lstinline|switch| was introduced, so that we have now two (in fact, three) different forms of that construct. I will discuss in chapter \tqfullvref{sec:TheSwitchStatement} how and when to use which form.
+
+%------------------------------------------------------------------------------
+
+\input{formattingCode/SubSubSection_TraditionalSwitch}
+\input{formattingCode/SubSubSection_NewSwitch}
+
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\subsubsection{General formatting Rules for ’switch’}
+\begin{itemize}
+\item{Every \lstinline|switch| statement should include a \lstinline|default| branch, even when the \lstinline|case| labels are exhaustive.}
+
+\item{If really all possible values for the \lstinline|case| labels are covered, the \lstinline|default| branch should throw an exception about an unknown/unexpected value.\footnote{Refer to chapter \tqfullref{sec:UnsupportedEnumError}\autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR} for a sample.}  Refer to chapter \tqfullvref{sec:TheSwitchStatement} for additional details.}
+
+\item{The \lstinline|default| branch should be always the last branch.}
+
+\item{A \lstinline|switch| with pattern matching should always have a \lstinline|case null| branch as it first branch.}
+
+\item{Syntactically, the use of curly braces in the branches is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.}
+
+\item{As already mentioned before, the blank line separating the branches is mandatory.}
+\end{itemize}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

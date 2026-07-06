@@ -1,0 +1,100 @@
+\subsubsection{The new Form of \bsq{switch}}\label{sec:NewSwitch}
+The alternative syntax for \lstinline|switch|\index{switch} comes in two flavours (as \textit{statement}\index{switch!statement} and \textit{expression}\index{switch!expression}).
+
+The new \lstinline|switch|\index{switch!statement} statement looks like this:
+
+\begin{lstlisting}[numbers=left]
+// switch statement
+switch( <selector> )
+{
+    case <switchlabel1> -> <singleStatement>;
+
+    case <switchlabel2>, <switchlabel3> -> <singleStatement>;
+
+    case <switchlabel4> ->
+    {
+        <statements>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+\end{lstlisting}
+
+And this is the new \lstinline|switch|\index{switch!expression} expression:
+
+\begin{lstlisting}[numbers=left]
+// switch expression
+var result = switch( <selector> )
+{
+    case <switchlabel1> -> <expression>;
+
+    case <switchlabel2>, <switchlabel3> -> <expression>;
+
+    case <switchlabel4> ->
+    {
+        <statements>;
+        yield <value>;
+    }
+
+    case <switchlabel4>, <switchlabel5> ->
+    {
+        <statements>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Of course the \lstinline|default| in line~18 can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~40 can have a complex expression like the \lstinline|case| in line~28.
+
+As this format does not allow a fall-through in cases where the branches for two or more labels are doing the same stuff, it is possible here to have more than one switch label per \lstinline|case|, as shown in lines~6, 13, 26 and 34.
+
+If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}), a \lstinline|switch| looks like this:
+\begin{lstlisting}[numbers=left]
+var selector = <anObject>
+// switch statement
+switch( selector )
+{
+    case null -> <singleStatement>;
+    
+    case <class1> <name1> -> <singleStatement>;
+
+    case <class2> <name2> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+
+// switch statement
+var result = switch( selector )
+{
+    case null -> <expression>;
+
+    case <class1> <name1> -> <expression>;
+
+    case <class2> <name2> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Same as for the \lstinline|default| branch, the \lstinline|case null| branch can be a statement block or a complex expression.
+
+And an expression can also be always a \lstinline|throw|.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -1,0 +1,84 @@
+\subsubsection{The traditional Form of \bsq{switch}}
+Originally, a \lstinline|switch|\index{switch}\index{switch!statement} statement in \Java looked like this:
+\begin{lstlisting}[numbers=left]
+switch( <selector> )
+{
+    case <switchlabel1>:
+        <statements1>;
+        // Falls through!
+
+    case <switchlabel2>:
+        <statements2>;
+        break;
+
+    case <switchlabel3>: <singleStatement>; break;
+
+    case <switchlabel4>:
+    {
+        <statements>;
+        break;
+    }
+
+    case <switchlabel5>: // Also a fall-through
+    case <switchlabel6>:
+    {
+        <statements>;
+        break;
+    }
+
+    default:
+       <statements>;
+       break;
+}
+\end{lstlisting}
+
+First, these coding conventions make the blank line above each \lstinline|case|\index{case} (except the very first one) and above \lstinline|default| mandatory!
+  
+If a \lstinline|case| falls through, like in lines~3 to 9, a comment \bdq{\lstinline|// Falls through!|} (or something similar\footnote{Linting tools as well as most IDEs issue a warning in case of a fall-through. Usually, these could be switched off by adding a comment or an annotation to the location of the fall-through. This would be a sufficient replacement for the comment.}) as in line~5 of the sample is required! But basically, such constructs should be avoided when possible, because it also forces that the sequence of the \lstinline|case| clauses cannot be changed, and that fact requires an additional comment to the \lstinline|switch| itself. In fact here you should consider to ignore the \bdq{DRY~Principle}\index{DRY Principle} – we will see this later – and repeat the code for the second \lstinline|case| on the first one:
+\begin{lstlisting}
+// BETTER
+switch( <selector> )
+{
+    case <switchlabel1>:
+        <statements1>;
+        <statements2>;
+        break;
+
+    case <switchlabel2>:
+        <statements2>;
+        break;
+
+    default: …
+}
+\end{lstlisting}
+Or you put the code that is common for both cases into a \lstinline|private| method and call that from both branches. 
+
+Different to the case shown in lines~3 to 9, no comment is required in the case shown in lines~19 and 20: here we have two \lstinline|case| clauses that triggers \textit{exactly the same} action, and we can even omit the blank line between them (and also the comment from line~19).
+
+For longer \lstinline|switch| statements it is highly recommended to use a label with the \lstinline|break| statement\footnote{In fact, I recommend to always use a label with \lstinline|break|; see chapter \tqfullref{sec:LabelsAndBreakStatements} on this topic.}; this can look like this:
+\begin{lstlisting}
+final Color color;
+ColorSelector: switch( colorIndex )
+{
+    case 1: color = RED; 
+        break ColorSelector;
+        
+    case 2: color = BLUE; 
+        break ColorSelector;
+        
+    case 3: color = YELLOW; 
+        break ColorSelector;
+        
+    case 4: color = GREEN; 
+        break ColorSelector;
+        
+    default: color = NONE; 
+        break ColorSelector;
+}   //  ColorSelector:
+\end{lstlisting}
+
+The \lstinline|break| in the \lstinline|default| branch is redundant, but it prevents a fall-through error if later another \lstinline|case| branch is added – although it should be assured that the \lstinline|default| branch is always the last branch in the \lstinline|switch| statement. Of course no \lstinline|break| is required when the branch is left by throwing an exception.\footnote{A \lstinline|break| would be also obsolete when the branch is left through a \lstinline|return| statement, but in that case, the \lstinline|return| would not be the last statement in the method, and this is another requirement from this coding conventions!}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

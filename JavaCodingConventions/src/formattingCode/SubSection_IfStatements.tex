@@ -1,106 +1,151 @@
 \subsection{\bsq{if}, \bsq{if-else}, \bsq{if-else~if-else} Statements}\label{sec:IfStatements}
-The base forms for the \lstinline|if| statement are the following ones:
-\begin{itemize}
-\item{This is the simplest form that does not have an \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> )
-{
-    <statements>;
-}
-\end{lstlisting}
-It allows to omit the curly braces (“\{\}”) when there is a single statement on the same line as the \lstinline|if| clause and there is no \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> ) <singleStatement>;
-\end{lstlisting}}
 
-\item{With an \lstinline|else| clause, the curly braces (“\{\}”) are always mandatory:
+
+We already discussed the use of blanks, round brackets, curly braces and linefeeds in \tqfullvref{sec:WhiteSpace}.
+
+The base form for the \lstinline|if| statement is like this:
 \begin{lstlisting}
 if( <condition>)
 {
+    // <condition> is true
     <statements>;
 }
 else
 {
+    // <condition> is false
     <statements>;
 }
 \end{lstlisting}
-Even if may fit into a single line, do not write an \verb#if-else# statement like below:
-\begin{lstlisting}
-// STRONGLY DISCOURAGED!!!
-if( <condition> ) <singleStatement>; else <otherStatement>;
-\end{lstlisting}}
 
-\item{In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use this form:
+If there is nothing to do in case the condition results as false, the \lstinline|else| clause must be omitted:
 \begin{lstlisting}
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-\end{lstlisting}}
-
-\item{Same as before, but with a final \lstinline|else| clause: 
-\begin{lstlisting}
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-else
-{
-    <statements>;
-}
-\end{lstlisting}
-Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.}
-
-\item{Avoid an empty code block:
-\begin{lstlisting}
-// AVOID!!!
 if( <condition>)
-{ /* Empty! */ }
-else
 {
+    // <condition> is true
     <statements>;
 }
 \end{lstlisting}
 
-Instead negate the condition and place the statements to the “then” block:
+If there is nothing to do when \verb#condition# is true, do not let the first statement block empty; instead you have to negate the condition:
 \begin{lstlisting}
-// BETTER
+// AVOID!!
+if( <condition>)
+{
+    // Nothing to do here!
+}
+else
+{
+    // <condition> is false
+    <statements>;
+}
+
+// RECOMMENDED!!
 if( !<condition>)
 {
+    // <condition> is false, mean !<condition> is true
     <statements>;
 }
-\end{lstlisting}}
-\end{itemize}
-
-As said already above, an \lstinline|if| statement does not need the curly braces (“\{\}”) only if there is just a single statement on the same line as the \lstinline|if| clause, and if there is no \lstinline|else| clause:
-\begin{lstlisting}
-if( <condition> ) <singleStatement>;
 \end{lstlisting}
 
-In any other case the curly braces \textit{are always required}, to avoid the following error-prone forms:
+If there is no \lstinline|else| clause, and only a single statement, you can write the \lstinline|if| statement can be written like this:
 \begin{lstlisting}
-// AVOID! MISSING CURLY BRACES {}!
-if( <condition> )
-    <statement>;
+if( <condition> ) <statements>;
+\end{lstlisting}
 
-// AVOID!!! EVEN WORSE THAN ABOVE!!    
-if( <condition> )
-    <statement>;
+The curly braces are mandatory if it is not possible to write the whole \lstinline|if| statement within a single line.
+
+In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use this form:
+\begin{lstlisting}
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+else if( <condition3>)
+{
+    <statements>;
+}
+else if( <condition#>)
+{
+    <statements>;
+}
+\end{lstlisting}
+
+Same as before, but with a final \lstinline|else| clause: 
+\begin{lstlisting}
+if( <condition1>)
+{
+    <statements>;
+}
+else if( <condition2>)
+{
+    <statements>;
+}
+else if( <condition3>)
+{
+    <statements>;
+}
+else if( <condition#>)
+{
+    <statements>;
+}
 else
-    <statement>;
+{
+    <statements>;
+}
 \end{lstlisting}
 
-If the \lstinline|if| statement takes more than one single line, curly braces have to be used around all statements, even if there is just one. This makes it easier to add statements without accidentally introducing bugs due to forget adding braces.
+Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.
 
-Please refer also to chapter \tqfullvref{sec:TheTernaryOperator} that discusses the ternary “\verb#?#” operator.
+It is not recommended to write \verb#if-else# like this, although it seems to be more conformant to the basic rule:
+\begin{lstlisting}
+// NOT RECOMMENDED!!
+if( <condition1>)
+{
+    <statements>;
+}
+else 
+{
+    if( <condition2>)
+    {
+        <statements>;
+    }
+    else 
+    {
+        if( <condition3>)
+        {
+            <statements>;
+        }
+        else 
+        {
+            if( <condition#>)
+            {
+                <statements>;
+            }
+            else
+            {
+                <statements>;
+            }
+        }
+    }
+}        
+\end{lstlisting}
+
+The increased indendation makes this even worse to read than the recommended variant.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Curly braces are mandatory when the \lstinline|if| statement has more than one line. They are always required for the \lstinline|else| clause.}
+\item{No empty \lstinline|if| clause; negate the condition if necessary.}
+\item{No blanks between the \lstinline|if| and the opening round bracket. Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{The opening curly brace for the body statement of the \lstinline|if| and the optional \lstinline|else| clause is on the same indentation level as the keyword itself. In case of the \verb#if-else# construct, on the level of the \lstinline|else|.}
+\item{The statements itself are indented one level relative to the curly braces.}
+\end{enumerate}
+
+Please refer also to chapter \tqvref{sec:TheTernaryOperator} that discusses the ternary \verb#?# operator.
 
 %==============================================================================
 % End of file!!

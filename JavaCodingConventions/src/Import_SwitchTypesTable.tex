@@ -1,0 +1,43 @@
+\begin{tabular}{ll}
+\rule[-1ex]{0pt}{2.5ex} ``\verb#case L:#'' or \bsq{old} \lstinline|switch| & ``\verb#case L ->#'' or \bsq{new} \lstinline|switch| \\ 
+\rule[-1ex]{0pt}{2.5ex}
+\begin{minipage}{0.48\textwidth}
+\begin{lstlisting}[numbers=left]
+switch( <selector> )
+{
+    case <label1>:
+        <statements1>; 
+        break;
+    
+    case <label2a>:
+    case <label2b>: 
+        <statements2>; 
+        break;
+    
+    default: <statements>; break;
+}
+\end{lstlisting}
+\end{minipage} & 
+
+\begin{minipage}{0.48\textwidth}
+\begin{lstlisting}
+switch( <selector> )
+{
+    case <label1> -> <statements1>;
+    
+    
+        
+    case <label2a>, <label2b> 
+        -> <statements2>;
+
+
+    
+    default -> <statments>
+}
+\end{lstlisting}
+\end{minipage} \\ 
+\end{tabular} 
+
+%==============================================================================
+% End of file!!
+%==============================================================================

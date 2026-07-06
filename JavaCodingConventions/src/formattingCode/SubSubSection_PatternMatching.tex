@@ -1,0 +1,58 @@
+\subsubsection{\bsq{switch} and Pattern Matching}\label{sec:PatternMatchingSwitch}
+If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}\index{pattern matching}), a \lstinline|switch| looks like this:
+\begin{lstlisting}[numbers=left]
+var selector = <anObject>
+// switch statement case L:
+switch( selector )
+{
+    case <class1> <name1>: <singleStatement>;
+
+    case <class2> <name2>:
+    {
+        <statements>;
+    }
+
+    default: <singleStatement>;
+}
+
+// switch statement case L ->
+switch( selector )
+{
+    case null -> <singleStatement>;
+    
+    case <class1> <name1> -> <singleStatement>;
+
+    case <class2> <name2> ->
+    {
+        <statements>;
+    }
+
+    default -> <singleStatement>;
+}
+
+// switch statement
+var result = switch( selector )
+{
+    case null -> <expression>;
+
+    case <class1> <name1> -> <expression>;
+
+    case <class2> <name2> ->
+    {
+        <expressions>;
+        yield <value>;
+    }
+
+    default -> <expression>;
+}
+\end{lstlisting}
+
+Same as for the \lstinline|default| branch, the \lstinline|case null| branch can be a statement block or a complex expression.
+
+And an expression can also be always a \lstinline|throw| statement.
+
+This topic is covered in more detail in chapter \tqfullvref{sec:PatternMatching}.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

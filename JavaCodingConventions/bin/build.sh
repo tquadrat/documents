@@ -22,8 +22,8 @@ $LATEX -draftmode $MAIN_DOC || exit 1
 echo Running Biber
 $BIBER $MAIN_DOC || exit 1
 
-echo Building the index
-$MKIDX -s idxhdr.ist -o ${PROJECT_NAME}.ind ${PROJECT_NAME}.idx || exit 1
+# echo Building the index
+# $MKIDX -s JavaCodingConventions.ist -o ${PROJECT_NAME}.ind ${PROJECT_NAME}.idx || exit 1
 
 echo 3. Cycle
 $LATEX $MAIN_DOC || exit 1

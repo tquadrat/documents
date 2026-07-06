@@ -12,7 +12,8 @@
 %\usepackage{amsmath}
 %\usepackage{amsfonts}
 %\usepackage{amssymb}
-\usepackage{makeidx}
+%\usepackage{makeidx}
+\usepackage{imakeidx}
 \usepackage{eurosym}
 \usepackage{ragged2e}
 \usepackage{textcomp}
@@ -85,8 +86,11 @@ literate=
 }
 
 \colorlet{shadecolor}{gray!10}
-\makeindex
-%To generate the index: "makeindex -s idxhdr.ist JavaCodingConventions"
+\makeindex[options={-s JavaCodingConventions.ist}]
+
+\renewcommand{\subitem}{\par\hangindent=40pt \hspace*{1em}\dots\,}
+\renewcommand{\subsubitem}{\par\hangindent=40pt \hspace*{2em}\dots\,}
+%To generate the index: "makeindex -s JavaCodingConventions.ist JavaCodingConventions"
 
 %---* New Commands *-----------------------------------------------------------
 \def\bsq#1{%both single quotes

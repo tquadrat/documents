@@ -2926,13 +2926,13 @@ The chapters \tqfullvref{sec:ThrowingExceptions} and \tqfullvref{sec:GeneralExce
 %------------------------------------------------------------------------------
 
 \subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
-Your code will emit an exception when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
+Your code will emit an exception\index{exception} when it encounters an error condition of some kind. Exceptions are discussed in detail in the Java Language Specification\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
 
 For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}\index{java.lang!Throwable}, or – more precise – from one of the child classes of \lstinline|Throwable|:
 \begin{itemize}[nosep]
-\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}\index{java.lang!Exception}}
-\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}\index{java.lang!RuntimeException}}
-\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}\index{java.lang!Error}}
+\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}\index{java.lang!Exception}\index{exception!checked exception}}
+\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}\index{java.lang!RuntimeException}\index{exception!unchecked exception}}
+\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}\index{java.lang!Error}\index{exception!error}}
 \end{itemize}
 
 \begin{center}
@@ -2942,13 +2942,13 @@ For the Java programming language, an exception is an instance of a class that i
 
 The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
 
-Exception classes that extend \lstinline|java.lang.Exception|\index{java.lang!Exception} are so-called \textit{checked} exceptions\index{exception!checked}\index{checked exception|see{exception}}; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException} is a direct subclass of \lstinline|java.lang.Exception|\index{java.lang!Exception} and the superclass of all \textit{runtime}\index{runtime exception|see{exception}} or \textit{unchecked}\index{exception!unchecked}\index{unchecked exception|see{exception}} exceptions – declaring these is not mandatory.
+Exception classes that extend \lstinline|java.lang.Exception|\index{java.lang!Exception} are so-called \textit{checked} exceptions\index{exception!checked exception}\index{checked exception|see{exception}}; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException} is a direct subclass of \lstinline|java.lang.Exception|\index{java.lang!Exception} and the superclass of all \textit{runtime}\index{runtime exception|see{exception}} or \textit{unchecked}\index{exception!unchecked exception}\index{unchecked exception|see{exception}} exceptions – declaring these is not mandatory.
 
-While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception|\index{java.lang!Exception} instance, it is assumed that instances of the class \lstinline|java.lang.Error|\index{java.lang!Error} and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
+While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception|\index{java.lang!Exception}\index{exception} instance, it is assumed that instances of the class \lstinline|java.lang.Error|\index{java.lang!Error}\index{exception!error} and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
 
 The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception|\index{java.lang!Exception} or \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException} is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS}\index{java.lang!NullPointerException} in case a divisor is 0 (zero)\footnote{The proper exception class would be \lstinline|java.lang.ArithmeticException|\autocite{ORACLE_DOC_ARITHMETICEXCEPTION_CLASS}\index{java.lang!ArithmeticException}.}.
 
-When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException|\index{javax.naming!OperationNotSupportedException} in a code segment that does nothing with the “Java Naming and Directory Interface” at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException}, or \lstinline|Error|\index{java.lang!Error}, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable|\index{java.lang!Throwable} directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException|\index{javax.naming!OperationNotSupportedException} in a code segment that does nothing with the \bdq{Java Naming and Directory Interface} at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException}, or \lstinline|Error|\index{java.lang!Error}, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable|\index{java.lang!Throwable} directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.
 
 When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
 \begin{lstlisting}
@@ -8833,11 +8833,11 @@ Both streams will be closed properly in case of a problem or the work is done.
 \subsection{Error Handling}
 What will happen if the code in the \lstinline|try| block throws an exception and closing the resource will throw one, too? Remember, \lstinline|AutoCloseable::close|\autocite{ORACLE_DOC_AUTOCLOSEABLE:close}\index{java.lang!AutoCloseable!close()} declares to throw \lstinline|Exception|\index{java.lang!Exception}!
 
-For the ‘traditional’ pattern (using \verb#try-catch-finally#\index{try-catch-finally} as shown in the first example of the previous chapter) this could mean that the first exception would be ‘supplanted’ by the exception issued by \lstinline|close()|, called in the \lstinline|finally| block. For sure, in a \lstinline|catch| block the original cause could be logged before the code in the \lstinline|finally| block will be executed, but usually only checked exceptions (and “expected“ ones) are covered this way.
+For the \bsq{traditional} pattern (using \verb#try-catch-finally#\index{try-catch-finally} as shown in the first example of the previous chapter) this could mean that the first exception would be ‘supplanted’ by the exception issued by \lstinline|close()|, called in the \lstinline|finally| block. For sure, in a \lstinline|catch| block the original cause could be logged before the code in the \lstinline|finally| block will be executed, but usually only checked exceptions (and \bdq{expected} ones) are covered this way.
 
-Together with \verb#try-with-resources#\index{try-with-resources}, a new feature was introduced to the language: the \textit{suppressed} exception\index{suppressed exception}. This deals with the problem described above.
+Together with \verb#try-with-resources#\index{try-with-resources}, a new feature was introduced to the language: the \textit{suppressed} exception\index{exception!suppressed exception}. This deals with the problem described above.
 
-So if the \lstinline|try| block throws an exception (for our example, it would be most probably an \lstinline|IOException|\index{java.io!IOException}) and the \lstinline|AutoCloseable.close()|\index{java.lang!AutoCloseable!close()} will fail with an exception, too, the latter one will be added to the first one as a “suppressed exception”\index{suppressed exception} by the JVM.
+So if the \lstinline|try| block throws an exception (for our example, it would be most probably an \lstinline|IOException|\index{java.io!IOException}) and the \lstinline|AutoCloseable.close()|\index{java.lang!AutoCloseable!close()} will fail with an exception, too, the latter one will be added to the first one as a \bdq{suppressed exception}\index{exception!suppressed exception} by the JVM.
 
 For this purpose, the API of the class \lstinline|java.lang.Throwable|\index{java.lang!Throwable} was extended by the methods \lstinline|addSuppressed()|\autocite{ORACLE_DOC_THROWABLE:addSuppressed}\index{java.lang!Throwable!addSuppressed()} and \lstinline|getSuppressed()|\autocite{ORACLE_DOC_THROWABLE:getSuppressed}\index{java.lang!Throwable!getSuppressed()}.\footnote{see \autocite{ORACLE_DOC_THROWABLE_CLASS} for more details.}
 
@@ -9653,7 +9653,45 @@ var list = new ArrayList<String>();
 
 %------------------------------------------------------------------------------
 
+
+\section{Pattern Matching}\label{sec:PatternMatching}
+
+\ref{sec:SwitchStatements}
+\ref{sec:CaseResults}
+\autocite{ORACLE_DOC_PATTERNMATCHING}
+
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS}
+
+
+\autocite{}
+
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+
 \section{The "switch" Statement}\label{sec:TheSwitchStatement}
+
+
+
+MENTION PATTERN MATCHING HERE!!!
+
 In this document, I mentioned the \lstinline|switch| statement\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Switch} a first time in chapter \tqfullvref{sec:SwitchStatements}, where the formatting of the source code is discussed, and a second time in chapter \tqvref{sec:CaseResults} that deals with return values.
 
 Java inherited the problematic syntax of the \lstinline|switch| statement from C\index{C}; whether, when and how it should or could be used was always discussed controversally. There are projects that even banned the use of \lstinline|switch| completely in their coding guidelines, because it is error prone.
@@ -9662,45 +9700,7 @@ Finally, a series of JEPs were launched to address the issues with the \lstinlin
 
 Some sources (e.g. \autocite{ORACLE_DOC_SWITCHEXPRESSIONS}) refer to the different syntax variants by the form of the \lstinline|switch| labels as “\verb#case L:#” (‘old’) and “\verb#case L ->#” (‘new’). 
 
-\begin{tabular}{ll}
-\rule[-1ex]{0pt}{2.5ex} “\verb#case L:#” or ‘old’ \lstinline|switch| & “\verb#case L ->#” or ‘new’ \lstinline|switch| \\ 
-\rule[-1ex]{0pt}{2.5ex}
-\begin{minipage}{0.48\textwidth}
-\begin{lstlisting}[numbers=left]
-switch( <selector> )
-{
-    case <label1>:
-        <expression1>; 
-        break;
-    
-    case <label2a>:
-    case <label2b>: 
-        <expression2>; 
-        break;
-    
-    default: <expression>; break;
-}
-\end{lstlisting}
-\end{minipage} & 
-
-\begin{minipage}{0.48\textwidth}
-\begin{lstlisting}
-switch( <selector> )
-{
-    case <label1> -> <expression1>;
-    
-    
-        
-    case <label2a>, <label2b> 
-        -> <expression2>;
-
-
-    
-    default -> <expression>
-}
-\end{lstlisting}
-\end{minipage} \\ 
-\end{tabular} 
+\input{Import_SwitchTypesTable}
 
 As we have two different forms of the \lstinline|switch| statement now, it is worth to define some coding guidelines for it.
 

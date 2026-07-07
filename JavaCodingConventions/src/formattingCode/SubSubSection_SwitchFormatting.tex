@@ -1,0 +1,53 @@
+\subsubsection{General formatting Rules for \bsq{switch}}
+
+The general use of blanks, round brackets, curly braces and linefeeds was already discussed in \tqfullvref{sec:WhiteSpace}. The curly braces after the initial \lstinline|switch|\index{switch} are required by the Java syntax and not optional. In case of a \lstinline|switch| statement\index{switch!statement} the opening and closing curly braces are on the same indentation level than the \lstinline|switch| keyword, while for an expression\index{switch!expression} they are aligned with the begin of the respective statement. In both cases, the curly braces are on lines of their own.
+
+The branches (\lstinline|case|\index{switch!case} or \lstinline|default|\index{switch!default}) are indented one level and will be separated from each other by a blank line, to improve the readability.
+
+Although not required (at least not for the ``\verb#case L:#'' variant), curly braces should be used for complex branch statements/expressions, also for readbility. The curly braces for the branches are indented to the same level to the same level as the \lstinline|case|/\lstinline|default|\index{switch!case}\index{switch!default} keywords, while the branch code itself is indented one additional level.
+
+The code for a branch should be short; I suggest that a branch should be limited to less than ten lines. If it is just onle line and it is short enough, the whole branch should be written as a single line, in particular for the ``\verb#case L ->#'' variant:
+
+\index{switch!case}\index{switch!break}
+\begin{lstlisting}
+case <switchlabel>: <singleStatement>; break;
+\end{lstlisting}
+
+\index{switch!case}
+\begin{lstlisting}
+case <switchlabe> -> <singleStatement>;
+\end{lstlisting}
+
+\index{switch!case}
+\begin{lstlisting}
+case <switchLabel> -> <expression>;
+\end{lstlisting}
+
+If necessary, create a private method with the branch code and call that from the branch.
+
+The branches should be ordered somehow logically (alphabetically, by ordinal number,~…), and an existing \lstinline|case null|\index{switch!case null} branch should be the first, while the \lstinline|default|\index{switch!default} branch should be the last one. This makes it easier to apply changes to the \lstinline|switch|\index{switch} later.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{No blanks between the \lstinline|switch|\index{switch} and the opening round bracket. Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{Curly braces are recommended when the branche statement has more than one line.}
+\item{The curly braces for a branch statement are on the same indentation level as the keyword itself.
+
+The branch statements itself are indented one level relative to the curly braces.}
+\item{The code for a branch should be short.}
+\item{Apply a logical order to the branches.
+
+Place \lstinline|case null|\index{switch!case null} as first, and \lstinline|default|\index{switch!default} as last branches.}
+\item{The blank line separating the branches is mandatory.}
+\item{No empty branch! A branch must contain at least a comment.
+
+An exception for the ``\verb#case L:#'' variant are branches with the same code.}
+\item{Avoid ‘fall-through’!}
+\item{Although it looks like one, a \lstinline|switch| expression\index{switch!expression} is not a lambda\index{lambda}.
+
+That means that local variables that are referenced in a \lstinline|switch| expression do not have to be effectively final.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

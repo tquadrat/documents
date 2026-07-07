@@ -9688,6 +9688,22 @@ var list = new ArrayList<String>();
 
 \section{The "switch" Statement}\label{sec:TheSwitchStatement}
 
+%------------------------------------------------------------------------------
+%NOTES - from the old version
+\begin{itemize}
+\item{Every \lstinline|switch| statement should include a \lstinline|default| branch, even when the \lstinline|case| labels are exhaustive.}
+
+\item{If really all possible values for the \lstinline|case| labels are covered, the \lstinline|default| branch should throw an exception about an unknown/unexpected value.\footnote{Refer to chapter \tqfullref{sec:UnsupportedEnumError}\autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR} for a sample.}  Refer to chapter \tqfullvref{sec:TheSwitchStatement} for additional details.}
+
+\item{The \lstinline|default| branch should be always the last branch.}
+
+\item{A \lstinline|switch| with pattern matching should always have a \lstinline|case null| branch as it first branch.}
+
+\item{Syntactically, the use of curly braces in the branches is optional, even for multi-line statements, but here it is set as mandatory. One reason is that it allows to declare additional variables for a given branch that are local to the given branch.}
+
+\item{As already mentioned before, the blank line separating the branches is mandatory.}
+\end{itemize}
+%------------------------------------------------------------------------------
 
 
 MENTION PATTERN MATCHING HERE!!!
@@ -9710,7 +9726,7 @@ As we have two different forms of the \lstinline|switch| statement now, it is wo
 \begin{enumerate}[label=P\arabic*.]
 \item{Prefer the ‘new’ \lstinline|switch| over the ‘old’ one.
 
-One motiviation for the JEPs had been the error prone syntax of the original “\verb#case L:#” \lstinline|switch| statement; this is fixed by the new “\verb#case L ->#”form – but only when it is used.}
+One motiviation for the JEPs mentioned above had been the error prone syntax of the original “\verb#case L:#” \lstinline|switch| statement; this is fixed by the new “\verb#case L ->#”form – but only when it is used.}
 
 \item{Using \lstinline|switch| \textit{expressions} can make your code much more concise.}
 
@@ -11130,7 +11146,7 @@ tbd
 
 %------------------------------------------------------------------------------
 
-\section{Embedded Code}
+\section{Embedded Code}\label{sec:EmbeddedCode}
 Sometimes, it is necessary to embed code inside the Java source code. Most often, these are SQL statements, but sometimes it could be also fragments of HTML or XML documents.
 
 %------------------------------------------------------------------------------

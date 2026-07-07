@@ -1,5 +1,6 @@
 \subsubsection{\bsq{switch} and Pattern Matching}\label{sec:PatternMatchingSwitch}
-If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}\index{pattern matching}), a \lstinline|switch| looks like this:
+If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}\index{pattern matching}), a \lstinline|switch|\index{switch} looks like this:
+\index{switch!case}\index{switch!default}\index{switch!break}\index{switch!yield}
 \begin{lstlisting}[numbers=left]
 var selector = <anObject>
 // switch statement case L:
@@ -47,7 +48,7 @@ var result = switch( selector )
 }
 \end{lstlisting}
 
-Same as for the \lstinline|default| branch, the \lstinline|case null| branch can be a statement block or a complex expression.
+Same as for the \lstinline|default|\index{switch!default} branch, the \lstinline|case null| \index{switch!case null} branch can be a statement block or a complex expression.
 
 And an expression can also be always a \lstinline|throw|\index{throw} statement.
 

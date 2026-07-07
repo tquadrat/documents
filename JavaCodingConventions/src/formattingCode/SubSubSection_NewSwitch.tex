@@ -3,6 +3,7 @@ The alternative syntax for \lstinline|switch|\index{switch} (the ``\verb#case L 
 
 The new \lstinline|switch|\index{switch!statement} \textit{statement} looks like this:
 
+\index{switch!case}\index{switch!default}
 \begin{lstlisting}[numbers=left]
 // switch statement
 switch( <selector> )
@@ -26,7 +27,7 @@ switch( <selector> )
 \end{lstlisting}
 
 And this is the new \lstinline|switch|\index{switch!expression} \textit{expression}:
-
+\index{switch!case}\index{switch!default}\index{switch!yield}\index{yield|see {switch!yield}}
 \begin{lstlisting}[numbers=left]
 // switch expression
 var result = switch( <selector> )
@@ -51,11 +52,11 @@ var result = switch( <selector> )
 }
 \end{lstlisting}
 
-Again, the blank lines separating the \lstinline|case| labels and the \lstinline|default| label are mandatory.
+Again, the blank lines separating the \lstinline|case|\index{switch!case} labels and the \lstinline|default|\index{switch!default} label are mandatory.
 
-Of course the \lstinline|default| in line~18 of the \textit{statement}\index{switch!statement} can be followed by a statement block as the \lstinline|case| in line~8, and the \lstinline|default| in line~18 of the \textit{expression}\index{switch!expression} can have a complex expression like the \lstinline|case| in line~8. An expression can be also a \lstinline|throw|\index{throw} statement.
+Of course the \lstinline|default|\index{switch!default} in line~18 of the \textit{statement}\index{switch!statement} can be followed by a statement block as the \lstinline|case|\index{switch!case} in line~8, and the \lstinline|default|\index{switch!default} in line~18 of the \textit{expression}\index{switch!expression} can have a complex expression like the \lstinline|case|\index{switch!case} in line~8. An expression can be also a \lstinline|throw|\index{throw} statement.
 
-As this format does not allow a fall-through in cases where the branches for two or more labels are doing the same stuff, it is possible here to have more than one switch label per \lstinline|case|, as shown in lines~6 and 13/14.
+As this format does not allow a fall-through in cases where the branches for two or more labels are doing the same stuff, it is possible here to have more than one switch label per \lstinline|case|\index{switch!case}, as shown in lines~6 and 13/14.
 
 %==============================================================================
 % End of file!!

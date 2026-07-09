@@ -1,0 +1,133 @@
+\subsection{\bsq{while} and \bsq{do} Statements}\label{sec:WhileStatements}
+The \lstinline|do|\index{while!do} statement does never come without a trailing \lstinline|while|\index{while} statement; this is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:WhileDo}. The statement \lstinline|while|\index{while} itself is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:While}. Both are loop statements, the difference is only where the termination condition is checked.
+
+With \lstinline|do|\index{while!do} you define an exit-controlled loop\index{exit-controlled loop}\footnote{In German: \bdq{nicht-abweisende Schleife}.}; this means that the loop body is executed at least once:
+\begin{lstlisting}
+do
+{
+    <statements>;
+}
+while( <condition> );
+\end{lstlisting}
+Although writing
+\begin{lstlisting}
+do <statement>; while( <condition> );
+\end{lstlisting}
+is syntactically correct (note the semicolon after \verb#<statement># and before \lstinline|while|) you should always surround the loop body with curly braces when using \lstinline|do|\index{while!do}.
+
+The entry-controlled \lstinline|while| loop\index{entry-controlled loop}\index{while}\footnote{In German: \bdq{abweisende Schleife}.} is used more often than the exit-controlled form; it looks like this:
+\begin{lstlisting}
+while( <condition> )
+{
+    <statements>;
+}
+
+while( <condition> ) <singleStatement>;
+\end{lstlisting}
+
+Same as for the \lstinline|for| statement (see \hyperref[sec:ForStatements]{there}), \bdq{single statement} also means \bdq{simple statement}. If the loop body is more complex, curly braces are mandatory; they are placed to lines of their own, indented to same level as the keyword, while the body itself has to be indented one additional level. The curly braces can be omitted only for a body consisting of a single statement that is written to the same line as the \lstinline|while|\index{while} statement.
+
+The form
+\begin{lstlisting}
+// DISCOURAGED
+while( <condition> )
+    <statements>;
+\end{lstlisting}
+is syntactically correct, but have to be avoided. It is error prone in case the code will be adjusted at a later time.
+
+The general use of blanks, round brackets, curly braces and linefeeds was already discussed in \tqfullvref{sec:WhiteSpace}.
+
+When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body:
+\begin{lstlisting}[numbers=left]
+<Label>: while( <condition> )
+{
+    if( <condition1> ) continue <Label>;
+    if( <condition2> ) break <Label>;
+    <statements>
+}   //  <Label>:
+
+<Label>: do
+{
+    if( <condition1> ) continue <Label>;
+    if( <condition2> ) break <Label>;
+    <statements>
+} 
+while( <condition> );
+//  <label>
+\end{lstlisting}
+
+The body of a \lstinline|while| loop\index{while}\index{while!do} must not be empty! Or, more precisely, it must contain executable code! Usually a comment is sufficient to document that nothing happens inside that code block, but for a \lstinline|while|\index{while!empty loop} loop, this is not sufficient. The details are explained in the chapter \tqfullvref{sec:EmptyWhile}.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{No blanks between the \lstinline|for|\index{for} and the opening round bracket. The blanks after the semi-colons are mandatory.
+
+Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{If the loop body is a simple single statement, it can be written without curly braces to the same line as the \lstinline|for|\index{for} itself.
+
+Otherwise curly braces are mandatory.}
+\item{The curly braces are on lines of their own, with the same indentation level as the \lstinline|for|\index{for} keyword. The code of the body will be indented one level.}
+\item{Do not use a \lstinline|for|\index{for} loop to consume CPU cycles only!}
+\item{Empty \lstinline|for|\index{for!empty} loops do all the work in the initialisation, condition and update clauses.
+
+Prefer a \lstinline|while|\index{while} loop over an empty \lstinline|for|\index{for!empty} loop.}
+\item{Keep the \lstinline|for|\index{for} statement simple.
+
+Avoid using the comma operator in the initialisation and update clause.}
+\item{Keep the loop body short.
+
+Use a label\index{label} for longer loops.}
+\item{Use the \lstinline|for|\index{for} loop variant that fits best to your current problem.
+
+The enhanced \lstinline|for|\index{for!enhanced} is not generally better than the basic variant, it just matches better with some iteration tasks.}
+\end{enumerate}
+
+\lstinline|for| loops are discussed in more detail in chapter \tqvref{sec:TheForStatement}.
+
+
+
+
+
+
+
+
+
+
+\subsection{‘do-while’ Statements}
+A \lstinline|do-while| statement should look like below:
+
+
+
+
+
+
+
+A \lstinline|while| statement should have one of the following forms:
+\begin{lstlisting}[numbers=left]
+while( <condition> )
+{
+    <statements>;
+}
+while( <condition> ) <singleStatement>
+\end{lstlisting}
+
+Again, the curly braces can only be omitted in case there is only a single statement, written on the same line than the \lstinline|while| statement that has to be executed in the loop.
+
+An empty \lstinline|while|-loop\footnote{An empty \lstinline|while|-loop usually makes no sense as the compiler optimises it away. Only when the condition causes side effects, it will be executed. But such an implementation is difficult to understand and should be avoided.} should have the following form: 
+\begin{lstlisting}
+while( <condition> );
+\end{lstlisting}
+
+Longer \lstinline|while|-loops should use a label:
+\begin{lstlisting}
+LoopLabel: while( proceed )
+{
+    // Lots of code lines here …
+}   //  LoopLabel:
+\end{lstlisting}
+
+Chapter \tqvref{sec:TheWhileStatement} has some more about \lstinline|while| loops.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

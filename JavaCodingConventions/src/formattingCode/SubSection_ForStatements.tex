@@ -1,8 +1,8 @@
-\subsection{‘for’ Statements}\label{sec:ForStatements}
+\subsection{\bsq{for} Statements}\label{sec:ForStatements}
 Since Java~5 the language knows two distinct types of \lstinline|for|\index{for} loops, both described in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:For}.
 
 The basic \lstinline|for| statement\index{for!basic} looks like this:
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 for( <initialization>; <condition>; <update> )
 {
     <statements>;
@@ -14,7 +14,7 @@ For the details of this basic form, refer to \autocite{ORACLE_DOC_LANGUAGE_SPECI
 
 An enhanced \lstinline|for| statement\index{for!enhanced} (defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ForEnhanced}) would be written as below:
 
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 for( <declaration> : <iterable> )
 {
     <statements>;
@@ -86,14 +86,14 @@ for( <initialization>; <condition>; <update> );
 
 In case the longer form (lines~1 to 4) is used, the comment is mandatory, because empty code blocks are forbidden. I recommend the shorter forms (line~6).
 
-In an empty \lstinline|for| loop\index{for!empty loop} all the work is done in the initialization, condition, and update clauses.\footnote{In most cases, you should consider to use a \lstinline|while|\index{while} loop instead of an empty \lstinline|for|\index{for} loop. See \hyperref[sec:WhileStatements]{there}.} Therefore an enhanced \lstinline|for| loop\index{for!enhanced} loop without body does not make much sense. It may be possible to write an implementation of \lstinline|java.lang.Iterable|\index{java.lang!Iterable}\autocite{ORACLE_DOC_ITERABLE_INTERFACE} with an iterator\index{java.util!Iterator}\autocite{ORACLE_DOC_ITERATOR_INTERFACE} that does something as a side effect of \lstinline|hasNext()|\index{java.util!Iterator!hasNext()} or \lstinline|next()|\index{java.util!Iterator!next()}, but this would break the contract of the interface.
+In an empty \lstinline|for| loop\index{for!empty loop} all the work is done in the initialization, condition, and update clauses.\footnote{In most cases, you should consider to use a \lstinline|while|\index{while} loop instead of an empty \lstinline|for|\index{for} loop. See \hyperref[sec:WhileStatements]{there}.} Therefore an enhanced \lstinline|for| loop\index{for!enhanced} loop without body does not make much sense. It may be possible to write an implementation of \lstinline|java.lang.Iterable|\index{java.lang!Iterable}\autocite{ORACLE_DOC_ITERABLE_INTERFACE} with an iterator\index{java.util!Iterator}\autocite{ORACLE_DOC_ITERATOR_INTERFACE} that does something as a side effect of \lstinline|hasNext()|\index{java.util!Iterator!hasNext()} or \lstinline|next()|\index{java.util!Iterator!next()}, but this would break the contract of the interface and is therefore strongly discouraged.
 
 An otherwise empty loop should not be used to consume CPU cycles; there are methods fitting much better to this purpose.
 
-When using the comma operator in the initialization or update clause of a \lstinline|for|\index{for} statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|-loop (for the initialization clause) or at the end of the loop (for the update clause).
+When using the comma operator in the initialization or update clause of a \lstinline|for|\index{for} statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|\index{for} loop (for the initialization clause) or at the end of the loop (for the update clause).
 
 Examples:
-\begin{lstlisting}
+\begin{lstlisting}[numbers=left]
 for( var i = 0, j = target.length; i < source.length && j >= 0; ++i, --j )
 {
     target [j] = source [i];
@@ -108,6 +108,23 @@ for( var j = 0; proceed; )
 }
 \end{lstlisting}
 
+When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body:
+\begin{lstlisting}[numbers=left]
+<Label>: for( <initialization>; <condition>; <update> )
+{
+    if( <condition1> ) continue <Label>;
+    if( <condition2> ) break <Label>;
+    <statements>
+}   //  <Label>:
+
+<Label>: for( <declaration> : <iterable> )
+{
+    if( <condition1> ) continue <Label>;
+    if( <condition2> ) break <Label>;
+    <statements>
+}   //  <Label>:
+\end{lstlisting}
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{No blanks between the \lstinline|for|\index{for} and the opening round bracket. The blanks after the semi-colons are mandatory.
@@ -118,18 +135,21 @@ Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
 Otherwise curly braces are mandatory.}
 \item{The curly braces are on lines of their own, with the same indentation level as the \lstinline|for|\index{for} keyword. The code of the body will be indented one level.}
 \item{Do not use a \lstinline|for|\index{for} loop to consume CPU cycles only!}
-\item{Empty \lstinline|for|\index{for!empty} loops do all the work in the initialisation, condition and update clauses.
+\item{Empty \lstinline|for|\index{for!empty loop} loops do all the work in the initialisation and/or update clauses.
 
 Prefer a \lstinline|while|\index{while} loop over an empty \lstinline|for|\index{for!empty} loop.}
 \item{Keep the \lstinline|for|\index{for} statement simple.
 
 Avoid using the comma operator in the initialisation and update clause.}
+\item{Keep the loop body short.
+
+Use a label\index{label} for longer loops.}
 \item{Use the \lstinline|for|\index{for} loop variant that fits best to your current problem.
 
 The enhanced \lstinline|for|\index{for!enhanced} is not generally better than the basic variant, it just matches better with some iteration tasks.}
 \end{enumerate}
 
-\lstinline|for| loops are discussed in more detail in \tqfullvref{sec:TheForStatement}.
+\lstinline|for| loops are discussed in more detail in chapter \tqvref{sec:TheForStatement}.
 
 %==============================================================================
 % End of file!!

@@ -15,45 +15,6 @@
 
 %------------------------------------------------------------------------------
 
-\subsection{‘while’ Statements}\label{sec:WhileStatements}
-A \lstinline|while| statement should have one of the following forms:
-\begin{lstlisting}[numbers=left]
-while( <condition> )
-{
-    <statements>;
-}
-while( <condition> ) <singleStatement>
-\end{lstlisting}
-
-Again, the curly braces can only be omitted in case there is only a single statement, written on the same line than the \lstinline|while| statement that has to be executed in the loop.
-
-An empty \lstinline|while|-loop\footnote{An empty \lstinline|while|-loop usually makes no sense as the compiler optimises it away. Only when the condition causes side effects, it will be executed. But such an implementation is difficult to understand and should be avoided.} should have the following form: 
-\begin{lstlisting}
-while( <condition> );
-\end{lstlisting}
-
-Longer \lstinline|while|-loops should use a label:
-\begin{lstlisting}
-LoopLabel: while( proceed )
-{
-    // Lots of code lines here …
-}   //  LoopLabel:
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
-\subsection{‘do-while’ Statements}
-A \lstinline|do-while| statement should look like below:
-\begin{lstlisting}
-do
-{
-    <statements>;
-}
-while( <condition> );
-\end{lstlisting}
-
-%------------------------------------------------------------------------------
-
 \subsection{‘try-catch’ and ‘try-catch-finally’ Statements}
 Basically, there are two different forms of \verb#try-catch#\index{try-catch-finally} statements: the simple one and the \verb#try-with-resources#\index{try-with-resources} that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
 
@@ -9610,6 +9571,70 @@ var list = new ArrayList<String>();
 \autocite{ORACLE_DOC_PATTERNMATCHING}
 
 \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:For, ORACLE_DOC_LANGUAGE_SPECIFICATION:ForBasic, ORACLE_DOC_LANGUAGE_SPECIFICATION:ForEnhanced}
+
+
+\autocite{}
+
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\section{The \bsq{while} Statement}\label{sec:TheWhileStatement}
+
+\ref{sec:WhileStatements}
+\ref{sec:CaseResults}
+\autocite{ORACLE_DOC_PATTERNMATCHING}
+
+\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:While}
+
+%------------------------------------------------------------------------------
+
+\subsection{The Problem with an Empty Loop Body}\label{sec:EmptyWhile}
+For an empty \lstinline|for|\index{for!empty loop}
+\begin{lstlisting}
+for( <initialization>; <condition>; <update> );
+\end{lstlisting}
+all the work is done in the initialisation and/or the update clauses\footnote{It is even possible to get something done in the condition clause, as a side effect}, and usually, this is honoured by the compiler.
+
+An empty \lstinline|while| loop\index{while!empty loop}
+\begin{lstlisting}
+while( <condition> );
+\end{lstlisting}
+could do work only as a side effect of the condition clause, and this is often not visible to the compiler. With the result that the empty loop is eleminated during the optimisation process.
+
+So the code snippet below, where the current thread should wait until another thread changes a status, will not work as expected:
+\begin{lstlisting}[numbers=left]
+// Will not work as expected!
+final void run()
+{
+    while( getOtherThreadStatus() == BUSY );
+    
+    // Do something …
+}   //  run()
+\end{lstlisting}
+The compiler will just ignore line~4, so that \lstinline|run()| will not wait for that other thread.
+
+A nasty fact is that the empty loop could be eleminated also by the JIT\index{JIT} at runtime.
+
+Consequently you should not use \lstinline|while|\index{while!empty loop} loops with an empty body.
+
+%------------------------------------------------------------------------------
 
 
 \autocite{}

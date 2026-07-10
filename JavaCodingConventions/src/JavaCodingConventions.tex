@@ -15,134 +15,6 @@
 
 %------------------------------------------------------------------------------
 
-\subsection{‘try-catch’ and ‘try-catch-finally’ Statements}
-Basically, there are two different forms of \verb#try-catch#\index{try-catch-finally} statements: the simple one and the \verb#try-with-resources#\index{try-with-resources} that was introduced with Java~7 (also refer to chapter \tqfullvref{sec:TryWithResources}).
-
-\subsubsection{The simple Form}
-A simple \verb#try-catch#\index{try-catch-finally} statement has the following format:
-\begin{lstlisting}
-try
-{
-    <statements>;
-}
-catch( <ExceptionClass> e )
-{
-    <statements>;
-}
-\end{lstlisting}
-
-For this simple form, the \lstinline|catch| block is mandatory. Additional \lstinline|catch| blocks and a \lstinline|finally| block may follow – see below.
-
-\subsubsection{‘try-with-resources’}
-A \verb#try-with-resources#\index{try-with-resources} allows to allocate resources that will be automatically released when the \lstinline|try| block is left. Something similar could be achieved also by adding a \lstinline|finally| block, but \verb#try-with-resources#\index{try-with-resources} is easier and more secure.
-
-It looks like this:
-\begin{lstlisting}[numbers=left]
-try( final var resource = new <ResourceClass>() )
-{
-    <statements>;
-}
-
-final var resource = new <ResourceClass>();
-try( final var r = resource )
-{
-    <statements>;
-}
-\end{lstlisting}
-
-\lstinline|<ResourceClass>| must implement the interface \lstinline|java.lang.Autocloseable|\autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}\index{java.lang!Autocloseable}.
-
-It is possible to allocate more than one resource in a single \lstinline|try| statement:
-\begin{lstlisting}
-try
-( 
-    final var resource1 = new <ResourceClass1>(); 
-    final var resource2 = new <ResourceClass2>() 
-)
-{
-    <statements>;
-}
-\end{lstlisting}
-
-One or more \lstinline|catch| blocks are optional for \verb#try-with-resources#\index{try-with-resources}, as well as a \lstinline|finally| block.
-
-The chapter \tqfullvref{sec:TryWithResources} handles \verb#try-with-resources#\index{try-with-resources} further.
-
-\subsubsection{General formatting Rules for ‘try-catch’}
-\begin{itemize}
-\item{The curly braces (“\{\}”) around the \lstinline|try|, the \lstinline|catch| and \lstinline|finally| blocks are requested by the Java syntax; their placement follows the rules for any other code block.}
-
-\item{In case the \lstinline|try| block can issue more than one exception type, these can be combined into one \lstinline|catch| block, like this:
-\begin{lstlisting}
-…
-catch( <ExceptionClass1> | <ExceptionClass2> e )
-{
-    <statements>;
-}
-\end{lstlisting}
-
-If all exceptions are handled by the same set of statements, or like this, when the exceptions are handled by different code blocks:
-
-\begin{lstlisting}
-…
-catch( <ExceptionClass1> e )
-{
-    <statements1>;
-}
-catch( <ExceptionClass2> e )
-{
-    <statements2>;
-}
-\end{lstlisting}
-
-Of course both can be combined:
-
-\begin{lstlisting}
-…
-catch( <ExceptionClass1> | <ExceptionClass2> e )
-{
-    <statements1>;
-}
-catch( <ExceptionClass3> e )
-{
-    <statements2>;
-}
-\end{lstlisting}}
-
-\item{Each \verb#try-catch#\index{try-catch-finally} statement can also be followed by a \lstinline|finally| block, which  executes regardless of whether or not the \lstinline|try| block has completed successfully.
-
-\begin{lstlisting}
-try
-{
-    <statements>;
-}
-catch( <ExceptionClass> e )
-{
-    <statements>;
-}
-finally
-{
-    <statements>; // Will always be executed!
-}
-\end{lstlisting}
-
-In case a \lstinline|finally| block is present, the \lstinline|catch| block is optional even for a simple \verb#try-catch#\index{try-catch-finally} statement, meaning that no exception is caught:
-\begin{lstlisting}
-try
-{
-    <statements>;
-}
-finally
-{
-    <statements>;
-}
-\end{lstlisting}}
-
-\item{An \textit{empty} \lstinline|catch| block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqvref{sec:SingleLineComments} about empty blocks and comments.}
-
-\item{An empty \lstinline|finally| block is completely obsolete and must be removed.}
-\end{itemize}
-
 %------------------------------------------------------------------------------
 
 \subsection{‘synchronized’ Statements}\label{sec:SynchronizedStatements}
@@ -2702,7 +2574,7 @@ For Reflection\index{reflection}, the situation is similar: you refer to the cla
 %------------------------------------------------------------------------------
 
 \section{Error Handling}\label{sec:ErrorHandling}
-A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined above.
+A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined \hyperref[sec:TypesOfProducts]{above}.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
@@ -8553,6 +8425,12 @@ Although the concatenation with \verb#+# is usually faster than using \lstinline
 %------------------------------------------------------------------------------
 
 \subsection{Composing Structured Strings}\label{sec:ComposingStructuredStrings}
+
+
+Refer to Embedded code, too!!!
+
+
+
 Quite often you see code like this
 \begin{lstlisting}
 final var message = "The requested seat " + number + " is unavailable because " + reason;
@@ -8615,6 +8493,52 @@ For multi-line text in strings, use a text block instead of concatenation, and w
 
 \section{try-with-resources}\label{sec:TryWithResources}
 The feature \verb#try-with-resources#\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TryWithResources}\index{try-with-resources} was introduced with Java~7; it can help to make programs more stable and less error prone.
+
+
+
+
+
+
+
+\subsubsection{‘try-with-resources’}
+A \verb#try-with-resources#\index{try-with-resources} allows to allocate resources that will be automatically released when the \lstinline|try| block is left. Something similar could be achieved also by adding a \lstinline|finally| block, but \verb#try-with-resources#\index{try-with-resources} is easier and more secure.
+
+It looks like this:
+\begin{lstlisting}[numbers=left]
+try( final var resource = new <ResourceClass>() )
+{
+    <statements>;
+}
+
+final var resource = new <ResourceClass>();
+try( final var r = resource )
+{
+    <statements>;
+}
+\end{lstlisting}
+
+\lstinline|<ResourceClass>| must implement the interface \lstinline|java.lang.Autocloseable|\autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}\index{java.lang!Autocloseable}.
+
+It is possible to allocate more than one resource in a single \lstinline|try| statement:
+\begin{lstlisting}
+try
+( 
+    final var resource1 = new <ResourceClass1>(); 
+    final var resource2 = new <ResourceClass2>() 
+)
+{
+    <statements>;
+}
+\end{lstlisting}
+
+One or more \lstinline|catch| blocks are optional for \verb#try-with-resources#\index{try-with-resources}, as well as a \lstinline|finally| block.
+
+The chapter \tqfullvref{sec:TryWithResources} handles \verb#try-with-resources#\index{try-with-resources} further.
+
+
+
+
+
 
 %------------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 \section{Method Chaining}
 Some APIs are designed to allow \bdq{method chaining}\index{method chaining}, sometimes also referred as \bdq{Call Chaining}\index{call chaining|see {method chaining}}; you may find this in particular for implementations of the \bdq{builder} pattern\index{builder pattern}, but it appears elsewhere, too. A prominent example is the class \lstinline|java.lang.StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}\index{java.lang!StringBuilder} (obviously not a builder), a real example for a builder class would be the class \lstinline|DateTimeFormatterBuilder|\autocite{ORACLE_DOC_DATETIMEFORMATTERBUILDER_CLASS}\index{java.time.format!DateTimeFormatterBuilder} from the package \lstinline|java.time.format|\index{java.time.format}.
 
-A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory for the use of method chaining, as shown in the code snippet below\footnote{The example will be explained in detail in chapter \tqref{sec:LocalVariableTypeInference}}:
+A class (or interface) is designed for method chaining when its methods return \lstinline|this| (the containing object instance), but this is not mandatory for the use of method chaining, as shown in the code snippet below:
 
 \index{java.util!Map}\index{java.util!Map!Entry}\index{java.util!Optional}\index{java.util!Stream}
 \begin{lstlisting}

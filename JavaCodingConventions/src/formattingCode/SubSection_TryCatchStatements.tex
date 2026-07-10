@@ -1,0 +1,81 @@
+\subsection{\bsq{throw}, \bsq{try-catch} and \bsq{try-catch-finally} Statements}\label{sec:TheTryCatchStatements}
+Throwing an exception and catching it somewhere else in the code is the foundation of error handling in the \Java programming language. The \verb#try-catch-finally#\index{try}\index{try!catch}\index{try!finally} statement is the core element here, together with the \lstinline|throw|\index{throw} statement and the exceptions itself. Error handling is covered in detail in chapter \tqfullvref{sec:ErrorHandling}.
+
+The \lstinline|try|\index{try} statement is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Try}, and the definitions for the \lstinline|throw|\index{throw} statement can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Throw}.
+
+\subsubsection{Formatting \bsq{throw}}
+There is not much to say about the \lstinline|throw|\index{throw} statement in regards of formatting:
+\begin{lstlisting}
+throw <exception>;
+\end{lstlisting}
+
+That's it!
+
+\subsubsection{Formatting \bsq{try-catch-finally}}
+A \verb#try-catch-finally#\index{try}\index{try!catch}\index{try!finally} statement has the following format:
+\begin{lstlisting}
+try
+{
+    <statements>;
+}
+catch( final <ExceptionClass> e )
+{
+    <statements>;
+}
+finally
+{
+    <statements>
+}
+\end{lstlisting}
+There can be more than one \lstinline|catch|\index{try!catch} clauses, but just one \lstinline|finally|\index{try!finally} clause. If there is at least one \lstinline|catch|\index{try!catch} clause, the \lstinline|finally|\index{try!finally} clause can be omitted. And \lstinline|catch|\index{try!catch} clauses are optional if there is a \lstinline|finally|\index{try!finally} clause.
+
+A \verb#try-with-resources#\index{try-with-resources}\index{try} looks basically like this:
+\begin{lstlisting}
+try( <resource reference> )
+{
+    <statements>;
+}
+catch( final <ExceptionClass> e )
+{
+    <statements>;
+}
+finally
+{
+    <statements>
+}
+\end{lstlisting}
+Again, there can be more than one \lstinline|catch|\index{try!catch} clauses, but just one \lstinline|finally|\index{try!finally} clause. But for a \verb#try-with-resources#\index{try-with-resources}\index{try}, both \lstinline|catch|\index{try!catch} clause and \lstinline|finally|\index{try!finally} clause can be omitted.
+
+For a detailed description of \verb#try-with-resources#\index{try-with-resources}\index{try} refer to chapter \tqfullvref{sec:TryWithResources}.
+
+The use of blanks, round brackets, curly braces and linefeeds was already discussed in \tqfullvref{sec:WhiteSpace}.
+
+The curly braces around the code blocks for the \lstinline|try|\index{try}, the \lstinline|catch|\index{try!catch}, and the \lstinline|finally|\index{try!finally} are syntactically required. The opening and the closing braces will be placed to lines of their own, indented to the level of the respective keyword. The code inside will be indented one additional level, as for any other code block.
+
+In case more than one exception type should be handled the same way, these can be combined into one \lstinline|catch|\index{try!catch} block, like this:
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final <ExceptionClass1> | <ExceptionClass2> e )
+{
+    <statements>;
+}
+\end{lstlisting}
+The vertical bar is surrounded by blanks.
+
+An \textit{empty} \lstinline|catch|\index{try!catch} block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqvref{sec:SingleLineComments} about empty blocks and comments.
+
+A \lstinline|finally| block without any executable code is completely obsolete and must be removed.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

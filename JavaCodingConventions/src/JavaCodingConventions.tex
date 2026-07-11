@@ -1,7 +1,7 @@
 \input{settings/settings}
 
 %To generate the references: "biber JavaCodingConventions"
-%To generate the index: "makeindex -s idxhdr.ist JavaCodingConventions"
+%To generate the index: "makeindex -s JavaCodingConventions.ist JavaCodingConventions"
 
 \input{settings/dedication}
 
@@ -12,93 +12,6 @@
 
 \include{introduction/Chapter}
 \include{formattingCode/Part}
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\subsection{‘synchronized’ Statements}\label{sec:SynchronizedStatements}
-A \lstinline|synchronized| statement acquires a mutual-exclusion lock on behalf of the executing thread, executes a block, then releases the lock. While the executing thread owns the lock, no other thread may acquire the lock\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} – meaning no other thread can enter the block and execute the code in there.
-
-This may look like this:
-\begin{lstlisting}
-synchronized( <expression> )
-{
-    <statements>
-}
-\end{lstlisting}
-The curly braces (“\{\}”) are requested by the Java syntax; their placement follows the rules for any other code block. A single-line \lstinline|synchronized| is therefore not possible.
-
-The Java Language Specification says, that the type of \verb#<expression># has to be a reference type\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized}. That means that
-\begin{lstlisting}
-// DOES NOT WORK!!
-final int i = 5;
-synchronized( i )
-{
-    …
-}
-\end{lstlisting}
-will not work\footnote{In fact, it will cause an error at compile time.}. Unfortunately, the compiler will not complain about something like this:
-\begin{lstlisting}
-// DO NOT DO THIS!!
-final StringBuilder sb = new StringBuilder();
-synchronized( sb )
-{
-    …
-}
-
-final String s = null;
-synchronized( s )
-{
-    …
-}
-\end{lstlisting}
-Ok, for the second one, you get a \lstinline|NullPointerException| at runtime, but it may take a lot of time before you spot the error in the first one. Even worse to debug would be this pattern, although it could be handy under some circumstances:
-\begin{lstlisting}
-// TRY TO AVOID
-synchronized( provideLockObject() )
-{
-    …
-}
-
-\end{lstlisting}
-In this case you have to rely on the method \lstinline|provideLockObject()| to return the proper guard object.
-
-Therefore the rule set by this code conventions is that \verb#<expression># has to be a \lstinline|final| attribute of a reference type, a constant reference\footnote{A \lstinline|final| class variable of a reference type.}, \lstinline|this| or the \lstinline|class| object. In case the respective field exist only to provide a monitor, it should be named as ‘\verb#Guard#’.
-\begin{lstlisting}[numbers=left]
-public final MyClass
-{
-    private final List<String> m_StringList = new ArrayList<>();
-    private static final Object m_MyClassGuard = new Object();
-    
-    public final void myMethod()
-    {
-        synchronized( m_StringList )
-        {
-            …
-        }
-
-        synchronized( m_MyClassGuard )
-        {
-            …
-        }
-
-        synchronized( MyClass.class )
-        {
-            …
-        }
-
-        synchronized( this )
-        {
-            …
-        }
-    }   //  myMethod()
-}
-//  class MyClass
-\end{lstlisting}
-Of course, a method with that many \lstinline|synchronized| blocks does not make any sense~…
-
-The chapter \tqfullvref{sec:MultiThreading} discusses this topic further.
 
 %------------------------------------------------------------------------------
 
@@ -242,7 +155,7 @@ The chapter \tqfullvref{sec:Packages} discusses how to define the name of the pa
 
 %------------------------------------------------------------------------------
 
-\chapter{Naming Conventions}\label{sec:NamingConventions}
+\part{Naming Conventions}\label{sec:NamingConventions}
 While the primary goal of the formatting rules is to make it easier to \textit{read} the source code, are the naming conventions targeted to make a program easier to \textit{understand}.
 
 \subsubsection{Principles}
@@ -957,7 +870,7 @@ Usually, the library files of a project are named after the project, appended by
 
 %------------------------------------------------------------------------------
 
-\chapter{Writing proper Comments}\label{sec:WritingProperComments}
+\part{Writing proper Comments}\label{sec:WritingProperComments}
 Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
 \subsubsection{Principles}
@@ -2435,7 +2348,7 @@ But keeping the outdated code as a comment is definitely not useful, in particul
 
 %------------------------------------------------------------------------------
 
-\chapter{Coding Guidelines}\label{sec:CodingGuidelines}
+\part{Coding Guidelines}\label{sec:CodingGuidelines}
 These coding guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
 
 But as myself, you may have issues to accept something as a “best practice” just because some guru told so. That's a good approach! First because what's a “best practice” today can be an “anti-pattern” tomorrow, and not just because some fashion trends have changed, but also because some new technology was introduced, or – happens all too often! – someone unmasked a false guru.
@@ -2583,13 +2496,13 @@ A proper error handling is crucial for any code, no matter in which type of prog
 
 
 \subsection{Domain Specific Exceptions}
-Each domain (component, module, area of operation, name it …) should have its “Domain specific Exception” – or, more precisely, its own, specific hierarchy of unchecked or checked Exceptions. For internal purposes, it could have also another hierarchy of checked Exceptions, but these should not get much visible outside that domain.
+Each domain (component, module, area of operation, name it …) should have its \bdq{Domain specific Exception} – or, more precisely, its own, specific hierarchy of unchecked or checked Exceptions. For internal purposes, it could have also another hierarchy of checked Exceptions, but these should not get much visible outside that domain.
  
-Except InvalidArgumentException and exceptions derived from that (“validation exceptions”), a domain or component may never emit an exception that is not defined by itself (except NPE, but this may not occur anyway). All other exceptions (exceptions, not errors!) must be caught and handled or wrapped. InvalidArgumentExceptions are thrown only by the API methods of the component as response of an invalid argument to that method. IAE thrown by other component used by this component must be wrapped and delegated or handled internally.
+Except InvalidArgumentException and exceptions derived from that (\bdq{validation exceptions}), a domain or component may never emit an exception that is not defined by itself (except NPE, but this may not occur anyway). All other exceptions (exceptions, not errors!) must be caught and handled or wrapped. InvalidArgumentExceptions are thrown only by the API methods of the component as response of an invalid argument to that method. IAE thrown by other component used by this component must be wrapped and delegated or handled internally.
  
-To illustrate that, we assume that we defined the component “Printing” that is responsible for the generation of documents for paper-like output and their distribution. It defines the exception class “PrintingException” (or “PrintingRuntimeException”, if you like that better), derived from java.lang.RuntimeException. If will directly extend RuntimeException, or  if Printing has a parent component, it will extend that component’s domain specific exception. Perhaps you have defined an application exception (like our PRRuntimeException), so the domain specific exceptions will extend that.
+To illustrate that, we assume that we defined the component \bdq{Printing} that is responsible for the generation of documents for paper-like output and their distribution. It defines the exception class \bdq{PrintingException} (or \bdq{PrintingRuntimeException}, if you like that better), derived from java.lang.RuntimeException. If will directly extend RuntimeException, or  if Printing has a parent component, it will extend that component’s domain specific exception. Perhaps you have defined an application exception (like our PRRuntimeException), so the domain specific exceptions will extend that.
  
-This “domain root exception” allows all consumers of the respective component to catch all specific exceptions from that component with a single catch:
+This \bdq{domain root exception} allows all consumers of the respective component to catch all specific exceptions from that component with a single catch:
  
 \begin{lstlisting}
 try
@@ -2598,18 +2511,18 @@ try
 }
 catch( final PrintingException e )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed with an Exception
        Recipient Id: %s
        Origin: %s
-       “””.formatted( recipientID, dataSource );
+       """.formatted( recipientID, dataSource );
     oLog.error( message, e );
     terminate();
     // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
 }
 \end{lstlisting}
  
-In this sample, „recipientID“ and „dataSource“ will enhance the information that is already provided with the PrintingException object; probably the Printing component was called with the data itself (not with the dataSource), and the recipient is not part of the generated document.
+In this sample, \bdq{recipientID} and \bdq{dataSource} will enhance the information that is already provided with the PrintingException object; probably the Printing component was called with the data itself (not with the dataSource), and the recipient is not part of the generated document.
  
 Printing now defines problem specific exceptions derived from PrintingException; this allows the consumers to respond to specific problems in a specific manner: if the Printing component throws a PrintingDeviceException, the consumer knows that there is a problem with the output device and can send an email to the support staff to inform them that the printer needs maintenance. A PrintingBadDataException tells the consumer that the data it provided was faulty, and a PrintingTooMuchDataException (probably derived from PrintingBadDataException) signals that too much data should be printed. An InvalidPrintingFormatException would indicate that the output description is not valid, and a NoOutputDeviceException tells that there is no printer with the given name.
  
@@ -2622,57 +2535,57 @@ try
 }
 catch( final NoOutputDeviceException ) // Self-Healing
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed because provided device does not exist
        Attempting again with alternative device
        Recipient Id: %s
        Origin: %s
        Missing Device: %s
        Alternative Device: %s
-       “””.formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
+       """.formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
     oLog.warn( message, e );
     retryPrinting();
 }
 catch( final InvalidPrintingFormatException )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed due to an invalid format specification
        Specification: %s
-       “””.formatted( format );
+       """.formatted( format );
     oLog.error( message, e );
     abort();
     // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
 }
 catch( final PrintingTooMuchDataException )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed because of too much data
        Recipient Id: %s
        Origin: %s
        Data Size: %d records
-       “””.formatted( recipientID, dataSource, dataSize );
+       """.formatted( recipientID, dataSource, dataSize );
     oLog.error( message, e );
     terminate();
     // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
 }
 catch( final PrintingBadDataException e )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed with an Exception
        Recipient Id: %s
        Origin: %s
-       “””.formatted( recipientID, dataSource );
+       """.formatted( recipientID, dataSource );
     oLog.error( message, e );
     terminate();
     // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
 }
 catch( final PrintingException e )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed with an Exception
        Recipient Id: %s
        Origin: %s
-       “””.formatted( recipientID, dataSource );
+       """.formatted( recipientID, dataSource );
     oLog.error( message, e );
     abort();
     // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
@@ -2685,22 +2598,22 @@ Printing signals that it cannot proceed by throwing a PrintingException or one o
 …
 catch( final PrintingException e )
 {
-    final var message = “””
+    final var message = """
        Printing Operation failed with an Exception
        Recipient Id: %s
        Origin: %s
-       “””.formatted( recipientID, dataSource );
+       """.formatted( recipientID, dataSource );
     throw new MyDomainSpecificOutputProblemException( message, e );
 }
 \end{lstlisting}
  
-This decision (“either wrap and throw or log and terminate”) has to be taken for each and every call
+This decision (\bdq{either wrap and throw or log and terminate}) has to be taken for each and every call.
  
-Using an unchecked hierarchy means that the consumer can completely ignore the exception handling for the PrintingException (and leave it to its own consumers). It also means that the API methods for the PrintingComponent do not need to have a throws clause, to declare the thrown exceptions. A sample for this approach can be found with the java.util.regex package (the regular expression handling in Java). The other approach, to use checked exceptions, can be found in java.io that defines IOException as the “domain specific exception” and derives exceptions like FileNotFoundException from that. Checked exceptions enforce that each call is somehow wrapped in a try-catch block, otherwise the code does not compile. This forces the attention for the error handling on each caller but can bloat the code. One can say bloated code is much better that code without proper error handling, but when it is too bloated, the code is difficult to read and prone to get broken when amended.
+Using an unchecked hierarchy means that the consumer can completely ignore the exception handling for the PrintingException (and leave it to its own consumers). It also means that the API methods for the PrintingComponent do not need to have a throws clause, to declare the thrown exceptions. A sample for this approach can be found with the java.util.regex package (the regular expression handling in Java). The other approach, to use checked exceptions, can be found in java.io that defines IOException as the \bdq{domain specific exception} and derives exceptions like FileNotFoundException from that. Checked exceptions enforce that each call is somehow wrapped in a try-catch block, otherwise the code does not compile. This forces the attention for the error handling on each caller but can bloat the code. One can say bloated code is much better that code without proper error handling, but when it is too bloated, the code is difficult to read and prone to get broken when amended.
  
 Some words regarding the calls to terminate() vs. abort(): assume we use the code snippet in a loop, where each cycle uses different data to be printed. A PrintingBadDataException means that the current data is somehow corrupted, but we can proceed with the loop (terminate the current process and load the next dataset), but an InvalidPrintingFormatException or a PrintingDeviceException means that no printing is possible at all and we abort the loop.
  
-There are libraries that use “Error” (domain specific implementations of java.lang.Error) to signal the abort condition, while “Exception” means: “you can try again with different (valid) input data”. I don’t like this approach as it is a widely accepted best practice not to catch Error.
+There are libraries that use \bdq{Error} (domain specific implementations of java.lang.Error) to signal the abort condition, while \bdq{Exception} means: \bdq{you can try again with different (valid) input data}. I don’t like this approach as it is a widely accepted best practice not to catch Error.
 
 
 
@@ -8898,9 +8811,9 @@ The C++~STL\index{C++}\index{C++!STL} is using a very similar pattern for smart 
 
 Unfortunately, Java does not know destructors\footnote{The deprecated method \lstinline|java.lang.Object.finalize()|\autocite{ORACLE_DOC_OBJECT:finalize}\index{java.lang!Object!finalize()} that is part of each Java class is not and was never a replacement for or an alternative to a destructor as it could never be predicted when it is called (just “sometime before the JVM terminates” – if ever).}, so this pattern could not be used in Java programs.
 
-A workaround is to use a \verb#try-finally#\index{try-catch-finally} block with the cleanup (usually a call to a method \lstinline|close()|) in the \lstinline|finally| block. But to often we have seen that in the run of modifications and/or corrections (refactorings) suddenly the \lstinline|finally| block and/or its contents had been removed (“optimised away”). Another problem were exceptions that are triggered from within a finally block.
+A workaround is to use a \verb#try-finally#\index{try!finally} block with the cleanup (usually a call to a method \lstinline|close()|) in the \lstinline|finally|\index{try!finally} block. But to often we have seen that in the run of modifications and/or corrections (refactorings) suddenly the \lstinline|finally|\index{try!finally} block and/or its contents had been removed (\bdq{optimised away}). Another problem were exceptions that are triggered from within a finally block.
 
-Now, with the \verb#try-with-resources# feature, we can have “Lifecycle” classes; they are still not that easy to use than a C++\index{C++} class with real destructors, but we can come close.
+Now, with the \verb#try-with-resources#\index{try-with-resources} feature, we can have \bdq{Lifecycle} classes; they are still not that easy to use than a C++\index{C++} class with real destructors, but we can come close.
 
 A sample would be the class \lstinline|AutoLock|; for the full code, see the chapter \tqfullvref{sec:AutoLock}\index{org.tquadrat.foundation.lang!AutoLock}; \lstinline|org.tquadrat.foundation.lang.AutoLock|\index{org.tquadrat.foundation.lang!AutoLock} is a real life implementation that can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
 
@@ -11008,7 +10921,7 @@ Example:
 
 %------------------------------------------------------------------------------
 
-\chapter{Appendices}\label{sec:Appendices}
+\part{Appendices}\label{sec:Appendices}
 
 %------------------------------------------------------------------------------
 

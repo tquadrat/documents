@@ -67,13 +67,33 @@ The vertical bar is surrounded by blanks.
 
 An \textit{empty} \lstinline|catch|\index{try!catch} block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqvref{sec:SingleLineComments} about empty blocks and comments.
 
+Usually, the caught exception is referenced in the \lstinline|catch|\index{try!catch} block. If it is not referenced, you should use the underscore (\bdq{\lstinline|_|}) as the \textit{unnamed exception parameter}\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}\index{unnamed exception parameter}\footnote{From the \jls: \bdq{If a declaration does not include an identifier, but instead includes the keyword \bdq{\lstinline|_|} (underscore), then the entity cannot be referred to by name. […] A local variable, exception parameter, or lambda parameter that is declared using an underscore is called an unnamed local variable, unnamed exception parameter, or unnamed lambda parameter, respectively.}}. This looks like this:
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final <ExceptionClass> _ )
+{
+    <statements>;
+}
+\end{lstlisting}
+Of course this is mandatory if the \lstinline|catch|\index{try!catch} block does not contain any executable code.
+
 A \lstinline|finally| block without any executable code is completely obsolete and must be removed.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
+\item{No blanks between the \lstinline|try|\index{try-with-resources} and the \lstinline|catch|\index{try!catch} keywords and the opening round brackets.
+
+Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{The keywords \lstinline|try|\index{try}, \lstinline|catch|\index{try!catch} and \lstinline|finally|\index{try!finally} are all indented at the same level.
+
+The curly braces  for the respective code blocks are aligned with the keywords, the code is indented one level relative to the curly braces.}
+\item{An empty \lstinline|catch|\index{try!catch} block is not allowed!
+
+It must contain at least a comment that explains why the caught exception is not handled.}
+\item{A \lstinline|finally|\index{try!finally} block without executable code must be removed.}
 \end{enumerate}
 
 %==============================================================================

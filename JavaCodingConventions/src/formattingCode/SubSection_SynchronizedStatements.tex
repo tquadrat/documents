@@ -1,0 +1,84 @@
+\subsection{‘synchronized’ Statements}\label{sec:SynchronizedStatements}
+The \lstinline|synchronized|\index{synchronized} statement is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized}\footnote{The keyword \lstinline|synchronized|\index{synchronized} can be used also as a method modifier; is is explained in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SynchronizedMethods}.}. A \lstinline|synchronized|\index{synchronized} statement acquires a mutual-exclusion lock on behalf of the executing thread, executes the related code block, then releases the lock. While the executing thread owns the lock, no other thread may acquire the lock – meaning no other thread can enter the block and execute the code in there.
+
+The chapter \tqfullvref{sec:MultiThreading} discusses this topic further.
+
+Such a \lstinline|synchronized|\index{synchronized} statement may look like this:
+\begin{lstlisting}
+synchronized( <expression> )
+{
+    <statements>
+}
+\end{lstlisting}
+The curly braces are mandatory according the Java syntax; their placement follows the rules for any other code block. A single-line \lstinline|synchronized|\index{synchronized} statement is therefore not possible.
+
+The {\bdq{The \Java Language Specification}\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} says, that the type of \verb#<expression># has to be a reference type. That means that
+\begin{lstlisting}
+// DOES NOT WORK!!
+final int i = 5;
+synchronized( i )
+{
+    …
+}
+\end{lstlisting}
+will not work\footnote{In fact, it will cause an error at compile time.}. Unfortunately, the compiler will not complain about something like this:
+\begin{lstlisting}[numbers=left]
+// DO NOT DO THIS!!
+final StringBuilder sb = new StringBuilder();
+synchronized( sb )
+{
+    …
+}
+
+// DO NOT DO THIS NEITHER!!
+final String s = null;
+synchronized( s )
+{
+    …
+}
+\end{lstlisting}
+Ok, for the second one (that one in line~9), you will get a \lstinline|NullPointerException|\index{java.lang!NullPointerException} at runtime, but it may take a lot of time before you spot the error in the first one (line~2). Even worse to debug would be this pattern, although it could be handy under some circumstances:
+\begin{lstlisting}
+// TRY TO AVOID!!
+synchronized( provideLockObject() )
+{
+    …
+}
+\end{lstlisting}
+In this case you have to rely on the method \lstinline|provideLockObject()| to return the proper guard object.
+
+So do not use local variables as the expression for \lstinline|synchronized|\index{synchronized}.
+
+In case you declare a field only to provide the monitor for synchronisation, you should name it as `\verb#Guard#’.
+\begin{lstlisting}
+public final MyClass
+{
+    private final List<String> m_StringList = new ArrayList<>();
+    private static final Object m_StringListGuard = new Object();
+    
+    public final void myMethod()
+    {
+        synchronized( m_StringListGuard )
+        {
+            …
+        }
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{No blanks between the \lstinline|synchronized|\index{synchronized} keyword and the opening round bracket.
+
+Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
+\item{The curly braces  for the code block are aligned with the keyword, the code is indented one level relative to the curly braces.}
+\item{The \lstinline|synchronised|\index{synchronized} expression should be a final reference field, at best.
+
+If that field exists only for this purpose, it should be named accordingly, as `\verb#Guard#’.}
+\item{An empty \lstinline|synchronized|\index{synchronized} block does not make any sense and should be removed.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

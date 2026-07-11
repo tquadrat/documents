@@ -2576,6 +2576,142 @@ For Reflection\index{reflection}, the situation is similar: you refer to the cla
 \section{Error Handling}\label{sec:ErrorHandling}
 A proper error handling is crucial for any code, no matter in which type of program it lives – but the definition of \textit{proper} depends significantly on the type of the final product, as it was defined \hyperref[sec:TypesOfProducts]{above}.
 
+
+
+
+
+
+
+\subsection{Domain Specific Exceptions}
+Each domain (component, module, area of operation, name it …) should have its “Domain specific Exception” – or, more precisely, its own, specific hierarchy of unchecked or checked Exceptions. For internal purposes, it could have also another hierarchy of checked Exceptions, but these should not get much visible outside that domain.
+ 
+Except InvalidArgumentException and exceptions derived from that (“validation exceptions”), a domain or component may never emit an exception that is not defined by itself (except NPE, but this may not occur anyway). All other exceptions (exceptions, not errors!) must be caught and handled or wrapped. InvalidArgumentExceptions are thrown only by the API methods of the component as response of an invalid argument to that method. IAE thrown by other component used by this component must be wrapped and delegated or handled internally.
+ 
+To illustrate that, we assume that we defined the component “Printing” that is responsible for the generation of documents for paper-like output and their distribution. It defines the exception class “PrintingException” (or “PrintingRuntimeException”, if you like that better), derived from java.lang.RuntimeException. If will directly extend RuntimeException, or  if Printing has a parent component, it will extend that component’s domain specific exception. Perhaps you have defined an application exception (like our PRRuntimeException), so the domain specific exceptions will extend that.
+ 
+This “domain root exception” allows all consumers of the respective component to catch all specific exceptions from that component with a single catch:
+ 
+\begin{lstlisting}
+try
+{
+    usePrinting();
+}
+catch( final PrintingException e )
+{
+    final var message = “””
+       Printing Operation failed with an Exception
+       Recipient Id: %s
+       Origin: %s
+       “””.formatted( recipientID, dataSource );
+    oLog.error( message, e );
+    terminate();
+    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
+}
+\end{lstlisting}
+ 
+In this sample, „recipientID“ and „dataSource“ will enhance the information that is already provided with the PrintingException object; probably the Printing component was called with the data itself (not with the dataSource), and the recipient is not part of the generated document.
+ 
+Printing now defines problem specific exceptions derived from PrintingException; this allows the consumers to respond to specific problems in a specific manner: if the Printing component throws a PrintingDeviceException, the consumer knows that there is a problem with the output device and can send an email to the support staff to inform them that the printer needs maintenance. A PrintingBadDataException tells the consumer that the data it provided was faulty, and a PrintingTooMuchDataException (probably derived from PrintingBadDataException) signals that too much data should be printed. An InvalidPrintingFormatException would indicate that the output description is not valid, and a NoOutputDeviceException tells that there is no printer with the given name.
+ 
+When the consumer wants to respond to all these exceptions differently (and it should do so! At least it should provide different data to the logging), the code snippet above would look like that below. Of course, we could always provide all information and leave it to the support engineer to identify what is relevant. But that would also mean that any kind of self-healing would get unnecessary complex.
+
+\begin{lstlisting}
+try
+{
+    usePrinting();
+}
+catch( final NoOutputDeviceException ) // Self-Healing
+{
+    final var message = “””
+       Printing Operation failed because provided device does not exist
+       Attempting again with alternative device
+       Recipient Id: %s
+       Origin: %s
+       Missing Device: %s
+       Alternative Device: %s
+       “””.formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
+    oLog.warn( message, e );
+    retryPrinting();
+}
+catch( final InvalidPrintingFormatException )
+{
+    final var message = “””
+       Printing Operation failed due to an invalid format specification
+       Specification: %s
+       “””.formatted( format );
+    oLog.error( message, e );
+    abort();
+    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
+}
+catch( final PrintingTooMuchDataException )
+{
+    final var message = “””
+       Printing Operation failed because of too much data
+       Recipient Id: %s
+       Origin: %s
+       Data Size: %d records
+       “””.formatted( recipientID, dataSource, dataSize );
+    oLog.error( message, e );
+    terminate();
+    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
+}
+catch( final PrintingBadDataException e )
+{
+    final var message = “””
+       Printing Operation failed with an Exception
+       Recipient Id: %s
+       Origin: %s
+       “””.formatted( recipientID, dataSource );
+    oLog.error( message, e );
+    terminate();
+    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
+}
+catch( final PrintingException e )
+{
+    final var message = “””
+       Printing Operation failed with an Exception
+       Recipient Id: %s
+       Origin: %s
+       “””.formatted( recipientID, dataSource );
+    oLog.error( message, e );
+    abort();
+    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
+}
+\end{lstlisting}
+ 
+Printing signals that it cannot proceed by throwing a PrintingException or one of the exceptions derived from it. What happens as response to that exception is on the consumer for Printing: it could terminate itself, too, it could attempt to print again, it can choose an alternative mean to get the documents out, or it could even ignore the problem … or it delegates the whole thing to its own consumers, by just wrapping the caught PrintingException into its own domain specific exception:
+
+\begin{lstlisting}
+…
+catch( final PrintingException e )
+{
+    final var message = “””
+       Printing Operation failed with an Exception
+       Recipient Id: %s
+       Origin: %s
+       “””.formatted( recipientID, dataSource );
+    throw new MyDomainSpecificOutputProblemException( message, e );
+}
+\end{lstlisting}
+ 
+This decision (“either wrap and throw or log and terminate”) has to be taken for each and every call
+ 
+Using an unchecked hierarchy means that the consumer can completely ignore the exception handling for the PrintingException (and leave it to its own consumers). It also means that the API methods for the PrintingComponent do not need to have a throws clause, to declare the thrown exceptions. A sample for this approach can be found with the java.util.regex package (the regular expression handling in Java). The other approach, to use checked exceptions, can be found in java.io that defines IOException as the “domain specific exception” and derives exceptions like FileNotFoundException from that. Checked exceptions enforce that each call is somehow wrapped in a try-catch block, otherwise the code does not compile. This forces the attention for the error handling on each caller but can bloat the code. One can say bloated code is much better that code without proper error handling, but when it is too bloated, the code is difficult to read and prone to get broken when amended.
+ 
+Some words regarding the calls to terminate() vs. abort(): assume we use the code snippet in a loop, where each cycle uses different data to be printed. A PrintingBadDataException means that the current data is somehow corrupted, but we can proceed with the loop (terminate the current process and load the next dataset), but an InvalidPrintingFormatException or a PrintingDeviceException means that no printing is possible at all and we abort the loop.
+ 
+There are libraries that use “Error” (domain specific implementations of java.lang.Error) to signal the abort condition, while “Exception” means: “you can try again with different (valid) input data”. I don’t like this approach as it is a widely accepted best practice not to catch Error.
+
+
+
+
+
+
+
+
+
+
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{Errors should never pass silently and Exceptions may never be swallowed.

@@ -108,7 +108,7 @@ for( var j = 0; proceed; )
 }
 \end{lstlisting}
 
-When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body:
+When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body. The label will then be repeated as the end comment of the code block. This is described in chapter \tqfullref{sec:LabelsAndBreakStatements} and also in  \tqfullref{sec:TrailingOrEndOfLineComments} and \tqfullref{sec:CommentsWhen}.
 \begin{lstlisting}[numbers=left]
 <Label>: for( <initialization>; <condition>; <update> )
 {

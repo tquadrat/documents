@@ -1,0 +1,70 @@
+\section{Labels and \bsq{break}/\bsq{continue} Statements}\label{sec:LabelsAndBreakStatements}
+In Java, a label can be placed in front of every statement, according to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LabeledStatements}:
+\begin{lstlisting}[numbers=left]
+<label>: <statement>
+\end{lstlisting}
+
+As Java does not allow the use of \lstinline|goto|\index{goto}\footnote{… despite it is a reserved keyword.}, labels are mainly used with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements.
+
+
+
+
+
+labels are mainly used in conjunction with \lstinline|break| and \lstinline|continue| statements, and therefore, they will be assigned mostly to \lstinline|switch|, \lstinline|for|, \lstinline|while| and \lstinline|do-while| statements, but they can be placed before any code block.
+
+The \lstinline|break| statement is used with the traditional \lstinline|switch| statement (refer to chapter \tqfullref{sec:SwitchStatements}), and – together with the \lstinline|continue| statement – with loops of all kind.\footnote{The use of \lstinline|break| and \lstinline|continue| with loops is usually discouraged, but in many cases it makes the logic of an algorithm easier and more understandable.}
+
+I recommend to always use a meaningful label together with \lstinline|break| and \lstinline|continue|. This would make it more obvious what is intended with the \lstinline|break| or \lstinline|continue|, and it assures that the right block will be terminated. If assigned, the label should be used also as the end comment for a code block, as described in chapter \tqfullref{sec:TrailingOrEndOfLineComments} and chapter \tqfullref{sec:CommentsWhen}.
+
+Some samples:
+\begin{lstlisting}[numbers=left]
+// BAD!!!
+for( var line = 0; line < maxLines; ++line )
+{
+    for( var column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break; // What??
+        …
+    }
+
+    processLine( field [line] );
+}
+
+// RECOMMENDED
+LineLoop: for( var line = 0; line < maxLines; ++line )
+{
+    ColumnLoop: for( var column = 0; column < maxColumns; ++column )
+    {
+        if( !isValid( field [line] [column] ) break ColumnLoop;
+        …
+    } //  ColumnLoop:
+    processLine( field [line] );
+} // LineLoop:
+
+// RECOMMENDED
+FilterLoop: while( input.hasNext() )
+{
+    final var value = input.next();
+    if( !value.isValid() ) continue FilterLoop; // Skip invalid
+    …
+} // FilterLoop:
+
+// RECOMMENDED
+DirectionSwitch: switch( direction )
+{
+    case LEFT: goLeft(); 
+    	break DirectionSwitch;
+    	
+    case RIGHT: goRight(); 
+    	break DirectionSwitch;
+    	
+    default:
+        throw new IllegalArgumentException( direction.toString() );
+} //  DirectionSwitch:
+\end{lstlisting}
+
+The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 43. The colon at the end of the label name is mandatory for this kind of comment.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -1,11 +1,24 @@
 \section{‘return’ and ‘yield’ Statements}
-The \lstinline|return|\index{return} statement has to be the last statement of a method, while the \lstinline|yield|\index{yield} statement has to be the last statement of a \lstinline|case| block; refer to the chapter \tqfullvref{sec:ReturningValues} for more details on this.
+The \lstinline|return|\index{return} statement has to be the last statement of a method, while the \lstinline|yield|\index{switch!yield} statement has to be the last statement of a \lstinline|case|\index{switch!case} block of a \lstinline|switch| expression\index{switch!expression}; refer to the chapters \tqfullvref{sec:ReturningValues} and \tqfullvref{sec:CaseResults} for more details on this.
 
-When \lstinline|return| is always the last statement of a method, it means that the simple form
+When \lstinline|return|\index{return} is always the last statement of a method, it means that the simple form
 \begin{lstlisting}
 return;
 \end{lstlisting}
-is obsolete and will be omitted. This implies that there is only one \lstinline|return| statement per method allowed, and that short-cutting a method is a forbidden practice. 
+is obsolete and will be omitted. This implies that there is only one \lstinline|return|\index{return} statement per method allowed, and that short-cutting a method is a forbidden practice.
+
+Usually, the name of the return value is \lstinline|retValue| (see \tqfullvref{lbl:RetValue}), and the lines before the \lstinline|return|\index{return} statement are a blank line and the comment \lstinline|//---* Done *---…|:
+\keeplisting{7}
+\begin{lstlisting}
+public final void myMethod()
+{
+    …
+        
+    //---* Done *----------------------------------------------------
+    return retValue;
+}   //  myMethod()
+\end{lstlisting}
+
 
 \lstinline|yield|\index{yield} alone (without a return value) in a \lstinline|case| block will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
 

@@ -92,6 +92,7 @@ An otherwise empty loop should not be used to consume CPU cycles; there are meth
 
 When using the comma operator in the initialization or update clause of a \lstinline|for|\index{for} statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|\index{for} loop (for the initialization clause) or at the end of the loop (for the update clause).
 
+\keeplisting{13}
 Examples:
 \begin{lstlisting}[numbers=left]
 for( var i = 0, j = target.length; i < source.length && j >= 0; ++i, --j )

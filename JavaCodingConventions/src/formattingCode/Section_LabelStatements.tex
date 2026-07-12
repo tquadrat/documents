@@ -1,23 +1,29 @@
 \section{Labels and \bsq{break}/\bsq{continue} Statements}\label{sec:LabelsAndBreakStatements}
-In Java, a label can be placed in front of every statement, according to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LabeledStatements}:
+In Java, a label\index{label} can be placed in front of every statement, according to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LabeledStatements}:
 \begin{lstlisting}
 <label>: <statement>
 \end{lstlisting}
 
-As Java does not allow the use of \lstinline|goto|\index{goto}\footnote{… despite it is a reserved keyword.}, labels are mainly used with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements. Therefore, labels will be assigned mostly to \lstinline|switch|\index{switch} (the ``\verb#case L:#'' variant only), \lstinline|for|\index{for}, \lstinline|while|\index{while} and \lstinline|do-while|\index{while!do} statements.
+As Java does not allow the use of \lstinline|goto|\index{goto}\footnote{… despite it is a reserved keyword.}, labels are mainly used with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements. Consequently, labels will be assigned mostly to \lstinline|switch|\index{switch} (the ``\verb#case L:#'' variant only), \lstinline|for|\index{for}, \lstinline|while|\index{while} and \lstinline|do-while|\index{while!do} statements.
 
-But I found labels particularly usefull to give a name to an arbitary code block:
+But I found labels\index{label} particularly useful to give a name to an arbitary code block or a statement, in particular when the related code block is quite long and/or complex\footnote{Of course, you could also move this code into a private method. This is discussed in \tqfullvref{sec:InlineVsMethods}.}:
 \begin{lstlisting}
 TaxCalculation: {
     // Do the tax calculation here!
     …
 }   //  TaxCalculation:
+
+OptionalProcessing: if( doOptional() )
+{
+    // Do the optional handling here!
+    …
+}   //  OptionalProcessing:    
 \end{lstlisting}
 Of course, you can achieve something similar with comments, but the definition of an additional scope with the block statement is also useful, especially when dealing with lambdas\index{lambda} (see \tqfullvref{sec:Lambdas}.)
 
 For a \lstinline|switch|\index{switch} statement, the \lstinline|break|\index{break} statement terminates a branch (refer to chapter \tqfullref{sec:TraditionalSwitch}).
 
-In the context of loops, the \lstinline|break|\index{break} and the \lstinline|continue|\index{continue} statements are used to modify the execution flow of those loops\footnote{Some other coding standards are discouraging the use of \lstinline|break|\index{break} and \lstinline|continue|\index{continue} with loops. But in many cases, \lstinline|break|\index{break} and \lstinline|continue|\index{continue} can make the implementation of an algorithm easier and better understandable.}.
+In the context of loops, the \lstinline|break|\index{break} and the \lstinline|continue|\index{continue} statements are used to modify the execution flow of those loops\footnote{Some other coding standards recommend to completely avoid the use of \lstinline|break|\index{break} and \lstinline|continue|\index{continue} with loops. But in many cases, \lstinline|break|\index{break} and \lstinline|continue|\index{continue} can make the implementation of an algorithm easier and better understandable.}.
 
 \lstinline|break|\index{break} aborts the current loop cycle and terminates the loop; the execution flow continues with the first statement after the loop body.
 
@@ -25,7 +31,7 @@ In the context of loops, the \lstinline|break|\index{break} and the \lstinline|c
 
 I recommend to always use a meaningful label together with \lstinline|break|\index{break} and \lstinline|continue|\index{continue}. This would make it more obvious what is intended with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue}, and it assures that the right block will be terminated. If assigned, the label should be used also as the end comment for a code block, as described in chapter \tqfullref{sec:TrailingOrEndOfLineComments} and chapter \tqfullref{sec:CommentsWhen}.
 
-Some samples:
+\paragraph{Some samples}
 \begin{lstlisting}[numbers=left]
 // BAD!!!
 for( var line = 0; line < maxLines; ++line )
@@ -35,11 +41,10 @@ for( var line = 0; line < maxLines; ++line )
         if( !isValid( field [line] [column] ) break; // What??
         …
     }
-
     processLine( field [line] );
 }
 \end{lstlisting}
-Of course, the \jls defines unambigiously whether the \lstinline|break| in line~6 terminates the inner or the outer loop, but do you now the respective chapters (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Break} for \lstinline|break|\index{break} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Continue} for \lstinline|continue|\index{continue}) by heart?
+Of course, the \jls defines unambigiously whether the \lstinline|break| in line~6 terminates the inner or the outer loop, but do you now the respective chapters (\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Break} for \lstinline|break|\index{break} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Continue} for \lstinline|continue|\index{continue}) by heart? The use of labels\index{label} clarifies the code's intent: 
 
 \begin{lstlisting}[numbers=left]
 // RECOMMENDED
@@ -52,7 +57,9 @@ LineLoop: for( var line = 0; line < maxLines; ++line )
     } //  ColumnLoop:
     processLine( field [line] );
 } // LineLoop:
+\end{lstlisting}
 
+\begin{lstlisting}[numbers=left]
 // RECOMMENDED
 FilterLoop: while( input.hasNext() )
 {
@@ -60,7 +67,9 @@ FilterLoop: while( input.hasNext() )
     if( !value.isValid() ) continue FilterLoop; // Skip invalid
     …
 } // FilterLoop:
+\end{lstlisting}
 
+\begin{lstlisting}[numbers=left]
 // RECOMMENDED
 DirectionSwitch: switch( direction )
 {
@@ -75,7 +84,21 @@ DirectionSwitch: switch( direction )
 } //  DirectionSwitch:
 \end{lstlisting}
 
-The name of the label is repeated in a comment at the end of the code block, as shown in lines~20, 22, 30, and 43. The colon at the end of the label name is mandatory for this kind of comment.
+The name of the label is repeated in a comment at the end of the code block. The colon at the end of the label name is mandatory for this kind of comment.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{A label can be used to give an arbitrary name to a code block.
+
+It should be used with lengthy code blocks to simplify navigation inside the source code.
+
+The label has to be repeated as a comment at the end of the code block; the colon is part of the label and may not be omitted.}
+\item{There is no blank between the label itself and the colon, while the blank after the colon is required.
+
+The statement follows the associated label on the same line.}
+\item{It is strongly recommended to use labels together with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements.}
+\end{enumerate}
+
 
 %==============================================================================
 % End of file!!

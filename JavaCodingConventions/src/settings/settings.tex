@@ -28,6 +28,7 @@
 \usepackage{varioref}
 \usepackage[iso,english]{isodate}
 \usepackage{makecell}
+\usepackage{needspace}
 \usepackage[english]{babel}
 \usepackage[babel]{csquotes}
 
@@ -92,7 +93,41 @@ literate=
 \renewcommand{\subsubitem}{\par\hangindent=40pt \hspace*{2em}\dots\,}
 %To generate the index: "makeindex -s JavaCodingConventions.ist JavaCodingConventions"
 
-%---* New Commands *-----------------------------------------------------------
+%---* Limit Hurenkinder and Schusterjungen *-------------------------
+\clubpenalty=1000
+\widowpenalty=1000
+
+%---* No Page Break between headline and text *----------------------
+\RedeclareSectionCommand[
+  beforeskip=-4.6\baselineskip
+]{part}
+
+\RedeclareSectionCommand[
+  beforeskip=-4.6\baselineskip
+]{chapter}
+
+\RedeclareSectionCommand[
+  beforeskip=-3.5ex plus -1ex minus -.2ex
+]{section}
+
+\RedeclareSectionCommand[
+  beforeskip=-3.25ex plus -1ex minus -.2ex
+]{subsection}
+
+\RedeclareSectionCommand[
+  beforeskip=-3.25ex plus -1ex minus -.2ex
+]{subsubsection}
+
+\RedeclareSectionCommand[
+  beforeskip=-3.25ex plus 1ex minus .2ex
+]{paragraph}
+
+\RedeclareSectionCommand[
+  beforeskip=-3.25ex plus 1ex minus .2ex
+]{subparagraph}
+
+
+%---* New Commands *-------------------------------------------------
 \def\bsq#1{%both single quotes
 \enquote*{#1}}
  
@@ -126,6 +161,10 @@ literate=
 % The Java Language Specification
 \newcommand{\jls}{\bdq{The \Java Language Specification}\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION}}
 
+% Tries to prevent page break in Listings
+\newcommand{\keeplisting}[1]{%
+  \needspace{#1\baselineskip}%
+}
 %==============================================================================
 % End of file!!
 %==============================================================================

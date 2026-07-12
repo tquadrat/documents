@@ -1,0 +1,510 @@
+
+\part{Appendices}\label{sec:Appendices}
+
+%------------------------------------------------------------------------------
+
+\section{The Naming Dictionary}\label{sec:TheNamingDictionary}
+The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
+
+%------------------------------------------------------------------------------
+
+\subsection{Verbs}
+This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’~…} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{Verbs.tbl.tex}
+
+That a method name is built using one of the verbs above does not free you from providing a proper JavaDoc comment that describes the purpose of the method in detail, together with the arguments, return values and exceptions.
+
+%------------------------------------------------------------------------------
+
+\subsection{Suffixes for Class Names}\label{sec:SuffixesForClassNames}
+This chapter lists defined suffixes for class names and their function.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{ClassNameSuffixes.tbl.tex}
+
+%------------------------------------------------------------------------------
+
+\section{Configurable Errors and Warnings}\label{sec:ConfigurableErrorsAndWarnings}
+A very convenient feature of most IDE's is the capability to configure additional warnings and even errors for the compilation.
+
+%------------------------------------------------------------------------------
+
+\subsection{Eclipse}\label{sec:EclipseErrorsAndWarnings}
+tdb
+
+%------------------------------------------------------------------------------
+
+\subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJErrorsAndWarnings}
+tdb
+
+%------------------------------------------------------------------------------
+
+\section{IDE Configuration}\label{sec:IDEConfiguration}
+This chapter provides samples of configuration files for some IDEs. See also the chapter \tqvref{sec:ConfigurableErrorsAndWarnings} about the errors and warnings that can be configured in Eclipse and IntelliJ IDEA.
+
+%------------------------------------------------------------------------------
+
+\subsection{Eclipse}\label{sec:EclipseConfiguration}
+tbd
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Snippets}
+This chapter provides the XML code for Eclipse snippets.
+
+%------------------------------------------------------------------------------
+
+\paragraph{Structuring Comments}\label{sec:SnippetStructuringComments}
+The snippets for the structuring comments as defined in chapter \tqfullvref{sec:StructuringComments}.
+\begin{lstlisting}[language=XML,basicstyle=\ttfamily\footnotesize]
+<?xml version="1.0"
+      encoding="UTF-16" 
+      standalone="no"?>
+<snippets>
+    <category filters="*"
+              id="category_1145179107125"
+              initial_state="0"
+              label="Structuring Comments"
+              largeicon=""
+              smallicon="">
+        <description><![CDATA[Structuring Comments as defined by the Code Conventions]]></description>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145232938375"
+              label="Enum Declaration"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the enum definition part]]></description>
+            <content><![CDATA[        /*------------------*\
+    ====** Enum Definitions **=================================================
+        \*------------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145179869843"
+              label="Inner Classes"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the inner classes part]]></description>
+            <content><![CDATA[        /*---------------*\
+    ====** Inner Classes **====================================================
+        \*---------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1251889697104"
+              label="Constants"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The part comment for constants.]]></description>
+            <content><![CDATA[      /*-----------*\
+    ====** Constants **========================================================
+        \*-----------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1251888677777"
+              label="Attributes"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The part comment for attributes.]]></description>
+            <content><![CDATA[      /*------------*\
+    ====** Attributes **=======================================================
+        \*------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145179436656"
+              label="Static Initialisations"
+              largeicon="" smallicon="">
+            <description><![CDATA[The header comment for the static initialisations part]]></description>
+            <content><![CDATA[        /*------------------------*\
+    ====** Static Initialisations **===========================================
+        \*------------------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145180117906"
+              label="Constructors"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the constructors part]]></description>
+            <content><![CDATA[    	/*--------------*\
+    ====** Constructors **=====================================================
+        \*--------------*/
+]]></content>
+        </item>
+        <item category="category_1145179107125"
+              class=""
+              editorclass=""
+              id="item_1145180168796"
+              label="Methods"
+              largeicon=""
+              smallicon="">
+            <description><![CDATA[The header comment for the methods part]]></description>
+            <content><![CDATA[    	/*---------*\
+    ====** Methods **==========================================================
+        \*---------*/
+]]></content>
+        </item>
+    </category>
+</snippets>
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsection{JetBrains IntelliJ IDEA}\label{sec:IntelliJConfiguration}
+tbd
+
+%------------------------------------------------------------------------------
+
+\section{Embedded Code}\label{sec:EmbeddedCode}
+Sometimes, it is necessary to embed code inside the Java source code. Most often, these are SQL statements, but sometimes it could be also fragments of HTML or XML documents.
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
+You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
+Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
+
+%------------------------------------------------------------------------------
+
+\section{The Reason why Prefix Notation should be preferred over Postfix Notation}
+At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \verb#++# and \verb#--#. As a C++ method, the prefix implementation may look like this:
+\begin{lstlisting}[language=C++]
+int prefixIncrement( int& n )
+{
+    n = n + 1;
+    return n;
+}
+\end{lstlisting}
+and the postfix version would look like this:
+\begin{lstlisting}[language=C++]
+int postfixIncrement( int& n )
+{
+    int oldValue = n;
+    n = n + 1;
+    return oldValue;
+}
+\end{lstlisting}
+So the postfix version has an additional stack operation that is not necessary if the return value is discarded anyway. This saves only nanoseconds for a single operation, but used in a loop, and in an application server environment, these nanos will sum up to minutes over time.
+
+I confess that there are other possible locations where one can save more CPU cycles, and I also know the advice not to begin too early with optimisations (to “avoid premature optimisation”). My opinion is that this is not an optimisation but a best practice, and that every cycle counts – especially if it is that easy to achieve.
+
+As said also already, most Java compilers (and not only these) will optimise the particular code, but different Java compilers optimises this pattern differently (meaning some even do not touch it – for example that one for the LEGO® Mindstorms Controller\index{LEGO Mindstorms}~…), and even the runtime optimisation will treat it differently, so just from this point of view I would recommend this simple change of one's personal habits.
+
+%------------------------------------------------------------------------------
+
+\section{Examples}\label{sec:Examples}
+
+%------------------------------------------------------------------------------
+
+\subsection{AutoLock}\label{sec:AutoLock}
+This class is a sample implementation of the idea described in chapter \tqfullvref{sec:Lifecycle}, like a PoC; a real life implementation can be found at \autocite{TQUADRAT_ORG_FOUNDATION_AUTOLOCK}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code} \
+\lstinputlisting[numbers=left,caption={AutoLock.java}]{AutoLock.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{Illegal Argument Exceptions}\label{sec:IllegalArgumentExceptions}
+As said in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, a \lstinline|NullPointerException| that is thrown from your code has to be seen as a coding bug: a value was not properly checked before it was used. Nevertheless, values can be \lstinline|null|, for various reasons, and this still can be an error that needs to be signalled.
+
+For that, I suggested a bunch of custom exceptions that are shown here; they are also part of my Foundation Library: for \lstinline|ValidationException| see \autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, the \lstinline|NullArgumentException| can be found at \autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}, the \lstinline|EmptyArgumentException| is documented at \autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}, and finally the documentation for \lstinline|BlankArgumentException| is at \autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code}\
+\lstinputlisting[numbers=left,caption={ValidationException.java}]{ValidationException.java}
+
+\lstinputlisting[numbers=left,caption={NullArgumentException.java}]{NullArgumentException.java}
+
+\lstinputlisting[numbers=left,caption={EmptyArgumentException.java}]{EmptyArgumentException.java}
+
+\lstinputlisting[numbers=left,caption={BlankArgumentException.java}]{BlankArgumentException.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{Lazy}\label{sec:Lazy}
+The interface \lstinline|Lazy| and the associated implementation \lstinline|LazyImpl| provide a holder for a lazy initialised object instance. The initialisation happens on the first call to the method \lstinline|Lazy::get| through a call to the \lstinline|Supplier| instance the \lstinline|Lazy| instance was created with.
+
+\begin{lstlisting}
+public final class MyClass
+{
+    /**
+     *  An attribute of type
+     *  {@link AClass}.
+     */
+    private final Lazy<AClass> m_Attribute;
+    
+    public MyClass()
+    {
+        m_Attribute = Lazy.use( ()-> new AClass( this ) );
+    }
+    
+    public final void myMethod()
+    {
+        m_Attribute.get().aMethod();
+    }   //  myMethod()
+}
+//  class MyClass
+\end{lstlisting}
+
+\lstinline|Lazy| is part of my Foundation Library and can be found at \autocite{TQUADRAT_ORG_FOUNDATION_LAZY}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code}\
+\lstinputlisting[numbers=left,caption={Lazy.java}]{Lazy.java}
+
+\lstinputlisting[numbers=left,caption={LazyImpl.java}]{LazyImpl.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{Load JDK~Logging Configuration}\label{sec:LoadJDKLoggingConfiguration}
+The default configuration for the JDK~Logging can be found in the configuration file \verb#${JAVA_HOME}/conf/logging.properties#; if you want to use a different file, you can announce that by providing the JVM command line argument \verb#-Djava.util.logging.config.file=<filename># . This also allows you to easily replace one logging configuration by another.
+
+But in most cases, you want that a fixed logging configuration is used. You can enforce that by providing the configuration file as a resource and load that in the class with the method \lstinline|main()| like this:
+\begin{lstlisting}[numbers=left,caption={Load Logging Configuration from Resource}]
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger;
+
+static
+{
+    //---* Load the logger configuration and create the logger *-----
+    final var c = Main.class;
+    Logger logger;
+    final var resourceURL = c.getResource( "logging.properties" );
+    if( nonNull( resourceURL )
+    {
+        try( final var logConfiguration = resourceURL.openStream() )
+        {
+            getLogManager().readConfiguration( logConfiguration );
+            logger = getLogger( c.getName() );
+        }
+        catch( final IOException e )
+        {
+            m_Logger = getAnonymousLogger();
+            throw new ExceptionInInitializerError( e );
+        }
+    }
+    else
+    {
+        m_Logger = getAnonymousLogger();
+        throw new ExceptionInInitializerError( "Cannot find resource 'logging.properties'" );
+    }
+    m_Logger = logger;
+}
+
+…
+\end{lstlisting}
+
+Or if you want to read it still from an external file, it can be done like this:
+\begin{lstlisting}[numbers=left,caption={Load Logging Configuration from File}]
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+/**
+ *  The logger for this class.
+ */
+private static final Logger m_Logger;
+
+static
+{
+    //---* Load the logger configuration and create the logger *-----
+    Logger logger;
+    try( final var logConfiguration = newInputStream( Path.of( ".", "logging.properties" ), READ ) )
+    {
+        getLogManager().readConfiguration( logConfiguration );
+        logger = getLogger( Main.class.getName() );
+    }
+    catch( final IOException e )
+    {
+        m_Logger = getAnonymousLogger();
+        throw new ExceptionInInitializerError( e );
+    }
+    m_Logger = logger;
+}
+
+…
+\end{lstlisting}
+The method \lstinline|LogManager::readConfiguration|\autocite{ORACLE_DOC_LOGMANAGER:readConfiguration} should be invoked before the first logger is configured, so the code above should be placed in the static initialisation part of that class of your application that is loaded first – usually this is the class that contains the method \lstinline|main()|.
+
+%------------------------------------------------------------------------------
+
+\subsection{MountPoint}\label{sec:MountPoint}
+The annotation \lstinline|@MountPoint| and how to use it is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}.
+
+The annotation is part of my foundation library, refer to \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code}\
+\lstinputlisting[numbers=left,caption={MountPoint.java}]{MountPoint.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{Patch Identification}\label{sec:PatchIdentification}
+The chapter \tqfullvref{sec:MaintenanceComments} discussed how to mark areas in the code that has been changed to fix a bug. There I suggested to use annotations for this task.
+
+This can look like this:
+\begin{lstlisting}[numbers=left]
+@BUG( id  = "BUG-123456", comment = "Introduced base class MyClassBase" )
+public final class MyClass extends MyClassBase
+{
+    @BUG( id = "BUG-100000", comment = "Made generic; added Typ 'String'" )
+    @BUG( id = "BUG-100003", comment = "Changed type to 'CharSequence'" )
+    private final List<CharSequence> m_Texts = new LinkedList<>();
+
+    @BUG( id  = "BUG-123456", comment = "Introduced base class MyClassBase; calling super()" )
+    public MyClass()
+    {
+        super();
+    }   //  MyClass()
+    
+    @BUG( id = "BUG-100003", comment = "Changed type to 'CharSequence'" )
+    @BUG( id = "BUG-100022", comment = "Made generic; changed to 'extends CharSequence'" )
+    @BUG( id = "BUG-123456", comment = "Introduced base class MyClassBase; added @Override" )
+    @Override
+    public final <T extends Charsequence> void addText( final T text ) { … }
+}
+//  class MyClass
+\end{lstlisting}
+
+That the same annotation can be applied multiple times to the same element requires a “container annotation” for that annotation\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RepeatableAnnotationInterfaces}, but the use of this annotation is implicit.
+
+The annotations \lstinline|@BUG| and \lstinline|@FixList| (the “container annotation”) are part of the Foundation Base project\autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_BUG, TQUADRAT_ORG_FOUNDATION_FIXLIST}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code} \
+\lstinputlisting[numbers=left,caption={FixList.java}]{FixList.java}
+
+\lstinputlisting[numbers=left,caption={BUG.java}]{BUG.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{PostProcessor}\label{sec:PostProcessor}
+This implementation is basically a PoC; currently it is not part of any library.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code} \
+\lstinputlisting[numbers=left,caption={PostProcessor.java}]{PostProcessor.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{ThreadGroup}\label{sec:ThreadGroup}
+The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.
+
+The method \lstinline|java.lang.ThreadGroup:uncaughtException| is called by the Java Virtual Machine when a thread in this thread group stops because of an uncaught exception, and no specific \lstinline|Thread.UncaughtExceptionHandler|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} instance was installed
+to that thread.
+
+The default implementation of that method does the following:
+\begin{enumerate}
+\item{If this thread group has a parent thread group, the \lstinline|uncaughtException()| method of that parent is called with the same two arguments.}
+\item{Otherwise, this method checks to see if there is a default uncaught exception handler installed, and if so, its \lstinline|uncaughtException()| method is called with the same two arguments.}
+\item{Otherwise, this method determines if the \lstinline|Throwable| argument is an instance of \lstinline|java.lang.ThreadDeath|. If so, nothing special is done.
+
+Otherwise, a message containing the thread's name, as returned from the thread's \lstinline|getName()| method, and a stack backtrace, using the \lstinline|Throwable|'s \lstinline|printStackTrace()| method, is printed to the standard error stream.}
+\end{enumerate}
+
+Unfortunately, the class \lstinline|java.lang.ThreadGroup| itself does not provide an API to change the behaviour of its \lstinline|uncaughtException()| method. To do that, you have to override that method in a subclass.
+
+Below you find an implementation of \lstinline|ThreadGroup| that fixes that. A similar class is also part of my Foundation library – see \autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_THREADGROUP}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code} \
+\lstinputlisting[numbers=left,caption={ThreadGroupExt.java}]{ThreadGroupExt.java}
+
+%------------------------------------------------------------------------------
+
+\subsection{UnsupportedEnumError}\label{sec:UnsupportedEnumError}
+This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \tqfullvref{sec:SwitchStatements}), in cases where the selector is an enum.
+
+It will be used like this:
+\begin{lstlisting}[numbers=left]
+enum Color
+{
+    RED, BLUE, GREEN, YELLOW
+}
+
+Color color = …    
+
+// Traditional switch statement
+switch( color )
+{
+    case RED: …; break;
+    case BLUE: …; break;
+    case GREEN: …; break;
+    case YELLOW: …; break;
+
+    default: throw new UnsupportedEnumError( color );
+}
+
+// New switch statement
+switch( color )
+{
+    case RED -> …;
+    case BLUE -> …;
+    case GREEN -> …;
+    case YELLOW -> …;
+
+    default: throw new UnsupportedEnumError( color );
+}
+
+// switch expression
+var result = switch( color )
+{
+    case RED -> "Rot";
+    case BLUE ->"Blau";
+    case GREEN -> "Grün";
+    case YELLOW -> "Gelb";
+
+    default: throw new UnsupportedEnumError( color );
+}
+\end{lstlisting}
+
+Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code} \
+\lstinputlisting[numbers=left,caption={UnsupportedEnumError.java}]{UnsupportedEnumError.java}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

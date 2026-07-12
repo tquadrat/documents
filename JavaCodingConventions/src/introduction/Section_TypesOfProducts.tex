@@ -1,5 +1,5 @@
 \section{Types of Products}\label{sec:TypesOfProducts}
-The rationale behind some of the coding conventions and guardrails depends on the type of product\index{product type} being delivered. This applies in particular to the coding guidelines in part \tqfullvref{sec:CodingGuidelines}. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms \bsq{Plug-In}\index{plugin} \bsq{Framework}\index{framework} and \bsq{Server}\index{server} on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}\index{product type!feature library}, and a \textit{Server} is a \textit{Standalone Application}\index{product type!standalone application} (what else could a server be?), while a \textit{Plug-In} is an extension\index{product type!extension}.}:
+The rationale behind some of the coding conventions and guardrails depends on the type of product\index{product type} being delivered. This applies in particular to the coding guidelines in part \tqfullvref{sec:CodingGuidelines}. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms \bsq{Plug-In}\index{plugin}, \bsq{Framework}\index{framework} and \bsq{Server}\index{server} on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}\index{product type!feature library}, and a \textit{Server} is a \textit{Standalone Application}\index{product type!standalone application} (what else could a server be?), while a \textit{Plug-In} is an \textit{Extension}\index{product type!extension}.}:
 \begin{itemize}[nosep]
 \item{\hyperref[sec:FunctionLibrary]{Function Libraries}\index{product type!function library}\index{function library| see {product type}}}
 \item{\hyperref[sec:FeatureLibrary]{Feature Libraries}\index{product type!feature library}\index{feature library| see {product type}}}
@@ -16,53 +16,52 @@ The individual types cannot be clearly distinguished one from another, there are
 \subsection{Function Library}\label{sec:FunctionLibrary}
 A function library\index{product type!function library} is a collection of functions (often organised in utility classes\index{utility class} – refer to chapter \tqvref{sec:UtilityClasses}) and helper classes\index{helper class|see{utility class}}. A function library does not have a state or requires an initialisation or configuration.
 
-Samples are my Foundation Util library\autocite{TQUADRAT_ORG_FOUNDATION_UTIL}\index{tquadrat Foundation!Util}, the Commons Lang library from the Apache Commons project\autocite{APACHE_COMMONS_LANG}\index{Apache Commons}\index{Apache Commons!Lang}, or Google Guava\autocite{GOOGLE_GUAVA}\index{Google Guava}.
+Samples are my Foundation Util library\index{tquadrat Foundation!Util} \autocite{TQUADRAT_ORG_FOUNDATION_UTIL}, the Commons Lang library from the Apache Commons project\index{Apache Commons}\index{Apache Commons!Lang} \autocite{APACHE_COMMONS_LANG}, or Google Guava\index{Google Guava} \autocite{GOOGLE_GUAVA}.
 
-My JavaComposer library\autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER}\index{tquadrat Foundation!JavaComposer} is a sample for the beforementioned ‘gray area’: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
+My JavaComposer library\index{tquadrat Foundation!JavaComposer} \autocite{TQUADRAT_ORG_FOUNDATION_JAVACOMPOSER} is a sample for the beforementioned \bsq{gray area}: I decided to treat it as a function library, but it could have been a feature library, too. The various XML parsers and JSON parsers/generators will also belong to this gray area. 
 
 %------------------------------------------------------------------------------
 
 \subsection{Feature Library}\label{sec:FeatureLibrary}
 A feature library\index{product type!feature library} adds a service or a complex functionality to your application. Usually, the library as a whole has an internal state, and it has its own configuration and initialisation. Quite often the library's functionality is accessed like an external service, and the library runs its own threads.
 
-Some feature libraries can even be started standalone, in a server mode. Samples for this are the H2 Database Engine\autocite{H2_DATABASE}\index{H2}, ActiveMQ\autocite{APACHE_ACTIVEMQ}\index{Apache ActiveMQ}\index{Active MQ|see {Apache ActiveMQ}}, or Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty}\index{Jetty|see {Eclipse Jetty}}.
+Some feature libraries can even be started standalone, in a server mode. Samples for this are the H2 Database Engine\index{H2} \autocite{H2_DATABASE}, ActiveMQ\index{Apache ActiveMQ}\index{Active MQ|see {Apache ActiveMQ}} \autocite{APACHE_ACTIVEMQ}, or Jetty\index{Eclipse Jetty}\index{Jetty|see {Eclipse Jetty}} \autocite{ECLIPSE_JETTY}.
 
-Others are only providing access to external services that runs in external processes even on different machines. The examples here are the various JDBC\index{JDBC} drivers or Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}.
+Others are only providing access to external services that runs in external processes even on different machines. The examples here are the various JDBC\index{JDBC} drivers or Hibernate\index{Hibernate} \autocite{HIBERNATE_ORM}.
 
-I would place JUnit\autocite{JUNIT5}\index{JUnit} and Log4j\autocite{APACHE_LOG4J}\index{Apache Log4j}\index{Log4j|see {Apache Log4j}} to the gray area here .
+I would place JUnit\index{JUnit} \autocite{JUNIT5} and Log4j\index{Apache Log4j}\index{Log4j|see {Apache Log4j}} \autocite{APACHE_LOG4J} to the gray area here .
 
 %------------------------------------------------------------------------------
 
 \subsection{Tool}\label{sec:Tool}
-A tool\index{product type!tool} in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line\index{command line}, and it will not have a UI, instead it takes all input data somehow from the command line. Perhaps it may even work as a filter\autocite{WIKIPEDIA:Filter}\index{filter}, reading from standard input\index{standard input} and writing to standard output\index{standard output}.
+A tool\index{product type!tool} in this context is a program that is started, performs a single task and terminates afterwards. Most probably it will be invoked from the command line\index{command line}, and it will not have a UI, instead it takes all input data somehow from the command line. Perhaps it may even work as a filter\index{filter} \autocite{WIKIPEDIA:Filter}, reading from standard input\index{standard input} and writing to standard output\index{standard output}.
 
 Programs like \verb#ls#\index{ls} or \verb#grep#\index{grep} belongs to this type. These are usually not provided as Java programs, although there are implementations written in \Java.
 
-Gray area candidates are \verb#awk#\index{awk} and also \verb#sed#\index{sed} (again usually not provided as Java programs, but available in versions written in \Java), jAlbum\autocite{JALBUM}\index{jAlbum}, but even \verb#javac#\index{javac}\autocite{ORACLE_TOOL:javac}, the Java compiler, or \verb#javadoc#\index{javadoc}\autocite{ORACLE_TOOL:javadoc}, the documentation tool for Java.
+Gray area candidates are \verb#awk#\index{awk} and also \verb#sed#\index{sed} (again usually not provided as Java programs, but available in versions written in \Java), jAlbum\index{jAlbum} \autocite{JALBUM}, but even \verb#javac#\index{javac} \autocite{ORACLE_TOOL:javac}, the Java compiler, or \verb#javadoc#\index{javadoc} \autocite{ORACLE_TOOL:javadoc}, the documentation tool for Java.
 
 %------------------------------------------------------------------------------
 
 \subsection{Standalone Application}\label{sec:StandaloneApplication}
-A standalone application\index{product type!standalone application} will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\autocite{JEDIT}\index{jEdit}, an IDE\index{IDE}\index{integrated development environment| see {IDE}}, an application server\index{application server} like WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} or a web container\index{web container} like Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}}.
+A standalone application\index{product type!standalone application} will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\index{jEdit} \autocite{JEDIT}, an IDE\index{IDE}\index{integrated development environment| see {IDE}}, an application server\index{application server} like WebSphere\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} \autocite{IBM_WEBSPHERE} or a web container\index{web container} like Tomcat\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}} \autocite{APACHE_TOMCAT}.
 
-A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, above, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache MQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes.
+A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, \hyperref[sec:Tool]{above}, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache MQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes (all previously mentioned in \tqfullref{sec:FeatureLibrary}).
 
 %------------------------------------------------------------------------------
 
 \subsection{Server-based Application}\label{sec:ServerbasedApplication}
-Server-based applications\index{product type!server-based application} are applications that require a special environment to be executed; the best example are JEE applications that need an application server\index{application server} like JBoss\autocite{REDHAT_JBOSS}\index{Redhat JBoss}\index{JBoss|see {Redhat JBoss}}, WebLogic\autocite{ORACLE_WEBLOGIC}\index{Oracle WebLogic}\index{WebLogic|see {Oracle WebLogic}}, WebSphere\autocite{IBM_WEBSPHERE}\index{IBM WebSphere}, or Geronimo\autocite{APACHE_GERONIMO}\index{Apache Geronimo}\index{Geronimo| see{Apache Geronimo}}
-and web applications, requiring Tomcat\autocite{APACHE_TOMCAT}\index{Apache Tomcat}, Jetty\autocite{ECLIPSE_JETTY}\index{Eclipse Jetty} or any of the appservers mentioned before.
+Server-based applications\index{product type!server-based application} are applications that require a special environment to be executed; the best example are JEE applications that need an application server\index{application server} like JBoss\index{Redhat JBoss}\index{JBoss|see {Redhat JBoss}} \autocite{REDHAT_JBOSS}, WebLogic\index{Oracle WebLogic}\index{WebLogic|see {Oracle WebLogic}} \autocite{ORACLE_WEBLOGIC}, WebSphere\index{IBM WebSphere} \autocite{IBM_WEBSPHERE}, or Geronimo\index{Apache Geronimo}\index{Geronimo| see{Apache Geronimo}} \autocite{APACHE_GERONIMO}, and web applications, requiring web containers\index{web container} like Tomcat\index{Apache Tomcat} \autocite{APACHE_TOMCAT}, Jetty\index{Eclipse Jetty} \autocite{ECLIPSE_JETTY} or any of the appservers mentioned before.
 
 In this case, the application consists of a bunch of so-called \bsq{Servlets}\index{servlet}; their program code has to follow several special rules, determined by the server environment. On the other side the enviroment provides several services that can be utilised by the application.
 
-Other samples are \bsq{Maillets}\index{maillet} for James\autocite{APACHE_JAMES}\index{Apache James} or the customisations (“mods”)\index{Minecraft!mod} for Minecraft\autocite{MINECRAFT}\index{Minecraft} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions\index{product type!extension}).
+Other samples are \bsq{Maillets}\index{maillet} for James\index{Apache James} \autocite{APACHE_JAMES} or the customisations (\bdq{mods})\index{Minecraft!mod} for Minecraft\index{Minecraft} \autocite{MINECRAFT} (although these could be regarded both as the gray area candidates here, because both could be seen also as extensions\index{product type!extension}).
 
 %------------------------------------------------------------------------------
 
 \subsection{Extension}\label{sec:Extension}
-An extension\index{product type!extension} or plugin\index{plugin} requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors\autocite{ORACLE_DOC_PROCESSOR_INTERFACE}\index{annotation processor} are samples for this (they change the behaviour of the Java compiler\index{javac}), as well as plugins for Maven\autocite{APACHE_MAVEN}\index{Apache Maven} or Gradle\autocite{GRADLE}\index{Gradle}.
+An extension\index{product type!extension} or plugin\index{plugin} requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors\index{annotation processor} \autocite{ORACLE_DOC_PROCESSOR_INTERFACE} are samples for this (they change the behaviour of the Java compiler\index{javac}), as well as plugins for Maven\index{Apache Maven} \autocite{APACHE_MAVEN}or Gradle\index{Gradle} \autocite{GRADLE}.
 
-Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\autocite{APACHE_OPENOFFICE}\index{Apache OpenOffice} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\autocite{LIBREOFFICE}\index{LibreOffice}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
+Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\index{Apache OpenOffice} \autocite{APACHE_OPENOFFICE} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\index{LibreOffice} \autocite{LIBREOFFICE}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
 
 %------------------------------------------------------------------------------
 

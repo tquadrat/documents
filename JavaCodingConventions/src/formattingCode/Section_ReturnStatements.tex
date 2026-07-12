@@ -19,39 +19,20 @@ public final void myMethod()
 }   //  myMethod()
 \end{lstlisting}
 
+\lstinline|yield|\index{switch!yield} as a keyword was introduced with the new \lstinline|switch|\index{switch} format and \lstinline|switch| expressions\index{switch!expression} by Java~12. It is used to return a value from a \lstinline|case|\index{switch!case} block that is not an expression. Same as \lstinline|return|\index{return} has \lstinline|yield|\index{switch!yield}to be placed on a line of its own, a the end of a \lstinline|case| block\index{switch!case}. Without  a return value \lstinline|yield|\index{switch!yield} will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
 
-\lstinline|yield|\index{yield} alone (without a return value) in a \lstinline|case| block will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
+The use of round brackets with the \lstinline|return|\index{return} or \lstinline|yield|\index{switch!yield} statement is not required unless they make the return value more obvious and better readable in some way.
 
-The use of parentheses with the \lstinline|return|\index{return} or \lstinline|yield|\index{yield} statement is not required unless they make the return value more obvious and better readable in some way.
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The \lstinline|return|\index{return} statement is, if it exists at all, always the last statement in a method.
 
-The recommended forms are shown in lines~15 and 22/23, below:
-\index{java.util!Arrays!stream()}\index{org.tquadrat.foundation.exception!NullArgumentException}\index{org.tquadrat.foundation.utils!StringUtils!abbreviate()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!length()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!collect()}\index{java.util.stream!Collectors!joining()}\index{org.tquadrat.foundation.exception!UnsupportedEnumError}
-\begin{lstlisting}[numbers=left]
-public final String myMethod( final InputType inputType, final String... input )
-{
-    InputSwitch: final var retValue = switch( inputType )
-    {
-        case null -> throw new NullArgumentException( "inputType" );
-        case FILE -> 
-        {
-            var result = stream( input )
-                .filter( String::isBlank )
-                .filter( s -> !s.startsWith( " " )
-                .collect( joining( "\n" );
-            result = result.length() > 80
-                ? abbreviate( result, 80 )
-                : result;
-            yield result;    
-        }
-        case REGULAR -> abbreviate( input [0], 80 );
-        case UNKNOWN -> "Unknown input";
-        default -> throw new UnsupportedEnumError( inputType );
-    }   //  InputSwitch:
-    
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  myMethod()
-\end{lstlisting}
+There is at maximum one \lstinline|return|\index{return} statement in a message.}
+\item{The \lstinline|return|\index{return} statement is introduced by a blank line and a \verb#Done!# comment.}
+\item{A \lstinline|yield|\index{switch!yield} is always the last statement in a \lstinline|case|\index{switch!case} block.}
+\item{The \lstinline|return|\index{return} and \lstinline|yield|\index{switch!yield} statements are always placed on a line of their own.}
+\item{Do not use round brackets with \lstinline|return|\index{return} or \lstinline|yield|\index{switch!yield}.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

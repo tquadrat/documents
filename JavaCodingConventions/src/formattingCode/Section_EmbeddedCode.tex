@@ -1,0 +1,54 @@
+\section{Embedded Code}\label{sec:EmbeddedCode}
+Sometimes, it is necessary to embed code from another (programming) language into the \Java source code\footnote{If you write a code generator tool, this could even by Java code.}.
+
+First, the code should be placed into a text block\index{text block} (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks} for the definition):
+\begin{lstlisting}[numbers=left]
+final var code = """
+    <code1>
+        <code2>
+    """;
+\end{lstlisting}
+
+The left margin of the text block is indicated by the position of the closing three double quotes. In the sample above, \verb#<code1># in line~2 is not indented at all, while \verb#<code2># in line~3 is indented by four spaces. The indentation\index{indentation} within the source code does not matter here; it is just important for optical reasons.
+
+Aligning the opening and the closing delimiters (the three double quotes) is not recommended. This requires reindentation of the text block\index{text block} if the variable name or modifiers are changed.
+
+Although I requested in \tqfullvref{sec:IndentationCharacter} to use only blanks for the indentation\index{indentation!character}, it is possible that the embedded code requires tabs:
+\begin{lstlisting}[numbers=left]
+final var codeJavaScript = """
+    \t	setTimeout(function() {
+    \t	\t	myDisplayer("Hello!");
+    \t	}, 3000);
+    """;
+\end{lstlisting}
+But for the indentation\index{indentation} of the text block\index{text block} itself (the indentation for the closing delimiter), you still use the blanks. Be careful to not mix the indentation characters\index{indentation!character} within the text block\index{text block} itself. It could lead to funny results.
+
+\autocite{Laskey:TextBlocks} is a comprehensive guide to text blocks\index{text block} in \Java.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The opening three double-quotes (the \bsq{\textit{delimiter}}) for a text block\index{text block} should be placed at the right end of the previous line, and the closing delimiter should be placed on its own line, at the left margin of the text block.
+
+Use the \lstinline|\| (line-terminator) escape sequence if the trailing line-feed is not wanted.}
+\item{Avoid aligning the opening and closing delimiters and the text block's left margin.}
+\item{Either use only spaces or only tabs for the indentation\index{indentation} inside a text block. Mixing white space will lead to a result with irregular indentation.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
+You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
+
+%------------------------------------------------------------------------------
+
+\subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
+Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

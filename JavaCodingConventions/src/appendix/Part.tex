@@ -171,25 +171,6 @@ tbd
 
 %------------------------------------------------------------------------------
 
-\section{Embedded Code}\label{sec:EmbeddedCode}
-Sometimes, it is necessary to embed code inside the Java source code. Most often, these are SQL statements, but sometimes it could be also fragments of HTML or XML documents.
-
-%------------------------------------------------------------------------------
-
-\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
-
-%------------------------------------------------------------------------------
-
-\subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
-You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
-
-%------------------------------------------------------------------------------
-
-\subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
-Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
-
-%------------------------------------------------------------------------------
-
 \section{The Reason why Prefix Notation should be preferred over Postfix Notation}
 At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \verb#++# and \verb#--#. As a C++ method, the prefix implementation may look like this:
 \begin{lstlisting}[language=C++]

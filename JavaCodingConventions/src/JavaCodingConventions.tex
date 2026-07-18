@@ -8154,7 +8154,9 @@ I am not a friend of \lstinline|clone()| and I try to avoid its implementation w
 Therefore my recommendation is to ignore the method \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} unless there is a strict requirement to use it.
 
 %------------------------------------------------------------------------------
-
+\chapter{String Handling}\label{sec:StringHandling}
+\section{Text Blocks}\label{sec:TextBlocks}
+\index{text block}
 \section{String Concatenation}
 How to concatenate strings has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
 
@@ -10353,6 +10355,52 @@ private static String composeToolTip( String text )
 Java requires that this helper is static, and it should be private, or in case the class allows to be extended, protected and final.
 
 Such a helper could also be used to check the arguments before conveying them to this() or super(), as shown in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}.
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{Resources on the CLASSPATH}\label{sec:ResourcesClasspath}
+\autocite{ORACLE_DOC_CLASS:getResourceAsStream}
+\autocite{ORACLE_DOC_CLASS:getResource}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 

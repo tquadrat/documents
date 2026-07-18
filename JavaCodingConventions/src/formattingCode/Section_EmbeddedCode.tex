@@ -1,29 +1,30 @@
 \section{Embedded Code}\label{sec:EmbeddedCode}
 Sometimes, it is necessary to embed code from another (programming) language into the \Java source code\footnote{If you write a code generator tool, this could even by Java code.}.
 
-First, the code should be placed into a text block\index{text block} (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks} for the definition):
+First, only relativly small fragments of foreign code should be embedded into the Java source; larger fragments and full documents can be handled better when provided as resources (refer to \tqfullvref{sec:ResourcesClasspath}). I consider something around 15 to 20~lines still as \bsq{small}, but this can be discussed for sure.
+
+Next, the code should be placed into a text block\index{text block} (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks} for the definition):
 \begin{lstlisting}[numbers=left]
 final var code = """
-    <code1>
-        <code2>
-    """;
+````<code1>
+````    <code2>
+````""";
 \end{lstlisting}
 
-The left margin of the text block is indicated by the position of the closing three double quotes. In the sample above, \verb#<code1># in line~2 is not indented at all, while \verb#<code2># in line~3 is indented by four spaces. The indentation\index{indentation} within the source code does not matter here; it is just important for optical reasons.
+The left margin of the text inside the text block\index{text block} is indicated by the position of the closing three double quotes. In the sample above, \verb#<code1># in line~2 is not indented at all, while \verb#<code2># in line~3 is indented by four spaces. The indentation\index{indentation} within the source code does not matter here; it is just important for optical reasons. The \lstinline|" "| indicates the indentation blanks for the string only.
 
 Aligning the opening and the closing delimiters (the three double quotes) is not recommended. This requires reindentation of the text block\index{text block} if the variable name or modifiers are changed.
 
-Although I requested in \tqfullvref{sec:IndentationCharacter} to use only blanks for the indentation\index{indentation!character}, it is possible that the embedded code requires tabs:
+According to chapter \tqfullref{sec:IndentationCharacter} only blanks are used for the indentation\index{indentation!character} of the Java source code. But it is of course possible that the embedded code requires tabs for its indendation. In this case, you have to the use the respective escape sequence \bdq{\lstinline|\\t|}:
 \begin{lstlisting}[numbers=left]
 final var codeJavaScript = """
-    \t	setTimeout(function() {
-    \t	\t	myDisplayer("Hello!");
-    \t	}, 3000);
-    """;
+````\tsetTimeout(function() {
+````\t\tmyDisplayer("Hello!");
+````\t}, 3000);
+````""";
 \end{lstlisting}
-But for the indentation\index{indentation} of the text block\index{text block} itself (the indentation for the closing delimiter), you still use the blanks. Be careful to not mix the indentation characters\index{indentation!character} within the text block\index{text block} itself. It could lead to funny results.
 
-\autocite{Laskey:TextBlocks} is a comprehensive guide to text blocks\index{text block} in \Java.
+\bdq{Programmer's Guide to Text Blocks} \autocite{Laskey:TextBlocks} is a comprehensive guide to text blocks\index{text block} in \Java. Text blocks will also be discussed again in chapter \tqfullvref{sec:TextBlocks}.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]

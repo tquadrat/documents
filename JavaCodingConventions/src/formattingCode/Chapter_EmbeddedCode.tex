@@ -1,4 +1,4 @@
-\section{Embedded Code}\label{sec:EmbeddedCode}
+\chapter{Embedded Code}\label{sec:EmbeddedCode}
 Sometimes, it is necessary to embed code from another (programming) language into the \Java source code\footnote{If you write a code generator tool, this could even by Java code.}.
 
 First, only relativly small fragments of foreign code should be embedded into the Java source; larger fragments and full documents can be handled better when provided as resources (refer to \tqfullvref{sec:ResourcesClasspath}). I consider something around 15 to 20~lines still as \bsq{small}, but this can be discussed for sure.
@@ -30,7 +30,7 @@ final var codeJavaScript = """
 \begin{enumerate}[label=P\arabic*.]
 \item{The opening three double-quotes (the \bsq{\textit{delimiter}}) for a text block\index{text block} should be placed at the right end of the previous line, and the closing delimiter should be placed on its own line, at the left margin of the text block.
 
-Use the \bdq{\lstinline|\|} (line-terminator) escape sequence if the trailing line-feed is not wanted.}
+Use the line-terminator escape sequence\footnote{A backslash immediately followed by a linefeed.} if the trailing line-feed is not wanted.}
 \item{Avoid aligning the opening and closing delimiters and the text block's left margin.}
 \item{If tabs are needed for the indentation of the code inside the text block, use the escape sequence \bdq{\lstinline|\\t|}. 
 
@@ -42,18 +42,7 @@ Use resources for extensive code.}
 
 %------------------------------------------------------------------------------
 
-\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
-
-%------------------------------------------------------------------------------
-
-\subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
-You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
-
-%------------------------------------------------------------------------------
-
-\subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
-Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
-
+\input{formattingCode/Section_FormattingEmbeddedCode.tex}
 
 %==============================================================================
 % End of file!!

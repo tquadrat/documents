@@ -10,8 +10,8 @@
 \include{settings/title}
 \include{settings/toc}
 
-%\include{introduction/Chapter}
-%\include{formattingCode/Part}
+\include{introduction/Chapter}
+\include{formattingCode/Part}
 
 %------------------------------------------------------------------------------
 
@@ -7644,20 +7644,20 @@ On the returned object instance you can call the ‘methods’ that had been def
 This is used by various popular libraries and frameworks:
 
 \begin{itemize}[nosep]
-\item{For XML parsing: JAXB and its predecessors\autocite{ORACLE_DOC_JAXB, ECLIPSE_XML_BINDING}\index{JAXB}}
-\item{For JSON parsing: GSON\autocite{GOOGLE_GSON}\index{GSON} and Jackson\autocite{FasterXML:Jackson}\index{Jackson}}
-\item{For WebServices: JAX\_WS\autocite{IBM_JAX_WS, ECLIPSE_XML_SERVICES}\index{JAX\_WS}}
-\item{For ORM: JPA\autocite{IBM_JPA, ECLIPSE_JPA}\index{JPA} and Hibernate\autocite{HIBERNATE_ORM}\index{Hibernate}}
-\item{For command line handling: ARGS4J\autocite{Kawaguchi:args4j, Kawaguchi:args4j_github}\index{ARGS4J}}
+\item{For XML\index{XML} parsing: JAXB and its predecessors\index{JAXB} \autocite{ORACLE_DOC_JAXB, ECLIPSE_XML_BINDING}}
+\item{For JSON\index{JSON} parsing: GSON\index{GSON} \autocite{GOOGLE_GSON} and Jackson\index{Jackson} \autocite{FasterXML:Jackson}}
+\item{For WebServices: JAX\_WS\index{JAX\_WS} \autocite{IBM_JAX_WS, ECLIPSE_XML_SERVICES}}
+\item{For ORM\index{ORM}: JPA\index{JPA} \autocite{IBM_JPA, ECLIPSE_JPA} and Hibernate\index{Hibernate} \autocite{HIBERNATE_ORM}}
+\item{For command line handling: ARGS4J\index{ARGS4J} \autocite{Kawaguchi:args4j, Kawaguchi:args4j_github}}
 \end{itemize}
 
-In fact, these frameworks/libraries are only possible because annotations had been introduced with Java~5: the annotations allow to apply meta information to classes above the information provided by the class definition itself.
+In fact, some of these frameworks/libraries are only possible because annotations had been introduced with Java~5: the annotations allow to apply meta information to classes above the information provided by the class definition itself.
 
 All the above listed projects will somehow map external data to a Java class (\textit{unmarshalling}\index{unmarshalling}), or from a Java class into an external format (\textit{marshalling}\index{marshalling}), and annotations provide column names or field names.
 
 When your project does not focus on another tool in this category, plain attributes are a better choice in most cases.
 
-And if you have to provide a mapper from an internal data exchange format (that is not XML or JSON~…), you should consider to write an annotation processor (AP) – in particular if you are in control of the full build process for the project that is intended to use that mapper.
+And if you have to provide a mapper from an internal data exchange format (that is not XML\index{XML} or JSON\index{JSON}~…), you should consider to write an annotation processor\index{annotation processor} (AP) that generates the respective code – in particular if you are in control of the full build process for the project that is intended to use that mapper.
 
 %------------------------------------------------------------------------------
 
@@ -8155,8 +8155,10 @@ Therefore my recommendation is to ignore the method \lstinline|java.lang.Object:
 
 %------------------------------------------------------------------------------
 \chapter{String Handling}\label{sec:StringHandling}
+
 \section{Text Blocks}\label{sec:TextBlocks}
-\index{text block}
+Text block\index{text block}
+
 \section{String Concatenation}
 How to concatenate strings has been a topic of discussion since the very beginning of Java. And the truth has changed with nearly each version of the language, not making it easier to decide how it is done correctly. This chapter provides some recommendations and best practices for the current versions of Java (Java~17 and later).
 

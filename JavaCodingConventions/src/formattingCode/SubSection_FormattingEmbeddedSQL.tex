@@ -1,0 +1,17 @@
+\subsection{Formatting SQL inside Java}\label{sec:FormattingSQLInsideJava}
+If your code needs to access a database\index{database} on an RDBMS\index{RDBMS}, it is quite likely that you have to write some SQL\index{SQL} statements into your code. Even when you are using an ORM\index{ORM} like JPA\index{JPA} \autocite{IBM_JPA, ECLIPSE_JPA} and Hibernate\index{Hibernate} \autocite{HIBERNATE_ORM}, it might still be necessary to add some SQL\index{SQL} statements or statements in the tool's variant of SQL (HQL\index{HQL}\index{HQL|see {Hibernate!HQL}} in case of Hibernate\index{Hibernate}).
+
+Also the statements of several other query languages can be formatted in the same manner than SQL statements.
+
+\begin{lstlisting}
+final var sqlSelect = """
+````SELECT person.id AS "id", person.name AS "lastName", person.surname AS "firstName"', address.street AS "street", address.city AS "city"
+````    FORM contact.person, contact.address
+````    WHERE person.addressid = address.id
+````        AND person.profession like '%Teacher%'
+````""";
+\end{lstlisting}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -24,15 +24,20 @@ final var codeJavaScript = """
 ````""";
 \end{lstlisting}
 
-\bdq{Programmer's Guide to Text Blocks} \autocite{Laskey:TextBlocks} is a comprehensive guide to text blocks\index{text block} in \Java. Text blocks will also be discussed again in chapter \tqfullvref{sec:TextBlocks}.
+\bdq{Programmer's Guide to Text Blocks} \autocite{Laskey:TextBlocks} is a comprehensive guide to text blocks\index{text block} in \Java. Text blocks will also be discussed more generally again in chapter \tqfullvref{sec:TextBlocks}.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{The opening three double-quotes (the \bsq{\textit{delimiter}}) for a text block\index{text block} should be placed at the right end of the previous line, and the closing delimiter should be placed on its own line, at the left margin of the text block.
 
-Use the \lstinline|\| (line-terminator) escape sequence if the trailing line-feed is not wanted.}
+Use the \bdq{\lstinline|\|} (line-terminator) escape sequence if the trailing line-feed is not wanted.}
 \item{Avoid aligning the opening and closing delimiters and the text block's left margin.}
-\item{Either use only spaces or only tabs for the indentation\index{indentation} inside a text block. Mixing white space will lead to a result with irregular indentation.}
+\item{If tabs are needed for the indentation of the code inside the text block, use the escape sequence \bdq{\lstinline|\\t|}. 
+
+Mixing white space will lead to a result with irregular indentation.}
+\item{Do not embed large code blocks.
+
+Use resources for extensive code.}
 \end{enumerate}
 
 %------------------------------------------------------------------------------

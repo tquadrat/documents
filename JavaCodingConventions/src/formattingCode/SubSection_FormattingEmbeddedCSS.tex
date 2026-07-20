@@ -1,0 +1,42 @@
+\subsection{Formatting CSS inside Java}\label{sec:FormattingCSSInsideJava}
+In most cases, CSS\index{CSS}\index{Cascading Style Sheets|see {CSS}} \autocite{W3C:CSS} settings should be provided through a resource file\index{resource file}, because there they are easier to modify if necessary.
+
+CSS\index{CSS} is not only used with HTML\index{HTML} in the context with browsers, but also for GUIs created with JavaFX\index{JavaFX} \autocite{JavaFX}.
+
+Basically, a \bdq{Cascading Style Sheet}\index{CSS} consists from a set of rules. Each rule begins with a selector or list of selectors, followed by one or more declarations, wrapped in curly braces. A declaration consists of a property and a value, separated by a colon. The declaration is terminated by a semicolon.
+
+This looks like this:
+\begin{lstlisting}[language={}]
+<selector> <selector> {
+    <property>:<value>;
+    <property>:<value>;
+}
+
+<selector> <selector> {
+    <property>:<value>;
+    <property>:<value>;
+}
+\end{lstlisting}
+
+Or, when embedded into a Java source file:
+\begin{lstlisting}
+final var cssString = """
+````<selector> <selector> {
+````    <property>:<value>;
+````    <property>:<value>;
+````}
+
+````<selector> <selector> {
+````    <property>:<value>;
+````    <property>:<value>;
+````}\
+````""";
+\end{lstlisting}
+
+Each rule starts on its own line. The list of selectors is terminated by the openening curly brace and a linefeed. The declarations will be indented with four spaces, terminated by the semicolon and a linefeed again. The closing curly braces is not indented and follows on a line of its own.
+
+The rules will be separated by an empty line from each other. 
+
+%==============================================================================
+% End of file!!
+%==============================================================================

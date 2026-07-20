@@ -1,6 +1,21 @@
 \subsection{Formatting HTML inside Java}\label{sec:FormattingHTMLInsideJava}
-Same as for XML, also only small HTML fragments should be embedded into the Java source code. Anything else should go into a resource file.
+Embedded HTML\index{HTML} snippets are usually used to format the output of a program or an application, not only in the context of web applications.
+
+Below some recommendations that were translated from \autocite{selfHTML:GuterHTMLStil}:
+\begin{itemize}
+	\item{Your HTML markup should be error-free (valid) so that it can be read by browsers and other parsers, such as screen readers. HTML\index{HTML} can only be validated if you include a \verb#doctype# declaration\footnote{This is only relevant if you embedd a complete HTML document into your Java code, and not just HTML snippets.}.} 
+	\item{Virtues borrowed from XML\index{XML}: 
+		\begin{itemize}
+			\item{Well-formed syntax improves readability and enables processing as XHTML\index{XHTML}.}
+			\item{All element names, attribute names, and their values are written in lowercase. Attribute values are always enclosed in doubel quotation marks.}
+			\item{Use \bdq{meaningful} class names that describe function rather than visual styling.} 
+			\item{Elements that do not strictly require a closing tag in HTML (e.g., \verb#p#, \verb#th#, \verb#td#, \verb#dt#, \verb#dd#, \verb#li#) should always be written with a closing tag.}
+			\item{Use indentation and blank lines to structure your code clearly.}
+		\end{itemize}}
+\end{itemize}
+\textbf{Note:} Since XHTML\index{XHTML} is an XML\index{XML} dialect, the points listed above are mandatory in XHTML, whereas in HTML they are \bdq{merely} a matter of good practice.
 
 %==============================================================================
 % End of file!!
 %==============================================================================
+

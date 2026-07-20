@@ -1,7 +1,9 @@
 \chapter{Embedded Code}\label{sec:EmbeddedCode}
 Sometimes, it is necessary to embed code from another (programming) language into the \Java source code\footnote{If you write a code generator tool, this could even by Java code.}.
 
-First, only relativly small fragments of foreign code should be embedded into the Java source; larger fragments and full documents can be handled better when provided as resources (refer to \tqfullvref{sec:ResourcesClasspath}). I consider something around 15 to 20~lines still as \bsq{small}, but this can be discussed for sure.
+First, only relativly small fragments of foreign code should be embedded into the Java source; larger fragments and full documents can be handled better when provided as resources\index{resource file} (refer to \tqfullvref{sec:ResourcesClasspath}). I consider something around 15 to 20~lines still as \bsq{small}, but this can be discussed for sure.
+
+Not only that the embedded code may clutter the Java source, it is also much better modifiable when stored in a resource file\index{resource file}.
 
 Next, the code should be placed into a text block\index{text block} (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks} for the definition):
 \begin{lstlisting}[numbers=left]

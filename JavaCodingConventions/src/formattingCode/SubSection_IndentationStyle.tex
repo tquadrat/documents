@@ -3,6 +3,7 @@ The indentation\index{indentation} of code blocks, based on their context, incre
 
 Obviously, \bdq{readability} is a relative term, depending from one's habits. So some people are more familiar with the Kernighan-Ritchie (K\&R) indentation style\index{Kernighan-Ritchie style}\index{K\&R style|see{Kernighan-Ritchie style}}
 
+\keeplisting{5}
 \begin{lstlisting}
 public final void myMethod (){
     if (flag) {
@@ -13,6 +14,7 @@ public final void myMethod (){
 
 as it is also shown in the \ccjpl, other prefer to have the curly braces on a line of their own (sometimes referred to as GNU or BSD style\index{GNU style}\index{BSD style}\footnote{All, BSD, GNU and K\&R styles, will define more than just how to place the curly braces. In addition, all three are originally part of code conventions for programming in C and/or \mbox{C++} that cannot applied to Java without modifications. See chapter \tqfullvref{sec:OtherProgrammingLanguages} on this topic.}):
 
+\keeplisting{7}
 \begin{lstlisting}
 public final void myMethod()
 {
@@ -27,6 +29,7 @@ Both styles will work fine, but they look different. So as a lot of other guidel
 
 I prefer the so-called GNU or BSD style\index{indentation!style} and recommend it to you as well, because it makes it easier to detect the begin and the end of a code block than the Kernighan-Ritchie style. It demands to have the opening and closing curly braces on a line of their own, like below. This let the corresponding opening and closing braces appear on the same column:
 
+\keeplisting{16}
 \begin{lstlisting}
 public final class MyClass
 {

@@ -1,10 +1,11 @@
 \subsection{Formatting CSS inside Java}\label{sec:FormattingCSSInsideJava}
 In most cases, CSS\index{CSS}\index{Cascading Style Sheets|see {CSS}} \autocite{W3C:CSS} settings should be provided through a resource file\index{resource file}, because there they are easier to modify if necessary.
 
-CSS\index{CSS} is not only used with HTML\index{HTML} in the context with browsers, but also for GUIs created with JavaFX\index{JavaFX} \autocite{JavaFX}.
+CSS\index{CSS} is not only used with HTML\index{HTML} in context with browsers, but also for GUIs created with JavaFX\index{JavaFX} \autocite{JavaFX}.
 
 Basically, a \bdq{Cascading Style Sheet}\index{CSS} consists from a set of rules. Each rule begins with a selector or list of selectors, followed by one or more declarations, wrapped in curly braces. A declaration consists of a property and a value, separated by a colon. The declaration is terminated by a semicolon.
 
+\keeplisting{10}
 This looks like this:
 \begin{lstlisting}[language={}]
 <selector> <selector> {
@@ -18,6 +19,7 @@ This looks like this:
 }
 \end{lstlisting}
 
+\keeplisting{12}
 Or, when embedded into a Java source file:
 \begin{lstlisting}
 final var cssString = """

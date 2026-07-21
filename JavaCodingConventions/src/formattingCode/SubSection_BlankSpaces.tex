@@ -10,9 +10,12 @@ As a short it can be said that the round brackets for these keywords will be tre
 Examples:
 \begin{lstlisting} 
 while( true ) { … }
-
+\end{lstlisting}
+\begin{lstlisting} 
 for( int i = 0; i < 10; ++i ) { … }
-
+\end{lstlisting}
+\index{java.lang!Exception}\index{java.lang!Throwable!printStackTrace()}
+\begin{lstlisting} 
 try
 {
     …
@@ -21,24 +24,28 @@ catch( Exception e )
 {
     e.printStackTrace();
 }
-
+\end{lstlisting}
+\begin{lstlisting} 
 if( list.isEmpty() ) { … }
 \end{lstlisting}}
 
 \item{A blank space has to appear after commas in argument lists. The exception are generics where the comma is not followed by a blank space in case there is more than one type.
 
+\keeplisting{7}
 Examples:
 \index{java.util!Map}\index{java.util!HashMap}
 \begin{lstlisting}
 Map<String,String> map1 = new HashMap<String,String>();
 
-Map<String,String> map2 = new HashMap<>(); // using the diamond operator
+// using the diamond operator:
+Map<String,String> map2 = new HashMap<>(); 
 
 map.put( key, value );
 \end{lstlisting}}
 
 \item{All binary operators except “\verb#.#” has to be separated from their operands by spaces.
 
+\keeplisting{6}
 Example:
 \begin{lstlisting}
 a += c + d;
@@ -50,6 +57,7 @@ printSize( "size is " + foo + "\n" );
 
 \item{Blank spaces should never separate unary operators such as unary minus, increment (“\verb#++#”), and decrement (“\verb#--#”) from their operands.
 
+\keeplisting{4}
 Example:
 \begin{lstlisting}
 while( d-- > s++ )
@@ -60,6 +68,7 @@ while( d-- > s++ )
 
 \item{The expressions in a \lstinline|for| statement has to be separated by blank spaces after the semicolon.
 
+\keeplisting{4}
 Example:
 \begin{lstlisting}
 for( expr1; expr2; expr3 )
@@ -75,6 +84,7 @@ for( String s : stringArray ) System.out.println( s );
 
 \item{For ternary statements, the question mark (“?”) and the colon (“:”) has to be surrounded by blank spaces:
 
+\keeplisting{2}
 Example:
 \begin{lstlisting}
 int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
@@ -83,6 +93,7 @@ int signum = d < 0 ? -1 : d > 0 ? 1 : 0;
 In this sample, some round bracket would be helpful to increase readability.}
 \item{Casts should be followed by a blank space. 
 
+\keeplisting{3}
 Examples:
 \begin{lstlisting}
 myMethod( (byte) aNum, (Object) x);

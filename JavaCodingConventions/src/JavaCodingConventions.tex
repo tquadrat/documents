@@ -10131,7 +10131,7 @@ Inner classes are …
 \end{lstlisting}
 
 %------------------------------------------------------------------------------
-
+\chapter{Constructors}\label{sec:CodingConstructors}
 \section{Chaining Constructors}\label{sec:ChainingConstructors}
 The DRY (“Don’t repeat yourself”) principle should be also used for constructors. Basically there are two different scenarios. In the first, you have constructors with a different number of arguments, reflecting to amount of default settings for the new object. We call this the “Primary Constructor” pattern.
 In the other case you have constructors with different arguments, what we want to call the “Common Constructor” pattern. Both patterns are discussed below.
@@ -10329,7 +10329,7 @@ private ChainedConstructor( final boolean ignored ) { … }
 
 %------------------------------------------------------------------------------
 
-\subsection{Constructor Helpers}
+\subsection{Constructor Helpers}\label{sec:ConstructorHelpers}
 In the sample for the ChainedConstructors class in chapter 5.19.1 above we have a constructor like this:
 \begin{lstlisting}[numbers=left]
 public ChainedConstructors( String text )

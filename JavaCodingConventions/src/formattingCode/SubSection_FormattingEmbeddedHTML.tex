@@ -15,6 +15,31 @@ Below some recommendations that were translated from \autocite{selfHTML:GuterHTM
 \end{itemize}
 \textbf{Note:} Since XHTML\index{XHTML} is an XML\index{XML} dialect, the points listed above are mandatory in XHTML, whereas in HTML they are \bdq{merely} a matter of good practice.
 
+\keeplisting{21}
+Embedding a complete HTML\index{HTML} document would look like this:
+\begin{lstlisting}
+final var htmlDocumentString = """
+````<!DOCTYPE html>
+````<html>
+````    <head>
+````        <meta charset="UTF-8" />
+````        <title>Title</title>
+````    </head>
+````    <body>
+````        <h1>Headline</h2>
+````        <p>Text …</p>
+````        <p>More text …</p>
+````        <ol>
+````            <li>Entry 1</li>
+````            <li>Entry 2</li>
+````            <li>Entry 3</li>
+````        </ol>
+````        <p>Final text!</p>
+````    </body>
+````</html>
+````""";
+\end{lstlisting}
+
 %==============================================================================
 % End of file!!
 %==============================================================================

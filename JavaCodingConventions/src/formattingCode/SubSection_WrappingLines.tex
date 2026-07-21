@@ -14,13 +14,16 @@ As we have an unlimited line length, it will not happen that an expression does 
 \end{enumerate}
 
 \subsubsection*{Line Wrapping for Method Calls}
+\keeplisting{4}
 Here are some examples on how to break long method calls:
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 //  USUAL
 final var result = myMethod( longExpression1, longExpression2, 
     longExpression3, longExpression4, longExpression5 );
-        
-//  SINGLE LINE FOR EACH ARGUMENT
+\end{lstlisting}
+Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument:
+\keeplisting{8}
+\begin{lstlisting}
 myProcedure
 ( 
     longExpression1,
@@ -29,7 +32,11 @@ myProcedure
     longExpression4, // some comment
     longExpression5
 );
+\end{lstlisting}
 
+\keeplisting{9}
+With a return value:
+\begin{lstlisting}
 final var result = myFunction
     ( 
         longExpression1,
@@ -38,8 +45,12 @@ final var result = myFunction
         longExpression4, // some comment
         longExpression5
     );
+\end{lstlisting}
 
-//  OTHER VARIANTS
+\keeplisting{11}
+When another method call is used as an argument\footnote{Usually, you should avoid to call another method in an arguments list, but sometimes this cannot be avoided (refer to \tqfullvref{sec:CodingConstructors} and there to section \tqfullref{sec:ConstructorHelpers}). In most cases, introducing a local variable is the better option.}:
+\keeplisting{9}
+\begin{lstlisting}
 final var result = myMethod( longExpression1,
     someMethod( longExpression2,
         longExpression3 ) );
@@ -51,10 +62,9 @@ final var result = myMethod1( longExpression1,
     otherMethod( longExpression5 ) );
 \end{lstlisting}
 
-Using a single line for each argument makes especially sense in cases where one or more expressions are really long, or if a comment should be added to the argument.
-
 Next there are two examples of breaking an arithmetic expression. The first is preferred, since the break occurs outside the parenthesized expression, which is at a higher level.
-\begin{lstlisting}[numbers=left]
+\keeplisting{10}
+\begin{lstlisting}
 // PREFERRED
 final var longName1 = longName2 * (longName3 + longName4 - longName5)
     + 4 * longname6;

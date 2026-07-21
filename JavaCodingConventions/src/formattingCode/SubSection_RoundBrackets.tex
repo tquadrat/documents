@@ -55,6 +55,7 @@ Applying these rules can improve the readability of complex terms drastically, c
 \hline
 \end{tabular}
 
+\keeplisting{3}
 A special case are round brackets used with a cast:
 \begin{lstlisting}
 final Object o = "Text";
@@ -65,6 +66,7 @@ Here an opening round bracker is never followed by a blank, and a closing one is
 
 \subsubsection{Lambda Expressions}
 According to the rules above, a lambda expression\index{lambda} with more than one argument should be written like this:
+\keeplisting{3}
 \begin{lstlisting}
 final BiFunction f1 = ( a, b ) -> (a + b) * PI;
 final BiFunction f2 = ( a, _ ) -> a * PI;
@@ -72,6 +74,7 @@ final BiFunction f3 = ( _, _ ) -> PI;
 \end{lstlisting}
 
 But it was found that it is easier to read without the blanks in the parameter list,  at least for single-letter parameter names or the unnamed variable\index{unnamed variable} (the underscore that is provided instead of the parameter):
+\keeplisting{3}
 \begin{lstlisting}
 final BiFunction f1 = (a,b) -> (a + b) * PI;
 final BiFunction f2 = (a,_) -> a * PI;

@@ -48,7 +48,7 @@ final var result = myFunction
 \end{lstlisting}
 
 \keeplisting{11}
-When another method call is used as an argument\footnote{Usually, you should avoid to call another method in an arguments list, but sometimes this cannot be avoided (refer to \tqfullvref{sec:CodingConstructors} and there to section \tqfullref{sec:ConstructorHelpers}). In most cases, introducing a local variable is the better option.}:
+When another method call is used as an argument\footnote{Usually, you should avoid to call another method in an arguments list, although sometimes this cannot be avoided (refer to \tqfullvref{sec:CodingConstructors} and there to section \tqfullref{sec:ConstructorHelpers}). But in most cases, introducing a local variable is the better option.}:
 \keeplisting{9}
 \begin{lstlisting}
 final var result = myMethod( longExpression1,
@@ -77,11 +77,9 @@ longName1 = longName2 * (longName3 + longName4
                        - longName5) + 4 * longname6;
 \end{lstlisting}
 
-Then we have a few examples for the indentation on long method declarations. First the conventional case. Next, a \lstinline|throws| clause that will be either appended on the same line as the closing parentheses, or it can be on its own line with an indentation of four blanks.
-
-The second example would shift the second and third lines to the far right if it uses conventional indentation, so instead it indents only 8 spaces. The final example uses a single line for each argument.
-
-\begin{lstlisting}[numbers=left]
+\keeplisting{15}
+Then we have a few examples for the indentation on long method declarations. First the conventional case:
+\begin{lstlisting}
 //  CONVENTIONAL INDENTATION
 public final void myMethod( final int anArg, final Object anotherArg,
     final String yetAnotherArg, final Object andStillAnother )
@@ -95,7 +93,11 @@ private final synchronized void horkingLongMethodName( final int arg,
 {
     …
 }   //  horkingLongMethodName()
+\end{lstlisting}
 
+Next, a \lstinline|throws| clause that will be either appended after the closing round bracket on the same line, or it is placed on its own line with an indentation of four blanks; in that case, the consecutive lines with parameters are indented by 8~spaces.
+\keeplisting{13}
+\begin{lstlisting}[numbers=left]
 public final void myMethod( final int anArg, final Object anotherArg,
     final String yetAnotherArg, final Object andStillAnother,
     final Instant andTheFinalArg ) throws IllegalArgumentException
@@ -103,15 +105,19 @@ public final void myMethod( final int anArg, final Object anotherArg,
     …
 }   //  myMethod()
 
-//  ADDITIONAL INDENTATION BECAUSE OF THE throws CLAUSE
+// ADDITIONAL INDENTATION BECAUSE OF THE throws CLAUSE
 public final void myMethod( final int anArg, final Object anotherArg,
         final String yetAnotherArg, final Object andStillAnother )
     throws IllegalArgumentException, IOException
 {
     …
 }   //  myMethod()
+\end{lstlisting}
+Usually, the second variant (starting at line~9) is better readable and should be preferred.
 
-// SINGLE LINE FOR EACH ARGUMENT
+\keeplisting{11}
+The final examples uses a single line for each argument:
+\begin{lstlisting}[numbers=left]
 private static final synchronized anotherHorkingLongMethodLine
 (
     final int anArg,
@@ -122,7 +128,11 @@ private static final synchronized anotherHorkingLongMethodLine
 {
     …
 }   //  anotherHorkingLongMethodLine()
+\end{lstlisting}
 
+\keeplisting{11}
+Or again with a \lstinline|throws| clause:
+\begin{lstlisting}[numbers=left]
 private static synchronized anotherHorkingLongMethodLineThrows
 (
     int anArg,
@@ -135,28 +145,21 @@ private static synchronized anotherHorkingLongMethodLineThrows
 }   //  anotherHorkingLongMethodLineThrows()
 \end{lstlisting}
 
-For a method declaration, a comment for a formal argument (like in line~34) is usually obsolete, as the description for the parameters is a mandatory part of the documentation comments (see chapter \tqfullvref{sec:MethodComment} for the details).
+For a method declaration, a comment for a formal parameter (as in line~4 of the first example) is usually obsolete, as the description for the parameters is a mandatory part of the documentation comments (see chapter \tqfullvref{sec:MethodComment} for the details).
 
-But you should think about having each formal argument in a line of it own if you have annotations on parameters, as shown in line~46. Especially when the annotation will have its own arguments.
+But you should think about having each formal argument in a line of it own if you have annotations\index{annotation} on parameters, as shown in line~5 of the second example. Especially when the annotation\index{annotation} will have its own arguments.
 
+\keeplisting{5}
 Here are the acceptable ways to format ternary expressions\footnote{Read more about the ternary operator \lstinline|?| in chapter \tqfullvref{sec:TheTernaryOperator}.}:
 \begin{lstlisting}[numbers=left]
-alpha = (aLongBooleanExpression) ? beta : gamma;
-alpha = (aLongBooleanExpression) ? beta
-                                 : gamma;
-alpha = (aLongBooleanExpression)
-    ? beta
-    : gamma;
-
 final var alpha = (aLongBooleanExpression) ? beta : gamma;
-final var alpha = (aLongBooleanExpression) ? beta
-                                           : gamma;
+                                           
 final var alpha = (aLongBooleanExpression)
     ? beta
     : gamma;
 \end{lstlisting}
 
-And finally a bad example; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
+And finally a bad example; the formula below calculates the date for Easter sunday for a given year, based on Gauss' Easter algorithm \autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}.
 
 \index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left]
@@ -203,7 +206,7 @@ public static final LocalDate calcEasterDate( final Year year )
 }   //  calcEasterDate()
 \end{lstlisting}
 
-Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with “breaking up the code into multiple parts by introducing additional temporary variables”.
+Even proper breaking of the term in line~37 will not help much to understand what's going on there. A much better formatted (and therefore more readable) version of the method \lstinline|calcEasterDate()| can be found in the listing \tqvref{listing:GaussEaster}, showing what is meant with \bdq{breaking up the code into multiple parts by introducing additional temporary variables}.
 
 %==============================================================================
 % End of file!!

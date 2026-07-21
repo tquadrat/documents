@@ -1,5 +1,5 @@
 \subsection{Class and Interface Declarations}\label{sec:ClassAndInterfaceDeclarations}
-Each Java source file\footnote{… or compilation unit\index{compilation unit}} contains at least one top level class or interface declaration; in most cases, it is just one. And it is strongly discouraged that it would be more than one!
+Each Java source file\footnote{… or \bdq{ordinary compilation unit}\index{compilation unit}} contains at least one top level class or interface declaration; in most cases, it is just one. And it is strongly discouraged that it would be more than one!
 
 Only one of these top level classes or interfaces can be \lstinline|public|, the others have to be package-local (meaning the modifiers \lstinline|private| and \lstinline|protected| are not allowed). If you really have more than one class in a single source file, the \lstinline|public| one should be the first entry, all others will follow, sorted alphabetically by their names.
 
@@ -17,13 +17,13 @@ At least since Java~5, there are not only classes and interfaces that are declar
 \item{\hyperref[subsec:Annotation]{annotations} (keyword \lstinline|@interface|)}
 \end{itemize}
 
-Technically, records and enums are special types of classes, while an annotation is somehow a special kind of an interface.
+Technically, records and enums are special types of classes, while an annotation\index{annotation} is somehow a special kind of an interface.
 
 Each of these allows different sections in their declarations; the following tables describe the various sections and the order they should appear in. Each section has a header comment, and inside each section, the elements are ordered alphabetically.
 
 \subsubsection{Class}\label{subsec:Class}
+\keeplisting{34}
 A skeleton for a Java \lstinline|class| may look like this:
-
 \begin{lstlisting}[numbers=left,caption={Class Skeleton}]
 public class MyClass 
 {
@@ -97,6 +97,7 @@ public class MyClass
 \LTXtable{\linewidth}{ClassParts.tbl}
 
 \subsubsection{Interface}\label{subsec:Interface}
+\keeplisting{20}
 A skeleton for an \lstinline|interface| may look like this:
 
 \begin{lstlisting}[numbers=left,caption={Interface Skeleton}]
@@ -224,7 +225,7 @@ public enum MyEnum
 Technically, an \lstinline|enum| can also define inner classes, but this is strongly discouraged, and I am not aware of any use case for this.
 
 \subsubsection{Record}\label{subsec:Record}
-\index{record}Records had been introduced to Java with version~14 and were finalised with version~16\autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords}. Like an \lstinline|enum|, a record is a restricted form of a Java class. It’s ideal for \bdq{plain data carrier} classes that contain data not meant to be altered. Usually it has only the most fundamental methods, such as constructors and accessors.
+\index{record}Records had been introduced to Java with version~14 and were finalised with version~16 \autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords}. Like an \lstinline|enum|, a record is a restricted form of a Java class. It’s ideal for \bdq{plain data carrier} classes that contain data not meant to be altered. Usually it has only the most fundamental methods, such as constructors and accessors.
 
 A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
@@ -293,9 +294,10 @@ public record MyRecord( ... )
 
 Same as \lstinline|enum|s can records have inner classes, but this is similarly discouraged, and there is no use case for it.
 
-\subsubsection{Annotation}
-Annotations had been introduced with Java~5\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces}. A skeleton for an annotation interface may look like this:
+\subsubsection{Annotation}\label{subsec:Annotation}
+Annotations had been introduced with Java~5 \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces}. A skeleton for an annotation interface may look like this:
 
+\keeplisting{8}
 \begin{lstlisting}[numbers=left,caption={Annotation Skeleton}]
 public @interface MyAnnotation 
 {
@@ -303,7 +305,6 @@ public @interface MyAnnotation
     ====** Attributes **=============================================
         \*------------*/
     …
-                
 }
 //  @interface MyAnnotation
 \end{lstlisting}

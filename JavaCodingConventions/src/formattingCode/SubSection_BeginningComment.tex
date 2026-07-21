@@ -1,9 +1,10 @@
 \subsection{Beginning Comment}\label{sec:BeginningComment}
-A Java project will not consist from Java source files only; aside the already mentioned module definition files(see \tqref{sec:ModuleDefinition}\index{module-info.java}), the package documentation files\index{package-info.java} (refer to \tqfullvref{sec:PackageDocumentation}), there can be various build files, scripts, resource and property files, and even source files other programming languages.
+Most Java projects does not consist from Java source (\verb#*.java#) files only; aside the already mentioned module definition files (see \tqref{sec:ModuleDefinition}\index{module-info.java}) and the package documentation files\index{package-info.java} (refer to \tqfullvref{sec:PackageDocumentation}), there can be various build files, scripts, resource and property files, and even source files with code from other programming languages.
 
-All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information\footnote{This is different from the Sun coding conventions\autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}, if possible at all: it should be obvious that it is sometimes difficult to add this kind of information to a binary resource like an image or a sound file.
+All source files of a project – not only the Java sources – have to start with a comment that gives the copyright\index{copyright} notice and the license\index{license} information\footnote{This is different from the bdq{Code Conventions for the \Java Programming Language}\index{Code Conventions for the Java Programming Language} \autocite{SUN_CODE_CONVENTIONS:BeginningComments} that recommends to put also the class name and the date into the beginning comment. I omitted the name of the class because this is obvious from the file name in case of a \lstinline|public| class, and it would confuse the reader if the file contains more than one class. The date is considered obsolete.}, if possible at all: it should be obvious that it is sometimes difficult to add this kind of information to a binary resource like an image or a sound file\footnote{JPEG\index{JPEG} as well as MP3\index{MP3} files provide meta data tags that should be used for the copyright\index{copyright} and license\index{license} information.}.
 
 For a Java file (a file with a name ending on \verb#*.java#), that beginning comment looks like this:
+\keeplisting{8}
 \begin{lstlisting}[numbers=left,caption={Beginning Comment for a Java file}]
 /*
  * ==================================================================
@@ -16,7 +17,9 @@ For a Java file (a file with a name ending on \verb#*.java#), that beginning com
 
 The same comment block can be used for Groovy\index{Groovy} source files, Kotlin\index{Kotlin} source files, Gradle\index{Gradle} build files (\lstinline|build.gradle|\index{build.gradle}) and generally for all file formats that uses the pattern \lstinline|/* … */| for comments.
 
-A \textit{resource} file\index{resource file}\autocite{ORACLE_DOC_RESOURCEBUNDLE_CLASS} can have XML format or it may contain simple key-value pairs. In the latter form, comments are prepended with the hash symbol (``\verb|#|''), and the beginning comment has the following form: 
+A resource bundle file\index{resource file} \autocite{ORACLE_DOC_RESOURCEBUNDLE_CLASS} can have XML format or it may contain simple key-value pairs. In the latter form, comments are prepended with the hash symbol (``\verb|#|''), and the beginning comment has the following form: 
+
+\keeplisting{8}
 \begin{lstlisting}[numbers=left,language=,caption={Beginning Comment for a Resource or a Script file}]
 #
 # ===================================================================
@@ -29,7 +32,9 @@ A \textit{resource} file\index{resource file}\autocite{ORACLE_DOC_RESOURCEBUNDLE
 
 Obviously, this can be used for all other file formats that use the same comment style, like Unix shell scripts\index{shell script}.
 
-For a resource file in XML\index{XML} format\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|, so it is not starting on line~1. That's similar for HTMl files.} (or any other XML file that is part of the sources), as well as for HTML\index{HTML} files, the beginning comment would look like this:
+For a resource file in XML\index{XML} format\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|, so it is not starting on line~1. That's similar for HTML\index{HTML} files.} (or any other XML\index{XML} file that is part of the sources), as well as for HTML\index{HTML} files, the beginning comment would look like this:
+
+\keeplisting{8}
 \begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment for XML and HTML files}]
 <!--
 =====================================================================
@@ -41,6 +46,8 @@ For a resource file in XML\index{XML} format\footnote{For an XML file, the begin
 \end{lstlisting}
 
 \TeX/\LaTeX\index{TeX}\index{LaTeX} uses the per cent sign (``\verb#%#'') to indicate a comment. So the beginning comment for a \TeX/\LaTeX\index{TeX}\index{LaTeX} source file would be like this:
+
+\keeplisting{8}
 \begin{lstlisting}[numbers=left,language=,caption={Beginning Comment for a \TeX/\LaTeX\ file}]
 %
 % ===================================================================
@@ -51,7 +58,7 @@ For a resource file in XML\index{XML} format\footnote{For an XML file, the begin
 %
 \end{lstlisting}
 
-\verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \bdq{\copyright} is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
+For all versions, \verb#<Year>#, \verb#<Copyright Notice># and \verb#<License Notice># has to be replaced by the appropriate texts. The special character \bdq{\copyright} is used not only because is looks better; it tells you immediately whether your environment is capable to deal with UTF-8 encoded files.
 
 The lines with the equals signs (“===”) will end at column~80; refer to chapter \tqfullvref{sec:LineLength}.\footnote{Keep in mind that in this document the line length is set to 70~columns; this means that you cannot just copy and paste the comment blocks into your development environment.}
 

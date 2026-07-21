@@ -1,6 +1,7 @@
 \subsection{Import Statements}\label{sec:ImportStatements}
-Usually several \lstinline|import| statements will follow the \lstinline|package| statement. Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package. But interfaces with only one method (a so-called \bdq{functional interface}\autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION}\index{functional interface}) may not need any imports at all, same for \bdq{marker interfaces} that does not declare any methods at all. Sometimes you may have also (abstract) parent classes without methods that do not need any \lstinline|import| statements, too.
+Usually several \lstinline|import| statements will follow the \lstinline|package| statement. Only very basic code will not import other stuff than that from the \lstinline|java.lang|\index{java.lang} package. But interfaces with only one method (a so-called \bdq{functional interface}\index{functional interface} \autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION}) may not need any imports at all, same for \bdq{marker interfaces} that does not declare any methods at all. Sometimes you may have also (abstract) parent classes without methods that do not need any \lstinline|import| statements, too.
 
+\keeplisting{8}
 But in general, that part of a source file would look like this:
 \index{java.lang!String}\index{java.lang!String!format()}\index{java.lang!System}\index{java.lang!System!out}\index{java.awt.peer!CanvasPeer}\index{java.io!InputStream}
 \begin{lstlisting}
@@ -14,6 +15,7 @@ import java.io.InputStream;
 \end{lstlisting}
 Static imports (for methods and constants) have to be placed before the imports for classes. Inside these blocks, the imports should be ordered alphabetically.
 
+\keeplisting{6}
 Wildcard imports like
 \begin{lstlisting}
 import static java.lang.String.*;
@@ -28,7 +30,8 @@ Eclipse users can use the function \verb#Source|Organize Imports# from the menu,
 
 At IntelliJ~IDEA, the function \verb#Code|Optimize Imports# from the menu does something similar; the short key would be \verb#Ctrl+Alt+O#.
 
-Java~25 introduced a new feature, called \textit{Module Import Declarations}\autocite{JEP511}. It allows to import all public classes and interfaces of a module with a single statement: 
+\keeplisting{6}
+Java~25 introduced a new feature, called \textit{Module Import Declarations} \autocite{JEP511}. It allows to import all public classes and interfaces of a module with a single statement:
 \begin{lstlisting}
 …
 import module java.base;

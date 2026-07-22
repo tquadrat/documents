@@ -2,6 +2,7 @@
 
 We already discussed the use of blanks, round brackets, curly braces and linefeeds in \tqfullvref{sec:WhiteSpace}.
 
+\keeplisting{11}
 The base form for the \lstinline|if| statement is like this:
 \begin{lstlisting}
 if( <condition>)
@@ -16,6 +17,7 @@ else
 }
 \end{lstlisting}
 
+\keeplisting{7}
 If there is nothing to do in case the condition results as false, the \lstinline|else| clause must be omitted:
 \begin{lstlisting}
 if( <condition>)
@@ -25,11 +27,24 @@ if( <condition>)
 }
 \end{lstlisting}
 
-If there is nothing to do when \verb#condition# is true, do not let the first statement block empty; instead you have to negate the condition:
+\keeplisting{8}
+Negate the condition if there is nothing to do when the original condition is true; do not let the first statement block empty:
+\begin{lstlisting}
+// RECOMMENDED!!
+if( !<condition>)
+{
+    // <condition> is false; that means !<condition> is true
+    <statements>;
+}
+\end{lstlisting}
+
+\keeplisting{12}
+Instead of:
 \begin{lstlisting}
 // AVOID!!
 if( <condition>)
 {
+    // <condition> is true
     // Nothing to do here!
 }
 else
@@ -37,22 +52,17 @@ else
     // <condition> is false
     <statements>;
 }
-
-// RECOMMENDED!!
-if( !<condition>)
-{
-    // <condition> is false, mean !<condition> is true
-    <statements>;
-}
 \end{lstlisting}
 
-If there is no \lstinline|else| clause, and only a single statement, you can write the \lstinline|if| statement can be written like this:
+\keeplisting{3}
+If there is no \lstinline|else| clause, and only a single statement, you can write the \lstinline|if| statement like this:
 \begin{lstlisting}
 if( <condition> ) <statements>;
 \end{lstlisting}
 
 The curly braces are mandatory if it is not possible to write the whole \lstinline|if| statement within a single line.
 
+\keeplisting{22}
 In case there are more conditions to check, but a \lstinline|switch| statement cannot be used due to the data types involved or the logic for the conditions, use this form:
 \begin{lstlisting}
 if( <condition1>)
@@ -71,34 +81,15 @@ else if( <condition#>)
 {
     <statements>;
 }
-\end{lstlisting}
-
-Same as before, but with a final \lstinline|else| clause: 
-\begin{lstlisting}
-if( <condition1>)
-{
-    <statements>;
-}
-else if( <condition2>)
-{
-    <statements>;
-}
-else if( <condition3>)
-{
-    <statements>;
-}
-else if( <condition#>)
-{
-    <statements>;
-}
 else
 {
     <statements>;
 }
 \end{lstlisting}
 
-Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic.
+Of course you can repeat the \lstinline|else if| as often as you need, but at some point the readability suffers seriously, and you should think about another logic. Also the final \lstinline|else| clause is not mandatory.
 
+\keeplisting{33}
 It is not recommended to write \verb#if-else# like this, although it seems to be more conformant to the basic rule:
 \begin{lstlisting}
 // NOT RECOMMENDED!!

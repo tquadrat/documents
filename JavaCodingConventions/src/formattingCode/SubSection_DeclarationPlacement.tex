@@ -55,6 +55,7 @@ public final void myComplexMethod( final String arg )
 \end{lstlisting}
 
 Placing the declaration close to its first use would also allow to limit the scope of a variable. This can help to prevent the pollution of the namespace with too many local variables as this could happen quickly when using lambda expressions\index{lambda}:
+\keeplisting{11}
 \begin{lstlisting}
 // AVOID!!
 var i = 0;
@@ -69,6 +70,7 @@ final var i3 = ++i;
 final IntFunction f3 = arg -> arg + i3;
 \end{lstlisting}
 
+\keeplisting{20}
 should be written like this instead:
 \index{java.util!function!IntFunction}
 \begin{lstlisting}
@@ -93,17 +95,33 @@ final IntFunction f3;
 }
 \end{lstlisting}
 
-Declaring and initialising a local variable inside a loop is even perfectly ok, as long as the initial value is different for each loop cycle:
+It is also perfectly acceptable to declare even a local variable inside a loop. It is the initialisation that is expensive, not the declaration itself. 
 
+\keeplisting{7}
+I recommend to write
 \begin{lstlisting}
+// RECOMMENDED!
 for( var i = 0; i < limit; ++i )
 {
     final var a = getValue( i );
     …
 }
 \end{lstlisting}
-
-Only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when the value does not change:
+\keeplisting{8}
+instead of
+\begin{lstlisting}
+// AVOID!
+Value a;
+for( var i = 0; i < limit; ++i )
+{
+    a = getValue( i );
+    …
+}
+\end{lstlisting}
+The recommended variant does not pollute the namespace (\lstinline|a| is visible only within the loop body), and  it makes \lstinline|a| available for the use in lambdas\index{lambda}.
+ 
+\keeplisting{8}
+Only the repeated \textit{initialisation} of a local variable inside a loop should be avoided, when the initialisation value does not change:
 \begin{lstlisting}[numbers=left]
 // AVOID!
 for( var i = 0; i < limit; ++i )
@@ -112,6 +130,8 @@ for( var i = 0; i < limit; ++i )
     …
 }
 \end{lstlisting}
+
+\keeplisting{6}
 In this case, line~4 should be moved before the loop header (before line~2):
 \begin{lstlisting}
 final var a = new VeryComplexImmutableType();

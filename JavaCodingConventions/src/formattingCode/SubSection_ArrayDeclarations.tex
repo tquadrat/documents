@@ -1,10 +1,13 @@
 \subsection{Array Declarations}
-The brackets for an array declaration always have to be put to the type, not to the name. So it should read
+The brackets for an array declaration always have to be put to the type, not to the name.
+\keeplisting{4}
+So it should read
 \begin{lstlisting}
 int [] foo;
 String [] bar;
 java.awt.Button [] buttons;
 \end{lstlisting}
+\keeplisting{4}
 and not
 \begin{lstlisting}
 // AVOID!!!
@@ -12,6 +15,7 @@ int foo [];
 String bar [];
 java.awt.Button buttons [];
 \end{lstlisting}
+\keeplisting{2}
 This is the same way as an array has to be declared as the return type for a method:
 \begin{lstlisting}
 public final static String [] getTexts() { return m_Texts; }

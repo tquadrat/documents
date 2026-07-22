@@ -1,7 +1,7 @@
 \section{Method Declarations}
 The declaration of methods is described in the \jls, and there at two locations: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsClass} for classes and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:MethodDeclarationsInterface} for interfaces.
 
-The formatting is quite simple and straight forward: a method\footnote{All this is also valid for constructors\index{constructor}; in regard of formatting, they are just a special kind of a method} starts with the Javadoc comment followed by the line with the method's signature.
+The formatting is quite simple and straight forward: a method (and a constructor\index{constructor} – in regard of formatting, they are just a special kind of a method) starts with the Javadoc comment followed by the line with the method's signature.
 
 If the method is not abstract, the body follows. If that body is short or empty, it can be placed on the same line, otherwise the opening curly braces follows on the next line, with the same indentation level as the line with the signature. The next line(s) have the code of the body, indented by one level, and finally the closing curly braces with a comment repeating the name of the method, with the same indentation level as the opening curly brace.
 
@@ -9,21 +9,29 @@ As said, short methods may be written in one single line. In this case, \bdq{one
 
 A method with an empty body could be treated as very short methods, but usually you provide a comment instead of code.
 
-Some samples\footnote{I omitted the Javadoc comments from the samples for brevity.}:
+Below some samples; again, I omitted the Javadoc comments from the samples for brevity.
+\keeplisting{5}
+A method from a class:
 \index{java.lang!String}
 \begin{lstlisting}
 public static final void main( final String... args ) 
 {
     // Do something …
 }   // main()
-
-public MyClass( final String arg )
-{
-	m_Arg = arg;
-}	//	MyClass()
 \end{lstlisting}
 
-For an \lstinline|interface|:
+\keeplisting{5}
+A constructor:
+\index{java.lang!String}
+\begin{lstlisting}
+public MyClass( final String arg )
+{
+    m_Arg = arg;
+}   //  MyClass()
+\end{lstlisting}
+
+\keeplisting{6}
+An abstract method declaration:
 \index{java.lang!String}
 \begin{lstlisting}
 // For an interface:
@@ -33,25 +41,31 @@ public void myAbstractMethod( final String... args );
 public abstract void myAbstractMethod( final String... args );
 \end{lstlisting}
 
+\keeplisting{2}
+A short method:
 \index{java.lang!String}
 \begin{lstlisting}
 public String myString() { return m_String; }
 \end{lstlisting}
 
+\keeplisting{9}
+An empty method:
 \index{java.lang!String}
 \begin{lstlisting}
 public String myMountPoint( final String arg ) {}
 
 // BETTER:
+@MountPoint
 public String myMountPoint( final String arg ) 
 {
 	/* This implementation does nothing! */
 }   //	myMountPoint()
 \end{lstlisting}
+The annotation \lstinline|@MountPoint|\index{mountpoint} \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT} is discussed in the chapter\tqfullvref{sec:NonFinalMethods}.
 
-According to what we said already in \tqfullvref{sec:WhiteSpace}, there is no space between a method or constructor name and the opening round bracket (\bdq{(}) starting its formal parameters list. Basically the parenthesis in the declaration are \bdq{Parameter Round Brackets} and should be treated along the same lines as for method and constructor \textit{calls}; refer to \tqvref{sec:ParameterParenthesis}.
+According to what was said already in \tqfullvref{sec:WhiteSpace}, there is no space between a method or constructor name and the opening round bracket (\bdq{(}) starting its formal parameters list. Basically the parenthesis in the declaration are \bdq{Parameter Round Brackets} and should be treated along the same lines as for method and constructor \textit{calls}; refer to \tqvref{sec:ParameterParenthesis}.
 
-Some modifiers are obsolete and/or redundant under some circumstances, but I recommend to add them anyway\footnote{Remember \ngref  \hyperref[lst:ZoP:ExplicitVsImplicit]{bullet point 2}: Verbosity is your friend.}
+Some modifiers are obsolete and/or redundant under some circumstances, but I recommend to add them anyway\footnote{Remember \ngref ~\hyperref[lst:ZoP:ExplicitVsImplicit]{bullet point 2}: Verbosity is your friend.}.
 
 \begin{itemize}
 \item{All methods of an \lstinline|interface| are public (add \lstinline|public| anyway). If not static or default, they are all abstract, but that modifier is not allowed in an interface.}

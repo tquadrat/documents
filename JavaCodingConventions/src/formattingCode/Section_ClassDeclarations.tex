@@ -10,6 +10,7 @@ Basically the declaration for a record looks the same, but because it declares t
 
 Each type ends with a comment after the closing curly brace, followed by a comment line repeating the name and kind of the type.
 
+\keeplisting{6}
 Some samples\footnote{I omitted the Javadoc comments from the samples for brevity.}:
 \begin{lstlisting}
 public final class MySimpleClass
@@ -19,6 +20,7 @@ public final class MySimpleClass
 //  class MySimpleClass
 \end{lstlisting}
 
+\keeplisting{5}
 \index{java.lang!CharSequence}
 \begin{lstlisting}
 public interface MyInterface<T extends CharSequence>
@@ -28,6 +30,7 @@ public interface MyInterface<T extends CharSequence>
 //  interface MyInterface
 \end{lstlisting}
  
+\keeplisting{5}
 \begin{lstlisting}
 public enum MyEnum
 {
@@ -36,13 +39,27 @@ public enum MyEnum
 //  enum MyEnum
 \end{lstlisting}
 
+\keeplisting{3}
 \index{java.lang!String}
 \begin{lstlisting}
 public final class MyRecord( String name, int age, boolean retirementStatus )
 {}
 //  record MyRecord
 \end{lstlisting}
- 
+
+\keeplisting{7}
+Or with line breaks according to \tqref{sec:WrappingLines}:
+\index{java.lang!String}
+\begin{lstlisting}
+public final class MyRecord( 
+    String name, 
+    int age, 
+    boolean retirementStatus )
+{}
+//  record MyRecord
+\end{lstlisting}
+
+\keeplisting{5}
 \index{java.lang!Serializable} 
 \begin{lstlisting}
 public final class MyClass extends MyBaseClass implements MySealedInterface, Serializable
@@ -52,6 +69,7 @@ public final class MyClass extends MyBaseClass implements MySealedInterface, Ser
 //  class MyClass
 \end{lstlisting}
 
+\keeplisting{6}
 \index{java.lang!String}\index{java.util!List}
 \begin{lstlisting}
 public sealed class MySealedInterface extends List<String>
@@ -62,6 +80,7 @@ public sealed class MySealedInterface extends List<String>
 //  interface MySealedInterface
 \end{lstlisting}
 
+\keeplisting{6}
 \index{java.lang!FunctionalInterface}
 \begin{lstlisting}
 @FunctionalInterface
@@ -72,6 +91,7 @@ public interface MyFunctionalInterface<T>
 //  interface MyFunctionalInterface
 \end{lstlisting}
 
+\keeplisting{6}
 \index{java.lang.annotation!Annotation}\index{java.lang.annotation!Documented}\index{java.lang.annotation!Retention}\index{java.lang.annotation!Target}\index{java.lang.annotation!RetentionPolicy!RUNTIME}\index{java.lang.annotation!ElementType}
 \index{java.lang.annotation!ElementType!ANNOTATION\_TYPE}
 \begin{lstlisting}

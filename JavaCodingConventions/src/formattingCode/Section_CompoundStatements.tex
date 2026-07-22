@@ -1,9 +1,10 @@
 \section{Compound Statements}\label{sec:CompoundStatements}
-Compound statements\index{compound statement} are statements that contain lists of statements enclosed in curly braces \lstinline|{ <statement, … > }|. A compound statement (also called a \bdq{code block}\index{code block|see {compound statement}} or \bdq{block statement}\index{block statement| see {compound statement}}) typically appears as the body of another statement, such as the \lstinline|if| or \lstinline|for| statements, but it may appear also on it own\footnote{In Java, a block also indicates a scope\index{scope}; a local variable lives only in the scope it was declared in, and all inner scopes contained in it.}.
+Compound statements\index{compound statement} are statements that contain lists of statements enclosed in curly braces \lstinline|{ <statement, … > }|. A compound statement (also called a \bdq{code block}\index{code block|see {compound statement}} or \bdq{block statement}\index{block statement| see {compound statement}}) typically appears as the body of another statement, like the \lstinline|if| or the \lstinline|for| statement, but it may appear also on its own\footnote{In Java, a block also indicates a scope\index{scope}; a local variable lives only in the scope it was declared in, and all inner scopes contained in it, but it is invisible outside that scope (or code block).}.
 
 The block's opening curly brace \bdq{\{} appears alone at a line by itself with the same indentation as the statement it belongs to and the corresponding closing curly brace \bdq{\}} is placed at a new line with the same indentation. All code inside such a block is indented one level more than the curly braces.
 
-Large compound statements (long code blocks) should be marked with a label\index{label} and should get an end comment, like in the examples below: 
+\keeplisting{19}
+Large compound statements (long code blocks) should be marked with a label\index{label} and should get an end comment that repeats the label, like in the examples below: 
 \begin{lstlisting}
 ForeverLoop: while( true )
 {
@@ -12,10 +13,10 @@ ForeverLoop: while( true )
 
 CountrySelector: switch( countryCode )
 {
-    case DE: …
-    case EN: …
+    case DE -> …
+    case EN -> …
     … // All the other countries
-    default: …
+    default -> …
 }   //  CountrySelector:
 
 ProcessLoop: for( final var entry : entries )
@@ -24,6 +25,7 @@ ProcessLoop: for( final var entry : entries )
 }   //  ProcessLoop:
 \end{lstlisting}
 
+\keeplisting{7}
 You may have seen something like this in existing code:
 \begin{lstlisting}
 // DISCOURAGED!
@@ -33,9 +35,11 @@ if( thisConditionIsTrue )
     …
 }   //	if( thisConditionIsTrue ) 
 \end{lstlisting}
+Here the begin of the compound statement is repeated by a comment at the end.
+
 As long as the \lstinline|if| clause (or whatever statement starts the block) will not change, this pattern serves the same purpose as my variant with the label. But when you change the \lstinline|if|, you have to modify the end comment accordingly – something that is forgotten much too often!
 
-As there is rarely a reason to change the label (the purpose of the block remains the same, no matter what the condition will be), it will not happen that the end comment will not match the start \bsq{comment} of the block.
+As there is rarely a reason to change the label (the purpose of the block remains the same, no matter what the condition will be), it will not happen that the end comment will not match the start \bsq{comment} (the label) of the block.
 
 See the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen} for some additional details. 
 

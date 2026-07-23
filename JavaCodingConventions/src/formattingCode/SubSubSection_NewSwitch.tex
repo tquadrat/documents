@@ -1,6 +1,7 @@
 \subsubsection{The new Form of \bsq{switch}}\label{sec:NewSwitch}
-The alternative syntax for \lstinline|switch|\index{switch} (the ``\verb#case L ->#'' variant) comes in two flavours (as \textit{statement}\index{switch!statement} and \textit{expression}\index{switch!expression}).
+The alternative syntax for \lstinline|switch|\index{switch} (the ``\verb#case L ->#'' variant) comes in two flavours (as \textit{statement}\index{switch!statement} and as \textit{expression}\index{switch!expression}).
 
+\keeplisting{20}
 The new \lstinline|switch|\index{switch!statement} \textit{statement} looks like this:
 
 \index{switch!case}\index{switch!default}
@@ -26,6 +27,7 @@ switch( <selector> )
 }
 \end{lstlisting}
 
+\keeplisting{10}
 And this is the new \lstinline|switch|\index{switch!expression} \textit{expression}:
 \index{switch!case}\index{switch!default}\index{switch!yield}\index{yield|see {switch}}
 \begin{lstlisting}[numbers=left]
@@ -41,6 +43,7 @@ var result = switch( <selector> )
         <statements>;
         yield <value>;
     }
+(|\newpage|)
 
     case <switchlabel4>, <switchlabel5> ->
     {

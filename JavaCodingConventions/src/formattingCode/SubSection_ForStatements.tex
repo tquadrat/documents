@@ -1,6 +1,7 @@
 \subsection{\bsq{for} Statements}\label{sec:ForStatements}
 Since Java~5 the language knows two distinct types of \lstinline|for|\index{for} loops, both described in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:For}.
 
+\keeplisting{7}
 The basic \lstinline|for| statement\index{for!basic} looks like this:
 \begin{lstlisting}
 for( <initialization>; <condition>; <update> )
@@ -12,6 +13,7 @@ for( <initialization>; <condition>; <update> ) <singleStatement>;
 \end{lstlisting}
 For the details of this basic form, refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ForBasic}.
 
+\keeplisting{7}
 An enhanced \lstinline|for| statement\index{for!enhanced} (defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ForEnhanced}) would be written as below:
 
 \begin{lstlisting}
@@ -27,12 +29,19 @@ The use of blanks, round brackets, curly braces and linefeeds was already discus
 
 Curly braces can be omitted only when there is just a single statement to be executed in the loop. In addition, this single statement has to be written completely into the same line as the \lstinline|for| itself. In any other case, the curly braces are mandatory.
 
-\bdq{Single statement} translates to \bdq{simple statement} in this context; the samples below are invalid because the loop body statements are not \textit{simple}:
-\begin{lstlisting}[numbers=left]
+\bdq{Single statement} translates to \bdq{simple statement} in this context.
+
+\keeplisting{5}
+The samples below are invalid because the loop body statements are not \textit{simple}:
+\begin{lstlisting}
 // DISCOURAGED
 for( var i = 0; i < max; ++i ) if( v [i] > 0 ) sum += v [i];
 for( final var s : texts ) if( !s.empty() ) out.println( s );
+\end{lstlisting}
 
+\keeplisting{17}
+While the statements above are still halfway readable, the following samples are really bad:
+\begin{lstlisting}
 // AVOID!!!
 for( var i = 0; i < max; ++i ) if( v [i] > 0 )
 {
@@ -49,23 +58,26 @@ for( final var s : texts ) if( !s.empty() )
     System.out.println( s );
 }
 \end{lstlisting}
-In particular the samples in the lines~6 and below are very problematic as they are difficult to read and to understand.
+These samples are very problematic as they are difficult to read and to understand.
 
+\keeplisting{4}
 The forms
 \begin{lstlisting}
 // DISCOURAGED
 for( <initialization>; <condition>; <update> )
-    <statement>;
+    <singleStatement>;
 \end{lstlisting}
+\keeplisting{4}
 and
 \begin{lstlisting}
 // DISCOURAGED
 for( <declaration> : <iterable> )
-    <statement>;
+    <singleStatement>;
 \end{lstlisting}
 are syntactically correct, but should be avoided as they are error prone in case the code will be changed later.
 
-When explicitly using an iterator\index{iterator}\index{java.util!Iterator}\autocite{ORACLE_DOC_ITERATOR_INTERFACE} with the (basic) \lstinline|for|\index{for!basic} loop, this should look like this:
+\keeplisting{6}
+When explicitly using an iterator\index{iterator}\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE} with the (basic) \lstinline|for|\index{for!basic} loop, this should look like this:
 \begin{lstlisting}
 for( final var i = source.iterator(); i.hasNext(); )
 {
@@ -74,19 +86,25 @@ for( final var i = source.iterator(); i.hasNext(); )
 }
 \end{lstlisting}
 
+\keeplisting{4}
 An empty loop body\index{for!empty loop} can be written like this:
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 for( <initialization>; <condition>; <update> )
 {
     // Deliberately empty
 }
-
+\end{lstlisting}
+\keeplisting{2}
+or like this
+\begin{lstlisting}
 for( <initialization>; <condition>; <update> );
 \end{lstlisting}
 
-In case the longer form (lines~1 to 4) is used, the comment is mandatory, because empty code blocks are forbidden. I recommend the shorter forms (line~6).
+In case the longer form (the first variant) is used, the comment is mandatory, because empty code blocks are forbidden. I recommend the shorter form, shown as second.
 
-In an empty \lstinline|for| loop\index{for!empty loop} all the work is done in the initialization, condition, and update clauses.\footnote{In most cases, you should consider to use a \lstinline|while|\index{while} loop instead of an empty \lstinline|for|\index{for} loop. See \hyperref[sec:WhileStatements]{there}.} Therefore an enhanced \lstinline|for| loop\index{for!enhanced} loop without body does not make much sense. It may be possible to write an implementation of \lstinline|java.lang.Iterable|\index{java.lang!Iterable}\autocite{ORACLE_DOC_ITERABLE_INTERFACE} with an iterator\index{java.util!Iterator}\autocite{ORACLE_DOC_ITERATOR_INTERFACE} that does something as a side effect of \lstinline|hasNext()|\index{java.util!Iterator!hasNext()} or \lstinline|next()|\index{java.util!Iterator!next()}, but this would break the contract of the interface and is therefore strongly discouraged.
+In an empty \lstinline|for| loop\index{for!empty loop} all the work is done in the initialization, condition, and update clauses. Therefore an enhanced \lstinline|for| loop\index{for!enhanced} loop without body does not make much sense. It may be possible to write an implementation of \lstinline|java.lang.Iterable|\index{java.lang!Iterable} \autocite{ORACLE_DOC_ITERABLE_INTERFACE} with an iterator\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE} that does something as a side effect of \lstinline|hasNext()|\index{java.util!Iterator!hasNext()} or \lstinline|next()|\index{java.util!Iterator!next()}, but this would break the contract of the interface and is therefore strongly discouraged.
+
+In most cases, you should consider to use a \lstinline|while|\index{while} loop instead of an empty \lstinline|for|\index{for} loop. See \hyperref[sec:WhileStatements]{there}.
 
 An otherwise empty loop should not be used to consume CPU cycles; there are methods fitting much better to this purpose.
 

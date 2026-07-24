@@ -1,7 +1,7 @@
+\keeplisting{32}
 \subsubsection{The traditional Form of \bsq{switch}}\label{sec:TraditionalSwitch}
 Originally, a \lstinline|switch|\index{switch}\index{switch!statement} statement in \Java looked like this (the ``\verb#case L:#'' variant):
 \index{switch!case}\index{switch!default}\index{switch!break}
-\keeplisting{29}
 \begin{lstlisting}[numbers=left]
 switch( <selector> )
 {
@@ -34,7 +34,7 @@ switch( <selector> )
 }
 \end{lstlisting}
 
-First, these coding conventions make the blank line above each \lstinline|case|\index{switch!case} (except the very first one) and above \lstinline|default|\index{switch!default} mandatory!
+First, these coding conventions make the blank line mandatory that separates each \lstinline|case|\index{switch!case} from another and from (except the very first one) and above \lstinline|default|\index{switch!default}!
   
 If a \lstinline|case|\index{switch!case} falls through, like in lines~3 to 9, a comment \bdq{\lstinline|// Falls through!|} (or something similar\footnote{Linting tools as well as most IDEs issue a warning in case of a fall-through. Usually, these could be switched off by adding a comment or an annotation\index{annotation} to the location of the fall-through. Such an annotation\index{annotation} would be a sufficient replacement for the comment.}) as in line~5 of the sample is required! But basically, such constructs should be avoided when possible, because it also forces that the sequence of the \lstinline|case|\index{switch!case} clauses cannot be changed, and that fact requires an additional comment to the \lstinline|switch|\index{switch} itself. In fact here you should consider to ignore the \bdq{DRY~Principle}\index{DRY Principle} – we will see this later – and repeat the code for the second \lstinline|case|\index{switch!case} on the first one.
 \index{switch!case}\index{switch!default}\index{switch!break}

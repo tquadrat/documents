@@ -1,9 +1,11 @@
 \subsubsection{\bsq{switch} and Pattern Matching}\label{sec:PatternMatchingSwitch}
-If used with pattern matching (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}\index{pattern matching}), a \lstinline|switch|\index{switch} looks like this:
-\index{switch!case}\index{switch!default}\index{switch!break}\index{switch!yield}
-\begin{lstlisting}[numbers=left]
+Pattern matching\index{pattern matching} (refer to \autocite{ORACLE_DOC_PATTERNMATCHING}\index{pattern matching}) is covered in more detail in chapter \tqfullvref{sec:PatternMatching}. Here I want to discuss only the basic formatting of the \lstinline|switch|\index{switch} when used with pattern matching.
+
+\keeplisting{14}
+A \lstinline|switch| statement\index{switch!statement} for the ``\verb#case L:#'' variant would look like this:
+\index{switch!case}\index{switch!default}\index{switch!break}
+\begin{lstlisting}
 var selector = <anObject>
-// switch statement case L:
 switch( selector )
 {
     case <class1> <name1>: <singleStatement>;
@@ -15,8 +17,13 @@ switch( selector )
 
     default: <singleStatement>;
 }
+\end{lstlisting}
 
-// switch statement case L ->
+\keeplisting{15}
+For the ``\verb#case L:#'' variant, a \lstinline|switch| statement\index{switch!statement} is written as below:
+\index{switch!case}\index{switch!default}
+\begin{lstlisting}
+var selector = <anObject>
 switch( selector )
 {
     case null -> <singleStatement>;
@@ -30,8 +37,13 @@ switch( selector )
 
     default -> <singleStatement>;
 }
+\end{lstlisting}
 
-// switch statement
+\keeplisting{16}
+And an ``\verb#case L->#'' variant \lstinline|switch| expression\index{switch!expression} would have this form:
+\index{switch!case}\index{switch!default}\index{switch!yield}
+\begin{lstlisting}
+var selector = <anObject>
 var result = switch( selector )
 {
     case null -> <expression>;
@@ -52,7 +64,7 @@ Same as for the \lstinline|default|\index{switch!default} branch, the \lstinline
 
 And an expression can also be always a \lstinline|throw|\index{throw} statement.
 
-This topic is covered in more detail in chapter \tqfullvref{sec:PatternMatching}.
+
 
 %==============================================================================
 % End of file!!

@@ -20,7 +20,7 @@ public final void myMethod()
 }   //  myMethod()
 \end{lstlisting}
 
-\lstinline|yield|\index{switch!yield} as a keyword was introduced in Java~14, together with the new form for the \lstinline|switch|\index{switch} \autocite{JEP325,JEP354,JEP361}. It is used to return the result of an expression from a \lstinline|case|\index{switch!case} in a \lstinline|switch| \textit{expression}\index{switch!expression}. Therefore it has to be the last statement of such a \lstinline|case|\index{switch!case} block; refer to the chapters \tqfullvref{sec:ReturningValues} and \tqfullvref{sec:CaseResults} for more details on this.
+\lstinline|yield|\index{switch!yield} as a keyword was introduced in Java~14, together with the new form for the \lstinline|switch|\index{switch} \autocite{JEP325,JEP354,JEP361}. It is used to return the result from a \lstinline|case|\index{switch!case} in a \lstinline|switch| \textit{expression}\index{switch!expression}. Therefore it has to be the last statement of such a \lstinline|case|\index{switch!case} block; refer to the chapters \tqfullvref{sec:ReturningValues} and \tqfullvref{sec:CaseResults} for more details on this.
 
 Same as \lstinline|return|\index{return} has \lstinline|yield|\index{switch!yield}to be placed on a line of its own, a the end of a \lstinline|case| block\index{switch!case}. Without  a return value \lstinline|yield|\index{switch!yield} will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
 

@@ -1,15 +1,14 @@
 \section{‘return’ and ‘yield’ Statements}
 The \lstinline|return|\index{return} statement has to be the last statement of a method.
 
-\lstinline|yield|\index{switch!yield} as a keyword was introduced in Java~14, together with the new form for the \lstinline|switch|\index{switch} \autocite{JEP325,JEP354,JEP361}. It is used to return the result of an expression from a \lstinline|case|\index{switch!case} in a \lstinline|switch| \textit{expression}\index{switch!expression}. Therefore it has to be the last statement of such a \lstinline|case|\index{switch!case} block; refer to the chapters \tqfullvref{sec:ReturningValues} and \tqfullvref{sec:CaseResults} for more details on this.
-
 When \lstinline|return|\index{return} is always the last statement of a method, it means that the simple form
 \begin{lstlisting}
 return;
 \end{lstlisting}
-is obsolete and will be omitted. This implies that there is only one \lstinline|return|\index{return} statement per method allowed, and that short-cutting a method is a forbidden practice.
+is obsolete and will be omitted. It also implies that there is only one \lstinline|return|\index{return} statement per method allowed, and that short-cutting a method is a forbidden practice.
 
-Usually, the name of the return value is \lstinline|retValue| (see \tqfullvref{lbl:RetValue}), and the lines before the \lstinline|return|\index{return} statement are a blank line and the comment \lstinline|//---* Done *---…|:
+\keeplisting{10}
+Usually, the name of the return value is \lstinline|retValue| (see \tqfullvref{lbl:RetValue}), and the lines before the \lstinline|return|\index{return} statement are a blank line and the comment \bdq{\lstinline|//---* Done *---…|}, as shown below:
 \keeplisting{7}
 \begin{lstlisting}
 public final void myMethod()
@@ -21,7 +20,9 @@ public final void myMethod()
 }   //  myMethod()
 \end{lstlisting}
 
-\lstinline|yield|\index{switch!yield} as a keyword was introduced with the new \lstinline|switch|\index{switch} format and \lstinline|switch| expressions\index{switch!expression} by Java~12. It is used to return a value from a \lstinline|case|\index{switch!case} block that is not an expression. Same as \lstinline|return|\index{return} has \lstinline|yield|\index{switch!yield}to be placed on a line of its own, a the end of a \lstinline|case| block\index{switch!case}. Without  a return value \lstinline|yield|\index{switch!yield} will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
+\lstinline|yield|\index{switch!yield} as a keyword was introduced in Java~14, together with the new form for the \lstinline|switch|\index{switch} \autocite{JEP325,JEP354,JEP361}. It is used to return the result of an expression from a \lstinline|case|\index{switch!case} in a \lstinline|switch| \textit{expression}\index{switch!expression}. Therefore it has to be the last statement of such a \lstinline|case|\index{switch!case} block; refer to the chapters \tqfullvref{sec:ReturningValues} and \tqfullvref{sec:CaseResults} for more details on this.
+
+Same as \lstinline|return|\index{return} has \lstinline|yield|\index{switch!yield}to be placed on a line of its own, a the end of a \lstinline|case| block\index{switch!case}. Without  a return value \lstinline|yield|\index{switch!yield} will always cause a compiler error. Some more details can be found at \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Yield}.
 
 The use of round brackets with the \lstinline|return|\index{return} or \lstinline|yield|\index{switch!yield} statement is not required unless they make the return value more obvious and better readable in some way.
 

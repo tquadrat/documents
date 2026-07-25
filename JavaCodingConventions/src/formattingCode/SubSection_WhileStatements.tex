@@ -1,6 +1,7 @@
 \subsection{\bsq{while} and \bsq{do} Statements}\label{sec:WhileStatements}
 The \lstinline|do|\index{while!do} statement does never come without a trailing \lstinline|while|\index{while} statement; this is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:WhileDo}. The statement \lstinline|while|\index{while} itself is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:While}. Both are loop statements, the difference is only where the termination condition is checked.
 
+\keeplisting{7}
 With \lstinline|do|\index{while!do} you define an exit-controlled loop\index{exit-controlled loop}\footnote{In German: \bdq{nicht-abweisende Schleife}.}; this means that the loop body is executed at least once:
 \begin{lstlisting}
 do
@@ -9,12 +10,15 @@ do
 }
 while( <condition> );
 \end{lstlisting}
+
+\keeplisting{2}
 Although writing
 \begin{lstlisting}
 do <statement>; while( <condition> );
 \end{lstlisting}
 is syntactically correct (note the semicolon after \verb#<statement># and before \lstinline|while|) you should always surround the loop body with curly braces when using \lstinline|do|\index{while!do}.
 
+\keeplisting{8}
 The entry-controlled \lstinline|while| loop\index{entry-controlled loop}\index{while}\footnote{In German: \bdq{abweisende Schleife}.} is used more often than the exit-controlled form; it looks like this:
 \begin{lstlisting}
 while( <condition> )
@@ -27,6 +31,7 @@ while( <condition> ) <singleStatement>;
 
 Same as for the \lstinline|for| statement (see \hyperref[sec:ForStatements]{there}), \bdq{single statement} also means \bdq{simple statement}. If the loop body is more complex, curly braces are mandatory; they are placed to lines of their own, indented to same level as the keyword, while the body itself has to be indented one additional level. The curly braces can be omitted only for a body consisting of a single statement that is written to the same line as the \lstinline|while|\index{while} statement.
 
+\keeplisting{4}
 The form
 \begin{lstlisting}
 // DISCOURAGED
@@ -37,15 +42,23 @@ is syntactically correct, but have to be avoided. It is error prone in case the 
 
 The general use of blanks, round brackets, curly braces and linefeeds was already discussed in \tqfullvref{sec:WhiteSpace}.
 
-When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body. The label will then be repeated as the end comment of the code block. This is described in chapter \tqfullref{sec:LabelsAndBreakStatements} and also in  \tqfullref{sec:TrailingOrEndOfLineComments} and \tqfullref{sec:CommentsWhen}.
-\begin{lstlisting}[numbers=left]
+I already recommended in \tqfullref{sec:CompoundStatements} adding a label if the compound statement is extensive. Naturally, this applies equally to a larger loop body.
+
+A label\index{label} is mandatory when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body. 
+
+The label\index{label} will then be repeated as the end comment of the code block. This is described in chapter \tqfullref{sec:LabelsAndBreakStatements} and also in  \tqfullref{sec:TrailingOrEndOfLineComments} and \tqfullref{sec:CommentsWhen}.
+
+\keeplisting{6}
+\begin{lstlisting}
 <Label>: while( <condition> )
 {
     if( <condition1> ) continue <Label>;
     if( <condition2> ) break <Label>;
     <statements>
 }   //  <Label>:
-
+\end{lstlisting}
+\keeplisting{8}
+\begin{lstlisting}
 <Label>: do
 {
     if( <condition1> ) continue <Label>;

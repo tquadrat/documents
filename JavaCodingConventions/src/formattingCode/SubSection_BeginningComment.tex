@@ -5,7 +5,7 @@ All source files of a project – not only the Java sources – have to start wi
 
 For a Java file (a file with a name ending on \verb#*.java#), that beginning comment looks like this:
 \keeplisting{8}
-\begin{lstlisting}[numbers=left,caption={Beginning Comment for a Java file}]
+\begin{lstlisting}[caption={Beginning Comment for a Java file}]
 /*
  * ==================================================================
  * Copyright © <Year> <Copyright Notice>
@@ -20,7 +20,7 @@ The same comment block can be used for Groovy\index{Groovy} source files, Kotlin
 A resource bundle file\index{resource file} \autocite{ORACLE_DOC_RESOURCEBUNDLE_CLASS} can have XML format or it may contain simple key-value pairs. In the latter form, comments are prepended with the hash symbol (``\verb|#|''), and the beginning comment has the following form: 
 
 \keeplisting{8}
-\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment for a Resource or a Script file}]
+\begin{lstlisting}[language={},caption={Beginning Comment for a Resource or a Script file}]
 #
 # ===================================================================
 # Copyright © <Year> <Copyright Notice>
@@ -35,7 +35,7 @@ Obviously, this can be used for all other file formats that use the same comment
 For a resource file in XML\index{XML} format\footnote{For an XML file, the beginning comments follows the initial \lstinline|<?xml …?>|, so it is not starting on line~1. That's similar for HTML\index{HTML} files.} (or any other XML\index{XML} file that is part of the sources), as well as for HTML\index{HTML} files, the beginning comment would look like this:
 
 \keeplisting{8}
-\begin{lstlisting}[numbers=left,firstnumber=5,language=XML,caption={Beginning Comment for XML and HTML files}]
+\begin{lstlisting}[firstnumber=5,language=XML,caption={Beginning Comment for XML and HTML files}]
 <!--
 =====================================================================
  Copyright © <Year> <Copyright Notice>
@@ -48,7 +48,7 @@ For a resource file in XML\index{XML} format\footnote{For an XML file, the begin
 \TeX/\LaTeX\index{TeX}\index{LaTeX} uses the per cent sign (``\verb#%#'') to indicate a comment. So the beginning comment for a \TeX/\LaTeX\index{TeX}\index{LaTeX} source file would be like this:
 
 \keeplisting{8}
-\begin{lstlisting}[numbers=left,language=,caption={Beginning Comment for a \TeX/\LaTeX\ file}]
+\begin{lstlisting}[language={TeX},caption={Beginning Comment for a \TeX/\LaTeX\ file}]
 %
 % ===================================================================
 % Copyright © <Year> <Copyright Notice>

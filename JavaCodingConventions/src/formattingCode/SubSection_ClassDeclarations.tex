@@ -21,8 +21,8 @@ Technically, records and enums are special types of classes, while an annotation
 
 Each of these allows different sections in their declarations; the following tables describe the various sections and the order they should appear in. Each section has a header comment, and inside each section, the elements are ordered alphabetically.
 
+\keeplisting{35}
 \subsubsection{Class}\label{subsec:Class}
-\keeplisting{34}
 A skeleton for a Java \lstinline|class| may look like this:
 \begin{lstlisting}[numbers=left,caption={Class Skeleton}]
 public class MyClass 
@@ -96,8 +96,8 @@ public class MyClass
 \end{filecontents}
 \LTXtable{\linewidth}{ClassParts.tbl}
 
+\keeplisting{21}
 \subsubsection{Interface}\label{subsec:Interface}
-\keeplisting{20}
 A skeleton for an \lstinline|interface| may look like this:
 
 \begin{lstlisting}[numbers=left,caption={Interface Skeleton}]
@@ -117,7 +117,6 @@ public interface MyInterface
     ====** Methods **================================================
         \*---------*/
     …
-                
 }
 //  interface MyInterface
 \end{lstlisting}
@@ -183,7 +182,6 @@ public enum MyEnum
     ====** Methods **================================================
         \*---------*/
     …
-                
 }
 //  enum MyEnum
 \end{lstlisting}
@@ -225,8 +223,9 @@ public enum MyEnum
 Technically, an \lstinline|enum| can also define inner classes, but this is strongly discouraged, and I am not aware of any use case for this.
 
 \subsubsection{Record}\label{subsec:Record}
-\index{record}Records had been introduced to Java with version~14 and were finalised with version~16 \autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords}. Like an \lstinline|enum|, a record is a restricted form of a Java class. It’s ideal for \bdq{plain data carrier} classes that contain data not meant to be altered. Usually it has only the most fundamental methods, such as constructors and accessors.
+\index{record}Records had been introduced to Java with version~14 and were finalised with version~16  \autocite{ORACLE_DOC_RECORD,ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordClasses,Eckel:JavaRecords}. Like an \lstinline|enum|, a record is a restricted form of a Java class. It’s ideal for \bdq{plain data carrier} classes that contain data not meant to be altered. Usually it has only the most fundamental methods, such as constructors and accessors.
 
+\keeplisting{30}
 A skeleton for a Java record class may look like this, with all parts being optional:
 \begin{lstlisting}[numbers=left,caption={Record Skeleton}]
 public record MyRecord( ... ) 
@@ -254,8 +253,7 @@ public record MyRecord( ... )
         /*---------*\
     ====** Methods **================================================
         \*---------*/
-    …
-                
+    …                
 }
 //  record MyRecord
 \end{lstlisting}
@@ -292,10 +290,10 @@ public record MyRecord( ... )
 \end{filecontents}
 \LTXtable{\linewidth}{RecordParts.tbl}
 
-Same as \lstinline|enum|s can records have inner classes, but this is similarly discouraged, and there is no use case for it.
+Records can have inner classes, but in the same was as for \lstinline|enum|s, this is also discouraged, and there is no use case for it.
 
 \subsubsection{Annotation}\label{subsec:Annotation}
-Annotations had been introduced with Java~5 \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces}. A skeleton for an annotation interface may look like this:
+Annotations had been introduced with Java~5  \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:AnnotationInterfaces}. A skeleton for an annotation interface may look like this:
 
 \keeplisting{8}
 \begin{lstlisting}[numbers=left,caption={Annotation Skeleton}]

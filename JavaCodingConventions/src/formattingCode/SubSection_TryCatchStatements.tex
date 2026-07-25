@@ -3,14 +3,17 @@ Throwing an exception and catching it somewhere else in the code is the foundati
 
 The \lstinline|try|\index{try} statement is defined in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Try}, and the definitions for the \lstinline|throw|\index{throw} statement can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Throw}.
 
+\keeplisting{6}
 \subsubsection{Formatting \bsq{throw}}
 There is not much to say about the \lstinline|throw|\index{throw} statement in regards of formatting:
+
 \begin{lstlisting}
 throw <exception>;
 \end{lstlisting}
 
 That's it!
 
+\keeplisting{14}
 \subsubsection{Formatting \bsq{try-catch-finally}}
 A \verb#try-catch-finally#\index{try}\index{try!catch}\index{try!finally} statement has the following format:
 \begin{lstlisting}
@@ -27,8 +30,9 @@ finally
     <statements>
 }
 \end{lstlisting}
-There can be more than one \lstinline|catch|\index{try!catch} clauses, but just one \lstinline|finally|\index{try!finally} clause. If there is at least one \lstinline|catch|\index{try!catch} clause, the \lstinline|finally|\index{try!finally} clause can be omitted. And \lstinline|catch|\index{try!catch} clauses are optional if there is a \lstinline|finally|\index{try!finally} clause.
+There can be more than one \lstinline|catch|\index{try!catch} clause following the \lstinline|try|\index{try} block, but just one \lstinline|finally|\index{try!finally} clause. If there is at least one \lstinline|catch|\index{try!catch} clause, the \lstinline|finally|\index{try!finally} clause can be omitted. And \lstinline|catch|\index{try!catch} clauses are optional if there is a \lstinline|finally|\index{try!finally} clause.
 
+\keeplisting{13}
 A \verb#try-with-resources#\index{try-with-resources}\index{try} looks basically like this:
 \begin{lstlisting}
 try( <resource reference> )
@@ -44,7 +48,7 @@ finally
     <statements>
 }
 \end{lstlisting}
-Again, there can be more than one \lstinline|catch|\index{try!catch} clauses, but just one \lstinline|finally|\index{try!finally} clause. But for a \verb#try-with-resources#\index{try-with-resources}\index{try}, both \lstinline|catch|\index{try!catch} clause and \lstinline|finally|\index{try!finally} clause can be omitted.
+Again, there can be more than one \lstinline|catch|\index{try!catch} clause, but just one \lstinline|finally|\index{try!finally} clause. But for a \verb#try-with-resources#\index{try-with-resources}\index{try}, both \lstinline|catch|\index{try!catch} clause and \lstinline|finally|\index{try!finally} clause can be omitted.
 
 For a detailed description of \verb#try-with-resources#\index{try-with-resources}\index{try} refer to chapter \tqfullvref{sec:TryWithResources}.
 
@@ -52,6 +56,7 @@ The use of blanks, round brackets, curly braces and linefeeds was already discus
 
 The curly braces around the code blocks for the \lstinline|try|\index{try}, the \lstinline|catch|\index{try!catch}, and the \lstinline|finally|\index{try!finally} are syntactically required. The opening and the closing braces will be placed to lines of their own, indented to the level of the respective keyword. The code inside will be indented one additional level, as for any other code block.
 
+\keeplisting{10}
 In case more than one exception type should be handled the same way, these can be combined into one \lstinline|catch|\index{try!catch} block, like this:
 \begin{lstlisting}
 try
@@ -67,7 +72,10 @@ The vertical bar is surrounded by blanks.
 
 An \textit{empty} \lstinline|catch|\index{try!catch} block is unacceptable under all circumstances! Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} how to handle exceptions. See also chapter \tqvref{sec:SingleLineComments} about empty blocks and comments.
 
-Usually, the caught exception is referenced in the \lstinline|catch|\index{try!catch} block. If it is not referenced, you should use the underscore (\bdq{\lstinline|_|}) as the \textit{unnamed exception parameter}\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}\index{unnamed exception parameter}\footnote{From the \jls: \bdq{If a declaration does not include an identifier, but instead includes the keyword \bdq{\lstinline|_|} (underscore), then the entity cannot be referred to by name. […] A local variable, exception parameter, or lambda parameter that is declared using an underscore is called an unnamed local variable, unnamed exception parameter, or unnamed lambda parameter, respectively.}}. This looks like this:
+Usually, the caught exception is referenced in the \lstinline|catch|\index{try!catch} block. If it is not referenced, you should use the underscore (\bdq{\lstinline|_|}) as the \textit{unnamed exception parameter}\index{unnamed exception parameter}\footnote{From the \jls: \bdq{If a declaration does not include an identifier, but instead includes the keyword \bdq{\lstinline|_|} (underscore), then the entity cannot be referred to by name. […] A local variable, exception parameter, or lambda parameter that is declared using an underscore is called an unnamed local variable, unnamed exception parameter, or unnamed lambda parameter, respectively.}} \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}. 
+
+\keeplisting{9}
+This looks like this:
 \begin{lstlisting}
 try
 {

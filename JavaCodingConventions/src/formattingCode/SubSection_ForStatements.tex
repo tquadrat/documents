@@ -108,16 +108,20 @@ In most cases, you should consider to use a \lstinline|while|\index{while} loop 
 
 An otherwise empty loop should not be used to consume CPU cycles; there are methods fitting much better to this purpose.
 
-When using the comma operator in the initialization or update clause of a \lstinline|for|\index{for} statement, avoid the complexity of using more than three variables. If needed, use separate statements before the \lstinline|for|\index{for} loop (for the initialization clause) or at the end of the loop (for the update clause).
+When using the comma operator in the initialization or update clause of a \lstinline|for|\index{for} statement, avoid the complexity of using more than three variables. 
 
-\keeplisting{13}
-Examples:
-\begin{lstlisting}[numbers=left]
+\keeplisting{4}
+\begin{lstlisting}
 for( var i = 0, j = target.length; i < source.length && j >= 0; ++i, --j )
 {
     target [j] = source [i];
 }
+\end{lstlisting}
 
+If needed, use separate statements before the \lstinline|for|\index{for} loop (for the initialization clause) or at the end of the loop (for the update clause).
+
+\keeplisting{6}
+\begin{lstlisting}
 var proceed = true;
 var i = source.iterator();
 for( var j = 0; proceed; )
@@ -127,8 +131,13 @@ for( var j = 0; proceed; )
 }
 \end{lstlisting}
 
-When the loop body is larger, you should consider to use a label\index{label}, also when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body. The label will then be repeated as the end comment of the code block. This is described in chapter \tqfullref{sec:LabelsAndBreakStatements} and also in  \tqfullref{sec:TrailingOrEndOfLineComments} and \tqfullref{sec:CommentsWhen}.
-\begin{lstlisting}[numbers=left]
+I already recommended in \tqfullref{sec:CompoundStatements} adding a label if the compound statement is extensive. Naturally, this applies equally to a larger loop body.
+
+A label\index{label} is mandatory when you use \lstinline|break|\index{break} or \lstinline|continue|\index{continue} inside the loop body. 
+
+The label\index{label} will then be repeated as the end comment of the code block. This is described in chapter \tqfullref{sec:LabelsAndBreakStatements} and also in  \tqfullref{sec:TrailingOrEndOfLineComments} and \tqfullref{sec:CommentsWhen}.
+\keeplisting{13}
+\begin{lstlisting}
 <Label>: for( <initialization>; <condition>; <update> )
 {
     if( <condition1> ) continue <Label>;

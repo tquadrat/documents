@@ -1,23 +1,37 @@
 \chapter{Embedded Code}\label{sec:EmbeddedCode}
 Sometimes, it is necessary to embed code from another (programming) language into the \Java source code\footnote{If you write a code generator tool, this could even by Java code.}.
 
-First, only relativly small fragments of foreign code should be embedded into the Java source; larger fragments and full documents can be handled better when provided as resources\index{resource file} (refer to \tqfullvref{sec:ResourcesClasspath}). I consider something around 15 to 20~lines still as \bsq{small}, but this can be discussed for sure.
+First, only relativly small fragments of foreign code should be embedded into the Java source. I consider something around 15 to 20~lines still as \bsq{small} in this context, but this can be discussed for sure.
 
-Not only that the embedded code may clutter the Java source, it is also much better modifiable when stored in a resource file\index{resource file}.
+Not only that the embedded code may clutter the Java source, it is also much better modifiable when stored in a resource file\index{resource file}. Therefore larger fragments and full documents can be handled better when provided as resources\index{resource file} (refer to \tqfullvref{sec:ResourcesClasspath})
 
-Next, the code should be placed into a text block\index{text block} (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks} for the definition):
-\begin{lstlisting}[numbers=left]
+\keeplisting{7}
+Embedded code should be placed into a text block\index{text block}\footnote{For the definition of a text block\index{text block} in Java see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TextBlocks}.}:
+\begin{lstlisting}
 final var code = """
-````<code1>
-````    <code2>
+````<line1>
+````    <line2>
+````        <line3>
+````    <line4>
 ````""";
 \end{lstlisting}
 
-The left margin of the text inside the text block\index{text block} is indicated by the position of the closing three double quotes. In the sample above, \verb#<code1># in line~2 is not indented at all, while \verb#<code2># in line~3 is indented by four spaces. The indentation\index{indentation} within the source code does not matter here; it is just important for optical reasons. The \lstinline|" "| indicates the indentation blanks for the string only.
+The left margin of the text inside the text block\index{text block} is indicated by the position of the closing three double quotes. In the sample above, \verb#<line1># in line~2 is not indented at all, while the lines~3 and 5 are indented by four spaces, and \verb#<line3># is indented by eight spaces. The indentation\index{indentation} within the source code does not matter here; it is just important for optical reasons. The \lstinline|" "| indicates the indentation blanks for the string only.
 
-Aligning the opening and the closing delimiters (the three double quotes) is not recommended. This requires reindentation of the text block\index{text block} if the variable name or modifiers are changed.
+\keeplisting{5}
+The embedded code looks like this when printed:
+\begin{lstlisting}[language={}]
+<line1>
+    <line2>
+        <line3>
+    <line4>
+\end{lstlisting}
 
-According to chapter \tqfullref{sec:IndentationCharacter} only blanks are used for the indentation\index{indentation!character} of the Java source code. But it is of course possible that the embedded code requires tabs for its indendation. In this case, you have to the use the respective escape sequence \bdq{\lstinline|\\t|}:
+Aligning the opening and the closing delimiters (the three double quotes) is not recommended. This would require reindentation of the text block\index{text block} if the variable name or modifiers are changed.
+
+According to chapter \tqfullref{sec:IndentationCharacter} only blanks are used for the indentation\index{indentation!character} of the Java source code. But it is of course possible that the embedded code requires tabs for its indendation.
+\keeplisting{6}
+In this case, you have to the use the respective escape sequence \bdq{\lstinline|\\t|}:
 \begin{lstlisting}[numbers=left]
 final var codeJavaScript = """
 ````\tsetTimeout(function() {

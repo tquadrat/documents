@@ -1,0 +1,180 @@
+% =============================================================================
+% BEISPIEL-EINTRAG FUER EINE *.bib-DATEI
+% =============================================================================
+% BibTeX kennt keinen einzelnen Eintragstyp, der ALLE Felder gleichzeitig
+% sinnvoll nutzt - jeder Typ (@book, @article, @inproceedings, ...) hat seine
+% eigene Menge an "required" und "optional" Feldern. Der folgende Eintrag ist
+% daher als @misc angelegt und listet trotzdem (fast) alle in Standard-BibTeX
+% und den gaengigen Erweiterungen (biblatex) vorkommenden Felder auf, jeweils
+% kommentiert. Nicht benoetigte Felder werden im Alltag natuerlich weggelassen.
+%
+% Hinweis: Zeilen, die mit "%" beginnen, sind Kommentare und werden von
+% BibTeX/biblatex ignoriert.
+% =============================================================================
+
+@misc{muster2024,
+    % -------------------------------------------------------------------
+    % PFLICHT-AEHNLICHE / IDENTIFIZIERENDE FELDER
+    % -------------------------------------------------------------------
+    author       = {Nachname, Vorname and Zweiter, Autor and {Institution als Autor}},
+                    % Autoren, durch " and " getrennt.
+                    % Format bevorzugt "Nachname, Vorname" (BibTeX sortiert dann
+                    % korrekt). Institutionen/Organisationen als Autor werden
+                    % in geschweifte Klammern gesetzt, damit sie nicht als
+                    % "Vorname Nachname" fehlinterpretiert werden.
+    editor       = {Herausgeber, Hans},
+                    % Herausgeber, z. B. bei Sammelbaenden (@incollection,
+                    % @proceedings). Gleiche Syntax wie "author".
+    title        = {Haupttitel des Werks: Untertitel nach Doppelpunkt},
+                    % Der Titel. Grossbuchstaben, die erhalten bleiben muessen
+                    % (Eigennamen, Abkuerzungen), in {geschweifte Klammern}
+                    % setzen, z. B. {JPMS} oder {Java}.
+    subtitle     = {Ein zusaetzlicher Untertitel},
+                    % (biblatex) Getrennter Untertitel, falls nicht schon
+                    % in "title" enthalten.
+    year         = {2024},
+                    % Erscheinungsjahr. In biblatex alternativ/ergaenzend:
+                    % "date = {2024-03-15}" fuer ein vollstaendiges Datum.
+    date         = {2024-03-15},
+                    % (biblatex) Praeziseres Datum, ersetzt/ergaenzt "year".
+
+    % -------------------------------------------------------------------
+    % VEROEFFENTLICHUNGS-KONTEXT
+    % -------------------------------------------------------------------
+    journal      = {Name der Zeitschrift},
+                    % Nur bei @article.
+    journaltitle = {Name der Zeitschrift},
+                    % (biblatex-Variante von "journal")
+    booktitle    = {Titel des Sammelbands oder Konferenzbands},
+                    % Bei @inproceedings, @incollection: Titel des
+                    % uebergeordneten Werks (nicht des eigenen Beitrags).
+    series       = {Name der Schriftenreihe},
+                    % Name einer Buchreihe/Schriftenreihe.
+    volume       = {12},
+                    % Band-/Jahrgangsnummer (Zeitschrift oder Reihe).
+    number       = {3},
+                    % Heftnummer innerhalb des Bandes, oder Report-/
+                    % Technical-Note-Nummer bei @techreport.
+    issue        = {Fruehjahr},
+                    % (biblatex, alternativ zu "number") z. B. bei
+                    % Zeitschriften ohne durchnummerierte Hefte.
+    chapter      = {4},
+                    % Kapitelnummer, v. a. bei @inbook.
+    pages        = {123--145},
+                    % Seitenbereich. Doppelter Bindestrich "--" fuer den
+                    % Bereich (typografisch korrekt in LaTeX).
+    edition      = {3},
+                    % Auflage, z. B. "3" oder "Third".
+    volumes      = {2},
+                    % (biblatex) Gesamtzahl der Baende eines mehrbaendigen Werks.
+
+    % -------------------------------------------------------------------
+    % VERLAG / INSTITUTION
+    % -------------------------------------------------------------------
+    publisher    = {Name des Verlags},
+                    % Verlag, v. a. bei @book, @inbook, @incollection.
+    address      = {Erscheinungsort des Verlags},
+                    % Ort des Verlags (klassisches BibTeX). In biblatex
+                    % heisst das Feld praeziser "location".
+    location     = {Erscheinungsort},
+                    % (biblatex) Ersetzt "address".
+    institution  = {Name der Institution},
+                    % Bei @techreport: herausgebende Institution.
+    organization = {Name der Organisation},
+                    % Bei @proceedings/@manual: veranstaltende Organisation.
+    school       = {Name der Hochschule},
+                    % Bei @phdthesis, @mastersthesis.
+    type         = {Diplomarbeit},
+                    % Praezisiert den Typ, z. B. "Dissertation",
+                    % "Technical Report", "Diplomarbeit".
+
+    % -------------------------------------------------------------------
+    % IDENTIFIKATOREN UND VERWEISE
+    % -------------------------------------------------------------------
+    doi          = {10.1000/beispiel.2024.001},
+                    % Digital Object Identifier, ohne "https://doi.org/"-Praefix.
+    isbn         = {978-3-16-148410-0},
+                    % Bei Buechern.
+    issn         = {1234-5678},
+                    % Bei Zeitschriften.
+    url          = {https://www.example.com/dokument},
+                    % Web-Adresse, v. a. bei Online-Quellen (@online, @misc).
+    urldate      = {2024-05-01},
+                    % (biblatex) Datum des letzten Zugriffs auf "url".
+    eprint       = {2401.01234},
+                    % Kennung in einem Preprint-Archiv (z. B. arXiv-ID).
+    eprinttype   = {arxiv},
+                    % (biblatex) Angabe, welches Archiv "eprint" verwendet.
+    eprintclass  = {cs.SE},
+                    % (biblatex) Klassifikation innerhalb des Preprint-Archivs.
+    crossref     = {anderer-key-2023},
+                    % Verweist auf einen anderen BibTeX-Key, von dem fehlende
+                    % Felder geerbt werden (klassisches BibTeX).
+    xref         = {anderer-key-2023},
+                    % (biblatex) Schwaechere Variante von "crossref", ohne
+                    % automatische Feldvererbung.
+    related      = {noch-ein-key-2022},
+                    % (biblatex) Verknuepfung zu thematisch verwandten Eintraegen.
+
+    % -------------------------------------------------------------------
+    % SPRACHE UND UEBERSETZUNG
+    % -------------------------------------------------------------------
+    language     = {german},
+                    % (biblatex) Sprache des Werks, z. B. "english", "german".
+    translator   = {Uebersetzer, Ute},
+                    % Uebersetzer des Werks.
+    origlanguage = {english},
+                    % (biblatex) Ausgangssprache bei Uebersetzungen.
+
+    % -------------------------------------------------------------------
+    % ZUSAETZLICHE BESCHREIBENDE FELDER
+    % -------------------------------------------------------------------
+    abstract     = {Kurze Zusammenfassung des Inhalts, wird von den meisten
+                     Stilen nicht gedruckt, kann aber fuer eigene Zwecke
+                     oder Werkzeuge nuetzlich sein.},
+    annotation   = {Freie Anmerkung/Notiz zum Eintrag, z. B. fuer die
+                     eigene Literaturverwaltung.},
+    keywords     = {Stichwort1, Stichwort2, Stichwort3},
+                    % Kommagetrennte Schlagworte, z. B. nutzbar zum Filtern
+                    % mit biblatex-Optionen wie "keyword=...".
+    note         = {Beliebige zusaetzliche Anmerkung, wird meist mit
+                     abgedruckt (im Gegensatz zu "annotation").},
+    howpublished = {Art der Veroeffentlichung, z. B. \url{https://...}},
+                    % Bei @misc: wie/wo etwas veroeffentlicht wurde.
+
+    % -------------------------------------------------------------------
+    % SORTIERUNG UND ANZEIGE (biblatex-spezifisch)
+    % -------------------------------------------------------------------
+    sortname     = {Nachname, Vorname},
+                    % Erzwingt eine bestimmte Sortierung, falls "author"
+                    % davon abweichend dargestellt werden soll.
+    shorttitle   = {Kurztitel},
+                    % Kurzform des Titels fuer wiederholte Zitate.
+    shorthand    = {Muster24},
+                    % Manuell definiertes Kuerzel/Label fuer die Zitation.
+    addendum     = {Weitere Angabe am Ende des Eintrags (biblatex).},
+    pagetotal    = {320},
+                    % Gesamtseitenzahl des Werks (nicht zu verwechseln mit
+                    % "pages", das einen Bereich innerhalb eines Sammelwerks
+                    % beschreibt).
+    file         = {beispiel.pdf}
+                    % (nicht-standardisiert, aber weit verbreitet, z. B. in
+                    % JabRef) Pfad zu einer lokal abgelegten Datei.
+}
+
+% =============================================================================
+% HAEUFIGE EINTRAGSTYPEN IM UEBERBLICK (nur die jeweils typischen Felder):
+% -----------------------------------------------------------------------------
+% @article        author, title, journal, year, volume, number, pages, doi
+% @book           author/editor, title, publisher, year, address, isbn
+% @inbook         author, title, chapter/pages, publisher, year
+% @incollection   author, title, booktitle, editor, publisher, year, pages
+% @inproceedings  author, title, booktitle, year, pages, organization
+% @proceedings    editor, title, year, publisher, organization
+% @techreport     author, title, institution, year, number, type
+% @phdthesis      author, title, school, year
+% @mastersthesis  author, title, school, year
+% @manual         title, organization/author, year
+% @online         author, title, url, urldate, year   (biblatex)
+% @misc           title, ... (Auffangbecken fuer alles Uebrige)
+% =============================================================================

@@ -2,11 +2,11 @@
 
 Basically, what we refer to as a \bdq{Java Source File} is defined by the \Java programming language as a \bdq{Compilation Unit}\index{compilation unit} \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit}.
 
-\bdq{The \Java Language Specification} distinguishes between \bdq{Ordinary Compilation Units}, \bdq{Compact Compilation Units} and \bdq{Modular Compilation Units}. Here, we are only interested in the \bdq{Ordinary Compilation Units}.
+\bdq{The \Java Language Specification} distinguishes between \bdq{Ordinary Compilation Units}\index{compilation unit!ordinary}, \bdq{Compact Compilation Units}\index{compilation unit!compact} and \bdq{Modular Compilation Units}\index{compilation unit!modular}. Here, we are only interested in the \bdq{Ordinary Compilation Units}\index{compilation unit!ordinary}.
 
-A \bdq{Modular Compilation Unit}\index{module-info.java} defines the module structure of an application; this is described in \tqfullvref{sec:ModuleDefinition}.
+A \bdq{Modular Compilation Unit}\index{compilation unit!modular} (a \verb#module-info.java#\index{module-info.java} file) defines the module\index{module} structure of an application. The formatting of such a file is described in \tqfullvref{sec:ModuleDefinition} and modules in general are discussed in \tqfullvref{sec:Modularisation}.
 
-\bdq{Compact Compilation Units} or \bdq{compact source files} were introduced with Java~25 and are mainly meant to support writing small scripts in Java, without the overhead of a full-flegded Java program. They should never be used in the context of a bigger Java program or application.
+\bdq{Compact Compilation Units}\index{compilation unit!compact} or \bdq{compact source files} were introduced with Java~25 and are mainly meant to support writing small scripts in Java, without the overhead of a full-flegded Java program. They should never be used in the context of a bigger Java program or application.
 
 \input{formattingCode/Section_FileEncoding}
 \input{formattingCode/Section_JavaSourceFileSize}

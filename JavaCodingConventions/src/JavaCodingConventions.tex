@@ -12,92 +12,11 @@
 
 \include{introduction/Chapter}
 \include{formattingCode/Part}
+\include{naming/Part}
 
 %------------------------------------------------------------------------------
 
-\section{Special Files}
-Beside the files that contain the Java source code itself (with the extension \verb#.java#), a project can contain several other files. Two (types) of these files are discussed here – interestingly, both have the \verb#.java# extension without being really valid Java source files.
 
-\subsection{The Module Definition}\label{sec:ModuleDefinition}
-Modules have been introduced to Java with version~9, as a result of the Jigsaw project\autocite{OPENJDK:ProjectJigsaw}\index{Project Jigsaw|see {Java Platform Module System}}\index{Java Platform Module System}. A module will be defined in the file \verb#module-info.java# that is located in the root of the source tree. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}.
-
-Basically, a \verb#module-info.java# file will look like this:
-\begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
-/*
- * ==================================================================
- * Copyright © <Year> <Copyright Notice>
- * ==================================================================
- *
- * <License Notice>
- */
- 
-/**
- *  <module description>
- */ 
-module <modulename> 
-{
-    requires <name_of_required_module_1>;
-    requires <name_of_required_module_2>;
-
-    requires transitive <name_of_required_module_3>;
-
-    exports <name_of_exported_package_1>;
-    exports <name_of_exported_package_2> to <name_of_target_module_1>;
-
-    opens <name_of_opened_package_1>;
-    opens <name_of_opened_package_1> to <name_of_target_module_1>, <name_of_target_module_2>;
-
-    uses <name_of_provider_interface>;
-    provides <name_of_provider_interface> with <name_of_provider_implementation>;
-}
-//  module <modulename>
-
-/*
- *  End of File
- */
-\end{lstlisting}
-How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}.
-
-The \verb#<module description># will be discussed in chapter \tqfullvref{sec:ModuleComment}.
-
-\subsection{The Package Documentation}\label{sec:PackageDocumentation}
-Different from the module, there is no special source file that defines a package in Java. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|.
-
-Nevertheless there is a need for package-level documentation, and it is even possible to set annotations to packages.
-
-For the documentation of a package, originally a file named \verb#package.html# was used, placed into the package folder. Although this still works, you should use the new \verb#package-info.java# file instead, because only this allows annotations on package level; it looks like this:
-
-\begin{lstlisting}[numbers=left, caption={package-info.java}]
-/*
- * ==================================================================
- * Copyright © <Year> <Copyright Notice>
- * ==================================================================
- *
- * <License Notice>
- */
- 
-/**
- *  <package description>
- */
-@<AnAnnotation> 
-package <packagename>;
-
-import <AnAnnotation>
-
-/*
- *  End of File
- */
-\end{lstlisting}
-
-The \verb#<package description># is a standard JavaDoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
-
-If the package is annotated\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
-
-The chapter \tqfullvref{sec:Packages} discusses how to define the name of the package (\verb#<packagename>#).
-
-%------------------------------------------------------------------------------
-
-\part{Naming Conventions}\label{sec:NamingConventions}
 While the primary goal of the formatting rules is to make it easier to \textit{read} the source code, are the naming conventions targeted to make a program easier to \textit{understand}.
 
 \subsubsection{Principles}
@@ -9991,6 +9910,14 @@ And an expression can also be always a \lstinline|throw|.
 %------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+
+\section{Modularisation}\label{sec:Modularisation}
+\section{-------------------------------------------- Proceed from here!}
+\lipsum[5]
+\tqfullvref{sec:ModuleDefinition} and modules in general are discussed in \tqfullvref{sec:Modularisation}
+name for a module: \tqfullvref{sec:Modules}
 
 %------------------------------------------------------------------------------
 

@@ -1,5 +1,41 @@
 \subsection{Formatting XML inside Java}\label{sec:FormattingXMLInsideJava}
-You should embed only small fragments of an XML document into the Java source; larger fragments and full documents can be handled better when provided as resources.
+These formatting rules are valid for plain XML\index{XML}, as well as for various XML\index{XML} dialects, like SVG\index{SVG}, DocBook\index{DocBook} or XSLT\index{XSLT}, but not for XHTML\index{XHTML} – that is covered by \tqfullref{sec:FormattingHTMLInsideJava}, above.
+
+The formatting of XML\index{XML} is relatively straight forward: the top level element will not be indented, each enclosed element will be indented by one level (or four spaces). The first attribute follows immediately the tag, further attributes are aligned with the first one. Attribute values are enclosed in double quotes. Closing tags are aligned with the opening tags, and the closing \bdq{\lstinline| />|} for an empty element is on the same line as the last attribute (or the opening tag, if there are no attributes).
+
+\keeplisting{12}
+This would look like this:
+\begin{lstlisting}[language=XML]
+<element attribute = "value">
+    <inner attribute1 = "value"
+           attribute2 = "value"
+        <empty />
+        <other attribute1 = "value"
+               attribute2 = "value" />
+    </inner>
+</element>
+<element attribute = "value">
+    <inner attribute1 = "value" />
+</element>
+\end{lstlisting}
+
+\keeplisting{14}
+Embedded into Java code, the result would be this:
+\begin{lstlisting}
+final var xmlSnippet = """
+````<element attribute = "value">
+````    <inner attribute1 = "value"
+````           attribute2 = "value"
+````        <empty />
+````        <other attribute1 = "value"
+````               attribute2 = "value" />
+````    </inner>
+````</element>
+````<element attribute = "value">
+````    <inner attribute1 = "value" />
+````</element>
+````""";
+\end{lstlisting}
 
 %==============================================================================
 % End of file!!

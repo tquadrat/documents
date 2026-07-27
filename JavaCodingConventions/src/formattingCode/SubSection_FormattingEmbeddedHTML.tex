@@ -13,7 +13,7 @@ Below some recommendations that were translated from \autocite{selfHTML:GuterHTM
 			\item{Use indentation and blank lines to structure your code clearly.}
 		\end{itemize}}
 \end{itemize}
-\textbf{Note:} Since XHTML\index{XHTML} is an XML\index{XML} dialect, the points listed above are mandatory in XHTML, whereas in HTML they are \bdq{merely} a matter of good practice.
+\textbf{Note:} Since XHTML\index{XHTML} is an XML\index{XML} dialect, the points listed above are mandatory in XHTML\index{XHTML}, whereas in HTML\index{HTML} they are \bdq{merely} a matter of good practice.
 
 \keeplisting{19}
 This short HTML\index{HTML} document
@@ -86,14 +86,7 @@ final var htmlFragment = """
 ````""";
 \end{lstlisting}
 
-
-
-
-
-String::indent \autocite{ORACLE_DOC_STRING:indent}
-
-
-
+This means that the top level element will not be indented. If you need to compose an HTML\index{HTML} document from the snippets, jyou can correct the indentation through calling \lstinline|String::indent|\index{java.lang!String!indent()} \autocite{ORACLE_DOC_STRING:indent}. This is explained in more detail in chapter \tqfullvref{sec:TextBlocks}.
 
 %==============================================================================
 % End of file!!

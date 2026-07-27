@@ -9,13 +9,13 @@ Basically, a \bdq{Cascading Style Sheet}\index{CSS} consists from a set of rules
 This looks like this:
 \begin{lstlisting}[language={}]
 <selector> <selector> {
-    <property>:<value>;
-    <property>:<value>;
+    <property>: <value>;
+    <property>: <value>;
 }
 
 <selector> <selector> {
-    <property>:<value>;
-    <property>:<value>;
+    <property>: <value>;
+    <property>: <value>;
 }
 \end{lstlisting}
 
@@ -24,18 +24,36 @@ Or, when embedded into a Java source file:
 \begin{lstlisting}
 final var cssString = """
 ````<selector> <selector> {
-````    <property>:<value>;
-````    <property>:<value>;
+````    <property>: <value>;
+````    <property>: <value>;
 ````}
 
 ````<selector> <selector> {
-````    <property>:<value>;
-````    <property>:<value>;
+````    <property>: <value>;
+````    <property>: <value>;
 ````}\
 ````""";
 \end{lstlisting}
 
-Each rule starts on its own line. The list of selectors is terminated by the openening curly brace and a linefeed. The declarations will be indented with four spaces, terminated by the semicolon and a linefeed again. The closing curly braces is not indented and follows on a line of its own.
+\keeplisting{12}
+Or, when embedded into an HTML\index{HTML} fragment that is embedded into a Java source file\footnote{I chose a more concrete sample as the \lstinline|<selector>| and \lstinline|<value>| meta variables would be confusing in the context of HTML\index{HTML}.}:
+\begin{lstlisting}
+final var htmlStyle = """
+````<style>
+````    h1 { 
+````       background-color: green;
+````       color: white;
+````    }
+````
+````    p {
+````        text-align: center; 
+````        color: green;
+````    }
+````</style>
+````""";
+\end{lstlisting}
+
+Each rule starts on its own line. The list of selectors is terminated by the openening curly brace and a linefeed. The declarations will be indented with four spaces, terminated by the semicolon and a linefeed again. There is no blank between the property name and the colon, but the value is prepended by a blank. After the semicolon that terminates the declaration, a line fedd follows. The closing curly brace is not indented and follows on a line of its own.
 
 The rules will be separated by an empty line from each other. 
 

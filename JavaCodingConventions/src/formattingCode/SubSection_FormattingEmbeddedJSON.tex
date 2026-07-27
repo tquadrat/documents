@@ -1,4 +1,59 @@
 \subsection{Formatting JSON inside Java}\label{sec:FormattingJSONInsideJava}
+Here are some basic rules for the formatting of JSON\index{JSON}:
+\begin{itemize}
+	\item{All strings must be wrapped in double quotes.}
+	\item{Numbers are always printed with their decimal part, even when it’s 0.}
+	\item{Booleans are printed as \verb#true# and \verb#false#.}
+	\item{\lstinline|NULL| is printed as \verb#null#.}
+	\item{Try to keep an array on a single line, otherwise it should be split with each item on a line of its own and indented by one level (four spaces).}
+	\item{Try to keep an object on a single line, otherwise, it should be split with each field/value pair on a line of its own, again indented by one level.}
+	\item{For an object, the field name and the relative value should never end up on different lines. If the value is an object/array that needs to be split, its open parentheses must be kept on the same line as the field name.}
+	\item{Neither objects nor arrays should have a trailing comma since it’s not allowed in JSON.}
+	\item{When objects and arrays are displayed on a single line there should be a single whitespace separating the parentheses and their items.}
+\end{itemize}
+
+\keeplisting{17}
+These should be sufficient for our purpose; a sample would look like this:
+\begin{lstlisting}[language={}]
+{
+    name: "value",
+    flag: true,
+    number: 42.0,
+    simpleArray: [1.0, 2.0, 3.0],
+    stringArray: ["one", "two", "three"],
+    complexArray: [
+        { s: "value", n: 2.0 f: false },
+        { s: "other", n: 3.14, f: true }
+    ],
+    complexObject: {
+        name: "value",
+        flag: false,
+        longText: "This is a long text with line break!\nHere we continue that text in the second line.\nAnd this is the third line!"
+    }       
+}
+\end{lstlisting}
+
+When we embed this into a Java source file, it would look like below:
+\begin{lstlisting}
+final var jsonSnippet = """
+````{
+````    name: "value",
+````    flag: true,
+````    number: 42.0,
+````    simpleArray: [1.0, 2.0, 3.0],
+````    stringArray: ["one", "two", "three"],
+````    complexArray: [
+````        { s: "value", n: 2.0 f: false },
+````        { s: "other", n: 3.14, f: true }
+````    ],(|\newpage|)
+````    complexObject: {
+````        name: "value",
+````        flag: false,
+````        longText: "This is a long text with line break!\nHere we continue that text in the second line.\nAnd this is the third line!"
+````    }       
+````}\
+````""";
+\end{lstlisting}
 
 %==============================================================================
 % End of file!!

@@ -1,0 +1,66 @@
+\section{UPPERCASE, lowercase, CamelCase}\label{sec:CaseOfNames}
+Use \textit{CamelCase}, starting with a capital letter, for the identifiers of all kinds of classes: 
+\begin{itemize}[nosep]
+	\item{\lstinline|String|}
+	\item{\lstinline|LocalDateTime|}
+	\item{\lstinline|AccountOwner|}
+	\item{…}
+\end{itemize}
+
+For the identifiers of local variables, methods and formal parameters, use \textit{camelCase} starting with a lowercase character: 
+\begin{itemize}[nosep]
+	\item{\lstinline|i|}
+	\item{\lstinline|proceed|}
+	\item{\lstinline|isValid|}
+	\item{\lstinline|retValue|}
+	\item{\lstinline|result|}
+	\item{\lstinline|lastOwner|}
+	\item{\lstinline|indexOfLastRecord|}
+	\item{…}
+\end{itemize}
+
+Fields (attributes or properties) are a bit special\footnote{see chapter \tqfullref{sec:Fields}}: their identifiers are prefixed with “\verb#m_#”, followed by the concrete name in \textit{CamelCase} (with a leading capital letter):
+\begin{itemize}[nosep]
+	\item{\lstinline|m_Name|}
+	\item{\lstinline|m_IsValid|}
+	\item{\lstinline|m_LastOwner|}
+	\item{\lstinline|m_IndexOfLastRecord|}
+	\item{…}
+\end{itemize}
+
+For the identifiers of packages and modules, all \textit{lowercase} is preferred, although this is not mandatory:
+\begin{itemize}[nosep]
+	\item{\lstinline|java.lang|}
+	\item{\lstinline|org.tquadrat.foundation|}
+	\item{\lstinline|com.ibm|}
+	\item{…}
+\end{itemize}
+In fact, these are 7~package \textit{names} (\lstinline|java|, \lstinline|lang|, \lstinline|org|, \lstinline|tquadrat|, \lstinline|foundation|, \lstinline|com| and \lstinline|ibm|) although we probably have only 3~\textit{packages}.
+
+Nevertheless, you should avoid a package name starting with a capital letter, as this could be mixed up easily with a class name.
+
+The \ccjpl demands to use all \textit{UPPERCASE} for constants and separating words with underscores, and usually this is implicitly expanded to \lstinline|enum| values, too\footnote{The \ccjpl ~were last updated in 1999, \lstinline|enum|s had been introduced with Java~5, and that was released at 2004-09-29~…}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}.
+
+\keeplisting{5}
+Samples for constants are:
+\begin{itemize}[nosep]
+	\item{\lstinline|EOF|}
+	\item{\lstinline|EMPTY_STRING|}
+	\item{\lstinline|XML_ATTRIBUTE_LastAccessed|}
+	\item{…}
+\end{itemize}
+
+\keeplisting{5}
+Examples for an \lstinline|enum| named \lstinline|LightStatus| could be
+\begin{itemize}[nosep]
+	\item{\lstinline|LIGHT_STATUS_Unknown|}
+	\item{\lstinline|LIGHT_STATUS_Off|}
+	\item{\lstinline|LIGHT_STATUS_On|}
+	\item{…}
+\end{itemize}
+
+Details are discussed in the chapters about the respective code elements, below.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -1,5 +1,7 @@
-\chapter{General Accords}
+\chapter{General Accords}\label{sec:General Accords}
 While the primary goal of the \hyperref[sec:FormattingTheSourceCode]{formatting rules} is to make the source code easier to \textit{read}, the naming conventions are targeted to make a program easier to \textit{understand}.
+
+The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the \bdq{The \Java Language Specification} \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
 
 So at first it is important to give the respective program elements a meaningful name. But unfortunately, \bdq{meaningful} is a relative term; it depends from domain context and the experience the audience has with that context.
 
@@ -11,49 +13,35 @@ Names, in particular those for methods, also provide an implicit contract\footno
 
 This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it performs a \textit{write} operation instead, the implicit contract is broken. To fix that, an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
 
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} at the end of this part.\label{princ:NamingConventions:NamesAsContract}
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} at the end of the part about the Naming Conventions.\label{princ:NamingConventions:NamesAsContract}
 
+Next, the naming must be consistent. This is particularly important for the names of local variables\index{local variable} and for the formal parameters\index{parameter} of methods\index{method} and constructors\index{constructor}. Basically, it means that the same thing should get always the same name.
 
+Then names must be spelled correctly, because typos\index{typo} are disturbing and interfere with the readability of the code. Not to mention that they are very ugly quite often!\footnote{You remember bullet point~\ref{lst:NutshellGuardrails} of the \ngref: \bdq{Beautiful is better than ugly}?}
 
-
-
-
-
-
-
-
-
-
-
-
-
+Finally, upper and lower case also have a meaning. Java is case sensitive, the names \lstinline|name|, \lstinline|NAME| and \lstinline|Name| are distinct. This is exploited to make it easier to distinguish between various program elements, names for different program elements use upper and lower case characters in different ways. Refer to \tqfullvref{sec:CaseOfNames} for more details.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{The selected name for a program element has to be meaningful.
+	\item{The selected name for a program element has to be meaningful.
 
-But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{princ:NamingConventions:MeaningfulNames}
+But as \bdq{meaningful} is a relative term, depending on context and audience, we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}
+	\item{Names, in particular those for methods, provide an implicit contract between the original author of a program and its users/maintainers.}
+	\item{The naming has to be consistent.
 
-\item{Names, in particular those for methods, provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+The same thing should always get the same name.}
 
-This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
+	\item{Correct spelling is not an unnecessary luxury.}
 
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{princ:NamingConventions:NamesAsContract}
-
-\item{The naming has to be consistent.
-
-This is particularly important for the names of local variables and for the formal parameters of a method or a constructor; it means that the same thing should always get the same name.}
-
-\item{Correct spelling is not an unnecessary luxury.
-
-Names should be spelled correctly, as typos are disturbing and interfere with the readability. Not to mention that they are quite often ugly.}
-
-\item{Upper and lower case also have a meaning.
-
-Names for different program elements use upper and lower case characters in different ways.}
+	\item{Upper and lower case also have a meaning.}
 \end{enumerate}
 
+But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may be syntactically correct and do look good in some sample code (like in the sample listings in this document~…), but they are definitely invalid for real code (even for quick-shot proof-of-concept code) – of course mainly because they are not meaningful! And the first rule about the naming of program elements is to use \textit{meaningful names}. 
 
+%------------------------------------------------------------------------------
+
+\input{naming/Section_Language}
+\input{naming/Section_CaseOfNames}
 
 %==============================================================================
 % End of file!!

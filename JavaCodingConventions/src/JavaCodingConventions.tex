@@ -16,44 +16,8 @@
 
 %------------------------------------------------------------------------------
 
-
-%------------------------------------------------------------------------------
-
-\section{General Accords}
-The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the Java Language Specification \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
-
-But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may be syntactically correct and do look good in some sample code (like in the sample listings in this document~…), but they are definitely invalid for real code (even for quick-shot proof-of-concept code) – of course mainly because they are not meaningful! And the first rule about the naming of program elements is to use \textit{meaningful names}. 
-
-%------------------------------------------------------------------------------
-
-\subsection{Language}
-The identifier names have to be taken from English language, and with correct spelling. I am conscious about the fact that there are differences between British and American English (at least between these two~…) and their spelling. “Correct spelling” means “correctly spelled according to at least one variant”. Decide for one spelling scheme and stuck with it. I personally use American English for the names. Consult a dictionary if in doubt of spelling and/or meaning for a word you want to use as a name.
-
-The reason to use English is that this is the common language for most international teams.
-
-But even if you are working in an environment where English is a foreign language, solely with people speaking all the local language, using English still has a big advantage: you can distingiush just by the language used if someone talks about the ‘real world’ object or its representation in the program.\footnote{From a specification document: “Ein Konto wird repräsentiert durch ein Objekt der Klasse \lstinline|Account|, der Kontoinhaber entsprechend durch ein Object der Klasse \lstinline|AccountOwner|.” – If you do not understand German, the translation is like this: “An account will be represented through an object of the class \lstinline|Account|, and the account owner by an object of the class \lstinline|AccountOwner|, respectively.” Or short: an account is an \lstinline|Account|, and an account owner is an \lstinline|AccountOwner|; in writing, this looks good, but in oral communications, misunderstandings are easy.}
-
-%------------------------------------------------------------------------------
-
-\subsection{UPPERCASE, lowercase, CamelCase}\label{sec:CaseOfNames}
-Use \textit{CamelCase}, starting with a capital letter, for the identifiers of all kinds of classes: \lstinline|String|, \lstinline|LocalDateTime|, \lstinline|AccountOwner|,~…
-
-For the identifiers of local variables, methods and formal parameters, use \textit{camelCase} starting with a lowercase character: \lstinline|i|, \lstinline|proceed|, \lstinline|isValid|, \lstinline|lastOwner|, \lstinline|indexOfLastRecord|,~…
-
-Fields (attributes or properties) are a bit special\footnote{see chapter \tqfullref{sec:Fields}}: their identifiers are prefixed with “\verb#m_#”, followed by the concrete name in \textit{CamelCase} (with a leading capital letter): \lstinline|m_IsValid|, \lstinline|m_Name|, \lstinline|m_IndexOfLastRecord|,~…
-
-For the identifiers of packages and modules, all lowercase is preferred, although this is not mandatory: \lstinline|java.lang|, \lstinline|org.tquadrat.foundation|,~… – Nevertheless, you should avoid a package name starting with a capital letter, as this could be mixed up easily with a class name.
-
-The Java coding convention \autocite{SUN_CODE_CONVENTIONS} demands to use all uppercase for constants and separating words with underscores, and usually this is implicitly expanded to enum values, too\footnote{The “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS} were last updated in 1999, enums had been introduced with Java~5, and that was released at 2004-09-29~…}. I prefer a more relaxed approach for that – see chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}. Samples for constants are: \lstinline|EOF|, \lstinline|EMPTY_STRING|, \lstinline|XML_ATTRIBUTE_LastAccessed|,~…
-
-Examples for an \lstinline|enum| named \lstinline|LightStatus| could be \lstinline|LIGHT_STATUS_Unknown|, \lstinline|LIGHT_STATUS_Off|, \lstinline|LIGHT_STATUS_On| and so on.
-
-Details are discussed in the chapters about the respective code elements.
-
-%------------------------------------------------------------------------------
-
 \subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
-In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \ref{princ:NamingConventions:MeaningfulNames}
+In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \tqfullref{sec:GeneralAccords} where I already discussed the need for meaningful names.
 
 The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
 

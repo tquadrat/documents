@@ -17,33 +17,6 @@
 %------------------------------------------------------------------------------
 
 
-While the primary goal of the formatting rules is to make it easier to \textit{read} the source code, are the naming conventions targeted to make a program easier to \textit{understand}.
-
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{The selected name for a program element has to be meaningful.
-
-But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{princ:NamingConventions:MeaningfulNames}
-
-\item{Names, in particular those for methods, provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
-
-This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
-
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{princ:NamingConventions:NamesAsContract}
-
-\item{The naming has to be consistent.
-
-This is particularly important for the names of local variables and for the formal parameters of a method or a constructor; it means that the same thing should always get the same name.}
-
-\item{Correct spelling is not an unnecessary luxury.
-
-Names should be spelled correctly, as typos are disturbing and interfere with the readability. Not to mention that they are quite often ugly.}
-
-\item{Upper and lower case also have a meaning.
-
-Names for different program elements use upper and lower case characters in different ways.}
-\end{enumerate}
-
 %------------------------------------------------------------------------------
 
 \section{General Accords}

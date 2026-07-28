@@ -1,0 +1,27 @@
+\chapter{The Naming Dictionary}\label{sec:TheNamingDictionary}
+The names of program elements provide an implicit contract (or at least a kind of commitment) between the original author of the program and its users/maintainers. But because people understand words differently, I have added a dictionary of common verbs and their implicit contracts here, together with a list of suffixes for class names.
+
+%------------------------------------------------------------------------------
+
+\section{Verbs}
+This chapter provides a list of verbs\footnote{Ok, some names or prefixes are not verbs, like ‘main’, ‘from’ or ‘to’~…} to be used with method names and a description of their implicit contract. These verbs are usually prefixes to a method name, although some of them could be used as standalone names, too. The form that used more often is mentioned first.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{naming/Verbs.tbl.tex}
+
+That a method name is built using one of the verbs above does not free you from providing a proper Javadoc comment that describes the purpose of the method in detail, together with the arguments, return values and exceptions.
+
+%------------------------------------------------------------------------------
+
+\section{Suffixes for Class Names}\label{sec:SuffixesForClassNames}
+This chapter lists defined suffixes for class names and their function.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{naming/ClassNameSuffixes.tbl.tex}
+
+\section{Domain Vocabulary}\label{sec:DomainVocabulary}
+If your project was designed using \bdq{Domain-Driven Design}\index{domain-driven design} \autocite{Evans:DomainDrivenDesign}, and you will adjust this Coding Conventions for your project, you should consider to add your project's vocabulary here.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

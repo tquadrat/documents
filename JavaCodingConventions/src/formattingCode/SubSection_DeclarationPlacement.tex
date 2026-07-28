@@ -42,9 +42,9 @@ public final void myComplexMethod( final String arg )
     final var a1 = getInitialValueForA1();
     final var a2 = getInitialValueForA2();
     final var a3 = 0;
-	…
-	// 20 lines of code before a2 is used and a3 is initialised …
-	final var a4 = getValueForA4( a2 );
+    …
+    // 20 lines of code before a2 is used and a3 is initialised …
+    final var a4 = getValueForA4( a2 );
     …
     // 30 lines of code before a3 and a4 are used …
     …
@@ -78,20 +78,20 @@ var i = 0;
 
 final IntFunction f1;
 {
-	final var x = ++i;
-	f1 = arg -> arg + x;
+    final var x = ++i;
+    f1 = arg -> arg + x;
 }
 
 final IntFunction f2;
 {
-	final var x = ++i;
-	f2 = arg -> arg + x;
+    final var x = ++i;
+    f2 = arg -> arg + x;
 }
 
 final IntFunction f3;
 {
-	final var x = ++i;
-	f3 = arg -> arg + x;
+    final var x = ++i;
+    f3 = arg -> arg + x;
 }
 \end{lstlisting}
 

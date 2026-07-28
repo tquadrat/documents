@@ -1,4 +1,59 @@
 \chapter{General Accords}
+While the primary goal of the \hyperref[sec:FormattingTheSourceCode]{formatting rules} is to make the source code easier to \textit{read}, the naming conventions are targeted to make a program easier to \textit{understand}.
+
+So at first it is important to give the respective program elements a meaningful name. But unfortunately, \bdq{meaningful} is a relative term; it depends from domain context and the experience the audience has with that context.
+
+A class name \bdq{\lstinline|TSU|} would most probably be just a cryptic three-letter-acronym with no meaning for someone with only a finance industry background, while people with knowledge in the warehouse \& logistics domain would know that this abbreviation stands for \bdq{Transport and Storage Unit}\index{Transport and Storage Unit|see {TSU}}\index{TSU} and that the respective class is an abstract representation of a container for goods within a Warehouse Management System\index{Warehouse Management System|see {WMS}} (WMS\index{WMS}).
+
+It is generally helpful to choose names that are not only understood by insiders of the respective problem domain. On the other hand, the domain-specific technical terms are concise and precise, thereby minimizing the potential for misunderstandings. This topic is discussed (amongst several others) in the book \bdq{Domain-Driven Design} by Eric Evans \autocite{Evans:DomainDrivenDesign}. But abbreviations as names are rarely a good idea.  
+
+Names, in particular those for methods, also provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+
+This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it performs a \textit{write} operation instead, the implicit contract is broken. To fix that, an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
+
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} at the end of this part.\label{princ:NamingConventions:NamesAsContract}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{The selected name for a program element has to be meaningful.
+
+But “meaningful” is a relative term, depending from context and experience. So the abbreviation “TSU” for a class name is just a cryptic three-letter-acronym for someone in the banking business while for people from the warehouse \& logistics domain no further explanation is required\footnote{“TSU” stands for “Transport and Storage Unit” and is something like an abstract container of goods for a Warehouse Management System (WMS).}. So we want to enhance this principle as we say that the name of a program element has to be meaningful for as many people as possible – even for someone outside the current problem domain.}\label{princ:NamingConventions:MeaningfulNames}
+
+\item{Names, in particular those for methods, provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+
+This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it will perform a \textit{write} operation instead, the implicit contract is broken. To fix that, at least an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
+
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} in the appendices for those lists.}\label{princ:NamingConventions:NamesAsContract}
+
+\item{The naming has to be consistent.
+
+This is particularly important for the names of local variables and for the formal parameters of a method or a constructor; it means that the same thing should always get the same name.}
+
+\item{Correct spelling is not an unnecessary luxury.
+
+Names should be spelled correctly, as typos are disturbing and interfere with the readability. Not to mention that they are quite often ugly.}
+
+\item{Upper and lower case also have a meaning.
+
+Names for different program elements use upper and lower case characters in different ways.}
+\end{enumerate}
+
+
 
 %==============================================================================
 % End of file!!

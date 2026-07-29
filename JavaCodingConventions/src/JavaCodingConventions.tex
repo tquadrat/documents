@@ -16,19 +16,6 @@
 
 %------------------------------------------------------------------------------
 
-\subsection{Length of Names and Use of Abbreviations}\label{sec:LengthOfNamesAndUseOfAbbreviations}
-In general, you should avoid abbreviations and acronyms as identifiers for program elements if those are not \textit{very well known} – refer to \tqfullref{sec:GeneralAccords} where I already discussed the need for meaningful names.
-
-The length of a name has very little to no influence on the size and speed of the compiled code. And with the code completion features provided by modern IDEs, the programmer may not even have to type long names~…
-
-This means that you will never sacrifice the meaningfulness of a long name for typing speed – never ever!
-
-If you think you will be more productive when using short names (because you can type them faster~…), you are wrong! When you have the feeling that you have to write code faster, learn typewriting\footnote{For my understanding, someone who does not reach at least 100 CPM should look for a job outside of software development (average values for a trained user are around 200 CPM, peak values are at 500 to 900 CPM)}. It will also help you to write all the other stuff you have to deliver in addition to your code (documentation, meeting notes, emails, specification documents,~…).
-
-But of course Java programs do have a maximum length for identifiers\footnote{The Java Language Specification does not impose such a limit: “An \textit{identifier} is an unlimited-length sequence of \textit{Java letters} and \textit{Java digits}, the first of which must be a \textit{Java letter}.”\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}, but the compiled code may not exceed a given length.}, although it is higher than any practical use case. I think that a name for a module, package, class, method, field, constant, argument, or local variable that is longer than 100 or perhaps 150 characters is definitely too long to be useful.
-
-%------------------------------------------------------------------------------
-
 \subsection{‘Special’ Characters}
 Java allows to compose an identifier from all Unicode letters and digits, plus the underscore “\verb#_#” and the dollar symbol “\verb#$#”. This, too, is a reason for using English only for the names and identifiers: usually, you can limit yourself to the ASCII character set, and for the rest, avoid dollars and underscores in identifiers; the only exceptions are underscores for the names of constants and \lstinline|enum| values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). 
 

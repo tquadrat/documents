@@ -1,0 +1,72 @@
+\section{\bsq{Special} Characters}
+\bdq{The \Java Language Specification} says in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}:
+\begin{quote}
+``An identifier is an unlimited-length sequence of Java letters and Java digits, the first of which must be a Java letter.
+
+\begin{lstlisting}[language={},numbers=none]
+Identifier:
+    IdentifierChars but not a ReservedKeyword or BooleanLiteral or NullLiteral
+
+IdentifierChars:
+    JavaLetter {JavaLetterOrDigit}
+
+JavaLetter:
+    any Unicode character that is a "Java letter"
+
+JavaLetterOrDigit:
+    any Unicode character that is a "Java letter-or-digit"
+\end{lstlisting}
+
+A \bsq{Java letter} is a character for which the method\\ \lstinline|Character::isJavaIdentifierStart|\index{java.lang!Character!isJavaIdentifierStart()} returns \lstinline|true|.
+
+A \bsq{Java letter-or-digit} is a character for which the method\\ \lstinline|Character::isJavaIdentifierPart|\index{java.lang!Character!isJavaIdentifierPart()} returns \lstinline|true|.
+
+[…]
+
+Letters and digits may be drawn from the entire Unicode character set, which supports most writing scripts in use in the world today, including the large sets for Chinese, Japanese, and Korean. This allows programmers to use identifiers in their programs that are written in their native languages.''
+\end{quote}
+
+And about the dollar sign (``\verb#$#'') and the underscore (``\verb#_#''), it says further: \bdq{The dollar sign should be used only in mechanically generated source code or, rarely, to access pre-existing names on legacy systems. The underscore may be used in identifiers formed of two or more characters, but it cannot be used as a one-character identifier due to being a keyword\footnote{Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}.}.} 
+
+It is a little-known fact that the method \lstinline|Character::isJavaIdentifierPart|\index{java.lang!Character!isJavaIdentifierPart()} also returns \lstinline|true| for all currency symbols, and consequently, the euro symbol \bdq{€} can also be used for an identifier.
+
+\keeplisting{16}
+You can easily check this with a little Java program that can be executed in \verb#jshell#\index{jshell}:
+\index{java.lang!Character!CURRENCY\_SYMBOL}\index{java.lang!Character!MAX\_CODE\_POINT}\index{java.lang!Character!getType()}\index{java.lang!Character!isJavaIdentifierPart()}\index{java.lang!Character!isValidCodePoint()}\index{java.lang!System!out}\index{java.io!PrintStream!printf()}\index{java.lang!Character!toString()}\index{for}\index{continue}
+\begin{lstlisting}
+import static java.lang.Character.CURRENCY_SYMBOL;
+import static java.lang.Character.MAX_CODE_POINT;
+import static java.lang.Character.getType;
+import static java.lang.Character.isJavaIdentifierPart;
+import static java.lang.Character.isValidCodePoint;
+import static java.lang.System.out;
+
+CharacterLoop: for( var codePoint = 0; codePoint <= MAX_CODE_POINT; ++codePoint )
+{
+    if( !isValidCodePoint( codePoint ) ) continue CharacterLoop;
+    if( !isJavaIdentifierPart( codePoint ) ) continue CharacterLoop;
+    final var type = getType( codePoint );
+    if( type != CURRENCY_SYMBOL ) continue CharacterLoop;
+    out.printf( "%s ", Character.toString( codePoint ) );
+}   //  CharacterLoop:
+\end{lstlisting}
+
+Java allows to compose an identifier from all Unicode letters and digits, plus the underscore (``\verb#_#'') and all currency symbols including the dollar sign (``\verb#$#''). This includes several characters that look the same but are in fact distinct. It should be obvious that this may cause some confusion for a human reader.
+
+This, too, is a reason for using English only for the names and identifiers: nearly all words in the English language can be written with only characters from the ASCII character set, and for the rest, avoid currency symbols and underscores in identifiers. 
+
+The only exceptions are underscores for the names of constants and \lstinline|enum|\index{enum} values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and as unnamed variables in lambdas\index{lambda} (see \tqfullvref{sec:Lambdas}) or unnamed exceptions in \lstinline|catch|\index{try!catch} clauses. 
+
+\keeplisting{7}
+In some older code, you may find a single dollar sign (``\verb#$#'') used in lambdas\index{lambda} as placeholder for unused parameters:
+\begin{lstlisting}
+// TODAY's STYLE
+final Function<String> contemporary = _ -> "Always this text!";
+
+// Previously used
+final Function<String> oldFashioned = $ -> "Always this text!";
+\end{lstlisting}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

@@ -1,7 +1,7 @@
 \section{The Module Definition}\label{sec:ModuleDefinition}
 Modules\index{module} have been introduced to Java with version~9, as a result of the Jigsaw project\index{Project Jigsaw|see {Java Platform Module System}}\index{Java Platform Module System} \autocite{OPENJDK:ProjectJigsaw}, today mostly referenced as JPMS.
 
-A module will be defined in the file \verb#module-info.java#\index{module-info.java} that is located in the root of the source tree for the project. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}. According to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit} is the \verb#module-info.java#\index{module-info.java} file a special kind of a compilation unit\index{compilation unit}: a \bdq{Modular Compilation Unit}. Basically, that file will look like this:
+A module will be defined in the file \verb#module-info.java#\index{module-info.java} that is located in the root of the source tree for the project. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}. According to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit} is the \verb#module-info.java#\index{module-info.java} file a special kind of a compilation unit\index{compilation unit}: a \bdq{Modular Compilation Unit}\index{compilation unit!modular}. Basically, that file will look like this:
 \begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
 /*
  * ==================================================================

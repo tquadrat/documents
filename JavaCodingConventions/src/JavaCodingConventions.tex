@@ -16,10 +16,6 @@
 
 %------------------------------------------------------------------------------
 
-\subsection{‘Special’ Characters}
-Java allows to compose an identifier from all Unicode letters and digits, plus the underscore “\verb#_#” and the dollar symbol “\verb#$#”. This, too, is a reason for using English only for the names and identifiers: usually, you can limit yourself to the ASCII character set, and for the rest, avoid dollars and underscores in identifiers; the only exceptions are underscores for the names of constants and \lstinline|enum| values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and a single dollar symbol (“\$”) in lambdas (see \tqfullvref{sec:Lambdas}). 
-
-%------------------------------------------------------------------------------
 
 \subsection{‘\textit{test}’ as Part of Names}
 Avoid “\verb#test#” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.

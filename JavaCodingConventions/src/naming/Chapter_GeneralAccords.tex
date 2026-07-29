@@ -5,11 +5,13 @@ The details on how names and identifiers are composed in Java, and where they ar
 
 So at first it is important to give the respective program elements a meaningful name. But unfortunately, \bdq{meaningful} is a relative term; it depends from domain context and the experience the audience has with that context.
 
-A class name \bdq{\lstinline|TSU|} would most probably be just a cryptic three-letter-acronym with no meaning for someone with only a finance industry background, while people with knowledge in the warehouse \& logistics domain would know that this abbreviation stands for \bdq{Transport and Storage Unit}\index{Transport and Storage Unit|see {TSU}}\index{TSU} and that the respective class is an abstract representation of a container for goods within a Warehouse Management System\index{Warehouse Management System|see {WMS}} (WMS\index{WMS}).
+A class name \bdq{\lstinline|TSU|} would most probably be just a cryptic three-letter-acronym with no meaning for someone with only a finance industry background, while people with knowledge in the warehouse \& logistics domain would know that this abbreviation stands for \bdq{Transport and Storage Unit}\index{Transport and Storage Unit|see {TSU}}\index{TSU} and that the respective class is an abstract representation of a container for goods within a Warehouse Management System\index{Warehouse Management System|see {WMS}} (WMS\index{WMS}). But generally speaking, using abbreviations as names is rarely a good idea.
 
-It is generally helpful to choose names that are not only understood by insiders of the respective problem domain. On the other hand, the domain-specific technical terms are concise and precise, thereby minimizing the potential for misunderstandings. This topic is discussed (amongst several others) in the book \bdq{Domain-Driven Design} by Eric Evans \autocite{Evans:DomainDrivenDesign}. But abbreviations as names are rarely a good idea.  
+It is generally helpful to choose names that are not only understood by insiders of the respective problem domain. On the other hand, the domain-specific technical terms are concise and precise, thereby minimizing the potential for misunderstandings. This topic is discussed (amongst several others) in the book \bdq{Domain-Driven Design}\index{domain-driven design} by Eric Evans\index{Evans, Eric} \autocite{Evans:DomainDrivenDesign}. 
 
-Names, in particular those for methods, also provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+On naming and the Ubiquitous Language\index{ubiquitous language}, Evans's\index{Evans, Eric} core argument is that a shared, rigorous vocabulary needs to be \bdq{applied relentlessly} so that developers and domain experts use identical terms in code, diagrams, and conversation – the point being that a class or method name isn't just a label, it's a stake in a shared conceptual model. He repeatedly frames sloppy or generic naming as a sign that the underlying domain model itself is still shallow: if you can't find a precise, concise name for a concept, it usually means you haven't understood it well enough yet, and pushing for a better name is itself a modeling exercise, not just an aesthetic one.
+
+In this sense, names, in particular those for methods, also provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
 
 This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it performs a \textit{write} operation instead, the implicit contract is broken. To fix that, an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
 
@@ -34,6 +36,8 @@ The same thing should always get the same name.}
 	\item{Correct spelling is not an unnecessary luxury.}
 
 	\item{Upper and lower case also have a meaning.}
+	
+	\item{Avoid abbreviations as names.}
 \end{enumerate}
 
 But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline|myMethod| may be syntactically correct and do look good in some sample code (like in the sample listings in this document~…), but they are definitely invalid for real code (even for quick-shot proof-of-concept code) – of course mainly because they are not meaningful! And the first rule about the naming of program elements is to use \textit{meaningful names}. 
@@ -44,6 +48,8 @@ But however, names like \lstinline|MyClass|, \lstinline|mypackage| or \lstinline
 \input{naming/Section_CaseOfNames}
 \input{naming/Section_LengthOfNames}
 \input{naming/Section_SpecialChars}
+\input{naming/Section_3rdPartyNames}
+\input{naming/Section_TestAsName}
 
 %==============================================================================
 % End of file!!

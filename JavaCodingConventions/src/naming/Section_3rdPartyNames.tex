@@ -1,0 +1,10 @@
+\section{Names forced by 3\textsuperscript{rd} Party Components}
+Most \Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). Most probably, these components will have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following the naming conventions imposed by this document. This is even made easier as those external names are usually used as Strings in the program.
+
+Most Java libraries follow with their namings the naming conventions given in chapter~9 of the \bdq{Code Conventions for the \Java Programming Language}\index{Code Conventions for the Java Programming Language} \autocite{SUN_CODE_CONVENTIONS:NamingConventions}, so usually you should not get in trouble here.
+
+But if you encounter a library with significantly deviating namings, you should hide such a library behind a facade\footnote{Refer to \autocite{Gamma:DesignPatterns}}.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

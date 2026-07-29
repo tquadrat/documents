@@ -53,7 +53,7 @@ CharacterLoop: for( var codePoint = 0; codePoint <= MAX_CODE_POINT; ++codePoint 
 
 Java allows to compose an identifier from all Unicode letters and digits, plus the underscore (``\verb#_#'') and all currency symbols including the dollar sign (``\verb#$#''). This includes several characters that look the same but are in fact distinct. It should be obvious that this may cause some confusion for a human reader.
 
-This, too, is a reason for using English only for the names and identifiers: nearly all words in the English language can be written with only characters from the ASCII character set, and for the rest, avoid currency symbols and underscores in identifiers. 
+This, too, is a reason for using only the English language for the names and identifiers: nearly all words in the English language can be written with only characters from the ASCII character set, and for the rest, avoid currency symbols and underscores in identifiers. 
 
 The only exceptions are underscores for the names of constants and \lstinline|enum|\index{enum} values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and as unnamed variables in lambdas\index{lambda} (see \tqfullvref{sec:Lambdas}) or unnamed exceptions in \lstinline|catch|\index{try!catch} clauses. 
 

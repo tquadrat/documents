@@ -7,93 +7,15 @@
 
 \begin{document}
 \isodate
-\include{settings/title}
-\include{settings/toc}
+\input{settings/title}
+\input{settings/toc}
 
-\include{introduction/Chapter}
-\include{formattingCode/Part}
-\include{naming/Part}
-
-%------------------------------------------------------------------------------
-
-
-\subsection{‘\textit{test}’ as Part of Names}
-Avoid “\verb#test#” as the part of the name of packages, classes, interfaces and methods that belong to the production code. For testers and for members of the test suite packages, it is allowed or even required, depending on the testing framework used. Also it may be recommended or even required if you write your own testing framework or extensions to an existing one.
+\input{introduction/Chapter}
+\input{formattingCode/Part}
+\input{naming/Part}
 
 %------------------------------------------------------------------------------
 
-\subsection{Names forced by 3\textsuperscript{rd} Party Components}
-Most Java programs do not exist in a vacuum, they have links to other components (like databases, messaging systems, or the real world). These components may have different naming conventions, whether due to technical or historical reasons, or just because the names are as they are. In such case, the foreign names should get hidden through aliases, like constants or getter methods, whose names are following the naming conventions imposed by this document. This is even made easier as those external names are usually used as Strings in the program.
-
-Most Java libraries follow with their namings the naming conventions given in chapter~9 of the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}, so usually you should not get in trouble here.
-
-But if you encounter a library with significantly deviating namings, you should hide such a library behind a facade\footnote{Refer to \autocite{Gamma:DesignPatterns}}.
-
-%------------------------------------------------------------------------------
-
-\section{Files}\label{sec:FileNames}
-The names for the files containing Java source code are determined by the names of the (\lstinline|public|) class such file defines: the file name has to be the name of that class with the extension \verb#.java#. It is recommended to name the source code files for non-\lstinline|public| (package-private) classes in the same way.
-
-The path for the file is determined by the package the class resides in.
-
-Some examples:
-
-\begin{tabular}{|l|l|}
-\hline 
-\textbf{Java Class} & \textbf{Fully qualified Filename} \\ 
-\hline 
-\lstinline|java.lang.String| & \verb#<srcroot>/java/lang/String.java# \\ 
-\lstinline|javax.xml.XMLConstants| & \verb#<srcroot>/javax/xml/XMLConstants.java# \\ 
-\lstinline|org.junit.Test| & \verb#<srcroot>/org/junit/Test.java# \\ 
-\hline 
-\end{tabular}
-
-For the naming of classes, refer to chapter \tqref{sec:Classes}, for the naming of packages, see chapter \tqref{sec:Packages}.
-
-%------------------------------------------------------------------------------
-
-\section{Modules}\label{sec:Modules}
-A module is defined in the file \verb#module-info.java# that is located in the root of the source tree for that module; see chapter \tqfullvref{sec:ModuleDefinition} and \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations} for the details.
-
-Each module has a main package, and this should be also the name of that module. If the module will export any packages at all\footnote{A module for a program is not required to export anything.}, it has to export at least this main package.
-
-So the names for modules will follow basically the same rules as those for packages.
-
-%------------------------------------------------------------------------------
-
-\section{Packages}\label{sec:Packages}
-According to the “Code Conventions for the Java\textsuperscript{TM} Programming Language” \autocite{SUN_CODE_CONVENTIONS}, the prefix of a unique package name is always written in all-lower-case ASCII letters and should be one of the top-level domain names (TLDs) (like e.g. “\verb#com#”, “\verb#net#” or “\verb#org#”)\footnote{There exist some more TLDs that are not country codes, but these are quite unlikely to be used in a package name. But of course, if you own a domain under one of these top-level domains, you can use its name as well.}, or one of the two-letter codes identifying countries as specified in ISO~Standard~3166,~1981.\autocite{SUN_CODE_CONVENTIONS:NamingConventions}
-
-Usually the second component is the company's or organisation's name as it appears in its website address, again in all lower case. This helps to ensure that packages will have a unique name across separate organisations.
-
-Subsequent components of the package name vary according to an organization's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
-
-Valid samples are:
-\begin{itemize}[nosep]
-\item\verb#org.tquadrat#
-\item\verb#com.ibm#
-\item\verb#com.sun#
-\item\verb#de.jug#
-\item\verb#uk.gov.hmrc#
-\item\verb#name.thrien.thomas#
-\end{itemize}
-
-Of course \textit{you} should use \textit{your} domain name! Those from the samples are already used by the respective companies or organisations (or persons).
-
-Subsequent components of the package name vary according to an organisation's own internal naming conventions. Such conventions might specify that certain directory name components be division, department, project, machine, or login names. Here also only lower case should be used.
-
-Next, a package name is also a folder name: the file with the source code for the class \lstinline|com.foo.bar.internal.MyImpl| is located in the folder \verb#com/foo/bar/internal# in the source code directory tree\footnote{see also chapter \tqvref{sec:FileNames}}.
-
-Finally the package name should reflect somehow the function of that package.
-
-%------------------------------------------------------------------------------
-
-\subsection{The Packages ‘\lstinline|internal|’ and ‘\lstinline|spi|’}
-The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers, and it is not exported.
-
-If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
-
-For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}. The important message here is, that a package with name \verb#internal# is never be exported, and that the exports for a package with name \verb#spi# can be restricted to some named modules.
 
 %------------------------------------------------------------------------------
 
@@ -10716,7 +10638,7 @@ Example:
 
 \begin{FlushLeft}
 \addcontentsline{toc}{chapter}{References}\printbibliography
-\end{FlushLeft}
+,,\end{FlushLeft}
 
 %------------------------------------------------------------------------------
 

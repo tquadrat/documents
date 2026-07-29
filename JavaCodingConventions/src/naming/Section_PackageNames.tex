@@ -1,0 +1,32 @@
+\section{Packages}\label{sec:Packages}
+According to the \bdq{Code Conventions for the \Java Programming Language}\index{Code Conventions for the Java Programming Language} \autocite{SUN_CODE_CONVENTIONS:NamingConventions}, a package\index{package} name is always written in all-lower-case ASCII letters.
+
+The name of a package\index{package} is a sequence of package names, separated by dots. This creates the impression that there is a hierarchy of packages – that is, that the package \lstinline|com.master.mypackage| is contained within the package \lstinline|com.master| in some form. This impression is further reinforced by the fact that the packages\index{package} are stored in a directory structure derived from the package\index{package} name.
+
+But there is no such hierarchy. In fact, Java packages\index{package} are comparable to the namespaces\index{namespace} found in other programming languages; they serve to avoid name collisions. Therefore, the naming convention for packages dictates that the name begins with the internet domain of the institution or individual responsible for the package, with the individual components listed in reverse order. So IBM uses \lstinline|com.ibm| as the prefix for the Java package names of their products (the internet domain is \verb#ibm.com#).
+
+Other samples are:
+\begin{itemize}[nosep]
+\item{\lstinline|org.tquadrat|}
+\item{\lstinline|com.sun|}
+\item{\lstinline|de.jug|}
+\item{\lstinline|uk.gov.hmrc|}
+\item{\lstinline|io.github.tquadrat| or \lstinline|com.github.tquadrat|}
+\end{itemize}
+
+Subsequent components of the package\index{package} name vary according to an organization's own internal naming conventions. Such conventions might specify that certain components be division, department, project, machine, or login names. Of course also only lower case should be used for these components.
+
+Finally the package name should reflect somehow the function of that package.
+
+%------------------------------------------------------------------------------
+
+\subsection{The Packages \bsq{\lstinline|internal|} and \bsq{\lstinline|spi|}}
+The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers, and it is not exported.
+
+If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
+
+For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}. The important message here is, that a package with name \verb#internal# is never be exported, and that the exports for a package with name \verb#spi# can be restricted to some named modules.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

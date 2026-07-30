@@ -20,12 +20,12 @@ Finally the package name should reflect somehow the function of that package.
 
 %------------------------------------------------------------------------------
 
-\subsection{The Packages \bsq{\lstinline|internal|} and \bsq{\lstinline|spi|}}
-The modularisation that was introduced with Java~9 allows a much clearer separation of an API from its implementation. Let's assume that your module exports the package \lstinline|com.foobar.library|, then this package contains the interfaces of the API, plus some public helper classes, while the package \lstinline|com.foobar.library.internal| contains the implementation classes and internal helpers, and it is not exported.
+\subsection{The Packages \bsq{internal} and \bsq{spi}}
+The modularisation\index{modularisation} that was introduced with Java~9\index{Java Platform Module System} \autocite{OPENJDK:ProjectJigsaw} allows a much clearer separation of an API from its implementation. Let's assume that your module\index{module} exports the package\index{package} \lstinline|com.foobar.library|, then this package\index{package} should contain the interfaces\index{interfaces} of the API, plus some public helper classes\index{class!helper class}, while implementation classes\index{class!implementation class} reside in the package\index{package} \lstinline|com.foobar.library.internal|, together with internal helpers; that package will not be exported.
 
-If the API is extensible, an additional package \lstinline|com.foobar.library.spi| contains the stuff that is needed to extend the API. It can be exported globally or only to some other named modules.
+If the API can be extended somehow, an additional package\index{package} \lstinline|com.foobar.library.spi| (\bsq{SPI}\index{SPI} stands for \bdq{Service Provider Interface}\index{Service Provider Interface|see {SPI}}) will be exported by your module. It contains the classes and interfaces that are needed to extend the API, but that are not required to use it. That package\index{package} can be exported globally or only to some other named modules\index{module!named module}.
 
-For the details, refer to chapter \tqfullvref{sec:EncapsulationWithModules}. The important message here is, that a package with name \verb#internal# is never be exported, and that the exports for a package with name \verb#spi# can be restricted to some named modules.
+For the details, refer to the chapters \tqfullvref{sec:Modularisation} and \tqfullvref{sec:EncapsulationWithModules}. The important message here is, that a package\index{package} with name \lstinline|internal| is never be exported, and that the exports for a package\index{package} with name \lstinline|spi| can be restricted to some named modules.
 
 %==============================================================================
 % End of file!!

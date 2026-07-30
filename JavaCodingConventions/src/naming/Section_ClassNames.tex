@@ -1,0 +1,71 @@
+\section{Class Names}\label{sec:Classes}
+In Java, classes\index{class}, interfaces\index{interface}, enums\index{enum}, records\index{record} and annotations\index{annotation} are all \bdq{classes}, and the names for a class\index{class} will be written in camelcase (also known as \bdq{mixed case}) with the first letter capitalized (\lstinline|MyClass| instead of \lstinline|myClass|)\footnote{refer to chapter \tqfullref{sec:CaseOfNames}}. Try to keep your class\index{class} names simple and descriptive. Use whole words, mainly nouns, and avoid acronyms and abbreviations, unless the abbreviation is much more widely used than the long form, such as URL\index{URL} or HTML\index{HTML}.
+
+According to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)! Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner\index{class!inner class} and anynomous classes\index{class!anonymous class}, as well as for the classes that will be generared for lambdas\index{lambda}.
+
+As numerical characters should also be avoided in class names, the rule is that a class name consists from uppercase and lowercase ASCII letters only.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{A class name is written in \textit{CamelCase}, with the first letter capitalized.}
+	\item{Use whole words, mainly nouns.
+	
+	Acronyms and abbreviations must be avoided. Only abbreviations that are better known than the long form might be acceptable.}
+	\item{Use only ASCII letters for the name.}
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
+The term \bsq{real} class\index{class} means that a Java class\index{class} is declared with the keyword \lstinline|class|. As said above, records\index{record} and enum\index{enum} classes are also Java classes\index{class}, to a certain extent, this also applies to interfaces\index{interface} and annotations\index{annotation}, but you use different keywords when you declare them.
+
+Some parts of a class\index{class} name will indicate a special position of that class in the class hierarchy: the suffix `\verb#Impl#’ for the class name \lstinline|FooImpl| shows that the class is the default implementation of an interface\index{interface} or an \lstinline|abstract| class\index{class!abstract class} named \lstinline|Foo|, either being the only one, or providing useful default implementations of the interface methods\footnote{Although in the latter case, the name is more likely to be \lstinline|FooBase|.}.
+
+A class\index{class} that has the suffix `\verb#Adapter#’\index{class!adapter class} in its name implements an interface\index{interface}, but here the methods\index{method} are usually empty, as it is assumed that only some of the methods of the interface\index{interface} are used by a particular implementation of the adapter\index{adapter}; various samples for this could be found in the Swing (\lstinline|javax.swing|)\index{javax.swing} \autocite{ORACLE_DOC_SWING_PACKAGE} packages. According to this coding conventions, an \lstinline|Adapter| class\index{class!adapter class} is always abstract even when it does not contain any abstract methods. Adapter classes\index{class!adapter class} are discussed in detail in \tqfullvref{sec:Adapter}.\footnote{An \lstinline|Adapter| class\index{class!adapter class} has nothing to do with an implementation of the \bdq{Adapter} design pattern (also known as the \bdq{Wrapper} pattern), which is described in \autocite{Gamma:DesignPatterns}.}
+
+A suffix `\verb#Base#’ indicates that the respective class\index{class} has to be extended; usually that class is abstract\index{class!abstract class}. It may or may not implement a specific interface\index{interface}.
+
+Other suffixes indicate special usage of the class\index{class}. Well known and obvious are the suffixes `\verb#Error#’ and `\verb#Exception#’ for error and exception classes\index{class!error class}\index{class!exception class}. Others are ‘\verb#Visitor#’ and ‘\verb#Listener#’ for the implementations of the respective patterns (refer to \autocite{Gamma:DesignPatterns}), ‘\verb#DAO#’ (often used in the context of database operations and with ORM\index{ORM} tools), or ‘\verb#Entity#’ (from the JEE\index{JEE} context). A more complete list can be found in chapter \tqfullvref{sec:SuffixesForClassNames}. Most of these suffixes are defined by the design patterns that are implemented by the respective classes.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Interfaces}\label{sec:NamesForInterfaces}
+An interface\index{interface} declares the public API for an object that represents a \textit{real world entity}\footnote{No matter how real that world really is~…}, and it should be named according to that entity.
+
+According to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}, the name of an interface should be basically a descriptive noun or noun phrase, which is appropriate when an interface is used as if it is an abstract superclass, such as the interfaces \lstinline|java.io.DataInput|\index{java.io!DataInput} \autocite{ORACLE_DOC_DATAINPUT_INTERFACE} and \lstinline|java.io.DataOutput|\index{java.io!DataOutput} \autocite{ORACLE_DOC_DATAOUTPUT_INTERFACE}; or it may be an adjective describing a behavior, as for the interfaces \lstinline|java.lang.Runnable|\index{java.lang!Runnable} \autocite{ORACLE_DOC_RUNNABLE_INTERFACE} and \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable} \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}.
+
+Some coding conventions (particularly in the Microsoft~Windows realm) require the prefix ‘\verb#I#’ for interfaces\index{interface}, but for Java, it does not make much sense to mark interfaces in such way. Therefore it is not recommended to use such a prefix for the names of interfaces.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for \bsq{enum} Classes}\label{sec:NamesForEnumClasses}
+An \lstinline|enum|\index{enum} is a special type of class\index{class} that will be declared with the keyword \lstinline|enum|.
+
+The name of an \lstinline|enum|\index{enum} class should be somehow the category of the enumerated entities, but plurals should be avoided; so it should read \lstinline|Type| and not \lstinline|Types|, and \lstinline|DayOfWeek| and not \lstinline|DaysOfWeek|.
+
+An \lstinline|enum| class can implement an interface\index{interface}, but this should not be reflected in the name. Therefore \lstinline|TypeImpl| would be an invalid name for an \lstinline|enum|\index{enum} class.
+
+For the naming of the enum values refer to chapter \tqfullref{sec:EnumValues}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Record Classes}\label{sec:NamesForRecordClasses}
+Basically, a record\index{record} class is like a \bsq{real} Java class\index{class}, and should be named in the same way. So it can implement an interface\index{interface}, like a regular class, meaning that the suffix ‘\verb#Impl#’ would be valid in such case. But as record classes are implicitly final, ‘\verb#Base#’ is not permitted, as well as any other suffix indicating a class that should be or can be extended.
+
+Also a record\index{record} class should not be named ‘\verb#Record#’.
+
+%------------------------------------------------------------------------------
+
+\subsection{Names for Annotations}\label{sec:NamesForAnnotations}
+Annotations\index{annotation} are a special type of an interface, distinguished by the “\verb#@#” as the first character of their name. The remaining part of the name is determined by the rules for regular interfaces. Samples for valid names are 
+
+\begin{itemize}[nosep]
+	\item{\lstinline|@Text| \autocite{TQUADRAT_ORG_FOUNDATION_TEXT}}
+	\item{\lstinline|@Translation| \autocite{TQUADRAT_ORG_FOUNDATION_TRANSLATION}}
+	\item{\lstinline|@Generated| \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
+	\item{\lstinline|@Deprecated| \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}
+\end{itemize}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

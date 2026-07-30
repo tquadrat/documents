@@ -14,7 +14,7 @@ synchronized( <expression> )
 The curly braces are mandatory according the Java syntax; their placement follows the rules for any other code block. A single-line \lstinline|synchronized|\index{synchronized} statement is therefore not possible.
 
 \keeplisting{8}
-The {\bdq{The \Java Language Specification} \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} says, that the type of \verb#<expression># has to be a reference type. That means that
+\jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} says, that the type of \verb#<expression># has to be a reference type. That means that
 \begin{lstlisting}
 // DOES NOT WORK!!
 final int i = 5;

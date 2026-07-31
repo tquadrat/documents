@@ -1,0 +1,111 @@
+\section{Method Names}\label{sec:NamesForMethods}
+In general, a method\index{method} name should be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in \textit{camelCase} with the first letter in lower case, and with the first letter of each internal word capitalized (see chapter \tqvref{sec:CaseOfNames} for additional details).
+
+The name of a method\index{method} needs to describe what that method does; this is what was meant with the implicit contract between the developers and the users/consumers/maintainers mentioned in \tqfullref{sec:GeneralAccords} and there on page \pageref{princ:NamingConventions:NamesAsContract}.
+
+That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| are syntactically correct, but are discouraged or even invalid. Nevertheless, both are used throughout this document as sample names for methods\index{method}, but just as \textit{a place holder for a meaningful method\index{method} name}, and definitely \textit{not} as an example for the naming of a method\index{method}.
+
+Chapter \tqref{sec:TheNamingDictionaryVerbs} beginning on page \pageref{sec:TheNamingDictionaryVerbs} contains a \bdq{Dictionary} for method\index{method} names; that is a list of verbs together with their implicit contract when used as a method\index{method} name or a part of it. I highly recommend to consult this list when searching a name for a new method\index{method}.
+
+Using digits in method\index{method} names is acceptable were it makes sense; so using the digit `\verb#4#' as replacement for the word ``\verb#for#'', and `\verb#2#' for the word ``\verb#to#'' is acceptable, but not really recommended. If you have different versions of a method\index{method}, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method\index{method} name.
+
+\subsection{Mutators and Accessors}
+\autocite{ORACLE_DOC_JAVABEANS} specifies the JavaBeans\index{JavaBeans} component architecture. Among a lot of other stuff, it defines the \textit{properties}\index{property} of a bean and the methods\index{method} to access these properties. In this chapter, we are interested in those methods and their naming.
+
+According to the specification document, the name of a method\index{method} that returns the value of a property\index{property} (the \bdq{\textit{accessor}} method\index{method!accessor method}\index{accessor| see{method}}) is composed from the prefix \bdq{\lstinline|get|} and the name of the property\index{property} itself (or, in case of a \lstinline|boolean| as return type, the prefix \bdq{\lstinline|is|} with the name of the property\index{property}). These methods are usually referred to as \textit{getters}\index{method!getter method}.
+
+The corresponding \bdq{\textit{mutator}} methods\index{method!mutator method}\index{mutator|see {method}} are referred to as \textit{setters}\index{method!setter method}, because their names are composed from the prefix \bdq{\lstinline|set|} and the name of the property\index{property}.
+
+In both cases the name of the property\index{property} starts with a capital letter.
+
+\index{java.lang!String}
+Some examples: \\
+\begin{tabular}{|l|l|l|}
+\hline 
+\textbf{Property} & \textbf{Getter} & \textbf{Setter} \\ 
+\hline 
+\verb#name# & \lstinline|String getName()| & \lstinline|void setName(String)| \\ 
+\verb#title# & \lstinline|String getTitle()| & \lstinline|void setTitle(String)| \\ 
+\verb#valid# & \lstinline|boolean isValid()| & \lstinline|void setValid(boolean)| \\ 
+\verb#age# & \lstinline|int getAge()| & \lstinline|void setAge(int)| \\ 
+\verb#contractId# & \lstinline|ContractId getContractId()| & \lstinline|void setContractId(ContractId)| \\ 
+\hline 
+\end{tabular}
+
+The name of the property\index{property} is not necessarily identical with the name of the corresponding class\index{class} attribute\index{attribute}.
+
+The respective setter\index{method!setter method} will be omitted if a property\index{property!read-only} is read-only. Theoretically, it is possible that a property\index{property} can be changed, but not accessed; in such a case, you would just omit the respective getter\index{method!getter method} for that property\index{property}.
+
+\keeplisting{23}
+A sample class could look like this:\footnote{I left out otherwise required comments and blank line for brevity, as well as probably required argument validations.}
+\begin{lstlisting}[caption={JavaBean}]
+public final class JavaBean
+{
+    private int m_Age;
+    private ContractId m_ContractId;
+    private String m_Name;
+    private String m_Title;
+    private boolean m_Valid;
+
+    public final int getAge() { return m_Age; }
+    public final ContractId getContractId() { return m_ContractId; }
+    public final String getName() { return m_Name; }
+    public final String getTitle() { return m_Title; }
+    public final boolean isValid() { return m_Valid; }
+
+    public final void setAge( final int age ) { m_Age = age; }
+    public final void setContractId( final ContractId contractId ) { m_ContractId = contractId; }
+    public final void setName( final String name ) { m_Name = name; }
+    public final void setTitle( final String title ) { m_Title = title; }
+    public final void setValid( final boolean flag ) { m_Valid = flag; }
+}
+//  class JavaBean
+\end{lstlisting}
+
+The JavaBeans\index{JavaBean} concept is widely accepted and well supported by tools, but there are of course alternatives for \textit{getters}\index{method!getter method} as accessors\index{method!accessor method} and \textit{setters}\index{method!setter method} as mutators\index{method!mutator method}.
+
+Another popular approach names accessors\index{method!accessor method} and mutators\index{method!mutator method} directly after the properties\index{property}, without any prefix; the methods\index{method} from the example above would look like this:
+
+\begin{tabular}{|l|l|l|}
+\hline 
+\textbf{Property} & \textbf{Accessor} & \textbf{Mutator} \\ 
+\hline 
+\verb#name# & \lstinline|String name()| & \lstinline|void name(String)| \\ 
+\verb#title# & \lstinline|String title()| & \lstinline|void title(String)| \\ 
+\verb#isValid# & \lstinline|boolean isValid()| & \lstinline|void isValid(boolean)| \\ 
+\verb#age# & \lstinline|int age()| & \lstinline|void age(int)| \\ 
+\verb#contractId# & \lstinline|ContractId contractId()| & \lstinline|void contractId(ContractId)| \\ 
+\hline 
+\end{tabular}
+
+\keeplisting{23}
+The sample class would look like this:\footnote{Again, I omitted otherwise required parts for brevity.}
+\begin{lstlisting}[caption={Overloaded Methods}]
+public final class Overloaded
+{
+    private int m_Age;
+    private ContractId m_ContractId;
+    private String m_Name;
+    private String m_Title;
+    private boolean m_Valid;
+
+    public final int age() { return m_Age; }
+    public final ContractId contractId() { return m_ContractId; }
+    public final String name() { return m_Name; }
+    public final String title() { return m_Title; }
+    public final boolean isValid() { return m_Valid; }
+
+    public final void age( final int age ) { m_Age = age; }
+    public final void contractId( final ContractId contractId ) { m_ContractId = contractId; }
+    public final void name( final String name ) { m_Name = name; }
+    public final void title( final String title ) { m_Title = title; }
+    public final void valid( final boolean flag ) { m_Valid = flag; }
+}
+//  class Overloaded
+\end{lstlisting}
+
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

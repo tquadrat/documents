@@ -16,64 +16,6 @@
 
 %------------------------------------------------------------------------------
 
-\section{Methods}\label{sec:NamesForMethods}
-A method name has to be a verb plus one or more nouns indicating the object of the operation performed by the respective method, eventually combined with adjectives or additional verbs. The name will be in mixed or camel case with the first letter in lower case, and with the first letter of each internal word capitalized\footnote{see chapter \tqvref{sec:CaseOfNames}}.
-
-The name of a method needs to describe what that method does; that is that contract between developer and maintainer mentioned in \ref{princ:NamingConventions:NamesAsContract}
-
-That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| are syntactically correct, but are discouraged or even invalid\footnote{Nevertheless, both are used throughout this document as sample names for methods, but just as \textit{a place holder for a meaningful method name}, and definitely \textit{not} as an example for the naming of a method.}.
-
-Chapter \tqref{sec:TheNamingDictionary} beginning on page \pageref{sec:TheNamingDictionary} contains “\nameref{sec:TheNamingDictionary}” for method names; that is a list of verbs together with their implicit contract. It is highly recommended to consult this list when searching a name for a new method.
-
-Using digits in method names is acceptable were it makes sense; so using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, but not really recommended. If you have different versions of a method, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method name.
-
-Regarding to “Data Objects” there are two different schools: one supports the JavaBean\footnote{see \autocite{ORACLE_DOC_JAVABEANS}} approach, using explicit getter and setter methods:
-\begin{lstlisting}[numbers=left,caption={JavaBean}]
-class JavaBeanDO
-{
-    private Object m_Attribute;
-
-    public final Object getAttribute() { return m_Attribute; }
-
-    public final void setAttribute( final Object value )
-    {
-        if( isNull( value ) ) 
-        {
-            throw new NullArgumentException( "value" );
-        }
-        m_Attribute = value;
-    }   //  setAttribute()
-}
-//  class JavaBeanDO
-\end{lstlisting}
-
-The other one is in favour of the Property concept, using two methods with the attribute name, but with different signatures as implicit getter and setter methods (here usually named as 'accessor' and 'mutator'):\footnote{I use the term \textit{POJO} (“Plain Old Java Object”) here only to distinguish this approach from a JavaBean; usually, POJOs do not make any assumption about the naming of their methods. This means that a real POJO can have getters and setters, too.}
-
-\begin{lstlisting}[numbers=left,caption={POJO}]
-public class PropertyDO
-{
-    private Object m_Attribute;
-
-    public final Object attribute() { return m_Attribute; }
-
-    public final void attribute( final Object value )
-    {
-        if( isNull( value ) ) 
-        {
-            throw new NullArgumentException( "value" );
-        }
-        m_Attribute = value;
-    }	//	attribute()
-}
-//  class PropertyDO
-\end{lstlisting}
-
-Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches.
-
-In the Java world, the JavaBean concept is more widely accepted, and it is better supported with tools, but if seen over all languages, the property concept is more popular.
-
-%------------------------------------------------------------------------------
-
 \section{Local Variables}\label{sec:NamesForLocalVariables}
 The identifiers for local variables have to be in mixed case, with a lowercase first letter. Internal words start with capital letters\footnote{see chapter \tqvref{sec:CaseOfNames}}. The names should contain neither the underscore (“\verb#_#”) nor the dollar sign (“\verb#$#”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
 

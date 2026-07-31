@@ -1,4 +1,4 @@
-\chapter{General Accords}\label{sec:General Accords}
+\chapter{General Accords}\label{sec:GeneralAccords}
 While the primary goal of the \hyperref[sec:FormattingTheSourceCode]{formatting rules} is to make the source code easier to \textit{read}, the naming conventions are targeted to make a program easier to \textit{understand}.
 
 The details on how names and identifiers are composed in Java, and where they are used can be taken from the respective chapter of the \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:NamesAndIdentifiers}.
@@ -11,11 +11,11 @@ It is generally helpful to choose names that are not only understood by insiders
 
 On naming and the Ubiquitous Language\index{ubiquitous language}, Evans's\index{Evans, Eric} core argument is that a shared, rigorous vocabulary needs to be \bdq{applied relentlessly} so that developers and domain experts use identical terms in code, diagrams, and conversation – the point being that a class or method name isn't just a label, it's a stake in a shared conceptual model. He repeatedly frames sloppy or generic naming as a sign that the underlying domain model itself is still shallow: if you can't find a precise, concise name for a concept, it usually means you haven't understood it well enough yet, and pushing for a better name is itself a modeling exercise, not just an aesthetic one.
 
-In this sense, names, in particular those for methods, also provide an implicit contract\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of a program and its users/maintainers.
+In this sense, names, in particular those for methods\index{method}, also provide an implicit contract\label{princ:NamingConventions:NamesAsContract}\footnote{If it is not a binding contract, so it is at least a kind of commitment.} between the original author of the code and its users/consumers/maintainers.
 
-This means that we expect that a method named \lstinline|read()| will \textit{read} something from somewhere. When it performs a \textit{write} operation instead, the implicit contract is broken. To fix that, an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
+This means that we expect that a method\index{method} named \lstinline|read()| will \textit{read} something from somewhere. When it performs a \textit{write} operation instead, the implicit contract is broken. To fix that, an elaborate comment is required, explaining why that \lstinline|read()| method \textit{writes} in fact.
 
-But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} at the end of the part about the Naming Conventions.\label{princ:NamingConventions:NamesAsContract}
+But because people may understand words differently, I have added a dictionary of common verbs and their implicit contracts to this document, together with a list of suffixes for class names. Refer to chapter \tqfullvref{sec:TheNamingDictionary} at the end of the part about the Naming Conventions.
 
 Next, the naming must be consistent. This is particularly important for the names of local variables\index{local variable} and for the formal parameters\index{parameter} of methods\index{method} and constructors\index{constructor}. Basically, it means that the same thing should get always the same name.
 

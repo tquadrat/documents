@@ -78,8 +78,10 @@ Another popular approach names accessors\index{method!accessor method} and mutat
 \hline 
 \end{tabular}
 
+This means that the mutators\index{method!mutator method} overload the accessors\index{method!accessor method} (or vice versa~…).
+
 \keeplisting{23}
-The sample class would look like this:\footnote{Again, I omitted otherwise required parts for brevity.}
+The sample class for this approach would look like this:\footnote{Again, I omitted otherwise required parts for brevity.}
 \begin{lstlisting}[caption={Overloaded Methods}]
 public final class Overloaded
 {
@@ -104,7 +106,7 @@ public final class Overloaded
 //  class Overloaded
 \end{lstlisting}
 
-Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself.
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordMembers}.
 
 %==============================================================================
 % End of file!!

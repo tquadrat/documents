@@ -5,15 +5,6 @@ According to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}, seve
 
 As numerical characters should also be avoided in class names, the rule is that a class name consists from uppercase and lowercase ASCII letters only.
 
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-	\item{A class name is written in \textit{CamelCase}, with the first letter capitalized.}
-	\item{Use whole words, mainly nouns.
-	
-	Acronyms and abbreviations must be avoided. Only abbreviations that are better known than the long form might be acceptable.}
-	\item{Use only ASCII letters for the name.}
-\end{enumerate}
-
 %------------------------------------------------------------------------------
 
 \subsection{Names for ‘real’ Classes}\label{sec:NamesForClasses}
@@ -65,6 +56,19 @@ Annotations\index{annotation} are a special type of an interface, distinguished 
 	\item{\lstinline|@Generated| \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
 	\item{\lstinline|@Deprecated| \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}
 \end{itemize}
+
+\subsection{Summary}
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{A class\index{class} name is written in \textit{CamelCase}, with the first letter capitalized.}
+	\item{Use whole words, mainly nouns.
+	
+	Acronyms and abbreviations must be avoided. Only abbreviations that are better known than the long form might be acceptable.}
+	\item{Use only ASCII letters for the name.}
+	\item{No prefix for the name of an interface\index{interface}.}
+	\item{The name for an \lstinline|enum|\index{enum} has to be the singular form, not plural.}
+	\item{\verb#Record# must not be part of the name for a \lstinline|record|\index{record} class.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

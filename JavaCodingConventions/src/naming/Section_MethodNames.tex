@@ -108,6 +108,21 @@ public final class Overloaded
 
 Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordMembers}.
 
+\subsection{Summary}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{A method name is written in \textit{camelCase}, with the first letter in lowercase.}
+	\item{Use whole words, starting with a verb that explains what the method\index{method} does.
+	
+	Additional parts of the name should be nouns and adjectives that further specify the method's\index{method} purpose.
+	
+	Acronyms and abbreviations should be avoided. Only abbreviations that are better known than the long form should be used.}
+	\item{Limit yourself to ASCII letters for the name.
+	
+	Digits are allowed, but have to be used with care.}
+\end{enumerate}
+
 %==============================================================================
 % End of file!!
 %==============================================================================

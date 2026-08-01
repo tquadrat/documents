@@ -1,26 +1,29 @@
 \section{Local Variable Names}\label{sec:NamesForLocalVariables}
-The identifiers for local variables have to be in mixed case, with a lowercase first letter. Internal words start with capital letters\footnote{see chapter \tqvref{sec:CaseOfNames}}. The names should contain neither the underscore (“\verb#_#”) nor the dollar sign (“\verb#$#”) characters, even though both are allowed by the language specification; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, but perfectly allowed as additional characters. But they should be used with care and only were necessary.
+The identifiers for local variables have to be in \textit{camelCase}, with a lowercase first letter. Internal words start with capital letters, as already described in \tqvref{sec:CaseOfNames}. The names should contain neither the underscore (“\verb#_#”) nor any other special characters or non-ASCII letters, although allowed according to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, otherwise they are allowed as additional characters. But they should be used with care and only were necessary.
 
 Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, yet not really recommended.
 
+\keeplisting{4}
 In case the first part of the variable name has to be an acronym, it will be written with all lower case:
 \begin{lstlisting}
-String htmlHeader; // OK
+// OK
+final String htmlHeader;
 \end{lstlisting}
+\keeplisting{3}
 instead of
 \begin{lstlisting}
-String hTMLHeader; // AVOID!
+// AVOID!
+final String hTMLHeader;
 \end{lstlisting}
 
-Single-letter variable names should be avoided except for temporary “throwaway” variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for| loop:
+Single-letter variable names should be avoided except for temporary \bdq{throwaway} variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for|\index{for} loop:
 \begin{lstlisting}
-for( var i = 0; i < max; ++i )
-{
-    …
-}
+for( var i = 0; i < max; ++i ) { … }
 \end{lstlisting}
 
-\lstinline|e| is the common name for the exception in a \lstinline|catch| block:
+\keeplisting{10}
+\lstinline|e| is the common name for the exception\index{exception} in a \lstinline|catch|\index{try!catch} block:
+\index{java.io!IOException}
 \begin{lstlisting}
 try
 {
@@ -29,13 +32,41 @@ try
 catch( final IOException e )
 {
     //---* Handle the exception *------------------------------------
-    …
+    e.printStackTrace();
 }    
 \end{lstlisting}
 
-For temporary strings, \lstinline|s| is common, as \lstinline|o| is for (temporary) objects of an unspecified type.
+If the caught exception\index{exception} is not referenced in the \lstinline|catch|\index{try!catch} block, use the underscore (\bdq{\lstinline|_|}) instead of a local variable; that is the \textit{unnamed exception}\index{exception!unnamed exception}:
+\index{java.io!IOException}
+\begin{lstlisting}
+var result = null;
+try
+{
+    result = …
+    …
+}
+catch( final IOException _ )
+{
+    //---* Use default value instead *-------------------------------
+    result = DEFAULT_VALUE;
+}    
+\end{lstlisting}
 
-\label{lbl:RetValue}Some names are fixed: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute or \lstinline|this|:
+For temporary strings, \lstinline|s| is well established, as \lstinline|o| is for (temporary) objects of an unspecified type, and \lstinline|n| for a number.
+
+\subsection{Reserved Names}\label{lbl:RetValue}
+Some names for local variables are reserved or otherwise fixed.
+
+
+
+
+
+
+
+
+
+
+: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute or \lstinline|this|:
 \begin{lstlisting}
 // OK
 public final int getValue() { return m_Value; }

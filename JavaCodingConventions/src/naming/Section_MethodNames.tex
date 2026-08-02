@@ -5,14 +5,16 @@ The name of a method\index{method} needs to describe what that method does; this
 
 That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| are syntactically correct, but are discouraged or even invalid. Nevertheless, both are used throughout this document as sample names for methods\index{method}, but just as \textit{a place holder for a meaningful method\index{method} name}, and definitely \textit{not} as an example for the naming of a method\index{method}.
 
-Chapter \tqref{sec:TheNamingDictionaryVerbs} beginning on page \pageref{sec:TheNamingDictionaryVerbs} contains a \bdq{Dictionary} for method\index{method} names; that is a list of verbs together with their implicit contract when used as a method\index{method} name or a part of it. I highly recommend to consult this list when searching a name for a new method\index{method}.
+ Chapter \tqref{sec:TheNamingDictionary:Verbs} beginning on page \pageref{sec:TheNamingDictionary:Verbs} contains a \bdq{Dictionary} for method\index{method} names; that is a list of verbs together with their implicit contract when used as a method\index{method} name or a part of it. I highly recommend to consult this list when searching a name for a new method\index{method}.
 
 Using digits in method\index{method} names is acceptable were it makes sense; so using the digit `\verb#4#' as replacement for the word ``\verb#for#'', and `\verb#2#' for the word ``\verb#to#'' is acceptable, but not really recommended. If you have different versions of a method\index{method}, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method\index{method} name.
 
-\subsection{Mutators and Accessors}
-\autocite{ORACLE_DOC_JAVABEANS} specifies the JavaBeans\index{JavaBeans} component architecture. Among a lot of other stuff, it defines the \textit{properties}\index{property} of a bean and the methods\index{method} to access these properties. In this chapter, we are interested in those methods and their naming.
+%------------------------------------------------------------------------------
 
-According to the specification document, the name of a method\index{method} that returns the value of a property\index{property} (the \bdq{\textit{accessor}} method\index{method!accessor method}\index{accessor| see{method}}) is composed from the prefix \bdq{\lstinline|get|} and the name of the property\index{property} itself (or, in case of a \lstinline|boolean| as return type, the prefix \bdq{\lstinline|is|} with the name of the property\index{property}). These methods are usually referred to as \textit{getters}\index{method!getter method}.
+\subsection{Mutators and Accessors}\label{sec:MutatorsAccessors}
+\autocite{ORACLE_DOC_JAVABEANS} specifies the JavaBeans\index{JavaBeans} component architecture. Among a lot of other stuff, it defines the \textit{properties}\index{property} of a bean and the methods\index{method} to access these properties\index{property}. I discussed the names for properties in \tqref{sec:NamesOfProperties}, above. In this chapter, we are interested in the related methods and their naming.
+
+According to the specification document, the name of a method\index{method} that returns the value of a property\index{property} (the \bdq{\textit{accessor}} method\index{method!accessor method}\index{accessor| see{method}}) is composed from the prefix \bdq{\lstinline|get|} and the name of the property\index{property} itself (or, in case of a \lstinline|boolean| as return type, the prefix \bdq{\lstinline|is|} with the name of the property\index{property} – this is spefified in \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3_2}). These methods are usually referred to as \textit{getters}\index{method!getter method}.
 
 The corresponding \bdq{\textit{mutator}} methods\index{method!mutator method}\index{mutator|see {method}} are referred to as \textit{setters}\index{method!setter method}, because their names are composed from the prefix \bdq{\lstinline|set|} and the name of the property\index{property}.
 
@@ -107,6 +109,44 @@ public final class Overloaded
 \end{lstlisting}
 
 Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordMembers}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Mutators for Collections}\label{sec:NamesForCollectionMutators}
+In case a property\index{property} is a collection\index{collection} of some kind, common operations would be to add new elements to that collection\index{collection} or to remove existing ones. In rare cases, the collection\index{collection} would be set as a whole – that would be done with a regular mutator method\index{method!mutator method} or setter\index{method!setter method} as described in \tqref{sec:MutatorsAccessors} above.
+
+The mutator methods\index{method!mutator method} will be named by a verb that describes the operation, followed by the name of the property\index{property}. As the property name would be usually in the plural form, it will not match for operations on single elements, so the singular form is used in that case. This is shown in the sample class, below.
+
+\begin{tabular}{|l|l|}
+\hline 
+\textbf{Verb} & \textbf{Operation} \\ 
+\hline 
+\verb#add# & Adds a new element to the collection\index{collection}. \\ 
+\verb#remove# & Removes the specified element from the collection\index{collection}. \\ 
+\verb#clear# & Empties the collection\index{collection}. \\  
+\hline 
+\end{tabular}
+
+\keeplisting{12}
+A sample class that has a collection property\index{property} could look like that one below:\footnote{Again, I omitted otherwise required parts for brevity.}
+\index{java.util!List}\index{java.util!ArrayList}\index{java.util!List!copy()}\index{java.util!List!add()}\index{java.util!List!clear()}\index{java.util!List!isEmpty()}\index{java.util!List!remove()}
+\begin{lstlisting}[caption={Collection Property}]
+public final class CollectionProperty
+{
+    private final List<Child> m_Childred = new ArrayList<>();
+
+    public final void addChild( final Child child ) { m_Children.add( child ); }
+    public final void clearChildren() { m_Children.clear(); }
+    public final Collection<Children> getChildren() { return List.copy( m_Children ); }
+    public final boolean hasChildren() { return !m_Children.isEmpty(); }
+    public final void removeChild( final Child child ) { m_Children.remove( child ); }
+}
+//  class CollectionProperty
+\end{lstlisting}
+
+Conceptually, the method\index{method} \lstinline|CollectionProperty::hasChildren| is not an accessor\index{method!accessor method} for the property\index{property} \verb#Children#, but represents a property\index{property} of its own, with the name \verb#hasChildren#. But it is no getter\index{method!getter method}, because it does not match the respective naming convention (prefix \lstinline|get| or \lstinline|is|). But this could be healed by renaming the method\index{method} to \lstinline|CollectionProperty.isHavingChildren()|. Sometimes, it makes sense to return to the \ngref, and here to the bullet points \ref{lst:ZoP:SimpleVsComplex}, \ref{lst:ZoP:SpecialCases}, and \ref{lst:ZoP:Practicality}.
+
+%------------------------------------------------------------------------------
 
 \subsection{Summary}
 

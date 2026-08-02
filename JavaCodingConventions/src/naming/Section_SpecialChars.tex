@@ -58,13 +58,14 @@ This, too, is a reason for using only the English language for the names and ide
 The only exceptions are underscores for the names of constants and \lstinline|enum|\index{enum} values (see the chapters \tqfullvref{sec:Constants} and \tqfullvref{sec:EnumValues}), for the “\verb#m_#” prefix for field names (see chapter \tqfullvref{sec:Fields}) and as unnamed variables in lambdas\index{lambda} (see \tqfullvref{sec:Lambdas}) or unnamed exceptions in \lstinline|catch|\index{try!catch} clauses. 
 
 \keeplisting{7}
-In some older code, you may find a single dollar sign (``\verb#$#'') used in lambdas\index{lambda} as placeholder for unused parameters:
+In some older code, you may find a single dollar sign (``\verb#$#'') used in lambdas\index{lambda} as placeholders for unused parameters:
+\index{java.util.function!UnaryOperator}
 \begin{lstlisting}
 // TODAY's STYLE
-final Function<String> contemporary = _ -> "Always this text!";
+final UnaryOperator<String> contemporary = _ -> "Always this text!";
 
 // Previously used
-final Function<String> oldFashioned = $ -> "Always this text!";
+final UnaryOperator<String> oldFashioned = $ -> "Always this text!";
 \end{lstlisting}
 
 %==============================================================================

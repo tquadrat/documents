@@ -77,10 +77,10 @@ For temporary strings, \lstinline|s| is well established, as \lstinline|o| is fo
 \subsection{Reserved Names}\label{lbl:RetValue}
 Some names for local variables are reserved or otherwise fixed – at least you should avoid to use them in another way than described here.
 
-I already mentioned the single-letter variable \lstinline|e| that is used for the caught exception in a catch block.
+\paragraph{\lstinline|e|}– I already mentioned the single-letter variable name \lstinline|e| that is used for the caught exception in a catch block.
 
 \keeplisting{18}
-The variable \lstinline|retValue| is reserved for the return value of a method\index{method}; basically a method\index{method} that does not have \lstinline|void| as the return value will return always \lstinline|retValue|, \lstinline|this| or an attribute:
+\paragraph{\lstinline|retValue|}– The variable name \lstinline|retValue| is reserved for the return value of a method\index{method}; basically a method\index{method} that does not have \lstinline|void| as the return value will return always \lstinline|retValue|, \lstinline|this| or an attribute:
 \begin{lstlisting}
 public final int signum( double d )
 {
@@ -101,7 +101,7 @@ public final Builder<T> setFlag( final Flag flag )
 public final int getValue() { return m_Value; }
 \end{lstlisting}
 
-Similarly, the local variable name \lstinline|result| is reserved for the return value of lambdas\index{lambda} (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case|\index{switch!expression}\index{switch!case} blocks (see chapter \tqfullvref{sec:CaseResults}). Avoid to use the name \lstinline|result| for a local variable in any other context. But usually, you should not need a local variable for the return values of lambdas\index{lambda} or \lstinline|case|\index{switch!expression}\index{switch!case} blocks.
+\paragraph{\lstinline|result|}– Similarly, the local variable name \lstinline|result| is reserved for the return values of lambdas\index{lambda} (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case|\index{switch!expression}\index{switch!case} blocks (see chapter \tqfullvref{sec:CaseResults}). Avoid to use the name \lstinline|result| for a local variable in any other context. But usually, you should not need a local variable for the return values of lambdas\index{lambda} or \lstinline|case|\index{switch!expression}\index{switch!case} blocks.
 
 \keeplisting{2}
 We can write the \lstinline|signum()| method\index{method} as a lambda\index{lambda} like this:
@@ -126,8 +126,7 @@ final var signum = switch( v )
 }
 \end{lstlisting}
 
-
-A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
+\paragraph{\lstinline|buffer|}– A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
 
 Do not use the names \lstinline|in|, \lstinline|out|, and \lstinline|err| for your local variables. Although these names are not reserved words, they should be treated as such, as that allows to import the default streams from the class \lstinline|java.lang.System|\autocite{ORACLE_DOC_SYSTEM_CLASS} statically.
 

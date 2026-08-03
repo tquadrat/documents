@@ -3,24 +3,43 @@ The identifiers for local variables have to be in \textit{camelCase}, with a low
 
 Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, yet not really recommended.
 
-\keeplisting{4}
-In case the first part of the variable name has to be an acronym, it will be written with all lower case:
+\keeplisting{7}
+In case the first part of the variable name has to be an acronym of some kind, it will be written with all lower case:
 \begin{lstlisting}
 // OK
 final String htmlHeader;
+final String xmlElement;
+final String jsonObject;
+final String svgNumber;
 \end{lstlisting}
-\keeplisting{3}
+\keeplisting{6}
 instead of
 \begin{lstlisting}
 // AVOID!
 final String hTMLHeader;
+final String xMLElement;
+final String jSONObject;
+final String sVGNumber;
 \end{lstlisting}
 
-Single-letter variable names should be avoided except for temporary \bdq{throwaway} variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for|\index{for} loop:
+Single-letter variable names should be avoided except for temporary \bdq{throwaway} variables. Some of these are widely used and have already a fixed meaning; so is \lstinline|i| very common for the run value of a classical \lstinline|for|\index{for} loop.
+
+\keeplisting{2}
+\lstinline|i| can be an \lstinline|int|:
 \begin{lstlisting}
 for( var i = 0; i < max; ++i ) { … }
 \end{lstlisting}
-
+\keeplisting{7}
+or it can be an \lstinline|Iterator|  \autocite{ORACLE_DOC_ITERABLE_INTERFACE,ORACLE_DOC_ITERATOR_INTERFACE}:
+\index{java.lang!Iterable}\index{java.lang!Iterable!iterator()}\index{java.lang!Iterator}\index{java.lang!Iterator!hasNext()}\index{java.lang!Iterator!next()}
+\begin{lstlisting}
+final Iterable<?> iterable = …
+for( final var i = iterable.iterator(); i.hasNext(); ) 
+{
+    final var current = i.next(); 
+    … 
+}
+\end{lstlisting}
 \keeplisting{10}
 \lstinline|e| is the common name for the exception\index{exception} in a \lstinline|catch|\index{try!catch} block:
 \index{java.io!IOException}
@@ -36,6 +55,7 @@ catch( final IOException e )
 }    
 \end{lstlisting}
 
+\keeplisting{13}
 If the caught exception\index{exception} is not referenced in the \lstinline|catch|\index{try!catch} block, use the underscore (\bdq{\lstinline|_|}) instead of a local variable; that is the \textit{unnamed exception}\index{exception!unnamed exception}:
 \index{java.io!IOException}
 \begin{lstlisting}
@@ -55,54 +75,13 @@ catch( final IOException _ )
 For temporary strings, \lstinline|s| is well established, as \lstinline|o| is for (temporary) objects of an unspecified type, and \lstinline|n| for a number.
 
 \subsection{Reserved Names}\label{lbl:RetValue}
-Some names for local variables are reserved or otherwise fixed.
+Some names for local variables are reserved or otherwise fixed – at least you should avoid to use them in another way than described here.
 
+I already mentioned the single-letter variable \lstinline|e| that is used for the caught exception in a catch block.
 
-
-
-
-
-
-
-
-
-: the name of the value that is returned from a method has to be \lstinline|retValue| if the method does not return a field or attribute or \lstinline|this|:
+\keeplisting{18}
+The variable \lstinline|retValue| is reserved for the return value of a method\index{method}; basically a method\index{method} that does not have \lstinline|void| as the return value will return always \lstinline|retValue|, \lstinline|this| or an attribute:
 \begin{lstlisting}
-// OK
-public final int getValue() { return m_Value; }
-
-// AVOID!! Use 'retValue' here instead of 'i'!!
-public final int signum( double d )
-{
-    final var i = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-    
-    //---* Done *----------------------------------------------------
-    return i;
-}   //  signum()
-
-// ACCEPTABLE (BARELY)
-public final int signum( double d )
-{
-    return (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
-}   //  signum()
-
-// RECOMMENDED
-public final int signum( double d )
-{
-    final var retValue = 0;
-    if( d < 0.0 )
-    {
-        retValue = -1
-    }
-    else
-    {
-        retValue = 1;
-    }
-
-    //---* Done *----------------------------------------------------
-    return retValue;
-}   //  signum()
-
 public final int signum( double d )
 {
     final var retValue = (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
@@ -110,9 +89,43 @@ public final int signum( double d )
     //---* Done *----------------------------------------------------
     return retValue;
 }   //  signum()
+
+public final Builder<T> setFlag( final Flag flag )
+{
+    if( nonNull( flag ) ) m_Flags.add( flag );
+    
+    //---* Done *----------------------------------------------------
+    return this;
+}   //  addFlag()
+
+public final int getValue() { return m_Value; }
 \end{lstlisting}
 
-In the same way, \lstinline|result| is reserved as the return value for lambdas (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case| blocks (see chapter \tqfullvref{sec:CaseResults}). The name \lstinline|result| should not be used for a local variable in any other context.
+Similarly, the local variable name \lstinline|result| is reserved for the return value of lambdas\index{lambda} (see chapter \tqfullvref{sec:LambdaResults}) and for the results of \lstinline|case|\index{switch!expression}\index{switch!case} blocks (see chapter \tqfullvref{sec:CaseResults}). Avoid to use the name \lstinline|result| for a local variable in any other context. But usually, you should not need a local variable for the return values of lambdas\index{lambda} or \lstinline|case|\index{switch!expression}\index{switch!case} blocks.
+
+\keeplisting{2}
+We can write the \lstinline|signum()| method\index{method} as a lambda\index{lambda} like this:
+\index{java.util.function!Function}
+\begin{lstlisting}
+public final Function<Double,Integer> signum = d -> (d < 0.0) ? -1 : ((d > 0.0) ? 1 : 0);
+\end{lstlisting}
+
+\keeplisting{19}
+or with a \lstinline|switch| expression\index{switch!expression}\footnote{The code works, but it does not make much sense to implement \lstinline|signum()| like this.}:
+\begin{lstlisting}
+final var signum = switch( v )
+{
+    case null -> throw new NullArgumentException( "v" );
+    case Byte byteValue -> (byteValue < 0) ? -1 : ((byteValue > 0) ? 1 : 0);
+    case Double doubleValue -> (doubleValue < 0.0d) ? -1 : ((doubleValue > 0.0d) ? 1 : 0);
+    case Float floatValue -> (floatValue < 0.0f) ? -1 : ((floatValue > 0.0f) ? 1 : 0);
+    case Integer intValue -> (intValue < 0) ? -1 : ((intValue > 0) ? 1 : 0);
+    case Long longValue -> (longValue < 0l) ? -1 : ((longValue > 0l) ? 1 : 0);
+    case Short shortValue -> (shortValue < 0) ? -1 : ((shortValue > 0) ? 1 : 0);
+    default -> throw new IllegalArgumentException( v.getClass().getName() + " not supported" );
+}
+\end{lstlisting}
+
 
 A temporary buffer is named \lstinline|buffer|, no matter if it is a \lstinline|java.lang.StringBuilder| or \lstinline|java.lang.StringBuffer|, an implementation of \lstinline|java.util.List|, another collection type, or any other type that can be used as a buffer.
 

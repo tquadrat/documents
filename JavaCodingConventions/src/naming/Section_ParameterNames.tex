@@ -1,10 +1,10 @@
 \section{Parameters}
-The rules for the identifier names for the formal parameters of methods\index{method} and constructors\index{constructor} are slightly  different from those for lambdas\index{lambda}.
+The naming rules for the names of formal parameters for methods\index{method} and constructors\index{constructor} are slightly  different from those for lambda\index{lambda} parameters.
 
 %------------------------------------------------------------------------------
 
 \subsection{Names for Parameters of Methods and Constructors}\label{sec:NamesForFormalParameters}
-The rules names for the parameters of a method\index{method} or a constructors\index{constructor} are basically the same as those for local variables. Refer to \tqfullref{sec:NamesForLocalVariables}. Especially parameters do \textit{not} have any prefix.
+The rules for the names of parameters for a method\index{method} or a constructors\index{constructor} are basically the same as those for local variables. Refer to \tqfullref{sec:NamesForLocalVariables}. Especially parameters do \textit{not} have any prefix.
 
 One minor difference is how digits in the names can be used; for local variables, they are discouraged, but for parameter names, they can be helpful.
 
@@ -12,7 +12,7 @@ Assume a method\index{method} that takes two interchangeable arguments, like
 \begin{lstlisting}
 public final int add( final int n1, final int n2 ) { return n1 + n2; }
 \end{lstlisting}
-Using parameter names like \lstinline|firstSummand| and \lstinline|secondSummand| would not add any additional information – not to forget that you still have to add the Javadoc\index{Javadoc} comment describing the method\index{method} and the parameters; refer to \tqfullvref{sec:MethodComment}. This sample shows also that single-letter names can be appropriate for parameter names.
+Using parameter names like \lstinline|firstSummand| and \lstinline|secondSummand| would not add any additional information – not to forget that you still have to add the Javadoc\index{Javadoc} comment describing the method\index{method} and the parameters; refer to \tqfullvref{sec:MethodComment}. This sample shows also that single-letter names can be appropriate for \textit{parameter} names.
 
 \keeplisting{16}
 Parameters of constructors\index{constructor} or setters\index{method!setter method} that are used to initialise or modify an attribute should have the same name as that field, but without the “\verb#m_#” prefix:
@@ -38,6 +38,10 @@ public final class MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
+
+
+
+
 
 A typical lambda in Java looks like this:
 \begin{lstlisting}

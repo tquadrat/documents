@@ -1,4 +1,4 @@
-\section{Parameters}
+\section{Parameter Names}
 The naming rules for the names of formal parameters for methods\index{method} and constructors\index{constructor} are slightly  different from those for lambda\index{lambda} parameters.
 
 %------------------------------------------------------------------------------
@@ -38,47 +38,109 @@ public final class MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
+A lambda\index{lambda} expression is a compact way to represent an instance of a functional interface\index{functional interface} (an interface with exactly one abstract method) as an anonymous, inline block of code. They will be discussed in detail in \tqfullvref{sec:Lambdas} and \tqfullvref{sec:FunctionalInterfaces}.
 
+Among others, one reason for the introduction of lambdas\index{lambda} was to reduce the verbosity of anonymous inner classes\index{class!anonymous class}\index{class!inner class}, especially for simple callbacks. A lambda\index{lambda} expression can replace boilerplate anonymous classes\index{class!anonymous class} with a few characters.
 
-
-
-
-A typical lambda in Java looks like this:
+Consequently, a typical lambda\index{lambda} expression is a one-liner like this:
+lambda in Java looks like this:
+\index{java.util.function!Predicate}\index{java.lang!String!contains()}
 \begin{lstlisting}
 Predicate<String> filter = s -> !s.contains( "invalid" );
 \end{lstlisting}
-\lstinline|s| is the parameter of that lambda, and that these parameters have just single letter names is common practice. As lambdas are usually quite short, this works sufficiently in most cases. In addition the meaning of the parameters is well explained through the documentation of the functional interface that is implemented by the lambda.
+In this case, \lstinline|s| is the parameter of that lambda, and that these parameters have just single letter names is common practice, to keep the expression short. 
 
-But if in doubt, you can use longer names with more meaningful names for the parameters of a lambda. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context:
+The meaning of the parameters is well explained through the documentation of the functional interface\index{functional interface} that is implemented by the lambda\index{lambda}, although the respective meaning of the parameters can usually also be easily inferred from the context.
+
+But if in doubt, you can of course use longer, more meaningful names for the parameters of a lambda\index{lambda}. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context.
+
+\keeplisting{5}
+The sample below does not work because there is a name clash between the local variable \lstinline|s| and the parameter of the lambda\index{lambda} expression; it will not even compile:
+\index{java.util.function!Predicate}\index{java.lang!String!contains()}
 \begin{lstlisting}
 // WILL NOT WORK AT ALL!!
 final var s = "invalid";
-Predicate<String> filter = s -> !s.contains( s ); // Hä?
+final Predicate<String> filter = s -> !s.contains( s ); // Hä?
+\end{lstlisting}
 
+\keeplisting{5}
+Using a single letter name for both the local variable and the lambda\index{lambda} parameter does not support readability:
+\index{java.util.function!Predicate}\index{java.lang!String!contains()}
+\begin{lstlisting}
 // Still not good …
 final var s = "invalid";
-Predicate<String> filter = p -> !p.contains( s );
+final Predicate<String> filter = p -> !p.contains( s );
+\end{lstlisting}
 
-// Better …
+\keeplisting{5}
+Single letter names for local variables are usually not recommended (see \tqfullref{sec:NamesForLocalVariables}); in combination with a long name for the lambda\index{lambda} parameter it is a bit confusing.:
+\index{java.util.function!Predicate}\index{java.lang!String!contains()}
+\begin{lstlisting}
+// Slightly better, but still not really good …
 final var s = "invalid";
-Predicate<String> filter = toCheck -> !toCheck.contains( s );
+final Predicate<String> filter = toCheck -> !toCheck.contains( s );
+\end{lstlisting}
 
+\keeplisting{5}
+The first variant is the most common one, but the second can be used, too.
+\index{java.util.function!Predicate}\index{java.lang!String!contains()}
+\begin{lstlisting}
 // Recommended
 final var criterion = "invalid";
-Predicate<String> filter = s -> !s.contains( criterion );
+final Predicate<String> filter = s -> !s.contains( criterion );
+
+final var criterion = "invalid";
+final Predicate<String> filter = toCheck -> !toCheck.contains( criterion );
 \end{lstlisting}
 
+\keeplisting{5}
 It does not make much difference if you number the parameters, of if you use different names fo them:
+\index{java.util.function!BiPredicate}\index{java.lang!String!length()}
 \begin{lstlisting}
-BiPredicate<String,String> filter = (s1,s2) -> s1.contains( s2 );
-BiPredicate<String,String> filter = (a,b) -> a.contains( b );
+BiPredicate<String,Integer> filter = (s1,s2) -> s1.length() < s2;
+
+\\ Better
+BiPredicate<String,Integer> filter = (a,b) -> a.length() < b;
 \end{lstlisting}
 
-Nevertheless, an accepted rule of thumb is to use different names if the parameters cannot be exchanged by each other (as in the sample above), while numbering the parameters is used when the parameters are interchangeable, like in an implementation of \lstinline|java.util.Comparator|\autocite{ORACLE_DOC_COMPARATOR_INTERFACE}:
+Nevertheless, an accepted rule of thumb is to use different names if the parameters cannot be exchanged by each other (as in the sample above), while numbering the parameters is used when the parameters are interchangeable, like in an implementation of \lstinline|java.util.Comparator|\index{java.util!Comparator} \autocite{ORACLE_DOC_COMPARATOR_INTERFACE}:
+\index{java.lang!String!compareToIgnoreCase()}
 \begin{lstlisting}
 Comparator<String> comparator = (s1,s2) -> s1.compareToIgnoreCase( s2 );
 \end{lstlisting}
+Here both arguments are instances of \lstinline|java.lang.String|\index{java.lang!String}, and there are regarded as interchangeable despite the fact that
+\index{java.util!Comparator!compare()}
+\begin{lstlisting}
+comparator.compare( a, b ) == comparator.compare( b, a );
+\end{lstlisting}
+will be true only if \lstinline|a.equals( b )|\index{java.lang!Object!equals()} is also true.
 
+\subsection{Summary}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{Use \textit{camelCase} for the names of parameters, with a lowercase first letter.}
+
+	\item{The names of parameters should be short yet meaningful.
+	
+	But as they have to be explained in the Javadoc comment this can be seen a bit more relaxed.}
+	
+	\item{Don't use \bsq{Hungarian Notation}\index{Hungarian Notation} or any other kind of prefix!}
+	
+	\item{Usually use the singular, but for collections and arrays, use the plural form.}
+	
+	\item{Naming a parameter after its type is always an option.
+	
+	Also using the type as a suffix or prefix.}
+	
+	\item{If the name starts with an acronym, write that all lowercase.}
+	
+	\item{Single-letter names are acceptable, but still not recommended.
+	
+	For the parameters of lambda\index{lambda} expressions, single letter parameter names are widely accepted.}
+	
+	\item{Interchangeable parameters may be numbered.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

@@ -1,0 +1,163 @@
+\section{Field Names}\label{sec:Fields}
+I distinguish generally two types of fields\index{field} that will have different naming rules.
+
+\paragraph{Attributes}\index{field!attribute} are mutable or immutable fields, that get there values during runtime; that they may get assigned a default value at compile time that may never change during runtime is irrelevant.
+
+\paragraph{Constants}\index{field!constant} are usually static final fields\index{field} that get their values always during compile time. They should have an immutable type, like a primitive or \lstinline|java.lang.String|\index{java.lang!String}.
+
+%------------------------------------------------------------------------------
+
+\subsection{Attribute Names}\label{sec:AttributeNames}
+The identifier for an attribute has to be prefixed with ``\verb#m_#'', usually followed by the property\index{property} name (see \tqfullvref{sec:NamesOfProperties}) with the first letter capitalised:
+\begin{lstlisting}
+private String m_AString;
+private boolean m_IsValid;
+private String m_HTMLHeader;
+private MessageProvider m_MessageProvider;
+\end{lstlisting}
+This ensures that the names of local variables and formal parameters of methods\index{method} or constructors\index{constructor} will be always distinct from those of attributes\index{field!attribute}, and therefore neither local variables nor parameters can collide with or hide an attribute\index{field!attribute}. Another consequence is that it is not necessary to use \lstinline|this.| when accessing an attribute\index{attribut}.
+
+Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of attributes\index{attribute}.
+
+Of course not all attributes\index{attribute} of a class\index{class} are properties\index{property}. They could hold an internal status as well or may serve other purposes. But the naming rules remain the same:  the prefix ``\verb#m_#'' is followed by a name describing the purpose of the attribute, typed in \textit{CamelCase} with the first letter capitalised.
+
+Eclipse\index{Eclipse} knows a configuration setting for the attribute name prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “\verb#m_#” makes sure that the generation of getters and setters will work as expected.
+
+For IntelliJ~IDEA\index{IntelliJ IDEA}, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
+
+%------------------------------------------------------------------------------
+
+\subsection{Constants}\label{sec:Constants}
+Constants in Java are fields of primitive or immutable types\index{immutable type} that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+
+Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”\index{magic number}, static configuration values and texts.
+
+Some samples for valid constants:
+\begin{lstlisting}
+public static final double PI = 3.1415;
+public static final int ANSWER_TO_ALL_QUESTIONS = 42;
+public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
+public static final String [] EMPTY_STRING_ARRAY = new String [0];
+\end{lstlisting}
+Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
+
+The field \lstinline|PATTERN| below is not a constant in the sense of this definition, and therefore it goes to the “Static Initialisations” part:
+\begin{lstlisting}[numbers=left]
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+public static final Pattern PATTERN = Pattern.compile( ".*" );
+
+// Better:
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+public static final Pattern PATTERN;
+
+static
+{
+    try
+    {
+        PATTERN = Pattern.compile( ".*" );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+
+// Even better:
+    /*-----------*\
+====** Constants **==================================================
+    \*-----------*/
+public static final String PATTERN_SOURCE = ".*";
+…
+
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+private static final Pattern m_Pattern;
+
+static
+{
+    try
+    {
+        m_Pattern = Pattern.compile( PATTERN_SOURCE );
+    }
+    catch( final PatternSyntaxException e )
+    {
+        throw new ExceptionInInitializerError( e );
+    }    
+}
+\end{lstlisting}
+No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialisations”.
+
+\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:AttributeNames} for their naming.
+
+Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
+\begin{lstlisting}[numbers=left]
+// AVOID!! Make it private!
+public static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// AVOID!! Make it private!
+public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
+\end{lstlisting}
+
+If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
+
+In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
+
+Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
+\begin{lstlisting}
+public final static String PERSON_COL_FirstName = "first_name";
+public final static String PERSON_COL_LastName = "last_name";
+public final static String PERSON_COL_MaidenName = "maiden_name";
+public final static String PERSON_COL_Title = "title";
+…
+\end{lstlisting}
+The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”, \verb#PERSON_COL# in this case.
+
+%------------------------------------------------------------------------------
+
+\subsection{Summary}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{Use \textit{camelCase} for the names of local variables, with a lowercase first letter.}
+
+	\item{The names of local variables should be short yet meaningful.}
+	
+	\item{Don't use \bsq{Hungarian Notation}\index{Hungarian Notation} or another kind of prefix!}
+	
+	\item{Usually use the singular, but for collections and arrays, use the plural form.}
+	
+	\item{Naming a local variable after its type is always an option.
+	
+	Also using the type as a suffix or prefix.}
+	
+	\item{If the name starts with an acronym, write that all lowercase.}
+	
+	\item{Usually don't use single-letter names.
+	
+	But for some well established use cases, single-letter names are ok.}
+	
+	\item{Some names are reserved:
+	\begin{itemize}[nosep]
+		\item{\lstinline|buffer|}
+		\item{\lstinline|e|}
+		\item{\lstinline|err|}
+		\item{\lstinline|in|}
+		\item{\lstinline|out|}
+		\item{\lstinline|result|}
+		\item{\lstinline|retValue|}
+	\end{itemize}}
+	
+	\item{All this is also valid for local variables in lambdas\index{lambda}.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

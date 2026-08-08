@@ -16,130 +16,6 @@
 
 %------------------------------------------------------------------------------
 
-\section{Fields}\label{sec:Fields}
-The identifier for a field (or for an ‘attribute’ or a ‘property’) has to be prefixed with “\verb#m_#”; the first letter after the underscore has to be a capital letter:
-\begin{lstlisting}
-private String m_AString;
-private boolean m_IsValid;
-private String m_HTMLHeader;
-private MessageProvider m_MessageProvider;
-\end{lstlisting}
-This ensures that the names of local variables and formal parameters of methods or constructors will be always distinct from those of fields, and therefore neither local variables nor parameters can collide with or hide fields. Another consequence is that it is not necessary to use \lstinline|this.| when accessing a field.
-
-Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of fields.
-
-Please be aware that a bean property name does not carry the prefix. So the getters for the samples above are
-\begin{lstlisting}[numbers=left]
-public final String getAString() { return m_AString; }
-public final boolean getIsValid() { return m_IsValid; }
-/* Alternatively: */ public final boolean isValid() { return m_IsValid; }
-public final String getHTMLHeader() { return m_HTMLHeader; }
-public final MessageProvider getMessageProvider() { return m_MessageProvider; }
-\end{lstlisting}
-
-Regarding the alternative getter in line~3 refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3_2}.
-
-Eclipse knows a configuration setting for this prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “\verb#m_#” makes sure that the generation of getters and setters will work as expected.
-
-For IntelliJ~IDEA, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
-
-%------------------------------------------------------------------------------
-
-\section{Constants}\label{sec:Constants}
-Constants in Java are fields of primitive or immutable types\index{immutable type} that are declared as \lstinline|public static final|. According to the Sun coding conventions, their names “should be all uppercase with words separated by underscores~ (‘\verb#_#’)”\autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
-
-Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”\index{magic number}, static configuration values and texts.
-
-Some samples for valid constants:
-\begin{lstlisting}
-public static final double PI = 3.1415;
-public static final int ANSWER_TO_ALL_QUESTIONS = 42;
-public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
-public static final String [] EMPTY_STRING_ARRAY = new String [0];
-\end{lstlisting}
-Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
-
-The field \lstinline|PATTERN| below is not a constant in the sense of this definition, and therefore it goes to the “Static Initialisations” part:
-\begin{lstlisting}[numbers=left]
-    /*------------------------*\
-====** Static Initialisations **=====================================
-    \*------------------------*/
-public static final Pattern PATTERN = Pattern.compile( ".*" );
-
-// Better:
-    /*------------------------*\
-====** Static Initialisations **=====================================
-    \*------------------------*/
-public static final Pattern PATTERN;
-
-static
-{
-    try
-    {
-        PATTERN = Pattern.compile( ".*" );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw new ExceptionInInitializerError( e );
-    }    
-}
-
-// Even better:
-    /*-----------*\
-====** Constants **==================================================
-    \*-----------*/
-public static final String PATTERN_SOURCE = ".*";
-…
-
-    /*------------------------*\
-====** Static Initialisations **=====================================
-    \*------------------------*/
-private static final Pattern m_Pattern;
-
-static
-{
-    try
-    {
-        m_Pattern = Pattern.compile( PATTERN_SOURCE );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw new ExceptionInInitializerError( e );
-    }    
-}
-\end{lstlisting}
-No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialisations”.
-
-\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:Fields} for their naming.
-
-Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
-\begin{lstlisting}[numbers=left]
-// AVOID!! Make it private!
-public static final Map<String,File> m_Files = new TreeMap<String,File>();
-
-// AVOID!! Make it private!
-public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
-
-// AVOID!! Make it private!
-public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
-\end{lstlisting}
-
-If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
-
-In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
-
-Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
-\begin{lstlisting}
-public final static String PERSON_COL_FirstName = "first_name";
-public final static String PERSON_COL_LastName = "last_name";
-public final static String PERSON_COL_MaidenName = "maiden_name";
-public final static String PERSON_COL_Title = "title";
-…
-\end{lstlisting}
-The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”, \verb#PERSON_COL# in this case.
-
-%------------------------------------------------------------------------------
-
 \section{enum Values}\label{sec:EnumValues}
 When the “Code Conventions for the Java\textsuperscript{TM} Programming Language”\autocite{SUN_CODE_CONVENTIONS} had been written in 1999, enums did not yet exist in Java. But because enum values are special cases of constants, the usual assumption is that their names have to follow the same rules as for normal constants: the name should be all upper case with words separated by underscores~(“\verb#_#”).
 
@@ -1132,7 +1008,7 @@ else
 }
 \end{lstlisting}
 
-You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqfullvref{sec:Fields}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
+You will use trailing comments to provide the documentation for local variables\footnote{Usually, the name of that local variable should be sufficient (refer to chapter \tqfullvref{sec:NamesForLocalVariables}), or the meaning of that variable is obvious from the context, but sometimes it still make sense to provide that kind of additional information.}:
 
 \index{Gauss@Gauß, Carl Friedrich}\index{Lichtenberg, Heiner}\index{java.lang!IllegalArgumentException}\index{java.time!LocalDate}\index{java.time!LocalDate!minusDays()}\index{java.time!LocalDate!of()}\index{java.time!LocalDate!plusDays()}\index{java.time!Month!MARCH}\index{java.time!Year}\index{java.time!Year!getValue()}\index{java.time!Year!isAfter()}\index{java.time!Year!isBefore()}\index{org.tquadrat.foundation.lang!Objects}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}
 \begin{lstlisting}[numbers=left,caption={Gauss' Easter algorithm\autocite{WIKIPEDIA:DateOfEaster,WIKIPEDIA:Gaussche_Osterformel}},label={listing:GaussEaster}]
@@ -1752,7 +1628,7 @@ if( length() == len ) …
 if( 5 == len ) …
 \end{lstlisting}
 
-Another sample for this is the recommendation to name fields with the “\verb#m_#” prefix (refer to chapter \tqfullvref{sec:Fields}) instead of using the \lstinline|this.| prefix. The compiler will never complain if you omit that prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field – but it will scream loudly about a non-existing reference if you forget the “\verb#m_#” prefix when accessing a field named along the rules defined here. Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.|, or if you shadow a field through a local variable with the same name. Nevertheless, I prefer the “\verb#m_#” prefix for fields because it is also easier to read.
+Another sample for this is the recommendation to name fields with the “\verb#m_#” prefix (refer to chapter \tqfullvref{sec:AttributeNames}) instead of using the \lstinline|this.| prefix. The compiler will never complain if you omit that prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field – but it will scream loudly about a non-existing reference if you forget the “\verb#m_#” prefix when accessing a field named along the rules defined here. Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.|, or if you shadow a field through a local variable with the same name. Nevertheless, I prefer the “\verb#m_#” prefix for fields because it is also easier to read.
 
 Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
 
@@ -9423,6 +9299,36 @@ name for a module: \tqfullvref{sec:Modules}
 %------------------------------------------------------------------------------
 
 \section{Lambdas}\label{sec:Lambdas}
+
+
+**Java Lambdas — A Concise Overview**
+
+**What are they?**
+A lambda expression is a compact way to represent an instance of a functional interface (an interface with exactly one abstract method) as an anonymous, inline block of code. 
+Syntax: \lstinline|(parameters) -> expression_or_block|. They were introduced in Java 8 (2014).
+
+**Why were they added?**
+- To enable functional-style programming on the JVM, complementing Java's object-oriented model.
+- To reduce the verbosity of anonymous inner classes, especially for simple callbacks (`Runnable`, `Comparator`, event listeners, etc.).
+- To power the new Streams API — lambdas are the natural way to pass behavior (filter/map/reduce predicates) into stream operations.
+- To make APIs more expressive without breaking backward compatibility (achieved via default methods on interfaces).
+
+**Advantages**
+- **Conciseness** — replaces boilerplate anonymous classes with a few characters.
+- **Readability** — intent (what to do) is clearer than mechanism (how an object is constructed).
+- **Enables Streams/functional APIs** — `map`, `filter`, `reduce`, `forEach`, etc. become practical.
+- **Deferred execution** — behavior can be passed around and invoked later (useful for lazy evaluation, callbacks, event handling).
+- **Effectively-final capture** — safe, predictable closure semantics over local variables.
+
+**Disadvantages**
+- **Debugging is harder** — stack traces for lambdas are less readable (synthetic method names, no meaningful frame).
+- **No explicit `this`** — lambdas share enclosing scope's `this`, which can confuse developers coming from anonymous-class semantics.
+- **Overuse hurts readability** — deeply nested or chained lambdas can become as hard to read as the boilerplate they replace.
+- **Type inference limits** — occasionally requires explicit casts or type witnesses when the target functional interface is ambiguous.
+- **Checked exceptions are awkward** — functional interfaces generally don't declare checked exceptions, forcing wrapping/rethrowing tricks.
+- **Serialization pitfalls** — lambdas are serializable only under specific conditions and can be fragile across JVM versions/refactorings.
+- **Performance** — not zero-cost; `invokedynamic`-based instantiation and boxing (for primitive-based functional interfaces without specialized variants) can add overhead in hot paths, though the JIT typically optimizes this well.
+
 \section{-------------------------------------------- Proceed from here!}
 \lipsum[5]
 
@@ -10304,7 +10210,7 @@ Example:
 
 \begin{FlushLeft}
 \addcontentsline{toc}{chapter}{References}\printbibliography
-,,\end{FlushLeft}
+\end{FlushLeft}
 
 %------------------------------------------------------------------------------
 

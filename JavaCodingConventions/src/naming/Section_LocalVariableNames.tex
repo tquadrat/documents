@@ -16,7 +16,7 @@ Linus Torvalds
 Bjarne Stroustrup
 \end{quote}
 
-The use of the \lstinline|var|\index{var} keyword\footnote{\lstinline|var|\index{var} is in fact not a keyword, but a special type.} in Java programs does not weaken the strong typing of Java in any way – refer to chapter \tqfullvref{sec:LocalVariableTypeInference} – and is therefore no reason for using \bdq{Hungarian Notation}\index{Hungarian Notation}.
+The use of the \lstinline|var|\index{var} keyword\footnote{Although \lstinline|var|\index{var} is a keyword (see \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}, it should be treated as a special type.} in Java programs does not weaken the strong typing of Java in any way – refer to chapter \tqfullvref{sec:LocalVariableTypeInference} – and is therefore no reason for using \bdq{Hungarian Notation}\index{Hungarian Notation}.
 
 \keeplisting{7}
 Usually you would use the singular form for a variable name, but for collections or arrays, the plural form can be perfectly correct:
@@ -151,6 +151,8 @@ catch( final IOException _ )
 
 For temporary strings, \lstinline|s| is well established, as \lstinline|o| is for (temporary) objects of an unspecified type, and \lstinline|n| for a number.
 
+%------------------------------------------------------------------------------
+
 \subsection{Reserved Names}\label{lbl:RetValue}
 Some names for local variables are reserved or otherwise fixed – at least you should avoid to use them in another way than described here.
 
@@ -219,8 +221,27 @@ final var signum = switch( v )
 
 \paragraph{\lstinline|in|, \lstinline|out|, and \lstinline|err|}– Do not use the names \lstinline|in|\index{java.lang!System!in}, \lstinline|out|\index{java.lang!System!out}, and \lstinline|err|\index{java.lang!System!err} as names for local variables. Although these names are not reserved words, they should be treated as such. They are the names for the variables from the class \lstinline|java.lang.System|\index{java.lang!System} \autocite{ORACLE_DOC_SYSTEM_CLASS}, representing the system streams \bsq{standard in} (\verb#stdin#), \bsq{standard out} (\verb#stdout#) and \bsq{standard error} (\verb#stderr#). They can be accessed qualified by the class name (as \lstinline|System.out|, but quite often, they are statically imported. A local variable with the same name would cause a name clash, or at least it could cause some confusion.
 
+\paragraph{\lstinline|_| (The underscore)}– is a keyword \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords} with a special meaning \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}. It can be used instead of a local variable where such a variable is syntactically required, but semantically obsolete.
+
+We have seen it already as the unnamed exception in a \lstinline|catch|\index{try!catch} block, but it can be used also with a \verb#try-with-resources#\index{try-with-resources} where a reference to the resource is not used:
+\begin{lstlisting}
+…
+AutoLock m_AutoLock = AutoLock.of( new ReentrantLock() );
+…
+try( final var _ = m_AutoLock.lock() )
+{
+    // Do something
+    …
+}
+\end{lstlisting}
+This example is explained in detail in chapter \tqfullvref{sec:TryWithResources}.
+
+%------------------------------------------------------------------------------
+
 \subsection{Local Variables in Lambdas}
 Local variables inside lambdas\index{lambda} are just like any other local variable and their naming follows the same rules. The only exception is that a lambda\index{lambda} does not use \lstinline|retValue| for a return value, but \lstinline|result| – refer to chapter \tqfullvref{sec:LambdaResults} for the details.
+
+%------------------------------------------------------------------------------
 
 \subsection{Summary}
 

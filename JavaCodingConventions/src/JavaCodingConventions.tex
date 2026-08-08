@@ -7836,8 +7836,8 @@ try
     final var output = new FileOutputStream( outfile ) 
 )
 {
-	var value = EOF;
-	
+    var value = EOF;
+
     //---* Read the input, write to the output *---------------------
     while( (value = input.read()) != EOF )
     {
@@ -7904,8 +7904,8 @@ try
     final var log = logStream 
 )
 {
-	var value = EOF;
-	
+    var value = EOF;
+
     //---* Read the input, write to the output *---------------------
     while( (value = input.read()) != EOF )
     {
@@ -8018,11 +8018,11 @@ First, \lstinline|Lock|\index{java.util.concurrent.locks!Lock} will not implemen
 
 Fortunately, the \verb#try-with-resources#\index{try-with-resources} feature will not call \lstinline|close()|\index{java.lang!AutoCloseable!close()} on the newly created object, but on the local reference to it (that is the reason why \verb#try-with-resources#\index{try-with-resources} will not work with anonymous instances like in \lstinline|try( new Lock() )|). If we would now wrap the \lstinline|Lock|\index{java.util.concurrent.locks!Lock} instance into a class that implements \lstinline|AutoCloseable|\index{java.lang!AutoCloseable}, we can write something like this:
 \index{org.tquadrat.foundation.lang!AutoLock}\index{org.tquadrat.foundation.lang!AutoLock!of()}\index{java.util.concurrent.locks!ReentrantLock}\index{org.tquadrat.foundation.lang!AutoLock!lock()}
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
 …
 AutoLock m_AutoLock = AutoLock.of( new ReentrantLock() );
 …
-try( final var unused = m_AutoLock.lock() )
+try( final var _ = m_AutoLock.lock() )
 {
     // Do something
     …

@@ -478,6 +478,9 @@ The documentation for these elements is generated either based on the arguments 
 \subsubsection{The Field Comment}\label{sec:FieldComment}
 Attributes/properties, constants and enum values are all summarised under ‘field’ here.
 
+% Elaborate on comments for constants!!!!
+
+
 Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
 \begin{lstlisting}
 /**
@@ -9704,6 +9707,40 @@ Such a helper could also be used to check the arguments before conveying them to
 \begin{lstlisting}[numbers=left]
 \end{lstlisting}
 %------------------------------------------------------------------------------
+\hrulefill\newpage 
+\section{Public Fields}
+\lipsum[1]
+
+%\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{one}
+\item{two}
+\item{three}
+\end{enumerate}
+
+\begin{itemize}[nosep]
+\item{one}
+\item{two}
+\item{three}
+\end{itemize}
+
+\begin{lstlisting}[numbers=left]
+\end{lstlisting}
+\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be public – with the final consequence that they are just fields\index{field} – so refer to chapter \tqref{sec:AttributeNames} for their naming.
+
+Some samples for fields\index{field} that are not feasible as constants\index{constant} (because the objects are not constant at all):
+\begin{lstlisting}
+private static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// NOT A VALID CONSTANT
+private static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
+\end{lstlisting}
+
+If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
+
 
 %------------------------------------------------------------------------------
 \hrulefill\newpage 
@@ -10115,7 +10152,22 @@ Example:
 \begin{lstlisting}
 // AVOID!
 d = (a = b + c) + r;        
+\end{lstlisting}\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be public – with the final consequence that they are just fields\index{field} – so refer to chapter \tqref{sec:AttributeNames} for their naming.
+
+Some samples for fields\index{field} that are not feasible as constants\index{constant} (because the objects are not constant at all):
+\begin{lstlisting}
+private static final Map<String,File> m_Files = new TreeMap<String,File>();
+
+// NOT A VALID CONSTANT
+private static final Date BEGIN_OF_EPOCHE = new Date( 0 );
+
+// AVOID!! Make it private!
+public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
 \end{lstlisting}
+
+If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
+
+
 should be written as 
 \begin{lstlisting}
 a = b + c;

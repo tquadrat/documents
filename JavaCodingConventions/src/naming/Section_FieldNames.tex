@@ -30,52 +30,50 @@ For IntelliJ~IDEA\index{IntelliJ IDEA}, a similar setting can be found at \verb#
 \subsection{Constants}\label{sec:Constants}
 The \Java programming language defines a keyword \lstinline|const| \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}, but that is just a reserved word without any function. There is also no syntactical concept for constant values in Java.
 
- 
+This means that a constant\index{constant} in Java exists only by convention. 
 
-Constants\index{constant} in Java are fields of primitive or immutable types\index{immutable type} that are declared as \lstinline|public static final|. According to the \ccjpl, their names ``should be all uppercase with words separated by underscores (`\verb#_#')'' \autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+Constants\index{constant} in Java are fields of primitive or immutable types\index{immutable type} that are declared as public, static and final.
 
-Our definition for a constant is even more restrictive: that \lstinline|public static final| field has to be initialised with a compile-time constant value. This basically limits constants to “magic numbers”\index{magic number}, static configuration values and texts.
+Our definition for a constant is even more restrictive: that public static final field has to be initialised with a compile-time constant value. This basically limits constants to \bdq{magic numbers}\index{magic number} and texts.\footnote{This limitation is imposed by the documentation rules, refer to \tqfullvref{sec:FieldComment}.}
 
-Some samples for valid constants:
+According to the \ccjpl, the name of a constant\index{constant} ``should be all uppercase with words separated by underscores (`\verb#_#')'' \autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+
+\keeplisting{5}
+Some samples for valid constants\index{constant}
 \begin{lstlisting}
 public static final double PI = 3.1415;
 public static final int ANSWER_TO_ALL_QUESTIONS = 42;
 public static final String ISO_DATE_FORMAT = "yyyyMMdd'T'hhmmss";
-public static final String [] EMPTY_STRING_ARRAY = new String [0];
 \end{lstlisting}
-Real constants go to the part of the class headlined with “Constants” (refer to chapter \tqvref{sec:StructuringComments}).
 
-The field \lstinline|PATTERN| below is not a constant in the sense of this definition, and therefore it goes to the “Static Initialisations” part:
-\begin{lstlisting}[numbers=left]
-    /*------------------------*\
-====** Static Initialisations **=====================================
-    \*------------------------*/
+Real constants\index{constant} go to the section of the class headlined with \bdq{Constants} (refer to chapter \tqfullvref{sec:StructuringComments}).
+
+\keeplisting{4}
+The field \lstinline|PATTERN| below is not a constant\index{constant} in the sense of our definition, because it is not initialised with a compile-time constants:
+\index{java.util.regex!Pattern!compile()}
+\begin{lstlisting}
+// NOT A CONSTANT
 public static final Pattern PATTERN = Pattern.compile( ".*" );
+\end{lstlisting}
 
-// Better:
+\keeplisting{5}
+It should not get named as a constant, and it should go to the \bdq{Static Initialisations} section of the class (see \tqref{sec:StructuringComments}). In most cases, it shouldn't be public, either.
+\begin{lstlisting}
     /*------------------------*\
 ====** Static Initialisations **=====================================
     \*------------------------*/
-public static final Pattern PATTERN;
+private static final Pattern m_Pattern = Pattern.compile( ".*" );
+\end{lstlisting}
 
-static
-{
-    try
-    {
-        PATTERN = Pattern.compile( ".*" );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw new ExceptionInInitializerError( e );
-    }    
-}
+You will encounter this kind of code pattern (sorry for the duplication of terms!) quite often, and the best way to implement it would look like this (for an instance of \lstinline|java.util.regex.Pattern| \autocite{ORACLE_DOC_PATTERN_CLASS}):
 
-// Even better:
+\keeplisting{21}
+\index{java.lang!String}\index{java.util.regex!Pattern}\index{java.util.regex!Pattern!compile()}\index{java.util.regex!PatternSyntaxException}\index{java.lang!ExceptionInInitializerError}
+\begin{lstlisting}
     /*-----------*\
 ====** Constants **==================================================
     \*-----------*/
 public static final String PATTERN_SOURCE = ".*";
-…
 
     /*------------------------*\
 ====** Static Initialisations **=====================================
@@ -94,25 +92,8 @@ static
     }    
 }
 \end{lstlisting}
-No matter which variant you go for, the declaration and initialisation have to go to the part “Static Initialisations”.
 
-\lstinline|static final| references to \textit{mutable} objects are no constants (no matter which definition you use), therefore they should never be \lstinline|public| – with the final consequence that they are just fields – so refer to chapter \tqref{sec:AttributeNames} for their naming.
-
-Samples for fields that are not feasible as \lstinline|public| constants are (as the objects are not constant at all):
-\begin{lstlisting}[numbers=left]
-// AVOID!! Make it private!
-public static final Map<String,File> m_Files = new TreeMap<String,File>();
-
-// AVOID!! Make it private!
-public static final Date BEGIN_OF_EPOCHE = new Date( 0 );
-
-// AVOID!! Make it private!
-public static final SimpleDateFormat ISO_DATE_FORMATTER = new SimpleDateFormat( ISO_DATE_FORMAT );
-\end{lstlisting}
-
-If you wonder why the lines~5 and 8 belong to this group of bad samples, refer to \autocite{ORACLE_DOC_DATE_CLASS,ORACLE_DOC_SIMPLEDATEFORMATTER_CLASS}: instances of \lstinline|java.util.Date| and \lstinline|java.text.SimpleDateFormatter| are not immutable!\footnote{In addition, the class \lstinline|java.util.Date| and the tools around it were superseded by the \lstinline|java.time| package (see \autocite{ORACLE_DOC_TIME_PACKAGE}) and should not be used in new software anymore.}
-
-In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be \lstinline|public| for some reason, you can name that either as a regular field (with the “\verb#m_#” prefix) or as a regular constant as described above. For a local constant (an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
+In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be public for some reason, you can name that either as a regular field (with the ``\verb#m_#'' prefix) or as a regular constant as described above. For a local constant\index{constant!local} (a local variable as an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
 
 Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
 \begin{lstlisting}
@@ -122,7 +103,7 @@ public final static String PERSON_COL_MaidenName = "maiden_name";
 public final static String PERSON_COL_Title = "title";
 …
 \end{lstlisting}
-The camelCased suffix is the ‘real’ name, while the part that follows the stronger rules for a constant name is just indicating the “constant category”, \verb#PERSON_COL# in this case.
+The camelCased suffix is the \bsq{real} name, while the part that follows the stronger rules for a constant name is just indicating the \bdq{constant category}, \verb#PERSON_COL# in this case.
 
 %------------------------------------------------------------------------------
 

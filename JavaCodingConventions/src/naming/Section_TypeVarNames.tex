@@ -1,13 +1,13 @@
-\section{Names for Type Variables}\label{sec:TypeVariables}
-Type variables \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TypeVariables} belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
+\section{Type Variable Names}\label{sec:TypeVariables}
+Type variables \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TypeVariables} belong to the definition of parameterised types\index{parameterized type} \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or \bdq{generics}\index{generics|see {parameterized type}}. So in
 \begin{lstlisting}
 public interface Function<T,R> { … }
 \end{lstlisting}
-\verb#T# and \verb#R# are the type arguments.
+\lstinline|T| and \lstinline|R| are the type variables.
 
-It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
+It is commom practice to name a single type variable as \lstinline|T|. If there are more than one type variable, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
 
-Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: 
+Aside that, no further rules exist. Even more than one character is possible for the name of a type variable: 
 \begin{lstlisting}
 public interface Map<Key,Value> { … }
 \end{lstlisting}
@@ -23,8 +23,16 @@ public interface Operation<T1,T2,T3,R> { … }
 \end{lstlisting}
  
 
-But because the type arguments denotes classes, their names have to start with a capital letter.
+But because the type variables denotes classes, their names have to start with a capital letter.
 
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{The names of has to be a single capital letter.
+	
+	Alternatively, it can an arbitrary name starting with a capital letter.}
+	
+	\item{Even digits are allowed a additional characters.}
+\end{enumerate}
 
 %==============================================================================
 % End of file!!

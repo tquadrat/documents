@@ -1,4 +1,4 @@
-\section{Names for \bsq{enum} Values}\label{sec:EnumValues}
+\section{\bsq{enum} Value Names}\label{sec:EnumValues}
 When the \ccjpl had been written in 1999, enums did not yet exist in the programming language. But because \lstinline|enum| values are seen as special cases of constants\index{constant}, the usual assumption is that their names have to follow the same rules as for regular constants\index{field!constant}: the name should be all uppercase with words separated by underscores~(``\verb#_#'').
 
 Basically, this works fine, but when using static imports, name clashes can occur for common terms that can be used in different contexts. So it makes sense to add a prefix to the name of an \lstinline|enum| value\index{enum}, similar to what we did with the categories or groups for regular constants\index{field!constant} (see \hyperref[sec:Constants]{above}). This may look like this:

@@ -1,0 +1,31 @@
+\section{Names for Type Variables}\label{sec:TypeVariables}
+Type variables \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TypeVariables} belong to the definition of parameterised types \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ParameterizedTypes} or “generics”. So in
+\begin{lstlisting}
+public interface Function<T,R> { … }
+\end{lstlisting}
+\verb#T# and \verb#R# are the type arguments.
+
+It is commom practice to name a single type argument as \lstinline|T|. If there are more than one type arguments, the name \lstinline|R| is usually used for the return type. Also often used are \lstinline|V| as the name for a value type and \lstinline|K| for the name of the type for a key, \lstinline|E| as the name for the type of an entry to a list or set or for an exception type.
+
+Aside that, no further rules exist. Even more than one character is possible for the name of a type argument: 
+\begin{lstlisting}
+public interface Map<Key,Value> { … }
+\end{lstlisting}
+is absolutely valid, although not common.
+
+Even numbers as part of the name are possible and sometimes helpful:
+\begin{lstlisting}
+// OK
+public interface Operation<T,U,V,R> { … }
+
+// BETTER in this case
+public interface Operation<T1,T2,T3,R> { … }
+\end{lstlisting}
+ 
+
+But because the type arguments denotes classes, their names have to start with a capital letter.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================

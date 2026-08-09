@@ -1,0 +1,51 @@
+\section{Names for \bsq{enum} Values}\label{sec:EnumValues}
+When the \ccjpl had been written in 1999, enums did not yet exist in the programming language. But because \lstinline|enum| values are seen as special cases of constants\index{constant}, the usual assumption is that their names have to follow the same rules as for regular constants\index{field!constant}: the name should be all uppercase with words separated by underscores~(``\verb#_#'').
+
+Basically, this works fine, but when using static imports, name clashes can occur for common terms that can be used in different contexts. So it makes sense to add a prefix to the name of an \lstinline|enum| value\index{enum}, similar to what we did with the categories or groups for regular constants\index{field!constant} (see \hyperref[sec:Constants]{above}). This may look like this:
+\keeplisting{12}
+\begin{lstlisting}
+enum Direction
+{
+    DIR_LEFT,
+    DIR_RIGHT;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_CENTER,
+    ALIGN_LEFT,
+    ALIGN_RIGHT;
+}   //  enum Alignment
+\end{lstlisting}
+where \lstinline|DIR_| and \lstinline|ALIGN_| as the respective prefixes, differentiating the \verb#LEFT# for the direction from that from the alignment.
+
+Using the prefix would allow now to use the values with static imports of their classes; otherwise, they have to be used with their class names as prefix.
+
+\keeplisting{12}
+Alternatively, you can use this:
+\begin{lstlisting}
+enum Direction
+{
+    DIR_Left,
+    DIR_Right;
+}   //  enum Direction
+
+enum Alignment
+{
+    ALIGN_Center,
+    ALIGN_Left,
+    ALIGN_Right;
+}   //  enum Alignment
+\end{lstlisting}
+Again the \textit{CamelCased} suffix is the \bdq{name} itself, while the \bsq{proper} typed prefix is just the category. This is the recommended approach if the suffix consists of multiple words that otherwise require additional underscores.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{The names of \lstinline|enum| values\index{enum} are all uppercase, with underscores (\verb#_#) as separators between words.}
+	
+	\item{Alternatively, \lstinline|enum| values\index{enum} can be named using a regular name (all uppercase~…) followed by an underscore as prefix, and the name in CamelCase.}
+\end{enumerate}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

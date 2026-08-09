@@ -96,6 +96,8 @@ static
 In case you have a constant value (a magic number\index{magic number}, a message string or alike) that should not be public for some reason, you can name that either as a regular field (with the ``\verb#m_#'' prefix) or as a regular constant as described above. For a local constant\index{constant!local} (a local variable as an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants. 
 
 Sometimes you may have classes, groups, families or categories of constants (e.g. the tags in an XML document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants. For the column names of the table \verb#PERSON#, the constants may be defined as shown in this example:
+\keeplisting{4}
+\index{java.lang!String}
 \begin{lstlisting}
 public final static String PERSON_COL_FirstName = "first_name";
 public final static String PERSON_COL_LastName = "last_name";

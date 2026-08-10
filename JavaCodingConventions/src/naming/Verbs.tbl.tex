@@ -17,42 +17,114 @@
     \multicolumn{2}{r}{\textit{Continued on next page}} \\
     \endfoot
     \endlastfoot
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|} & This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by the given argument.\newline Usually, the return value is some kind of handle that has to be released later, by a call to a ‘release’ method. \\
-    \hline
+\makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|} & This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by a given argument.
+    
+Usually, the return value (if any) is some kind of handle that has to be released later, by a call to a \bsq{release} method.
 
-    \makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.\newline Usually, an ‘add’-method would not return something. \\
-    \hline
+\index{java.util.concurrent!Semaphore}\index{java.util.concurrent!Semaphore!acquire()}\index{java.util.concurrent!Semaphore!release()}
+\begin{lstlisting}[xleftmargin=.7cm]
+private final Semaphore m_Semaphore = new Semaphore( 5 );
+…
+m_Semaphore.acquire();
+try
+{
+    // Do something here …
+}
+finally
+{
+    m_Semaphore.release();
+}
+\end{lstlisting}
+For more details about the class \lstinline|Semaphore| from the package \lstinline|java.util.concurrent| refer to \autocite{ORACLE_DOC_SEMAPHORE_CLASS,ORACLE_DOC_SEMAPHORE:aquire,ORACLE_DOC_SEMAPHORE:release}. \\
+\hline
 
-    \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name ‘append’ for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).\newline A sample for this is \lstinline|java.lang.StringBuffer.append()|. \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|build()|} & The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object. \\
-    \hline
+\makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.
+    
+Usually, an \bsq{add}method would not return something, but that is not mandatory.
 
-    \makecell{\lstinline|call()|} & This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface) and should usually only used in this or a similar context.\newline For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE} and \autocite{ORACLE_DOC_CALLABLE_INTERFACE}. \\
-    \hline
+Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{add} methods are already mentioned. \\
+\hline
 
-    \makecell{\lstinline|check()| \\ \lstinline|check( <arg> )| \\ \lstinline|check…()|} & Usually ‘to check’ is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in “CheckBox”). I do not recommend the latter usage (use ‘mark’ instead), and because of the chance to generally misinterpret the verb, I do not recommend to use it at all.\newline If used anyway, the respective method may not modify the object and it should return a boolean. \\
-    \hline
+%------------------------------------------------------------------------------
 
-   \makecell{\lstinline|clear()|} & A method with this name will empty or reset the owning object. \\
-    \hline
+\makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).
+    
+A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!StringBuffer!append()} \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}. \\
+\hline
 
-   \makecell{\lstinline|clone()|} & The method \lstinline|clone()| creates an identical copy of the owning object.\newline Refer to chapter \tqvref{sec:Clone} and to \autocite{ORACLE_DOC_OBJECT:clone} and \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}. \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|close()| \\ \lstinline|close…()|} & This name will be assigned to methods to close a connection to an external resource, like a file or device.\newline Refer to \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE} and \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} for details. \\
-    \hline
+\makecell{\lstinline|build()|} & The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object.
+    
+An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()}\autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
+\hline
 
-    \makecell{\lstinline|compose…( <arg> )| \\ \lstinline|compose…()|} & A ‘compose’ method will compose a new object or data structure from the internal state and the given arguments – if any. It will not modify the owning object itself, and each call with identical arguments (and on an unchanged object) will return the same value. Different from a ‘build’ method, a ‘compose’ method can be called more than once on the same object instance. \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|connect()| \\ \lstinline|connect( <arg> )| \\ \lstinline|connect…()| \\ \lstinline|connect…( <arg> )|} & A method with this name initialises the connection of the owning object to an external resource, like a device or a remote system. \\
-    \hline
+\makecell{\lstinline|call()|} & This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface)\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE} and should usually only used in this or a similar context.
 
-    \makecell{\lstinline|copy( <arg> )|} & A ‘copy’ method makes a copy of the given argument and returns it. If this is an identical copy (like through the invocation of \lstinline|clone()| or not depends from the implementation. \\
-    \hline
+For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|check()| \\ \lstinline|check( <arg> )| \\ \lstinline|check…()|} & Usually \bsq{to check} is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in \bdq{CheckBox}). I do not recommend the latter usage (use \bsq{mark} instead), and because of the chance to generally misinterpret the verb, I do not recommend to use \bsq{check} at all.
+
+If used anyway, the respective method may not modify the object, and it should return a boolean. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|clear()| \\ \lstinline|clear…()| \\ \lstinline|clear…( <arg> )|} & A method with this name will empty or reset the owning object, or it empties a collection that is part of the owning object. It could be used also to \textit{clear} the object indicated by the argument.
+
+Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{clear} methods are already mentioned. 
+
+Another sample is \lstinline|Collection::clear|\index{java.util!Collection!clear()} \autocite{ORACLE_DOC_COLLECTION:clear}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|clone()|} & The method \lstinline|clone()|\index{java.lang!Object!clone()}  \autocite{ORACLE_DOC_OBJECT:clone,ORACLE_DOC_CLONEABLE_INTERFACE} creates an identical copy of the owning object.
+
+Refer to chapter \tqfullvref{sec:Clone} for the details. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|close()| \\ \lstinline|close…()|} & Usually, this name will be assigned to methods that close an (external) resource, like a file, a connection or a device. \lstinline|close()|\index{java.lang!AutoCloseable!close()}\index{java.io!Closeable!close()} is the only method of the interfaces \lstinline|Closeable|\index{java.io!Closeable} \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} and \lstinline|AutoCloseable|\index{java.lang!AutoCloseable} \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}.
+
+The latter interface is important for \verb#try-with-resources#\index{try-with-resources} and therefore sometimes the method \lstinline|close()| is used to implement some special features; refer to \tqfullvref{sec:TryWithResources}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|compile( <arg> )| \\ \lstinline|compile…( <arg> )|} & A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. A sample is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|compose…( <arg> )| \\ \lstinline|compose…()|} & A \bsq{compose} method will compose a new object or data structure from the internal state of the owning object and the given arguments – if any. It will not modify the owning object itself, and each call with identical arguments (and on an unchanged object) will return the same value.
+
+Other than a \bsq{build} method, a \bsq{compose} method can be called more than once on the same object instance. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|connect()| \\ \lstinline|connect( <arg> )| \\ \lstinline|connect…()| \\ \lstinline|connect…( <arg> )|} & A method with this name initialises a connection from the owning object to an external resource, like a device or a remote system. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|copy( <arg> )| \\ \lstinline|copyOf( <arg> )| \\ \lstinline|copy…( <arg> )|} & A \bsq{copy} method makes a semanticall copy of the given argument and returns it. If this is also an identical copy (like through the invocation of \lstinline|clone()|) or not depends from the implementation. 
+
+An example is \lstinline|List::copyOf|\index{java.util!List!copyOf()} \autocite{ORACLE_DOC_LIST:copyOf}, another example is \lstinline|Collections.copy(List,List)|\index{java.util!Collections!copy()} \autocite{ORACLE_DOC_COLLECTIONS:copy}. \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|create…( <arg> )| \\ \lstinline|create…()|} & This name indicates a method that creates something based on the given arguments, but different from the ‘compose’ method, each call can have a different result, even for identical arguments.\newline A ‘create’ method usually returns created entity as the result. \\
     \hline
@@ -61,7 +133,7 @@
     \hline
 
     \makecell{\lstinline|execute()| \\ \lstinline|execute( <arg> )|} & This is the name for a method that does the program's or application's work. Usually the arguments are the command line arguments for the program, although this is not mandatory.\newline This is used in pattern similar this:
-\begin{lstlisting}[xleftmargin=.7cm,numbers=left]
+\begin{lstlisting}[xleftmargin=.7cm]
 public final class MyProgram
 {
     public final void execute( final String [] args ) { … }
@@ -74,7 +146,7 @@ public final class MyProgram
 }
 //  class MyProgram
 \end{lstlisting}
-    Obviously, the method \lstinline|initialize()| is optional, put if available, only this may take the command line arguments instead of lstinline|execute()|, too.\newline This allows to use an application/program class also in the context of another program/application. \\
+    Obviously, the method \lstinline|initialize()| is optional, put if available, only this may take the command line arguments instead of \lstinline|execute()|, too.\newline This allows to use an application/program class also in the context of another program/application. \\
     \hline
 
     \makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix ‘exec’ to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.\newline Nothing is said about the state of the owning object, any return values or the state of the arguments. \\

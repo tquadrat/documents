@@ -7078,37 +7078,37 @@ If your class is not \lstinline|final|, the method \lstinline|toString()|\index{
 
 %------------------------------------------------------------------------------
 
-\subsection{\lstinline|clone()|}\label{sec:Clone}
-The JavaDoc for \lstinline|java.lang.Object::clone|\autocite{ORACLE_DOC_OBJECT:clone}\index{java.lang!Object!clone()} says:
+\subsection{The Method \bsq{clone()}}\label{sec:Clone}
+The Javadoc for \lstinline|java.lang.Object::clone|\index{java.lang!Object!clone()} \autocite{ORACLE_DOC_OBJECT:clone} says:
 
 \begin{quote}
-“Creates and returns a copy of this object. The precise meaning of ‘copy’ may depend on the class of the object. The general intent is that, for any object \lstinline|x|, the expression:
+``Creates and returns a copy of this object. The precise meaning of \bsq{copy} may depend on the class of the object. The general intent is that, for any object \lstinline|x|, the expression:
 \begin{lstlisting}
 x.clone() != x
 \end{lstlisting}
 
-will be \lstinline|true|, and that the expression:
+will be true, and that the expression:
 \begin{lstlisting}
 x.clone().getClass() == x.getClass()
 \end{lstlisting}
 
-will be \lstinline|true|, but these are not absolute requirements. While it is typically the case that:
+will be also true, but these are not absolute requirements. While it is typically the case that:
 \begin{lstlisting}
 x.clone().equals(x)
 \end{lstlisting}
-will be \lstinline|true|, this is not an absolute requirement.
+will be true, this is not an absolute requirement.
 
 By convention, the returned object should be obtained by calling \lstinline|super::clone|. If a class and all of its superclasses (except \lstinline|java.lang.Object|\index{java.lang!Object}) obey this convention, it will be the case that 
 \begin{lstlisting}
 x.clone().getClass() == x.getClass()
 \end{lstlisting}
 
-is \lstinline|true|.
+is true.
 
-By convention, the object returned by this method should be independent of this object (which is being cloned). To achieve this independence, it may be necessary to modify one or more fields of the object returned by \lstinline|super::clone| before returning it. Typically, this means copying any mutable objects that comprise the internal ‘deep structure’ of the object being cloned and replacing the references to these objects with references to the copies. If a class contains only primitive fields or references to immutable objects\index{immutable type}, then it is usually the case that no fields in the object returned by \lstinline|super::clone| need to be modified.”
+By convention, the object returned by this method should be independent of this object (which is being cloned). To achieve this independence, it may be necessary to modify one or more fields of the object returned by \lstinline|super::clone| before returning it. Typically, this means copying any mutable objects that comprise the internal \bsq{deep structure} of the object being cloned and replacing the references to these objects with references to the copies. If a class contains only primitive fields or references to immutable objects\index{immutable type}, then it is usually the case that no fields in the object returned by \lstinline|super::clone| need to be modified.''
 \end{quote}
 
-When instances of your class should be cloneable, it first has to implement the interface \lstinline|java.lang.Cloneable|\autocite{ORACLE_DOC_CLONEABLE_INTERFACE}\index{java.lang!Cloneable}, and then you need to override the method \lstinline|clone()|\index{java.lang!Object!clone()}; usually, this method is \lstinline|protected| and it declares to throw a \lstinline|java.lang.CloneNotSupportedException|\autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}\index{java.lang!CloneNotSupportedException}. The default implementation does nothing else that throwing that exception when called.
+When instances of your class should be cloneable, it first has to implement the interface \lstinline|java.lang.Cloneable|\index{java.lang!Cloneable} \autocite{ORACLE_DOC_CLONEABLE_INTERFACE}, and then you need to override the method \lstinline|clone()|\index{java.lang!Object!clone()}; usually, this method is protected and it declares to throw a \lstinline|java.lang.CloneNotSupportedException|\index{java.lang!CloneNotSupportedException} \autocite{ORACLE_DOC_CLONENOTSUPPORTEDEXCEPTION_CLASS}. The default implementation does nothing else that throwing that exception when called.
 
 A simple implementation may look like this:
 \index{java.lang!Override}\index{java.lang!Cloneable}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}

@@ -19,9 +19,10 @@
     \endlastfoot
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|} & This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by a given argument.
+\makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|\pslabel{verb:acquire}} & 
+This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by a given argument.
     
-Usually, the return value (if any) is some kind of handle that has to be released later, by a call to a \bsq{release} method.
+Usually, the return value (if any) is some kind of handle that has to be released later, by a call to a \hyperref[verb:release]{\bsq{release}} method.
 
 \index{java.util.concurrent!Semaphore}\index{java.util.concurrent!Semaphore!acquire()}\index{java.util.concurrent!Semaphore!release()}
 \begin{lstlisting}[xleftmargin=.7cm]
@@ -42,44 +43,50 @@ For more details about the class \lstinline|Semaphore| from the package \lstinli
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|} & A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.
+\makecell{\lstinline|add…( <arg> )| \\ \lstinline|add( <arg> )|\pslabel{verb:add}} & 
+A method with this name will add the given argument value to an internal list in the object, keeping the argument as it is, so that it could be retrieved again later.
     
-Usually, an \bsq{add}method would not return something, but that is not mandatory.
+Usually, an \bsq{add} method would not return something, but that is not mandatory.
 
 Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{add} methods are already mentioned. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|} & The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).
+\makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|\pslabel{verb:append}} & 
+The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).
     
 A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!StringBuffer!append()} \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|build()|} & The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object.
+\makecell{\lstinline|build()|\pslabel{verb:build}} & 
+The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object.
     
 An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()}\autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|call()|} & This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface)\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE} and should usually only used in this or a similar context.
+\makecell{\lstinline|call()|\pslabel{verb:call}} & 
+This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface)\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE} and should usually only used in this or a similar context.
 
 For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|check()| \\ \lstinline|check( <arg> )| \\ \lstinline|check…()|} & Usually \bsq{to check} is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in \bdq{CheckBox}). I do not recommend the latter usage (use \bsq{mark} instead), and because of the chance to generally misinterpret the verb, I do not recommend to use \bsq{check} at all.
+\makecell{\lstinline|check()| \\ \lstinline|check( <arg> )| \\ \lstinline|check…()|\pslabel{verb:check}} & 
+Usually \bdq{to check} is understood as testing for a given condition, but sometimes it is also used if an object should be marked (as used in \bdq{CheckBox}). I do not recommend the latter usage (use \hyperref[verb:mark]{\bsq{mark}} instead), and because of the chance to generally misinterpret the verb, I do not recommend to use \bsq{check} at all.
 
 If used anyway, the respective method may not modify the object, and it should return a boolean. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|clear()| \\ \lstinline|clear…()| \\ \lstinline|clear…( <arg> )|} & A method with this name will empty or reset the owning object, or it empties a collection that is part of the owning object. It could be used also to \textit{clear} the object indicated by the argument.
+\makecell{\lstinline|clear()| \\ \lstinline|clear…()| \\ \lstinline|clear…( <arg> )|\pslabel{verb:clear}} & 
+A method with this name will empty or reset the owning object, or it empties a collection that is part of the owning object. It could be used also to \textit{clear} the object indicated by the argument.
 
 Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{clear} methods are already mentioned. 
 
@@ -88,61 +95,70 @@ Another sample is \lstinline|Collection::clear|\index{java.util!Collection!clear
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|clone()|} & The method \lstinline|clone()|\index{java.lang!Object!clone()}  \autocite{ORACLE_DOC_OBJECT:clone,ORACLE_DOC_CLONEABLE_INTERFACE} creates an identical copy of the owning object.
+\makecell{\lstinline|clone()|\pslabel{verb:clone}} & 
+The method \lstinline|clone()|\index{java.lang!Object!clone()}  \autocite{ORACLE_DOC_OBJECT:clone,ORACLE_DOC_CLONEABLE_INTERFACE} creates an identical copy of the owning object.
 
 Refer to chapter \tqfullvref{sec:Clone} for the details. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|close()| \\ \lstinline|close…()|} & Usually, this name will be assigned to methods that close an (external) resource, like a file, a connection or a device. \lstinline|close()|\index{java.lang!AutoCloseable!close()}\index{java.io!Closeable!close()} is the only method of the interfaces \lstinline|Closeable|\index{java.io!Closeable} \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} and \lstinline|AutoCloseable|\index{java.lang!AutoCloseable} \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}.
+\makecell{\lstinline|close()| \\ \lstinline|close…()|\pslabel{verb:close}} & 
+Usually, this name will be assigned to methods that close an (external) resource, like a file, a connection or a device. \lstinline|close()|\index{java.lang!AutoCloseable!close()}\index{java.io!Closeable!close()} is the only method of the interfaces \lstinline|Closeable|\index{java.io!Closeable} \autocite{ORACLE_DOC_CLOSEABLE_INTERFACE} and \lstinline|AutoCloseable|\index{java.lang!AutoCloseable} \autocite{ORACLE_DOC_AUTOCLOSEABLE_INTERFACE}.
 
 The latter interface is important for \verb#try-with-resources#\index{try-with-resources} and therefore sometimes the method \lstinline|close()| is used to implement some special features; refer to \tqfullvref{sec:TryWithResources}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|compile( <arg> )| \\ \lstinline|compile…( <arg> )|} & A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. A sample is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
+\makecell{\lstinline|compile( <arg> )| \\ \lstinline|compile…( <arg> )|\pslabel{verb:compile}} & 
+A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. A sample is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|compose…( <arg> )| \\ \lstinline|compose…()|} & A \bsq{compose} method will compose a new object or data structure from the internal state of the owning object and the given arguments – if any. It will not modify the owning object itself, and each call with identical arguments (and on an unchanged object) will return the same value.
+\makecell{\lstinline|compose…( <arg> )| \\ \lstinline|compose…()|\pslabel{verb:compose}} & 
+A \bsq{compose} method will compose a new object or data structure from the internal state of the owning object and the given arguments – if any. It will not modify the owning object itself, and each call with identical arguments (and on an unchanged object) will return the same value.
 
-Other than a \bsq{build} method, a \bsq{compose} method can be called more than once on the same object instance. \\
+Other than a \hyperref[verb:build]{\bsq{build}} method, a \bsq{compose} method can be called more than once on the same object instance. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|connect()| \\ \lstinline|connect( <arg> )| \\ \lstinline|connect…()| \\ \lstinline|connect…( <arg> )|} & A method with this name initialises a connection from the owning object to an external resource, like a device or a remote system. \\
+\makecell{\lstinline|connect()| \\ \lstinline|connect( <arg> )| \\ \lstinline|connect…()| \\ \lstinline|connect…( <arg> )|\pslabel{verb:connect}} & 
+A method with this name initialises a connection from the owning object to an external resource, like a device or a remote system. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|copy( <arg> )| \\ \lstinline|copyOf( <arg> )| \\ \lstinline|copy…( <arg> )|} & A \bsq{copy} method makes a semanticall copy of the given argument and returns it. If this is also an identical copy (like through the invocation of \lstinline|clone()|) or not depends from the implementation. 
+\makecell{\lstinline|copy( <arg> )| \\ \lstinline|copyOf( <arg> )| \\ \lstinline|copy…( <arg> )|\pslabel{verb:copy}} & 
+A \bsq{copy} method makes a semanticall copy of the given argument and returns it. If this is also an identical copy (like through the invocation of \hyperref[verb:clone]{\lstinline|clone()|}\index{java.lang!Object!clone()}) or not depends from the implementation. 
 
 One example is \lstinline|List::copyOf|\index{java.util!List!copyOf()} \autocite{ORACLE_DOC_LIST:copyOf}, another example is \lstinline|Collections.copy(List,List)|\index{java.util!Collections!copy()} \autocite{ORACLE_DOC_COLLECTIONS:copy}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|create…( <arg> )| \\ \lstinline|create…()|} & This name indicates a method that creates something based on the given arguments and/or on the state of the owning object, but different from the \bsq{compose} method, each call can have a different result, even for identical arguments.
+\makecell{\lstinline|create…( <arg> )| \\ \lstinline|create…()|\pslabel{verb:create}} & 
+This name indicates a method that creates something based on the given arguments and/or on the state of the owning object, but different from the \hyperref[verb:compose]{\bsq{compose}} method, each call can have a different result, even for identical arguments.
 
 A \bsq{create} method usually returns the created entity as the result. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|delete()| \\ \lstinline|delete( <arg> )| \\ \lstinline|delete…()| \\ \lstinline|delete…( <arg> )|} & A method with the name \bsq{delete} deletes an external entity (in most cases, a file or folder), either identified by the state of the owning object or by the given arguments.
+\makecell{\lstinline|delete()| \\ \lstinline|delete( <arg> )| \\ \lstinline|delete…()| \\ \lstinline|delete…( <arg> )|\pslabel{verb:delete}} & 
+A method with the name \bsq{delete} deletes an external entity (in most cases, a file or folder), either identified by the state of the owning object or by the given arguments.
 
-An example is \lstinline|java.io.File::delete|\index{java.io!File!delete()} \autocite{ORACLE_DOC_FILE:delete} that removes the file that is associated with the respective instance of \lstinline|java.io.File|\index{java.io!File} \autocite{ORACLE_DOC_FILE_CLASS}. 
+An example is \lstinline|java.io.File.delete()|\index{java.io!File!delete()} \autocite{ORACLE_DOC_FILE:delete} that removes the file that is associated with the respective instance of \lstinline|java.io.File|\index{java.io!File} \autocite{ORACLE_DOC_FILE_CLASS}. 
 
 Another example is \lstinline|java.nio.file.Files::delete|\index{java.nio.file!Files!delete()} \autocite{ORACLE_DOC_FILES:delete} that deletes the file that is specified by the given \lstinline|Path|\index{java.nio.file.Path} \autocite{ORACLE_DOC_PATH_INTERFACE} argument. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|execute()| \\ \lstinline|execute( <arg> )|} & This is the name for a method that does the program's or application's work. The arguments are usually the command line arguments for the program, although this is not mandatory.
+\makecell{\lstinline|execute()| \\ \lstinline|execute( <arg> )|\pslabel{verb:execute}} & 
+This is the name for a method that does the program's or application's work. The arguments are usually the command line arguments for the program, although this is not mandatory.
 
 This is used in a pattern similar to this:
 \begin{lstlisting}[xleftmargin=.7cm]
@@ -159,19 +175,20 @@ public final class MyProgram
 //  class MyProgram
 \end{lstlisting}
 
-The method \lstinline|initialize()| is optional, but if available, it takes the command line arguments instead of \lstinline|execute()|. \lstinline|execute()| may take arguments that where generated by \lstinline|initialize()|. If the method is public, this would allow to use the respective class not only as a standalone program, but also in the context of another program/application. \\
+The method \hyperref[verb:initialize]{\lstinline|initialize()|} is optional, but if available, it takes the command line arguments instead of \lstinline|execute()|. \lstinline|execute()| may take arguments that where generated by \lstinline|initialize()|. If the method is public, this would allow to use the respective class not only as a standalone program, but also in the context of another program/application. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|} & Use the prefix \bsq{exec} to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.
+\makecell{\lstinline|exec…()| \\ \lstinline|exec…( <arg> )|\pslabel{verb:exec}} & 
+Use the prefix \bsq{exec} to name methods the will execute an operation, identified by the main part of the name. The arguments are parameters for this operation.
 
 Nothing is said about the state of the owning object, any return values or the state of the arguments. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|} & A \bsq{find} method searches something that is expected to be there (different from a \bsq{search} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
+\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|\pslabel{verb:find}} & A \bsq{find} method searches something that is expected to be there (different from a \hyperref[verb:search]{\bsq{search}} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
 
 The arguments are parameters for the search, although it is possible that the state of the owning object determines the search.
 
@@ -180,7 +197,8 @@ The method may or may not change the state of the owning object. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )| \\ \lstinline|...From( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with \bsq{from} are (usually static) factory methods\index{method!factory method}\index{factory} that create an instance of the owning class from something, represented by the given argument.
+\makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )| \\ \lstinline|...From( <arg> )|\pslabel{verb:from}} & 
+Methods with the name \lstinline|from()| or a name prefixed with \bsq{from} are (usually static) factory methods\index{method!factory method}\index{factory} that create an instance of the owning class from something, represented by the given argument.
 
 A sample would be \lstinline|Instant.from()|\index{java.time!Instant!from()} \autocite{ORACLE_DOC_INSTANT:from}.
 
@@ -189,17 +207,59 @@ A sample would be \lstinline|Instant.from()|\index{java.time!Instant!from()} \au
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|} & A ‘generate’ method generates something based on the object state, with or without changing it. Each call to generate may have a different result, even for the same arguments – this distinguishes it from ‘compose’.\newline Different from a ‘create’ method, a ‘generate’ method may work on entities outside the program (a file, an image, a report,~…); this means it does not have a return value, or the return value is just the status of the generation process. \\
-    \hline
+\makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|\pslabel{verb:generate}} & 
+A \bsq{generate} method generates something based on the state of the owning object and the given arguments, with or without changing that state. Each call to a \bsq{generate} method may have a different result, even for the same arguments – this distinguishes it from \hyperref[verb:compose]{\bsq{compose}} methods.
 
-    \makecell{\lstinline|get…()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}, but it should never fail (meaning it should be avoided that a getter throws an exception). \\
-    \hline
+Different from a \hyperref[verb:create]{\bsq{create}} method, a \bsq{generate} method may work on entities outside the program, like a file, an image, a report, or alike. This means it does not necessarily have a return value, or the return value may just be the status of the generation process. \\
+\hline
 
-    \makecell{\lstinline|getInstance()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}, but it should never fail (meaning it should be avoided that a getter throws an exception). \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|} & A method with a name starting with \lstinline|has| checks whether the owning object ‘contains’ something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.\newline Calling the method may not change the state of the owning object. \\
-    \hline
+\makecell{\lstinline|get…()|\pslabel{verb:get}} & 
+The prefix \bsq{get} indicates a \textit{getter} method\index{method!getter method} if the respective method does not take any arguments. It does not change the state of the owning object.
+
+The remaining part of the method name is known as the \bsq{property name}\index{property}\footnote{refer to chapter \tqfullvref{sec:NamesOfProperties}} the getter\index{method!getter method} returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}
+
+For optional properties\index{property}, a getter\index{method!getter method} may return an instance of \lstinline|java.util.Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS}, but it should never fail (meaning it should be avoided that a getter throws an exception). \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|get…( <arg> )| \\ \lstinline|get( <arg> )|\pslabel{verb:get_Arg}} & 
+A \bsq{get} method that takes an argument is \textit{not} a getter method\index{method!getter method}; nevertheless, it should also not change the state of the owning object.
+
+Such a method returns something that is determined by the rest of the name and further specified by the arguments.
+
+An example for this kind of \bsq{get} is \lstinline|map.get()|\index{java.util!Map!get()} \autocite{ORACLE_DOC_MAP:get}, more can be found in \lstinline|ResultSet|\index{java.sql!ResultSet} \autocite{ORACLE_DOC_RESULTSET_INTERFACE}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|getInstance()|\pslabel{verb:getInstance}} & 
+The method \lstinline|public static <Type> getInstance()| is somehow special; it is not really a getter\index{method!getter method} although it has the prefix \bsq{get}.
+
+The method returns an instance of the class \lstinline|<Type>|; each invocation returns the same instance but never \lstinline|null|. It does not matter whether the first invocation creates that instance, or if it will exist previously. 
+
+If declared by an interface\index{interface} or an abstract class\index{class!abstract class}, it will be a factory method\index{factory}\index{method!factory method} for an object instance that implements that interface\index{interface} or abstract class\index{class!abstract class}. A factory that returns a new instance for each invocation should be named \hyperref[verb:makeInstance]{\lstinline|makeInstance()|}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|\pslabel{verb:has}} & 
+A method with a name starting with \bsq{has} checks whether the owning object \bdq{contains} something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.
+
+Calling the method may not change the state of the owning object. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|hasNext()|\pslabel{verb:hasNext}} & 
+The method \lstinline|hasNext|\index{java.util!Iterator!hasNext()} \autocite{ORACLE_DOC_ITERATOR:hasNext} is declared by the interface \lstinline|java.util.Iterator|\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE}. It checks whether the iterator can still provide at least one more value. 
+
+A method with that name in a class that does not implement \lstinline|Iterator|\index{java.util!Iterator} should do something similar. \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\
     \hline
@@ -230,7 +290,7 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
     \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & The prefix ‘make’ is similar to ‘create’,‘compose’, or ‘generate’, but usually a method with a name starting with ‘make’ produces something outside the program – like a file or a database (table). In this regard it is like ’generate’, but the process of ‘making’ is less complex as that of ‘generation’. \\
     \hline
 
-    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
+    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\label{verb:mark}} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
     \hline
 
     \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
@@ -267,7 +327,8 @@ that can be even used with \lstinline|try-with-resources|. \\
     \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
     \hline
 
-    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|} & A ‘release’ method provides the converse operation to an ‘acquire’ method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
+    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\phantomsection\label{verb:release}} & 
+A ‘release’ method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
     \hline
 
     \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\

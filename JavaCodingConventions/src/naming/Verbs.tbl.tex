@@ -171,22 +171,31 @@ Nothing is said about the state of the owning object, any return values or the s
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…()| \\ \lstinline|find…( <arg> )|} & A \bsq{find} method searches something that is expected to be there (different from a \bsq{search} method described below). The method returns the result or throws an appropriate exception when it fails, but it would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS}.
+\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|} & A \bsq{find} method searches something that is expected to be there (different from a \bsq{search} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
 
-The arguments are parameters for the search.
+The arguments are parameters for the search, although it is possible that the state of the owning object determines the search.
 
 The method may or may not change the state of the owning object. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with ‘from’ had been introduced with the \lstinline|java.time| API and Java~8. These are static factory methods that create an instance of the owning class based on the given argument (usually a String). \\
-    \hline
+\makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )| \\ \lstinline|...From( <arg> )|} & Methods with the name \lstinline|from()| or a name prefixed with \bsq{from} are (usually static) factory methods\index{method!factory method}\index{factory} that create an instance of the owning class from something, represented by the given argument.
+
+A sample would be \lstinline|Instant.from()|\index{java.time!Instant!from()} \autocite{ORACLE_DOC_INSTANT:from}.
+
+\bsq{From} can be found also a suffix for method names, as in \lstinline|Signature.parseFrom()|\index{java.lang.classfile!Signature!parseFrom()} \autocite{ORACLE_DOC_SIGNATURE:parseFrom}. \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|generate…()| \\ \lstinline|generate…( <arg> )| \\ \lstinline|generate()| \\ \lstinline|generate( <arg> )|} & A ‘generate’ method generates something based on the object state, with or without changing it. Each call to generate may have a different result, even for the same arguments – this distinguishes it from ‘compose’.\newline Different from a ‘create’ method, a ‘generate’ method may work on entities outside the program (a file, an image, a report,~…); this means it does not have a return value, or the return value is just the status of the generation process. \\
     \hline
 
     \makecell{\lstinline|get…()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}, but it should never fail (meaning it should be avoided that a getter throws an exception). \\
+    \hline
+
+    \makecell{\lstinline|getInstance()|} & The prefix \lstinline|get| indicates a \textit{getter} method; it does not take any arguments, and it does not change the state of the owning object.\newline The remaining part of the method name is known as the ‘property name’: the getter returns the value for that property (attribute). For more details, refer to \autocite{ORACLE_DOC_JAVABEANS:Chapter8_3}\footnote{Although the whole document \autocite{ORACLE_DOC_JAVABEANS} could be relevant here.}.\newline A special variant is the method \lstinline|public static <Type> getInstance()| method: it returns an instance of the class \lstinline|<Type>| – each invocation returns the same instance. It does not matter whether the first invocation creates that instance, or if it will exist previously.\newline For optional properties, a getter may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}, but it should never fail (meaning it should be avoided that a getter throws an exception). \\
     \hline
 
     \makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|} & A method with a name starting with \lstinline|has| checks whether the owning object ‘contains’ something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.\newline Calling the method may not change the state of the owning object. \\

@@ -290,7 +290,8 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
     \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & The prefix ‘make’ is similar to ‘create’,‘compose’, or ‘generate’, but usually a method with a name starting with ‘make’ produces something outside the program – like a file or a database (table). In this regard it is like ’generate’, but the process of ‘making’ is less complex as that of ‘generation’. \\
     \hline
 
-    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\label{verb:mark}} & A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
+    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\pslabel{verb:mark}} & 
+A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
     \hline
 
     \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
@@ -327,7 +328,7 @@ that can be even used with \lstinline|try-with-resources|. \\
     \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
     \hline
 
-    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\phantomsection\label{verb:release}} & 
+    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\pslabel{verb:release}} & 
 A ‘release’ method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
     \hline
 

@@ -19,6 +19,13 @@
     \endlastfoot
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|abort( <arg> )| \\ \lstinline|abort…()| \\ \lstinline|abort()|\pslabel{verb:abort}} & 
+A method \lstinline|abort()| or one with a name prefixed with \bsq{abort} ungracefully terminates something, most probably a thread or a process determined by the arguments, and usually as a result of an error condition of some kind. In case the method does not take an argument, either the remaining part of the name determines the subject, or the owning object represents that subject. 
+Also refer to \hyperref[verb:cancel]{\bsq{cancel}}, \hyperref[verb:exit]{\bsq{exit}},  \hyperref[verb:shutdown]{\bsq{shutdown}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|acquire( <arg> )| \\ \lstinline|acquire…()| \\ \lstinline|acquire…( <arg> )| \\ \lstinline|acquire()|\pslabel{verb:acquire}} & 
 This name or prefix for the name of a method is used for methods that requests an exclusive access to something, either the owning object (then usually there is no argument given) or the object that is identified by a given argument.
     
@@ -53,6 +60,18 @@ Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{add} meth
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|alert…( <arg> )| \\ \lstinline|alert( <arg> )|\pslabel{verb:alert}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|alter…( <arg> )| \\ \lstinline|alter( <arg> )|\pslabel{verb:alter}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|\pslabel{verb:append}} & 
 The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).
     
@@ -73,6 +92,18 @@ An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Str
 This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface)\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE} and should usually only used in this or a similar context.
 
 For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|cancel…( <arg> )| \\ \lstinline|cancel( <arg> )|\pslabel{verb:cancel}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|change…( <arg> )| \\ \lstinline|change( <arg> )|\pslabel{verb:change}} & 
+\lipsum[1] \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -111,6 +142,18 @@ The latter interface is important for \verb#try-with-resources#\index{try-with-r
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|compare…( <arg> )| \\ \lstinline|compare( <arg> )|\pslabel{verb:compare}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|compareTo…( <arg> )| \\ \lstinline|compareTo( <arg> )|\pslabel{verb:compareTo}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|compile( <arg> )| \\ \lstinline|compile…( <arg> )|\pslabel{verb:compile}} & 
 A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. A sample is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
 \hline
@@ -131,6 +174,12 @@ A method with this name initialises a connection from the owning object to an ex
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|convert( <arg> )| \\ \lstinline|convert…( <arg> )|\pslabel{verb:convert}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|copy( <arg> )| \\ \lstinline|copyOf( <arg> )| \\ \lstinline|copy…( <arg> )|\pslabel{verb:copy}} & 
 A \bsq{copy} method makes a semanticall copy of the given argument and returns it. If this is also an identical copy (like through the invocation of \hyperref[verb:clone]{\lstinline|clone()|}\index{java.lang!Object!clone()}) or not depends from the implementation. 
 
@@ -147,12 +196,24 @@ A \bsq{create} method usually returns the created entity as the result. \\
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|decrement…( <arg> )| \\ \lstinline|decrement( <arg> )|\pslabel{verb:decrement}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|delete()| \\ \lstinline|delete( <arg> )| \\ \lstinline|delete…()| \\ \lstinline|delete…( <arg> )|\pslabel{verb:delete}} & 
 A method with the name \bsq{delete} deletes an external entity (in most cases, a file or folder), either identified by the state of the owning object or by the given arguments.
 
 An example is \lstinline|java.io.File.delete()|\index{java.io!File!delete()} \autocite{ORACLE_DOC_FILE:delete} that removes the file that is associated with the respective instance of \lstinline|java.io.File|\index{java.io!File} \autocite{ORACLE_DOC_FILE_CLASS}. 
 
 Another example is \lstinline|java.nio.file.Files::delete|\index{java.nio.file!Files!delete()} \autocite{ORACLE_DOC_FILES:delete} that deletes the file that is specified by the given \lstinline|Path|\index{java.nio.file.Path} \autocite{ORACLE_DOC_PATH_INTERFACE} argument. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|draw…( <arg> )| \\ \lstinline|draw( <arg> )|\pslabel{verb:draw}} & 
+\lipsum[1] \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -188,11 +249,29 @@ Nothing is said about the state of the owning object, any return values or the s
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|exit( <arg> )| \\ \lstinline|exit()|\pslabel{verb:exit}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|filter…( <arg> )| \\ \lstinline|filter( <arg> )|\pslabel{verb:filter}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|\pslabel{verb:find}} & A \bsq{find} method searches something that is expected to be there (different from a \hyperref[verb:search]{\bsq{search}} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
 
 The arguments are parameters for the search, although it is possible that the state of the owning object determines the search.
 
 The method may or may not change the state of the owning object. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|format…( <arg> )| \\ \lstinline|format( <arg> )|\pslabel{verb:format}} & 
+\lipsum[1] \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -246,7 +325,7 @@ If declared by an interface\index{interface} or an abstract class\index{class!ab
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|has…()| \\ \lstinline|has( <arg> )| \\ \lstinline|has…( <arg> )|\pslabel{verb:has}} & 
-A method with a name starting with \bsq{has} checks whether the owning object \bdq{contains} something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.
+A method with a name starting with \bsq{has} is meant to check whether the owning object \bdq{contains} something, either identified by the rest of the name, or by the given argument. Samples could be \lstinline|hasChildren()| for a tree node object, or \lstinline|hasOrders()| for a customer record instance.
 
 Calling the method may not change the state of the owning object. \\
 \hline
@@ -264,8 +343,30 @@ A method with that name in a class that does not implement \lstinline|Iterator|\
     \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\
     \hline
 
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|increment…( <arg> )| \\ \lstinline|increment( <arg> )|\pslabel{verb:increment}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|insert…( <arg> )| \\ \lstinline|insert( <arg> )|\pslabel{verb:insert}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
     \makecell{\lstinline|is…()|} & This is the prefix for a \textit{getter} that returns a \lstinline|boolean|. Refer to \lstinline|get…|, above. \\
     \hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|join…( <arg> )| \\ \lstinline|join( <arg> )|\pslabel{verb:join}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|load()| \\ \lstinline|load( <arg> )|} & The method with the name \lstinline|load()| ‘loads’ the data for the owning object from somewhere (usually an external source) and initialises it with this data. The argument is usually the reference to the source.\newline The return type is either \lstinline|void|, or the method returns some kind of status for the load operation.\\
     \hline
@@ -294,6 +395,32 @@ Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
 A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
     \hline
 
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|map…( <arg> )| \\ \lstinline|map( <arg> )|\pslabel{verb:map}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|merge…( <arg> )| \\ \lstinline|merge( <arg> )|\pslabel{verb:merge}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|new…( <arg> )| \\ \lstinline|new( <arg> )|\pslabel{verb:new}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|newInstance( <arg> )| \\ \lstinline|newInstance( <arg> )|\pslabel{verb:newInstance}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
     \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
     \hline
 
@@ -310,14 +437,44 @@ public final File openLogFile( final File logFolder ) {…}
 that can be even used with \lstinline|try-with-resources|. \\
     \hline
 
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|paint…( <arg> )| \\ \lstinline|paint( <arg> )|\pslabel{verb:paint}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
     \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
     \hline
 
     \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\
     \hline
 
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|pop…( <arg> )| \\ \lstinline|pop( <arg> )|\pslabel{verb:pop}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|print…( <arg> )| \\ \lstinline|print( <arg> )|\pslabel{verb:print}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
     \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|} & This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\
     \hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|push…( <arg> )| \\ \lstinline|push( <arg> )|\pslabel{verb:push}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|} & ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP:put}. \\
     \hline
@@ -328,12 +485,34 @@ that can be even used with \lstinline|try-with-resources|. \\
     \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
     \hline
 
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|reduce…( <arg> )| \\ \lstinline|reduce( <arg> )|\pslabel{verb:reduce}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
     \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\pslabel{verb:release}} & 
 A ‘release’ method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
     \hline
 
     \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\
     \hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|repose…( <arg> )| \\ \lstinline|repose( <arg> )|\pslabel{verb:repose}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|reset…( <arg> )| \\ \lstinline|reset( <arg> )|\pslabel{verb:reset}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|} & A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\
     \hline
@@ -349,5 +528,61 @@ A ‘release’ method provides the converse operation to an \hyperref[verb:acqu
 
     \makecell{\lstinline|save…( <arg> )|} & A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\
     \hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|select…( <arg> )| \\ \lstinline|select( <arg> )|\pslabel{verb:select}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|shutdown…( <arg> )| \\ \lstinline|shutdown( <arg> )|\pslabel{verb:shutdown}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|sleep…( <arg> )| \\ \lstinline|sleep( <arg> )|\pslabel{verb:sleep}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|split…( <arg> )| \\ \lstinline|split( <arg> )|\pslabel{verb:split}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|switch…( <arg> )| \\ \lstinline|switch( <arg> )|\pslabel{verb:switch}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|terminate…( <arg> )| \\ \lstinline|terminate( <arg> )|\pslabel{verb:terminate}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|toggle…( <arg> )| \\ \lstinline|toggle( <arg> )|\pslabel{verb:toggle}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|update…( <arg> )| \\ \lstinline|update( <arg> )|\pslabel{verb:update}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|wait…( <arg> )| \\ \lstinline|wait( <arg> )|\pslabel{verb:wait}} & 
+\lipsum[1] \\
+\hline
+
+%------------------------------------------------------------------------------
 
 \end{longtable}

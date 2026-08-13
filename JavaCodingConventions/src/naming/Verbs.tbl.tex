@@ -289,7 +289,13 @@ Nothing is said about the state of the owning object, any return values or the s
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|exit( <arg> )|\pslabel{verb:exit}} & 
-\lipsum[1] \\
+The class \lstinline|System|\index{java.lang!System} \autocite{ORACLE_DOC_SYSTEM_CLASS} defines the method \lstinline|exit(int)|\index{java.lang!System!exit()} \autocite{ORACLE_DOC_SYSTEM:exit} that, when called, terminates the JVM. Depending on the type of product\footnote{refer to \tqfullvref{sec:TypesOfProducts}.} that your project delivers, this method is seen as evil, just bad or even useful.
+
+The method \lstinline|javafx.application.Platform.exit()|\index{javafx.application!Platform!exit()} \autocite{JavaFX_DOC_Platform:exit} has basically the same effect.
+
+You should avoid naming a method \lstinline|exit|, and you should even avoid to use exit as a prefix of a method name, just to avoid a misunderstanding.
+
+But naming a method \lstinline|exit()| that just does some housekeeping before it will call \lstinline|System::exit|\index{java.lang!System!exit()} is perfectly ok. \\
 \hline
 
 %------------------------------------------------------------------------------

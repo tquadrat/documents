@@ -43,7 +43,11 @@ Gray area candidates are \verb#awk#\index{awk} and also \verb#sed#\index{sed} (a
 %------------------------------------------------------------------------------
 
 \subsection{Standalone Application}\label{sec:StandaloneApplication}
-A standalone application\index{product type!standalone application} will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. Samples are text editors like jEdit\index{jEdit} \autocite{JEDIT}, an IDE\index{IDE}\index{integrated development environment|see {IDE}}, an application server\index{application server} like WebSphere\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} \autocite{IBM_WEBSPHERE} or a web container\index{web container} like Tomcat\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}} \autocite{APACHE_TOMCAT}.
+A standalone application\index{product type!standalone application} will run indefinitely (meaning until deliberately terminated by the user) and takes input continuously. It may have a (graphical) user interface\index{GUI}, or it will listen on the network, or even both.
+
+Applications with a GUI\index{GUI} are usually built on AWT\index{AWT} (refer to the package \lstinline|java.awt|\index{java.awt} \autocite{ORACLE_DOC_AWT_PACKAGE}, on Swing\index{Swing} (see package \lstinline|javax.swing|\index{javax.swing} \autocite{ORACLE_SWING_PACKAGE}, or on JavaFX\index{JavaFX} \autocite{JavaFX}. There are also several libraries that support text-based user interfaces\index{text-based user interface|see {TUI}} (TUI\index{TUI}) or even terminal-like user interfaces.
+
+Samples are text editors like jEdit\index{jEdit} \autocite{JEDIT}, an IDE\index{IDE}\index{integrated development environment|see {IDE}}, an application server\index{application server} like WebSphere\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} \autocite{IBM_WEBSPHERE} or a web container\index{web container} like Tomcat\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}} \autocite{APACHE_TOMCAT}.
 
 A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, \hyperref[sec:Tool]{above}, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache ActiveMQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes (all previously mentioned in \tqfullref{sec:FeatureLibrary}).
 

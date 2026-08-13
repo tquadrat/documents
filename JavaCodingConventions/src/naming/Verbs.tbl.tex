@@ -21,7 +21,7 @@
 
 \makecell{\lstinline|abort( <arg> )| \\ \lstinline|abort…()| \\ \lstinline|abort()|\pslabel{verb:abort}} & 
 A method \lstinline|abort()| or one with a name prefixed with \bsq{abort} ungracefully terminates something, most probably a thread or a process determined by the arguments, and usually as a result of an error condition of some kind. In case the method does not take an argument, either the remaining part of the name determines the subject, or the owning object represents that subject. 
-Also refer to \hyperref[verb:cancel]{\bsq{cancel}}, \hyperref[verb:exit]{\bsq{exit}},  \hyperref[verb:shutdown]{\bsq{shutdown}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
+Also refer to \hyperref[verb:cancel]{\bsq{cancel}}, \hyperref[verb:exit]{\bsq{exit}}, \hyperref[verb:shutdown]{\bsq{shutdown}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -61,19 +61,21 @@ Refer to chapter \tqfullref{sec:NamesForCollectionMutators} where \bsq{add} meth
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|alert…( <arg> )| \\ \lstinline|alert( <arg> )|\pslabel{verb:alert}} & 
-\lipsum[1] \\
+\bsq{Alert} methods will send a message about an irregular condition to somewhere. This could be an internal monitoring facility or a human administrator that receives an email. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|alter…( <arg> )| \\ \lstinline|alter( <arg> )|\pslabel{verb:alter}} & 
-\lipsum[1] \\
+A method with a name prefixed by \bsq{alter} modifies something (a picture, a file, a document), but usually not the owning object. But the state the owning object determines the kind of change that is performed to the subject defined by the arguments. 
+
+This is somehow related to \hyperref[verb:change]{\bsq{change}}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|\pslabel{verb:append}} & 
-The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder, so usually the method returns the owning object itself (\lstinline|this|).
+The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder implementation, so usually the method returns the owning object itself (\lstinline|this|).
     
 A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!StringBuffer!append()} \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}. \\
 \hline
@@ -83,7 +85,7 @@ A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!
 \makecell{\lstinline|build()|\pslabel{verb:build}} & 
 The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object.
     
-An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()}\autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
+An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()} \autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -96,14 +98,22 @@ For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|cancel…( <arg> )| \\ \lstinline|cancel( <arg> )|\pslabel{verb:cancel}} & 
-\lipsum[1] \\
+\makecell{\lstinline|cancel()| \\ \lstinline|cancel…()| \\ \lstinline|cancel…( <arg> )| \\ \lstinline|cancel( <arg> )|\pslabel{verb:cancel}} & 
+A \bsq{cancel} method is used to terminate a process or operation prematurely, but not necessary because of an error condition (this would be a \hyperref[verb:abort]{\bsq{abort}} method).
+
+The respective operation is either determined by the arguments, or it is represented by the owning object.
+
+\bsq{Cancel} is also often used in the context of user interfaces.  
+
+Also refer to \hyperref[verb:exit]{\bsq{exit}}, \hyperref[verb:shutdown]{\bsq{shutdown}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|change…( <arg> )| \\ \lstinline|change( <arg> )|\pslabel{verb:change}} & 
-\lipsum[1] \\
+A \bsq{change} method implies a non-permanent modification to something. This distinguishes it from an \hyperref[verb:alter]{\bsq{alter}} method. 
+
+The subject for the change is usually determined by the arguments, but it could be also the owning object. If given, the remainder of method's name tells the kind of change. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -142,14 +152,27 @@ The latter interface is important for \verb#try-with-resources#\index{try-with-r
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|compare…( <arg> )| \\ \lstinline|compare( <arg> )|\pslabel{verb:compare}} & 
-\lipsum[1] \\
+\makecell{\lstinline|compare( <arg> )| \\ \lstinline|compare…( <arg> )|\pslabel{verb:compare}} & 
+The method \lstinline|compare()|\index{java.util!Comparator!compare()}  \autocite{ORACLE_DOC_COMPARATOR:compare} is declared by the interface\index{interface} \lstinline|java.util.Comparator|\index{java.util!Comparator} \autocite{ORACLE_DOC_COMPARATOR_INTERFACE}. An implementation of that method compares the given arguments with each other and returns the result as an integer.
+
+Any \bsq{compare} method should be implemented along the lines provided by the documentation for \lstinline|java.util.Comparator.compare()|\index{java.util!Comparator!compare()}, even when the owning class does not implement the interface \lstinline|Comparator|\index{java.util!Comparator}.
+
+See also \hyperref[verb:compareTo]{\bsq{compareTo}}, \hyperref[verb:compareTo]{below}. 
+
+The lambda below illustrates how the interfaces \lstinline|Comparator|\index{java.util!Comparator} and \lstinline|Comparable|\index{java.lang!Comparable} are related to each other:
+\index{java.lang!Integer!signum()}
+\begin{lstlisting}[xleftmargin=.7cm]
+final Comparator<Comparable> comparator = (o1,o2) -> Integer.signum( o1.compareTo( o2 ) );
+\end{lstlisting}
+\\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|compareTo…( <arg> )| \\ \lstinline|compareTo( <arg> )|\pslabel{verb:compareTo}} & 
-\lipsum[1] \\
+\makecell{\lstinline|compareTo( <arg> )|\pslabel{verb:compareTo}} & 
+The method \lstinline|compareTo()|\index{java.lang!Comparable!compareTo()} \autocite{ORACLE_DOC_COMPARABALE:compareTo} is the only method of the interface \lstinline|java.lang.Comparable|\index{java.lang!Comparable} \autocite{ORACLE_DOC_COMPARABALE_INTERFACE}. It compares the owning object with the object provided as the argument and returns the result as an integer, same as a \hyperref[verb:compare]{\bsq{compare}} method. 
+
+You should use the name \lstinline|compareTo()| only for methods that are implementations of the interface \lstinline|Comparable|\index{java.lang!Comparable}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -174,8 +197,10 @@ A method with this name initialises a connection from the owning object to an ex
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|convert( <arg> )| \\ \lstinline|convert…( <arg> )|\pslabel{verb:convert}} & 
-\lipsum[1] \\
+\makecell{\lstinline|convert…()| \\ \lstinline|convert…( <arg> )| \\ \lstinline|convert( <arg> )|\pslabel{verb:convert}} & 
+A convert method transforms something from one format into another. The details are determined by the arguments and the state of the owning object.
+
+The name is often supplemented by \bsq{from} or \bsq{to}, to indicate the source or target format, as in \lstinline|convertFromXML()| or \lstinline|convertToHTML()|. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -196,8 +221,10 @@ A \bsq{create} method usually returns the created entity as the result. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|decrement…( <arg> )| \\ \lstinline|decrement( <arg> )|\pslabel{verb:decrement}} & 
-\lipsum[1] \\
+\makecell{\lstinline|decrement…()| \\ \lstinline|decrement()|\pslabel{verb:decrement}} & 
+A method with the name \lstinline|decrement()| reduces the value of the owning object by 1. If \bsq{decrement} is used as prefix to the name, the name indicates the object property whose value is reduced by 1.
+
+The converse operation is named \hyperref[verb:increment]{\bsq{increment}}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -213,7 +240,19 @@ Another example is \lstinline|java.nio.file.Files::delete|\index{java.nio.file!F
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|draw…( <arg> )| \\ \lstinline|draw( <arg> )|\pslabel{verb:draw}} & 
-\lipsum[1] \\
+The prefixes \bsq{draw} and \hyperref[verb:paint]{\bsq{paint}} are typically found for method names related to elements of graphical user interfaces\index{graphical user interface|see {GUI}} (GUI\index{GUI}).
+
+Both are part of the names for methods that will visualise GUI\index{GUI} elements on screen; the difference is that the \bsq{draw} methods are usually associated with the container and take the element to draw as the argument, while the \bsq{paint} methods are associated with the element and take the container where to paint that element. 
+
+Examples are 
+\begin{itemize}[nosep]
+\item{\lstinline|java.awt.Graphics2D::draw|\index{java.awt!Graphics2D!draw()} \autocite{ORACLE_DOC_GRAPHICS2D:draw}}
+\item{\lstinline|javax.swing.text.PlainView::drawLine|\index{javax.swing.text!PlainView!drawLine} \autocite{ORACLE_DOC_PLAINVIEW:drawLine}}
+\item{\lstinline|javax.scene.canvas.GraphicsContext::drawImage|\index{javafx.scene.canvas!GraphicsContext!drawImage()} \autocite{JavaFX_DOC_GraphicsContext:drawImage}}
+\item{\lstinline|java.awt.Window::paint|\index{java.awt!Window!paint()} \autocite{ORACLE_DOC_WINDOW:paint}}
+\item{\lstinline|javax.swing.JComponent:paint|\index{javax.swing!JComponent!paint()} \autocite{ORACLE_DOC_JCOMPONENT:paint}}
+\item{\lstinline|javafx.embed.swing.JFXPanel::paintComponent|\index{javax.embed.swing!JFXPanel!paintComponent()} \autocite{JavaFX_DOC_JFXPanel:paintComponent}}
+\end{itemize} \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -249,7 +288,7 @@ Nothing is said about the state of the owning object, any return values or the s
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|exit( <arg> )| \\ \lstinline|exit()|\pslabel{verb:exit}} & 
+\makecell{\lstinline|exit( <arg> )|\pslabel{verb:exit}} & 
 \lipsum[1] \\
 \hline
 
@@ -340,14 +379,16 @@ A method with that name in a class that does not implement \lstinline|Iterator|\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\
-    \hline
+\makecell{\lstinline|increment…( <arg> )| \\ \lstinline|increment( <arg> )|\pslabel{verb:increment}} & 
+A method with the name \lstinline|increment()| increases the value of the owning object by 1. If \bsq{increment} is used as prefix to the name, the name indicates the object property whose value is increased by 1.
+
+The converse operation is named \hyperref[verb:decrement]{\bsq{decrement}}. \\
+\hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|increment…( <arg> )| \\ \lstinline|increment( <arg> )|\pslabel{verb:increment}} & 
-\lipsum[1] \\
-\hline
+    \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\
+    \hline
 
 %------------------------------------------------------------------------------
 
@@ -440,7 +481,7 @@ that can be even used with \lstinline|try-with-resources|. \\
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|paint…( <arg> )| \\ \lstinline|paint( <arg> )|\pslabel{verb:paint}} & 
-\lipsum[1] \\
+Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 \hline
 
 %------------------------------------------------------------------------------

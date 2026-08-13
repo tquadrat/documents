@@ -293,7 +293,7 @@ The class \lstinline|System|\index{java.lang!System} \autocite{ORACLE_DOC_SYSTEM
 
 The method \lstinline|javafx.application.Platform.exit()|\index{javafx.application!Platform!exit()} \autocite{JavaFX_DOC_Platform:exit} has basically the same effect.
 
-You should avoid naming a method \lstinline|exit|, and you should even avoid to use exit as a prefix of a method name, just to avoid a misunderstanding.
+You should avoid naming a method \lstinline|exit()|, and you should even avoid to use \bsq{exit} as a prefix of a method name, just to avoid a misunderstanding.
 
 But naming a method \lstinline|exit()| that just does some housekeeping before it will call \lstinline|System::exit|\index{java.lang!System!exit()} is perfectly ok. \\
 \hline
@@ -301,12 +301,17 @@ But naming a method \lstinline|exit()| that just does some housekeeping before i
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|filter…( <arg> )| \\ \lstinline|filter( <arg> )|\pslabel{verb:filter}} & 
-\lipsum[1] \\
+A \bsq{filter} method will be applied on a collection and returns those that matches a filter condition. The collection or the filter condition or both are provided as arguments. 
+
+An example is the method \lstinline|Stream::filter|\index{java.util.stream!Stream!filter()} \autocite{ORACLE_DOC_STREAM:filter}. It works on an instance of \lstinline|java.util.stream.Stream|\index{java.util.stream!Stream} \autocite{ORACLE_DOC_STREAM_INTERFACE}, takes a \lstinline|Predicate|\index{java.util.function!Predicate} as the filter condition, and returns another \lstinline|Stream| with those values that fullfilled the condition. 
+
+Other \bsq{filter} methods should basically work along the same lines. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|\pslabel{verb:find}} & A \bsq{find} method searches something that is expected to be there (different from a \hyperref[verb:search]{\bsq{search}} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
+\makecell{\lstinline|find( <arg> )| \\ \lstinline|find…( <arg> )| \\ \lstinline|find…()|\pslabel{verb:find}} & 
+A \bsq{find} method searches something that is expected to be there (different from a \hyperref[verb:search]{\bsq{search}} method described below). The method returns the result, or it throws an appropriate exception when it fails. It would be also possible to return an instance of \lstinline|java.lang.Optional|\index{java.lang!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
 
 The arguments are parameters for the search, although it is possible that the state of the owning object determines the search.
 
@@ -364,7 +369,7 @@ The method \lstinline|public static <Type> getInstance()| is somehow special; it
 
 The method returns an instance of the class \lstinline|<Type>|; each invocation returns the same instance but never \lstinline|null|. It does not matter whether the first invocation creates that instance, or if it will exist previously. 
 
-If declared by an interface\index{interface} or an abstract class\index{class!abstract class}, it will be a factory method\index{factory}\index{method!factory method} for an object instance that implements that interface\index{interface} or abstract class\index{class!abstract class}. A factory that returns a new instance for each invocation should be named \hyperref[verb:makeInstance]{\lstinline|makeInstance()|}. \\
+If declared by an interface\index{interface} or an abstract class\index{class!abstract class}, it will be a factory method\index{factory}\index{method!factory method} for an object instance that implements that interface\index{interface} or abstract class\index{class!abstract class}. A factory that returns a new instance for each invocation should be named \hyperref[verb:newInstance]{\lstinline|newInstance()|}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -567,8 +572,17 @@ A ‘release’ method provides the converse operation to an \hyperref[verb:acqu
     \makecell{\lstinline|run()|} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE}, and as such it is also the main method of all threads except the main thread (there it is \lstinline|main()|). The name should not be used in a different context. Refer also to \autocite{ORACLE_DOC_RUNNABLE:run,ORACLE_DOC_THREAD:run}. \\
     \hline
 
-    \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|} & A ‘search’ method searches something, but it is a valid result that it does not find something (it will not throw an exception if nothing was found). That distinguishes it from a ‘find’ method as described above. The method returns an instance of \lstinline|java.lang.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.\newline The arguments are parameters for the search.\newline The method may or may not change the state of the owning object. \\
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|\pslabel{verb:search}} & 
+A \bsq{search} method searches something, but it is a valid result that it does not find something (it will never throw an exception if nothing was found). That distinguishes it from a \hyperref[verb:find]{\bsq{find}} method as described above. The method returns an instance of \lstinline|java.util.Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
+
+The arguments are parameters for the search.
+
+The method may or may not change the state of the owning object. \\
     \hline
+
+%------------------------------------------------------------------------------
 
     \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|} & A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is the status of the save operation.\newline The method may or may not change the state of the owning object. \\
     \hline

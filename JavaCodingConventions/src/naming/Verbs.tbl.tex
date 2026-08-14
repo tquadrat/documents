@@ -321,7 +321,7 @@ The method may or may not change the state of the owning object. \\
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|format…( <arg> )| \\ \lstinline|format( <arg> )|\pslabel{verb:format}} & 
-A \bsq{format} method prepares the representation of data. A wonderful example is the method \lstinline|format|\index{java.util!Formatter!format()} \autocite{ORACLE_DOC_FORMATTER:format} from the class \lstinline|java.util.Formatter|\index{java.util!Formatter} \autocite{ORACLE_DOC_FORMATTER_CLASS}, another one is \lstinline|format()|\index{java.time.format!DateTimeFormatter!format()} \autocite{ORACLE_DOC_DATETIMEFORMATTER:format} from class \lstinline|java.time.format.DateTimeFormatter|\index{java.time.format!DateTimeFormatter} \autocite{ORACLE_DOC_DATETIMEFORMATTER_CLASS}. \\
+A \bsq{format} method prepares the representation of data. A wonderful example is the method \lstinline|format|\index{java.util!Formatter!format()} \autocite{ORACLE_DOC_FORMATTER:format} from the class \lstinline|java.util.Formatter|\index{java.util!Formatter} \autocite{ORACLE_DOC_FORMATTER_CLASS} (the method \lstinline|String::format|\index{java.lang!String!format} \autocite{ORACLE_DOC_STRING:format} delegates to this), another one is \lstinline|format()|\index{java.time.format!DateTimeFormatter!format()} \autocite{ORACLE_DOC_DATETIMEFORMATTER:format} from class \lstinline|java.time.format.DateTimeFormatter|\index{java.time.format!DateTimeFormatter} \autocite{ORACLE_DOC_DATETIMEFORMATTER_CLASS}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -423,38 +423,65 @@ public static final boolean isWeekend( final DayOfWeek day ) { return day == Day
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|join…( <arg> )| \\ \lstinline|join( <arg> )|\pslabel{verb:join}} & 
-\lipsum[1] \\
+\makecell{\lstinline|join()| \\ \lstinline|join( <arg> )|\pslabel{verb:join}} & 
+The method \lstinline|Thread.join()|\index{java.lang!Thread!join()} \autocite{ORACLE_DOC_THREAD:join} pauses the calling thread (the current thread) until the thread, represented by the \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS} object that owns the methods, terminates, or, in case of the variant that takes an argument, a timeout occurs.
+
+If you implement a \bsq{join} method in one of your own classes, it should do something similar, to avoid confusion. 
+
+Unfortunately, the Java runtime library has several classes that implement a \bsq{join} method with different functionality. Most prominent is \lstinline|String::join|\index{java.lang!String!join()} \autocite{ORACLE_DOC_STRING:join} that is used to compose a single \lstinline|String|\index{java.lang!String} from a list of \lstinline|CharSequence|\index{java.lang!CharSequence} instances. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|load()| \\ \lstinline|load( <arg> )|} & The method with the name \lstinline|load()| ‘loads’ the data for the owning object from somewhere (usually an external source) and initialises it with this data. The argument is usually the reference to the source.\newline The return type is either \lstinline|void|, or the method returns some kind of status for the load operation.\\
-    \hline
+\makecell{\lstinline|load()| \\ \lstinline|load( <arg> )|\pslabel{verb:load}} & 
+A method with the name \lstinline|load()| \bdq{loads} data from somewhere (usually an external source) and initialises the owning object with this data. The argument is usually the reference to the source.
 
-    \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|} & If this is used as the prefix for a method name, that method also loads data from an external source, but it initialised and returns a data structure that is described by the remainder of the name.\newline Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
-    \hline
+The return type is either \lstinline|void|, or the method returns some kind of status for the load operation. \\
+\hline
 
-    \makecell{\lstinline|log( <arg> )| \\ \lstinline|log()|} & A method with this name will write something to the logging subsystem. The method is either a member of the class representing the logger instance, or it is a member of an arbitrary class. In the first case, the arguments determine what is logged. In the latter case, it logs the internal state of the respective object instance – without modifying it! \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|} & Although ‘main’ is not a reserved word in the Java language, it should be treated as one. Therefore a method should never be named as \lstinline|main()| unless it is the program entry point. Not to mention that ‘main’ is not even a verb at all.\newline The usual signature for the main method is
-\begin{lstlisting}
+\makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|\pslabel{verb:load_name}} & 
+A method with a name prefixed by \bsq{load} also loads data from an external source (like \hyperref[verb:load]{\bsq{load} above}), but it initialises and returns a data structure that is described by the remainder of the method name.
+
+Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|log( <arg> )| \\ \lstinline|log…( <arg> )| \\ \lstinline|log()|\pslabel{verb:log}} & 
+A \bsq{log} method writes something to a logging subsystem of some kind. The method is either a member of the class representing that subsystem, or it is a member of an arbitrary class. In the first case, the method's arguments determine what is logged. In the latter case, the method logs the internal state of the owning object, without modifying it. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|\pslabel{verb:main}} & 
+The method \lstinline|main()| is the entry point for any Java program; refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_main} for the details about the \lstinline|main()| method.
+
+The signature for the \lstinline|main()| method that is found most often in literature about the \Java programming language is
+\begin{lstlisting}[xleftmargin=.7cm]
 public static void main( String [] args )
 \end{lstlisting}
 but I prefer it as
-\begin{lstlisting}
+\begin{lstlisting}[xleftmargin=.7cm]
 public static final void main( final String... args )
 \end{lstlisting}
-Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main}. \\
-    \hline
+because it reflects the command line better. Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main} about the signatures. \\
+\hline
 
-    \makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|} & The prefix ‘make’ is similar to ‘create’,‘compose’, or ‘generate’, but usually a method with a name starting with ‘make’ produces something outside the program – like a file or a database (table). In this regard it is like ’generate’, but the process of ‘making’ is less complex as that of ‘generation’. \\
-    \hline
+%------------------------------------------------------------------------------
 
-    \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\pslabel{verb:mark}} & 
-A ‘mark’ method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also ‘check’). Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
-    \hline
+\makecell{\lstinline|make…()| \\ \lstinline|make…( <arg> )|\pslabel{verb:make}} & 
+The prefix \bsq{make} is similar to \hyperref[verb:create]{\bsq{create}}, \hyperref[verb:compose]{\bsq{compose}}, or \hyperref[verb:generate]{\bsq{generate}}, but usually a method with a name starting with \bsq{make} produces something outside the program – like a file or a database (table). In this regard it is like \bsq{generate}, but the process of \bdq{making} is less complex as that of \bdq{generation}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\pslabel{verb:mark}} & 
+A \bsq{mark} method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also \hyperref[verb:check[{\bsq{check}}). 
+
+Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
+\hline
 
 %------------------------------------------------------------------------------
 

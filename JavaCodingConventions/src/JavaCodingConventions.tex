@@ -387,7 +387,7 @@ public record Tupel<K extends Comparable<K>,V>( K key, V value ) implements Comp
 Although not explicitly declared, \lstinline|Tupel| has~…
 \begin{itemize}[nosep]
 \item{…~a constructor “\lstinline|Tupel( final K key, final V value )|”}
-\item{…~two attributes “\lstinline|private final K key|” and “\lstinline|private final V value|}
+\item{…~two attributes “\lstinline|public final K key|” and “\lstinline|publi8 final V value|}
 \item{…~the two accessor methods “\lstinline|K key()|” and “\lstinline|V value()|”}
 \item{…~and implementations for “\lstinline|equals()|”, “\lstinline|hashCode()|” and “\lstinline|toString()|”}
 \end{itemize}

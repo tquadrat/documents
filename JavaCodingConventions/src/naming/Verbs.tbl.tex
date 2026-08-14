@@ -221,7 +221,7 @@ A \bsq{create} method usually returns the created entity as the result. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|decrement…()| \\ \lstinline|decrement()|\pslabel{verb:decrement}} & 
+\makecell{\lstinline|decrement…()|/\lstinline|dec…()| \\ \lstinline|decrement()|/\lstinline|dec()|\pslabel{verb:decrement}} & 
 A method with the name \lstinline|decrement()| reduces the value of the owning object by 1. If \bsq{decrement} is used as prefix to the name, the name indicates the object property whose value is reduced by 1.
 
 The converse operation is named \hyperref[verb:increment]{\bsq{increment}}. \\
@@ -321,7 +321,7 @@ The method may or may not change the state of the owning object. \\
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|format…( <arg> )| \\ \lstinline|format( <arg> )|\pslabel{verb:format}} & 
-\lipsum[1] \\
+A \bsq{format} method prepares the representation of data. A wonderful example is the method \lstinline|format|\index{java.util!Formatter!format()} \autocite{ORACLE_DOC_FORMATTER:format} from the class \lstinline|java.util.Formatter|\index{java.util!Formatter} \autocite{ORACLE_DOC_FORMATTER_CLASS}, another one is \lstinline|format()|\index{java.time.format!DateTimeFormatter!format()} \autocite{ORACLE_DOC_DATETIMEFORMATTER:format} from class \lstinline|java.time.format.DateTimeFormatter|\index{java.time.format!DateTimeFormatter} \autocite{ORACLE_DOC_DATETIMEFORMATTER_CLASS}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -331,7 +331,7 @@ Methods with the name \lstinline|from()| or a name prefixed with \bsq{from} are 
 
 A sample would be \lstinline|Instant.from()|\index{java.time!Instant!from()} \autocite{ORACLE_DOC_INSTANT:from}.
 
-\bsq{From} can be found also a suffix for method names, as in \lstinline|Signature.parseFrom()|\index{java.lang.classfile!Signature!parseFrom()} \autocite{ORACLE_DOC_SIGNATURE:parseFrom}. \\
+\bsq{From} can be found also a suffix for method names, as in \lstinline|Signature.parseFrom()|\index{java.lang.classfile!Signature!parseFrom()} \autocite{ORACLE_DOC_SIGNATURE:parseFrom} (although this would be a better sample for a \hyperref[verb:parse]{\bsq{parse}} method). \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -359,17 +359,17 @@ A \bsq{get} method that takes an argument is \textit{not} a getter method\index{
 
 Such a method returns something that is determined by the rest of the name and further specified by the arguments.
 
-An example for this kind of \bsq{get} is \lstinline|map.get()|\index{java.util!Map!get()} \autocite{ORACLE_DOC_MAP:get}, more can be found in \lstinline|ResultSet|\index{java.sql!ResultSet} \autocite{ORACLE_DOC_RESULTSET_INTERFACE}. \\
+An example for this kind of \bsq{get} is \lstinline|map.get()|\index{java.util!Map!get()} \autocite{ORACLE_DOC_MAP:get}, more samples can be found in \lstinline|ResultSet|\index{java.sql!ResultSet} \autocite{ORACLE_DOC_RESULTSET_INTERFACE}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|getInstance()|\pslabel{verb:getInstance}} & 
-The method \lstinline|public static <Type> getInstance()| is somehow special; it is not really a getter\index{method!getter method} although it has the prefix \bsq{get}.
+The method \lstinline|public static <Type> getInstance()| is somehow special; it is not really a getter\index{method!getter method} although it has the prefix \bsq{get} and does not take any arguments.
 
 The method returns an instance of the class \lstinline|<Type>|; each invocation returns the same instance but never \lstinline|null|. It does not matter whether the first invocation creates that instance, or if it will exist previously. 
 
-If declared by an interface\index{interface} or an abstract class\index{class!abstract class}, it will be a factory method\index{factory}\index{method!factory method} for an object instance that implements that interface\index{interface} or abstract class\index{class!abstract class}. A factory that returns a new instance for each invocation should be named \hyperref[verb:newInstance]{\lstinline|newInstance()|}. \\
+If declared by an interface\index{interface} or an abstract class\index{class!abstract class}, usually it will be a factory method\index{factory}\index{method!factory method} for an object instance that implements that interface\index{interface} or abstract class\index{class!abstract class}. A factory\index{factory}\index{method!factory method} that returns a new instance for each invocation should be named \hyperref[verb:newInstance]{\lstinline|newInstance()|} instead. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -390,7 +390,7 @@ A method with that name in a class that does not implement \lstinline|Iterator|\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|increment…( <arg> )| \\ \lstinline|increment( <arg> )|\pslabel{verb:increment}} & 
+\makecell{\lstinline|increment…()|/\lstinline|inc…()| \\ \lstinline|increment()|/\lstinline|inc()|\pslabel{verb:increment}} & 
 A method with the name \lstinline|increment()| increases the value of the owning object by 1. If \bsq{increment} is used as prefix to the name, the name indicates the object property whose value is increased by 1.
 
 The converse operation is named \hyperref[verb:decrement]{\bsq{decrement}}. \\
@@ -398,18 +398,27 @@ The converse operation is named \hyperref[verb:decrement]{\bsq{decrement}}. \\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|} & The ‘initialize’ method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.\newline If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException| on any invocation after the first. \\
-    \hline
+\makecell{\lstinline|initialize()| \\ \lstinline|initialize( <arg> )|\pslabel{verb:initialize}} & 
+The \bsq{initialize} method does what its name says: it initialises the owning object. Obviously, this changes the state of that object.
 
-%------------------------------------------------------------------------------
-
-\makecell{\lstinline|insert…( <arg> )| \\ \lstinline|insert( <arg> )|\pslabel{verb:insert}} & 
-\lipsum[1] \\
+If the method cannot be called multiple times, it should throw an \lstinline|IllegalStateException|\index{java.lang!IllegalStateException} \autocite{ORACLE_DOC_ILLEGALSTATEEXCEPTION_CLASS} on any invocation after the first. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|is…()|} & This is the prefix for a \textit{getter} that returns a \lstinline|boolean|. Refer to \lstinline|get…|, above. \\
+\makecell{\lstinline|insert…( <arg> )| \\ \lstinline|insert( <arg> )|\pslabel{verb:insert}} & 
+An \bsq{insert} method implements data within a previously existing sequence of data. The SQL command \lstinline|INSERT| is a good example of that, but with the method \lstinline|insert()|\index{java.lang!StringBuilder!insert()} \autocite{ORACLE_DOC_STRINGBUILDER:insert} from the class \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder} \autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, there is also a good sample from the Java runtime library. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|is…()| \\ \lstinline|is…( <arg> )|\pslabel{verb:is}} & 
+Usually, \bsq{is} is the prefix for a \textit{getter}\index{method!getter method} that returns a \lstinline|boolean| (refer to \hyperref[verb:get]{\bsq{get}}, above), but it can be used also to query the state of the owning object, or the state of a given argument, like in the samples below:
+\index{java.time!DayOfWeek}
+\begin{lstlisting}[xleftmargin=.7cm]
+public static final boolean isWorkday( final DayOfWeek day ) { return day != DayOfWeek.SUNDAY; } 
+public static final boolean isWeekend( final DayOfWeek day ) { return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY; } 
+\end{lstlisting} \\
     \hline
 
 %------------------------------------------------------------------------------

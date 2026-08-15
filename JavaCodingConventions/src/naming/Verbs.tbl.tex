@@ -478,7 +478,7 @@ The prefix \bsq{make} is similar to \hyperref[verb:create]{\bsq{create}}, \hyper
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|mark()| \\ \lstinline|mark( <arg> )| \\ \lstinline|mark…()| \\ \lstinline|mark…( <arg> )|\pslabel{verb:mark}} & 
-A \bsq{mark} method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also \hyperref[verb:check[{\bsq{check}}). 
+A \bsq{mark} method changes the state of the owning object by setting (when taking a \lstinline|boolean| argument) or toggling (when taking no argument) an internal flag (see also \hyperref[verb:check]{\bsq{check}}). 
 
 Usually those methods will not return something, but for chaining, they can return \lstinline|this|, or they return the previous state of the flag. \\
 \hline
@@ -486,7 +486,15 @@ Usually those methods will not return something, but for chaining, they can retu
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|map…( <arg> )| \\ \lstinline|map( <arg> )|\pslabel{verb:map}} & 
-\lipsum[1] \\
+A \bsq{map} method translates something into something else, like the method \lstinline|Optional::map|\index{java.util!Optional!map()} \autocite{ORACLE_DOC_OPTIONAL:map}.
+
+Another example would be the method \lstinline|mapFromNull()| below:
+\begin{lstlisting}[caption=mapFromNull(),xleftmargin=.7cm]
+public static final <T> T mapFromNull( final T value, final Supplier<T> supplier )
+{
+    return isNull( value ) ? supplier.get() : value;
+}   //  mapFromNull() 
+\end{lstlisting} \\
 \hline
 
 %------------------------------------------------------------------------------

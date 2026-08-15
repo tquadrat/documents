@@ -500,33 +500,59 @@ public static final <T> T mapFromNull( final T value, final Supplier<T> supplier
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|merge…( <arg> )| \\ \lstinline|merge( <arg> )|\pslabel{verb:merge}} & 
-\lipsum[1] \\
+Merge methods are combining two sets of data into one single one. If both data sets are provided as argument, a merge method usually does not change the state of the owning object, or it can even be static.
+
+Examples are \lstinline|StringJoiner::merge|\index{java.util!StringJoiner!merge()} \autocite{ORACLE_DOC_STRINGJOINER:merge} and \lstinline|Map::merge|\index{java.util!Map!merge()} \autocite{ORACLE_DOC_MAP:merge}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|new…( <arg> )| \\ \lstinline|new( <arg> )|\pslabel{verb:new}} & 
-\lipsum[1] \\
+\makecell{\lstinline|new…( <arg> )| \\ \lstinline|new…()|\pslabel{verb:new}} & 
+A method \lstinline|new()|, with or without arguments, is invalid because \lstinline|new| is a keyword of the \Java Programming Language (refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}). The method reference\lstinline|<Class>::new| refers to the constructor\index{constructor} of \lstinline|class| that has the appropriate parameters as inferred from the context. This might look like line~3:
+\index{java.util!Set}\index{java.util!HashSet}\index{java.util!Set!toArray()}
+\begin{lstlisting}[xleftmargin=.7cm]
+final Set<String> strings = new HashSet<>();
+…
+final var stringArray = strings.toArray( String []::new );
+\end{lstlisting}
+The method \lstinline|Set::toArray|\index{java.util!Set!toArray()} is declared as below (inherited from \lstinline|Collection|\index{java.util!Collection} \autocite{ORACLE_DOC_COLLECTION:toArray3}):
+\begin{lstlisting}[xleftmargin=.7cm]
+public <T> T[] toArray( IntFunction<T[]> generator );
+\end{lstlisting}
+
+Consequently, \bsq{new} can be used only as the prefix for a method name, and that should be a factory method\index{method!factory method} for something that is determined by the remainder of the method name.
+
+See also \hyperref[verb:newInstance]{below}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|newInstance( <arg> )| \\ \lstinline|newInstance( <arg> )|\pslabel{verb:newInstance}} & 
-\lipsum[1] \\
+\makecell{\lstinline|newInstance( <arg> )| \\ \lstinline|newInstance()|\pslabel{verb:newInstance}} & 
+The method \lstinline|newInstance()| is usually a static member of a class (probably abstract) or an interface, and it returns a new instance of the owning class when called (it is a factory method\index{method!factory method} for that class or interface). Depending on the arguments for that call, the instances might be equals, but they will never be the same; this distinguishes \lstinline|newInstance()| from \hyperref[verb:getInstance]{\lstinline|getInstance()|}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|} & A method with a name prefixed with ‘obtain’ is similar to a getter, but with the difference that an ‘obtain’ method can change the state of the owning object, and that it does not necessarily return just a property.\newline An ‘obtain’ method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
+\makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|\pslabel{verb:obtain}} & 
+A method with a name prefixed with \bsq{obtain} is similar to a \hyperref[verb:get]{getter}\index{method!getter method}, but with the difference that an \bsq{obtain} method can change the state of the owning object, and that it does not necessarily return just a property\index{property}.
+
+An \bsq{obtain} method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|of( <arg> )| \\ \lstinline|of…( <arg> )| \\ \lstinline|...Of( <arg> )|\pslabel{verb:of}} & 
+\bsq{Of} methods are quite similar to the \hyperref[verb:from]{\bsq{from}} methods, and like \hyperref[verb:newInstance]{\lstinline|newInstance()|}, methods with that name creates an instance of the owning class or interface based on the given arguments. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+    \makecell{\lstinline|open()|\pslabel{verb:open}} & 
+    An ‘open’ method opens a connection to an external resource that is represented by the owning object. Obviously, that object changes its state.\newline Usually, \lstinline|open()| will not return something; or when it returns something, in will be that status of the open operation.\newline It will also not take any arguments as all necessary information are given by the state of the owning object. \\
     \hline
 
-    \makecell{\lstinline|of( <arg> )|} & The method name \lstinline|of()| was more or less introduced with Java~9 and the static factory methods for \lstinline|java.util.List|,  \lstinline|java.util.Set| and  \lstinline|java.util.Map|. The methods with the that name creates an instance of owning class containing the given arguments.\newline If there is no argument, an empty instance will be created. \\
-    \hline
-
-    \makecell{\lstinline|open()|} & An ‘open’ method opens a connection to an external resource that is represented by the owning object. Obviously, that object changes its state.\newline Usually, \lstinline|open()| will not return something; or when it returns something, in will be that status of the open operation.\newline It will also not take any arguments as all necessary information are given by the state of the owning object. \\
-    \hline
-
-    \makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|} & A method with a name that is prefixed with ‘open’ will also open a connection to an external resource, but it will return an object representing this connection or the external resource. The required information can either be taken from the owning object or given as the arguments or both.\newline Such a method may or may not change the state of the owning object. And the owning object may or may not provide a corresponding ‘close’ method.\newline A sample could be a method
+    \makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|\pslabel{verb:opern_arg}} & 
+    A method with a name that is prefixed with ‘open’ will also open a connection to an external resource, but it will return an object representing this connection or the external resource. The required information can either be taken from the owning object or given as the arguments or both.\newline Such a method may or may not change the state of the owning object. And the owning object may or may not provide a corresponding ‘close’ method.\newline A sample could be a method
 \begin{lstlisting}
 public final File openLogFile( final File logFolder ) {…}
 \end{lstlisting}
@@ -541,10 +567,12 @@ Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|peek()|} & A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
+    \makecell{\lstinline|peek()|\pslabel{verb:peek}} & 
+    A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek| \autocite{ORACLE_DOC_QUEUE:peek} is a sample for this.\newline The method \lstinline|java.util.stream.Stream::peek| \autocite{ORACLE_DOC_STREAM:peek} does not examine a data structure, but it allows to spy on the intermediate results of the stream processing. \\
     \hline
 
-    \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|} & A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\
+    \makecell{\lstinline|perform()| \\ \lstinline|perform( <arg> )| \\ \lstinline|perform()| \\ \lstinline|perform( <arg> )|\pslabel{verb:perform}} & 
+    A ‘perform’ method performs an action, either implicitly like for an implementation of the command pattern, or explicitly named by the remaining part of the method name; it is even an option that the action is given as the argument of the method. Usually such a method will not change the state if the owning object. \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -561,7 +589,8 @@ Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|} & This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\
+    \makecell{\lstinline|pull()| \\ \lstinline|push( <arg> )|\pslabel{verb:pull}} & 
+    This pair of methods is usually associated with data structures like stacks or queues: \lstinline|push()| adds an entry to the data structure, \lstinline|pull()| retrieves an entry from it. \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -572,13 +601,16 @@ Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|} & ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP:put}. \\
+    \makecell{\lstinline|put( <arg> )| \\ \lstinline|put…( <arg> )|\pslabel{verb:put}} & 
+    ‘put’ is somehow a synonym for ‘add’, put different from that it has some position identification: with ‘add’, the new part is just thrown on the big pile, while it will be placed to a special position with ‘put’. Refer to \autocite{ORACLE_DOC_MAP:put}. \\
     \hline
 
-    \makecell{\lstinline|read()|} & The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\
+    \makecell{\lstinline|read()|\pslabel{verb:read}} & 
+    The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\
     \hline
 
-    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|} & A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
+    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|\pslabel{verb:read_arg}} & 
+    A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -593,7 +625,8 @@ Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 A ‘release’ method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
     \hline
 
-    \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|} & A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\
+    \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|\pslabel{verb:remove}} & 
+    A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -610,10 +643,11 @@ A ‘release’ method provides the converse operation to an \hyperref[verb:acqu
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|} & A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\
+    \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|\pslabel{verb:retrieve}} & 
+    A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\
     \hline
 
-    \makecell{\lstinline|run()|} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE}, and as such it is also the main method of all threads except the main thread (there it is \lstinline|main()|). The name should not be used in a different context. Refer also to \autocite{ORACLE_DOC_RUNNABLE:run,ORACLE_DOC_THREAD:run}. \\
+    \makecell{\lstinline|run()|\pslabel{verb:run}} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE}, and as such it is also the main method of all threads except the main thread (there it is \lstinline|main()|). The name should not be used in a different context. Refer also to \autocite{ORACLE_DOC_RUNNABLE:run,ORACLE_DOC_THREAD:run}. \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -628,10 +662,12 @@ The method may or may not change the state of the owning object. \\
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|} & A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is the status of the save operation.\newline The method may or may not change the state of the owning object. \\
+    \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|\pslabel{verb:save}} & 
+    A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is the status of the save operation.\newline The method may or may not change the state of the owning object. \\
     \hline
 
-    \makecell{\lstinline|save…( <arg> )|} & A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\
+    \makecell{\lstinline|save…( <arg> )|\pslabel{verb:save_arg}} & 
+    A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\
     \hline
 
 %------------------------------------------------------------------------------
@@ -660,8 +696,10 @@ The method may or may not change the state of the owning object. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|switch…( <arg> )| \\ \lstinline|switch( <arg> )|\pslabel{verb:switch}} & 
-\lipsum[1] \\
+\makecell{\lstinline|switch…( <arg> )| \\ \lstinline|switch…()|\pslabel{verb:switch}} & 
+A method \lstinline|switch()|, with or without arguments, is invalid because \lstinline|switch| is a keyword of the \Java Programming Language (refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}). Consequently, \bsq{switch} can be used only a the prefix for a method name.
+
+Use \bsq{switch} for methods that somehow alter the behaviour of something, like \lstinline|switchDirection()| or \lstinline|switchContext()|. \\
 \hline
 
 %------------------------------------------------------------------------------

@@ -1,0 +1,36 @@
+% Basically, this is the index to the entries in DomainGlossary.tex.
+
+\begin{longtable}{|l|X|}
+    \caption{Domain Glossary} \\
+    \hline
+    \textbf{Term} & \textbf{Description} \\
+    \hline
+    \endfirsthead
+    \multicolumn{2}{c}%
+    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+    \hline
+    \textbf{Term} & \textbf{Description} \\
+    \hline
+    \endhead
+    \multicolumn{2}{r}{\textit{Continued on next page}} \\
+    \endfoot
+    \endlastfoot
+%------------------------------------------------------------------------------
+
+\makecell{\nameref{ddterm:TermName}} & 
+[A short description of \nameref{ddterm:TermName}] \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{t.b.c.} & 
+… \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\end{longtable}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

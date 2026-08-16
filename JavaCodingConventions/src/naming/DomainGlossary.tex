@@ -1,0 +1,62 @@
+\section{Domain Vocabulary}\label{sec:DomainVocabulary}
+If your project was designed using \bdq{Domain-Driven Design}\index{domain-driven design} \autocite{Evans:DomainDrivenDesign}, and you will adjust this Coding Conventions for your project, you should consider to add your project's vocabulary here.
+
+Such a glossary may look like the sample structure below that consist from a table that lists the terms together with a brief description, serving as a kind of index to the terms, and a section that describes the terms in details. If that section gets larger, you may consider to move it to the \nameref{sec:Appendices}.
+
+If you want to add your stuff here, look for the files
+\begin{itemize}
+\item{\verb#naming/DomainGlossary.tex#}
+\item{\verb#naming/DomainGlossary.tbl.tex#}
+\end{itemize} 
+in the \TeX/\LaTeX\index{TeX}\index{LaTeX} sources for this book on GitHub\index{GitHub} \autocite{TQUADRAT_ORG_DOCUMENT_REPOSITORY}.
+
+%------------------------------------------------------------------------------
+
+\clearpage
+\subsection{The Ubiquitous Language Glossary} 
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{naming/DomainGlossary.tbl.tex}
+
+\subsubsection{The Terms}
+
+% The suggested structure for a Domain Glossary
+
+% If you avoid references to other parts of the Coding Conventions document, you can use this
+% file also as part of a standalone Domain Glossary, using DomainGlossary.tbl.tex as the
+% index to it.
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\paragraph{[\textit{Term Name}]}\label{ddterm:TermName}
+
+\subparagraph{Bounded Context:} [Which context this definition applies to]
+
+\subparagraph{Definition:} 
+[Clear, precise definition as agreed upon by domain experts and dev team]
+
+\subparagraph{Synonyms/Aliases:} 
+[Other names used for this concept, if any – flag if inconsistent]
+
+\subparagraph{Type:} 
+[Entity | Value Object | Aggregate | Aggregate Root | Domain Event | Domain Service | Policy | Specification | Enum/Category]
+
+\subparagraph{Attributes/Properties:} 
+[Key attributes, if it's a model element]
+
+\subparagraph{Related Terms:} 
+[Links to other glossary entries this term relates to or depends on]
+
+\subparagraph{Example:} 
+[Concrete example in plain business language]
+
+\subparagraph{Code Reference:} 
+[Class/interface name in the codebase – keeps code and language in sync]
+
+\subparagraph{Notes/Constraints:} 
+[Business rules, invariants, edge cases]
+
+\noindent\rule{\textwidth}{0.4pt}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

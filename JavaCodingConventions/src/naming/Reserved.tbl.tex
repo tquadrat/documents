@@ -15,6 +15,14 @@
     \endlastfoot
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|call()|} & Method & 
+This is the name of the paylaod method of a thread that returns a result (an implementation of the \lstinline|Callable| interface\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE}) and should usually only used in this or a similar context.
+
+For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|e|} & Local Variable & 
 The name for a caught exception; refer to page \pageref{lbl:e}. \\
 \hline
@@ -99,6 +107,13 @@ The name for the return value of a method\index{method}; refer to page \pageref{
 
 \makecell{\lstinline|run()|} & Method & 
 The payload method for a \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS}; refer to page \pageref{verb:run}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+
+\makecell{\lstinline|wait()|} & SystemMethod & 
+The method \lstinline|Object::wait|\index{java.lang!Object!wait()} \autocite{ORACLE_DOC_OBJECT:wait} is final; refer to page \pageref{verb:wait}. \\
 \hline
 
 %------------------------------------------------------------------------------

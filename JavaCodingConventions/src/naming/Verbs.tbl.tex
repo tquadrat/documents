@@ -771,7 +771,7 @@ Usually, a \bsq{select} method is used to chose from a set of options. It will e
 \makecell{\lstinline|shutdown()| \\ \lstinline|shutdown…( <arg> )| \\ \lstinline|shutdown( <arg> )|\pslabel{verb:shutdown}} & 
 A \bsq{shutdown} method terminates an asynchronously running operation (usually a thread or a process) gracefully. This operation is either represented by the owning object or by the given arguments. 
 
-Refer also to \hyperref[verb:abort]{\bsq{abort}}, \hyperref[verb:cancel]{\bsq{cancel}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
+Refer also to \hyperref[verb:abort]{\bsq{abort}}, \hyperref[verb:exit]{\bsq{exit}}, \hyperref[verb:cancel]{\bsq{cancel}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -815,7 +815,15 @@ public static final boolean repose( final Duration duration )
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|split…( <arg> )| \\ \lstinline|split( <arg> )|\pslabel{verb:split}} & 
-\lipsum[1] \\
+A \bsq{split} method breaks up data into pieces, either based on a regular expression, a delimiter or a fixed length. 
+
+The method \lstinline|Pattern::split|\index{java.util.regex!Pattern!split()} \autocite{ORACLE_DOC_PATTERN:split} is an example for an implementation that uses a regular expression. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|supply…()| \\ \lstinline|supply()| \\ \lstinline|supply…( <arg> )| \\ \lstinline|supply( <arg> )|\pslabel{verb:supply}} & 
+A supply method returns something, depending on the state of the owning object or always the same. An implementation without parameters can be used as an implementation of the functional interface\index{interface!functional interface} \lstinline|Supplier<T>|\index{java.util.function!Supplier} \autocite{ORACLE_DOC_SUPPLIER_INTERFACE}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -828,26 +836,34 @@ Use \bsq{switch} for methods that somehow alter the behaviour of something, like
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|terminate…( <arg> )| \\ \lstinline|terminate( <arg> )|\pslabel{verb:terminate}} & 
-\lipsum[1] \\
+\makecell{\lstinline|terminate…()| \\ \lstinline|terminate()| \\ \lstinline|terminate…( <arg> )| \\ \lstinline|terminate( <arg> )|\pslabel{verb:terminate}} & 
+Implement a \bsq{terminate} method to finish an operation gracefully. The operation is determined by the owning object or through the given argument.
+
+Refer to \hyperref[verb:abort]{\bsq{abort}}, \hyperref[verb:cancel]{\bsq{cancel}}, \hyperref[verb:exit]{\bsq{exit}} and \hyperref[verb:shutdown]{\bsq{shutdown}} that do similar things. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|toggle…( <arg> )| \\ \lstinline|toggle( <arg> )|\pslabel{verb:toggle}} & 
-\lipsum[1] \\
+\makecell{\lstinline|toggle…()| \\ \lstinline|toggle()|\pslabel{verb:toggle}} & 
+With a method named \bsq{toggle} you will flip the state of an attribute, usually of type \lstinline|boolean|. You can use it also to switch through the values of an \lstinline|enum| attribute.
+
+The method can return the previous value, the current value or just nothing. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|update…( <arg> )| \\ \lstinline|update( <arg> )|\pslabel{verb:update}} & 
-\lipsum[1] \\
+\makecell{\lstinline|update()| \\ \lstinline|update( <arg> )| \\ \lstinline|update…()| \\ \lstinline|update…( <arg> )|\pslabel{verb:update}} & 
+An \bsq{update} method updates either the state of the owning object or an object provided as an argument. In the latter case, it may return the updated object. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|wait…( <arg> )| \\ \lstinline|wait( <arg> )|\pslabel{verb:wait}} & 
-\lipsum[1] \\
+\makecell{\lstinline|wait…( <arg> )| \\ \lstinline|wait…()|\pslabel{verb:wait}} & 
+The method \lstinline|Object::wait|\index{java.lang!Object!wait()} \autocite{ORACLE_DOC_OBJECT:wait} cannot be overwritten because it is declared final. 
+
+The method \lstinline|wait()| suspends the current thread until that thread is interrupted or notified. Therefore it declares to throw an \lstinline|InterruptedException|\index{java.lang!InterruptedException} \autocite{ORACLE_DOC_INTERRUPTDEXCEPTION_CLASS}. 
+
+Methods that uses the prefix \bsq{wait} in their name should do something similar than \lstinline|Object::wait|\index{java.lang!Object!wait()}. \\
 \hline
 
 %------------------------------------------------------------------------------

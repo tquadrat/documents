@@ -27,8 +27,28 @@ The standard error output. \\
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|exit()|} & System Method & 
+Terminates the JVM and should not be called; refer to page \pageref{verb:exit}. See also \autocite{ORACLE_DOC_SYSTEM:exit}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|flag|} & Parameter Name & 
+Usually the name for a \lstinline|boolean| parameter. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|getInstance()|} & (static) Method & 
 Returns the singleton instance of a class; refer to page \pageref{verb:getInstance}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|hasNext()|} & Method & 
+The method \lstinline|hasNext|\index{java.util!Iterator!hasNext()} \autocite{ORACLE_DOC_ITERATOR:hasNext} is declared by the interface \lstinline|java.util.Iterator|\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE}. It checks whether the iterator can still provide at least one more value.
+
+A method with that name in a class that does not implement \lstinline|Iterator|\index{java.util!Iterator} should be avoided. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -47,6 +67,14 @@ The standard input. \\
 
 \makecell{\lstinline|newInstance()|} & (static) Method & 
 A factory method for object instances; refer to page \pageref{verb:newInstance}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|next()|} & Method & 
+The method \lstinline|next|\index{java.util!Iterator!next()} \autocite{ORACLE_DOC_ITERATOR:next} is declared by the interface \lstinline|java.util.Iterator|\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE}. It returns the next value from the iterator.
+
+A method with that name in a class that does not implement \lstinline|Iterator|\index{java.util!Iterator} should be avoided. \\
 \hline
 
 %------------------------------------------------------------------------------

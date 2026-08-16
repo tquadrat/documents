@@ -47,7 +47,9 @@ For more details about the class \lstinline|Semaphore| from the package \lstinli
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|action…( <arg> )| \\ \lstinline|action…()|\pslabel{verb:action}} & 
-An \bsq{action} method performs an action, usually specified by the remainder of the name or the arguments for the call. To some extent, \bsq{action} is synonym to \hyperref[verb:perform]{\bsq{perform}}\footnote{Interstingly the \Java Runtime Libary defines a lot of methods named \lstinline|actionPerformed()|.}. \\
+An \bsq{action} method performs an action, usually specified by the remainder of the name or the arguments for the call.
+
+To some extent, \bsq{action} is synonym to \hyperref[verb:perform]{\bsq{perform}}. Interestingly, the \Java Runtime Library lists a whole series of methods named \lstinline|actionPerformed()|. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -79,7 +81,7 @@ This is somehow related to \hyperref[verb:change]{\bsq{change}}. \\
 \makecell{\lstinline|append( <arg> )| \\ \lstinline|append…( <arg> )|\pslabel{verb:append}} & 
 The name \bsq{append} for a method indicates that it will append the given argument to an extensible data structure, usually with interpreting the argument in some way. In most cases, it is not possible to retrieve the argument from the data structure afterwards. This a typical method for a builder implementation, so usually the method returns the owning object itself (\lstinline|this|).
     
-A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!StringBuffer!append()} \autocite{ORACLE_DOC_STRINGBUFFER_CLASS}. \\
+The method \lstinline|java.lang.StringBuffer::append|\index{java.lang!StringBuffer!append()} \autocite{ORACLE_DOC_STRINGBUFFER_CLASS} is an example for this. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -87,13 +89,13 @@ A sample for this is \lstinline|java.lang.StringBuffer::append|\index{java.lang!
 \makecell{\lstinline|build()|\pslabel{verb:build}} & 
 The terminal method for a builder has this name. It returns the built object. Usually it can be called only once on the owning object.
     
-An example would be \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()} \autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
+An example is \lstinline|Stream.Builder::build|\index{java.util.stream!Stream.Builder!build()} \autocite{ORACLE_DOC_STREAM_BUILDER:build}. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|call()|\pslabel{verb:call}} & 
-This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface)\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE} and should usually only used in this or a similar context.
+This is the name of the main method of a thread that returns a result (an implementation of the \lstinline|Callable| interface\index{java.util.concurrent!Callable} \autocite{ORACLE_DOC_CALLABLE_INTERFACE}) and should usually only used in this or a similar context.
 
 For details on this, refer to \autocite{ORACLE_DOC_UTIL_CONCURRENT_PACKAGE}. \\
 \hline
@@ -154,6 +156,14 @@ The latter interface is important for \verb#try-with-resources#\index{try-with-r
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|collect()| \\ \lstinline|collect…()|\pslabel{verb:collect}} & 
+A \bsq{collect} method collects data and combines it into a single object instance. The source for the data is either determined by the owning object or the arguments; same for the return value that could be determine also by the main part of the name. 
+
+\bsq{collect} is related to \hyperref[verb:gather]{\bsq{gather}}, with the difference that the latter is meant to return a collection of the gathered data. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|compare( <arg> )| \\ \lstinline|compare…( <arg> )|\pslabel{verb:compare}} & 
 The method \lstinline|compare()|\index{java.util!Comparator!compare()}  \autocite{ORACLE_DOC_COMPARATOR:compare} is declared by the interface\index{interface} \lstinline|java.util.Comparator|\index{java.util!Comparator} \autocite{ORACLE_DOC_COMPARATOR_INTERFACE}. An implementation of that method compares the given arguments with each other and returns the result as an integer.
 
@@ -172,7 +182,7 @@ final Comparator<Comparable> comparator = (o1,o2) -> Integer.signum( o1.compareT
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|compareTo( <arg> )|\pslabel{verb:compareTo}} & 
-The method \lstinline|compareTo()|\index{java.lang!Comparable!compareTo()} \autocite{ORACLE_DOC_COMPARABALE:compareTo} is the only method of the interface \lstinline|java.lang.Comparable|\index{java.lang!Comparable} \autocite{ORACLE_DOC_COMPARABALE_INTERFACE}. It compares the owning object with the object provided as the argument and returns the result as an integer, same as a \hyperref[verb:compare]{\bsq{compare}} method. 
+\lstinline|compareTo()|\index{java.lang!Comparable!compareTo()} \autocite{ORACLE_DOC_COMPARABALE:compareTo} is the only method of the interface \lstinline|java.lang.Comparable|\index{java.lang!Comparable} \autocite{ORACLE_DOC_COMPARABALE_INTERFACE}. It compares the owning object with the object provided as the argument and returns the result as an integer, same as a \hyperref[verb:compare]{\bsq{compare}} method. 
 
 You should use the name \lstinline|compareTo()| only for methods that are implementations of the interface \lstinline|Comparable|\index{java.lang!Comparable}. \\
 \hline
@@ -180,7 +190,7 @@ You should use the name \lstinline|compareTo()| only for methods that are implem
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|compile( <arg> )| \\ \lstinline|compile…( <arg> )|\pslabel{verb:compile}} & 
-A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. A sample is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
+A \bsq{compile} method translates a \textit{source} (usually a text) into an executable format and returns that. An example for this is \lstinline|Pattern.compile( String )|\index{java.util.regex!Pattern!compile()} \autocite{ORACLE_DOC_PATTERN:compile}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -210,7 +220,7 @@ The name is often supplemented by \bsq{from} or \bsq{to}, to indicate the source
 \makecell{\lstinline|copy( <arg> )| \\ \lstinline|copyOf( <arg> )| \\ \lstinline|copy…( <arg> )|\pslabel{verb:copy}} & 
 A \bsq{copy} method makes a semanticall copy of the given argument and returns it. If this is also an identical copy (like through the invocation of \hyperref[verb:clone]{\lstinline|clone()|}\index{java.lang!Object!clone()}) or not depends from the implementation. 
 
-One example is \lstinline|List::copyOf|\index{java.util!List!copyOf()} \autocite{ORACLE_DOC_LIST:copyOf}, another example is \lstinline|Collections.copy(List,List)|\index{java.util!Collections!copy()} \autocite{ORACLE_DOC_COLLECTIONS:copy}. \\
+One example is \lstinline|List::copyOf|\index{java.util!List!copyOf()} \autocite{ORACLE_DOC_LIST:copyOf}, another sample is \lstinline|Collections.copy(List,List)|\index{java.util!Collections!copy()} \autocite{ORACLE_DOC_COLLECTIONS:copy}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -236,7 +246,7 @@ A method with the name \bsq{delete} deletes an external entity (in most cases, a
 
 An example is \lstinline|java.io.File.delete()|\index{java.io!File!delete()} \autocite{ORACLE_DOC_FILE:delete} that removes the file that is associated with the respective instance of \lstinline|java.io.File|\index{java.io!File} \autocite{ORACLE_DOC_FILE_CLASS}. 
 
-Another example is \lstinline|java.nio.file.Files::delete|\index{java.nio.file!Files!delete()} \autocite{ORACLE_DOC_FILES:delete} that deletes the file that is specified by the given \lstinline|Path|\index{java.nio.file.Path} \autocite{ORACLE_DOC_PATH_INTERFACE} argument. \\
+\lstinline|java.nio.file.Files::delete|\index{java.nio.file!Files!delete()} \autocite{ORACLE_DOC_FILES:delete} is another example; it deletes the file that is specified by the given \lstinline|Path|\index{java.nio.file.Path} \autocite{ORACLE_DOC_PATH_INTERFACE} argument. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -330,12 +340,24 @@ A \bsq{format} method prepares the representation of data. A wonderful example i
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|fold( <arg> )| \\ \lstinline|fold…( <arg> )|\pslabel{verb:fold}} & 
+The name/prefix \bsq{fold} is mostly synonym to \hyperref[verb:reduce]{\bsq{reduce}}. A method that uses this name or prefix as part of it name should work along the same lines a \hyperref[verb:reduce]{\bsq{reduce}} method. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|from( <arg> )| \\ \lstinline|from…( <arg> )| \\ \lstinline|...From( <arg> )|\pslabel{verb:from}} & 
 Methods with the name \lstinline|from()| or a name prefixed with \bsq{from} are (usually static) factory methods\index{method!factory method}\index{factory} that create an instance of the owning class from something, represented by the given argument.
 
 A sample would be \lstinline|Instant.from()|\index{java.time!Instant!from()} \autocite{ORACLE_DOC_INSTANT:from}.
 
 \bsq{From} can be found also a suffix for method names, as in \lstinline|Signature.parseFrom()|\index{java.lang.classfile!Signature!parseFrom()} \autocite{ORACLE_DOC_SIGNATURE:parseFrom} (although this would be a better sample for a \hyperref[verb:parse]{\bsq{parse}} method). \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|gather…()| \\ \lstinline|gather…( <arg> )| \\ \lstinline|gather( <arg> )| \\ \lstinline|gather()|\pslabel{verb:gather}} & 
+Like a \hyperref[verb:collect]{\bsq{collect}} method, a \bsq{gather} method collects data, but different from that, it returns a collection with the retrieved data. The source for the data is either determined by the owning object or the arguments; same for the return value that could be determined also by the main part of the name. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -395,7 +417,7 @@ A method with that name in a class that does not implement \lstinline|Iterator|\
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|increment…()|/\lstinline|inc…()| \\ \lstinline|increment()|/\lstinline|inc()|\pslabel{verb:increment}} & 
-A method with the name \lstinline|increment()| increases the value of the owning object by 1. If \bsq{increment} is used as prefix to the name, the name indicates the object property whose value is increased by 1.
+A method with the name \lstinline|increment()| increases the value of the owning object by 1. If \bsq{increment} is used as prefix to the name, the name indicates the object property whose value is incremented.
 
 The converse operation is named \hyperref[verb:decrement]{\bsq{decrement}}. \\
 \hline
@@ -448,7 +470,7 @@ The return type is either \lstinline|void|, or the method returns some kind of s
 \makecell{\lstinline|load…()| \\ \lstinline|load…( <arg> )|\pslabel{verb:load_name}} & 
 A method with a name prefixed by \bsq{load} also loads data from an external source (like \hyperref[verb:load]{\bsq{load} above}), but it initialises and returns a data structure that is described by the remainder of the method name.
 
-Depending on the context, a name like \lstinline|loadData()| could be valid, but some more meaningful is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
+Depending on the context, a name like \lstinline|loadData()| could be valid, but a some more meaningful name is preferred, like \lstinline|loadClientHistory()| or \lstinline|loadArticleList()|. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -540,7 +562,7 @@ The method \lstinline|newInstance()| is usually a static member of a class (prob
 \makecell{\lstinline|obtain…()| \\ \lstinline|obtain…( <arg> )|\pslabel{verb:obtain}} & 
 A method with a name prefixed with \bsq{obtain} is similar to a \hyperref[verb:get]{getter}\index{method!getter method}, but with the difference that an \bsq{obtain} method can change the state of the owning object, and that it does not necessarily return just a property\index{property}.
 
-An \bsq{obtain} method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
+An \bsq{obtain} method should never fail (should not throw an exception), but it may return an instance of \lstinline|java.util.Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS}. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -561,7 +583,7 @@ The method will also not take any arguments as all necessary information are giv
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|\pslabel{verb:opern_arg}} & 
+\makecell{\lstinline|open…( <arg> )| \\ \lstinline|open( <arg> )|\pslabel{verb:open_arg}} & 
 A method with a name that is prefixed with \bsq{open} will also open a connection to an external resource, but it will return an object representing either that connection or the external resource. The required information can be taken from the owning object or given as the arguments or both.
 
 Such a method may or may not change the state of the owning object.
@@ -602,15 +624,21 @@ Refer also to \hyperref[verb:action]{\bsq{action}} and \hyperref[verb:exec]{\bsq
 \makecell{\lstinline|pop()| \\ \lstinline|pop…()|\pslabel{verb:pop}} & 
 For the data structure \bdq{Stack}, \bsq{pop} is the operation that takes the top entry from the stack. The converse operation is \hyperref[verb:push]{\bsq{push}}. 
 
-Methods with this name or \bsq{pop} as prefix for their name should do something similar. \\
+Methods with this name or with \bsq{pop} as prefix for their name should do something similar. \\
 \hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|print( <arg> )| \\ \lstinline|print()|\pslabel{verb:print}} & 
-A print method will write the textual representation of either the argument to the output represented by the owning object, or of the owning object to the output represented by the argument.
+A \bsq{print} method writes the textual representation of either the argument to the output represented by the owning object, or of the owning object to the output represented by the argument.
 
 An example is \lstinline|PrintStream::print|\index{java.io!PrintStream!print()} \autocite{ORACLE_DOC_PRINTSTREAM:print}; the IOStream classes and interfaces define a whole family of \bsq{print} methods. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|provide…()| \\ \lstinline|provide…( <arg> )|\pslabel{verb:provide}} & 
+A \bsq{provide} method returns an attribute of the owning object, similar to a \hyperref[verb:get]{getter method\index{method!getter method}}, but it may generate or modify the returned value before, or the provided reference will allow to modify the attribute. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -625,7 +653,7 @@ A \bsq{pull} method retrieves data from somewhere, most probably from an externa
 \makecell{\lstinline|push( <arg> )| \\ \lstinline|push…( <arg> )|\pslabel{verb:push}} & 
 For the data structure \bdq{Stack}, \bsq{push} is the operation that puts a new entry to the top of the stack. The converse operation is \hyperref[verb:pop]{\bsq{pop}}. 
 
-Methods with this name or \bsq{push} as prefix for their name should do something similar. \\
+Methods with this name or with \bsq{push} as prefix for their name should do something similar. \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -636,87 +664,152 @@ Methods with this name or \bsq{push} as prefix for their name should do somethin
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|read()|\pslabel{verb:read}} & 
-    The \lstinline|read()| method loads the state of the owning object from an external resource. Usually, it does not return something, or it returns that status of the ‘read’ operation.\newline I prefer to use \lstinline|load()| instead. \\
-    \hline
+\makecell{\lstinline|read()| \\ \lstinline|read( <arg> )|\pslabel{verb:read}} & 
+A \lstinline|read()| method loads the state of the owning object from an external resource that is usually determined by the state of that object, but it can be also gven as an argument. Usually, the method returns nothing, or it returns that status of the \bsq{read} operation.
 
-    \makecell{\lstinline|read( <arg> )| \\ \lstinline|read…( <arg> )|\pslabel{verb:read_arg}} & 
-    A ‘read’ method read something from an external source and returns. This may or may not change the state of the owning object.\newline Usually a reference to that external source is provided as a parameter, but it is also possible that this reference is implicit (as for streams). \\
-    \hline
-
-%------------------------------------------------------------------------------
-
-\makecell{\lstinline|reduce…( <arg> )| \\ \lstinline|reduce( <arg> )|\pslabel{verb:reduce}} & 
-\lipsum[1] \\
+But for this purpose, I prefer to use \hyperref[verb:load]{\lstinline|load()|} instead of \lstinline|read()|. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\pslabel{verb:release}} & 
-A ‘release’ method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. It does not return something, or it returns the status of the operation. \\
-    \hline
+\makecell{\lstinline|read…( <arg> )| \\ \lstinline|read( <arg> )| \\ \lstinline|read( <arg> )|\pslabel{verb:read_arg}} & 
+A \bsq{read} method reads something from an external source and returns an object constructed from that data. This may or may not change the state of the owning object.
 
-    \makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|\pslabel{verb:remove}} & 
-    A method with the name \lstinline|remove()| or a name that is prefixed with ‘remove’ will remove something from an internal data structure of the owning method. The given argument is some kind of reference to that thing that should be removed. It does not return something, or it returns the removed object or the status of the operation.\newline A ‘remove’ method is somehow the reverse operation to an ‘add’ method. \\
-    \hline
+Usually a reference to the external source is provided as a parameter, but it is also possible that this reference is implicit (as for input streams). It is also possible that the destination for the data is given as an argument.
 
-%------------------------------------------------------------------------------
-
-\makecell{\lstinline|repose…( <arg> )| \\ \lstinline|repose( <arg> )|\pslabel{verb:repose}} & 
-\lipsum[1] \\
+The main part of the name may determine the type of object that is returned. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|reset…( <arg> )| \\ \lstinline|reset( <arg> )|\pslabel{verb:reset}} & 
-\lipsum[1] \\
+\makecell{\lstinline|reduce( <arg> )| \\ \lstinline|reduce…( <arg> )| \pslabel{verb:reduce}} & 
+The method \lstinline|reduce()|\index{java.util.stream!Stream!reduce()} \autocite{ORACLE_DOC_STREAM:reduce} is declared by the interface \lstinline|java.util.stream.Stream|\index{java.util.stream!Stream} \autocite{ORACLE_DOC_STREAM_INTERFACE}. It performs a \textit{reduction} operation \autocite{ORACLE_DOC_STREAM:Reduction} on a \lstinline|Stream|\index{java.util.stream!Stream} – basically it reduces the multiple elements on that stream to a single one.
+
+Your own \bsq{reduce} methods should work along the same lines. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-    \makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|\pslabel{verb:retrieve}} & 
-    A ‘retrieve’ method is similar to a ‘get’ method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an ‘obtain’ method – that it can fail. \\
-    \hline
+\makecell{\lstinline|release…( <arg> )| \\ \lstinline|release( <arg> )|\pslabel{verb:release}} & 
+A \bsq{release} method provides the converse operation to an \hyperref[verb:acquire]{\bsq{acquire}} method: it releases the exclusive access to the object that is somehow identified by the given argument. The method returns nothing, or it returns the status of the operation. \\
+\hline
 
-    \makecell{\lstinline|run()|\pslabel{verb:run}} & \lstinline|run()| is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|\autocite{ORACLE_DOC_RUNNABLE_INTERFACE}, and as such it is also the main method of all threads except the main thread (there it is \lstinline|main()|). The name should not be used in a different context. Refer also to \autocite{ORACLE_DOC_RUNNABLE:run,ORACLE_DOC_THREAD:run}. \\
-    \hline
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|remove…( <arg> )| \\ \lstinline|remove( <arg> )|\pslabel{verb:remove}} & 
+A method with the name \lstinline|remove()| or a name that is prefixed with \bsq{remove} will remove something from an internal data structure of the owning object. The given argument is some kind of reference to that thing that should be removed. The method returns nothing, or it returns the removed object or the status of the operation.
+    
+A \bsq{remove} method is somehow the reverse operation to an \hyperref[verb:add]{\bsq{add}} method. It was already mentioned in chapter \tqfullref{sec:NamesForCollectionMutators}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|repose( <arg> )|\pslabel{verb:repose}} & 
+See \hyperref[verb:sleep]{\bsq{sleep}}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|reset()| \\ \lstinline|reset( <arg> )| \\ \lstinline|reset…( <arg> )|\pslabel{verb:reset}} & 
+A \bsq{reset} method sets the the owning object or an object provided as the argument back to a previously defined state. 
+
+The method \lstinline|java.io.Reader::reset|\index{java.io!Reader!reset()} \autocite{ORACLE_DOC_READER:reset} is an example for this. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|retrieve…()| \\ \lstinline|retrieve…( <arg> )|\pslabel{verb:retrieve}} & 
+A \bsq{retrieve} method is similar to a \hyperref[verb:get]{\bsq{get}} method, with the differences that it may change the state of the owning object, that it is not limited in returning a property, and – that makes it also different to an \hyperref[verb:obtain]{\bsq{obtain}} method – that it can fail with an exception. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|run()|\pslabel{verb:run}} & 
+\lstinline|run()|\index{java.lang!Runnable!run()} is the name of the main method of all implementations of the interface \lstinline|java.lang.Runnable|\index{java.lang!Runnable} \autocite{ORACLE_DOC_RUNNABLE_INTERFACE}, and as such it is also the main method of all threads except the main thread (there it is \hyperref[verb:main]{\lstinline|main()|}). The name \lstinline|run()| should not be used for methods in a different context. 
+
+Refer also to \autocite{ORACLE_DOC_RUNNABLE:run,ORACLE_DOC_THREAD:run}. \\
+\hline
 
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|search( <arg> )| \\ \lstinline|search…( <arg> )|\pslabel{verb:search}} & 
-A \bsq{search} method searches something, but it is a valid result that it does not find something (it will never throw an exception if nothing was found). That distinguishes it from a \hyperref[verb:find]{\bsq{find}} method as described above. The method returns an instance of \lstinline|java.util.Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
+A \bsq{search} method searches something, but it is a valid result that it does not find something; this means, it does not throw an exception if nothing was found. That distinguishes it from a \hyperref[verb:find]{\bsq{find}} method as described above. The method returns an instance of \lstinline|java.util.Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} with the result.
 
 The arguments are parameters for the search.
 
 The method may or may not change the state of the owning object. \\
-    \hline
-
-%------------------------------------------------------------------------------
-
-    \makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|\pslabel{verb:save}} & 
-    A method \lstinline|save()| provides the converse operation to that of a method \lstinline|load()|: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.\newline If the method has another return type than \lstinline|void|, the return value is the status of the save operation.\newline The method may or may not change the state of the owning object. \\
-    \hline
-
-    \makecell{\lstinline|save…( <arg> )|\pslabel{verb:save_arg}} & 
-    A ‘save’ method provides the converse operation to that of a ‘load’ method: it persists the object that is identified by the given argument to an external destination. If it has a return type other than \lstinline|void|, this will be the status of the save operation.\newline The method may or may not change the state of the owning object. \\
-    \hline
-
-%------------------------------------------------------------------------------
-
-\makecell{\lstinline|select…( <arg> )| \\ \lstinline|select( <arg> )|\pslabel{verb:select}} & 
-\lipsum[1] \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|shutdown…( <arg> )| \\ \lstinline|shutdown( <arg> )|\pslabel{verb:shutdown}} & 
-\lipsum[1] \\
+\makecell{\lstinline|save()| \\ \lstinline|save( <arg> )|\pslabel{verb:save}} & 
+The method \lstinline|save()| is the converse method to \hyperref[verb:load]{\lstinline|load()|}: it persists the current state of the owning object, usually to an external destination. The argument usually determines that destination.
+
+If the method has another return type than \lstinline|void|, the return value is the status of the \bsq{save} operation.
+
+The method may or may not change the state of the owning object. \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|sleep…( <arg> )| \\ \lstinline|sleep( <arg> )|\pslabel{verb:sleep}} & 
-\lipsum[1] \\
+\makecell{\lstinline|save…( <arg> )|\pslabel{verb:save_arg}} & 
+A \bsq{save} method provides the converse operation to that of a \hyperref[verb:load_arg]{\bsq{load}} method: it persists the object that is identified by the given argument to an external destination.
+
+If the method has a return type other than \lstinline|void|, this will be the status of the save operation.
+
+The method may or may not change the state of the owning object or the argument. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|select…( <arg> )| \\ \lstinline|select…( <arg> )| \\ \lstinline|select( <arg> )|\pslabel{verb:select}} & 
+Usually, a \bsq{select} method is used to chose from a set of options. It will either return a reference to the selected option, or it will change the state of the owning object accordingly. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|shutdown()| \\ \lstinline|shutdown…( <arg> )| \\ \lstinline|shutdown( <arg> )|\pslabel{verb:shutdown}} & 
+A \bsq{shutdown} method terminates an asynchronously running operation (usually a thread or a process) gracefully. This operation is either represented by the owning object or by the given arguments. 
+
+Refer also to \hyperref[verb:abort]{\bsq{abort}}, \hyperref[verb:cancel]{\bsq{cancel}} and \hyperref[verb:terminate]{\bsq{terminate}}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\makecell{\lstinline|sleep( <arg> )|\pslabel{verb:sleep}} & 
+The static method \lstinline|Thread::sleep|\index{java.lang!Thread!sleep()} \autocite{ORACLE_DOC_THREAD:sleep} pauses the \textit{calling} for the period of time specified as the argument. Your implementation of a method with name \bsq{sleep} should do the same.
+
+Unfortunately, \lstinline|Thread::sleep|\index{java.lang!Thread!sleep()} declares to throw \lstinline|InterruptedException|\index{java.lang!InterruptedException} \autocite{ORACLE_DOC_INTERRUPTDEXCEPTION_CLASS}, making the use of that method somehow inconvinient.
+
+The below implementation of a method \lstinline|repose()| makes it easier to pause the current thread:
+\index{java.time!Duration}\index{org.tquadrat.foundation.lang!Objects!requireNonNullArgument()}\index{java.time!Instant}\index{java.time!Instant!now()}\index{java.time!Instant!plus()}\index{java.time!Instant!isBefore()}\index{java.lang!Thread}\index{java.lang!Thread!sleep()}\index{java.lang!InterruptedException}\index{java.lang!Thread!currentThread()}\index{java.lang!Thread!isInterrupted()}\index{java.time!Duration!between()}
+\begin{lstlisting}[xleftmargin=.7cm,caption=repose()]
+public static final boolean repose( final Duration duration )
+{
+  var retValue = true;
+  var remainder = requireNonNullArgument( duration, "duration" );
+  var now = Instant.now();
+  final var endTime = now.plus( duration );
+  SleepLoop: while( retValue && now.isBefore( endTime ) )
+  {
+    try
+    {
+      Thread.sleep( remainder );
+      retValue = false;
+    }
+    catch( final InterruptedException _ )
+    {
+      if( currentThread().isInterrupted() ) break SleepLoop;
+      now = Instant.now();
+      remainder = Duration.between( now, endTime );
+    }
+  }   //  SleepLoop:
+
+  //---* Done *------------------------------
+  return retValue;
+}   //  repose()
+\end{lstlisting}
+ \\
 \hline
 
 %------------------------------------------------------------------------------
@@ -728,7 +821,7 @@ The method may or may not change the state of the owning object. \\
 %------------------------------------------------------------------------------
 
 \makecell{\lstinline|switch…( <arg> )| \\ \lstinline|switch…()|\pslabel{verb:switch}} & 
-A method \lstinline|switch()|, with or without arguments, is invalid because \lstinline|switch| is a keyword of the \Java Programming Language (refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}). Consequently, \bsq{switch} can be used only a the prefix for a method name.
+A method \lstinline|switch()|, with or without arguments, is invalid because \lstinline|switch| is a keyword of the \Java Programming Language (refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}). Consequently, \bsq{switch} can be used only as the prefix for a method name.
 
 Use \bsq{switch} for methods that somehow alter the behaviour of something, like \lstinline|switchDirection()| or \lstinline|switchContext()|. \\
 \hline

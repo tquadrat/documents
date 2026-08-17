@@ -1,9 +1,38 @@
 \part{Writing proper Comments}\label{sec:WritingProperComments}
+
+% Wenn ich gefragt werde, welche Programmiersprache ein Programmieranfänger zuerst lernen sollte, lautet meine Antwort in der Regel: Assembler.
+
+% Warum ausgerechnet Assembler? Selbst wenn das Programmieren für manche Assembler von entsprechenden Tools so gut unterstützt wird, dass es sich fast so anfühlt als würde man eine Hochsprache benutzen, so ist Assembler immer noch absolut nicht intuitiv.
+
+% Und wenn ich "Assembler" sage, dann meine ich nicht die mit der exzellenten Tool-Unterstützung, sondern so etwas wie den 6502-Assembler mit dreibuchstabigen Mnemonics und einer Beschränkung auf sechs Zeichen für die Benennung von Speicherstellen. Wer damit freiwillig arbeitet, muß eine gewisse masochistische Veranlagung haben …
+
+% Aber was man bei der Erstellung von Programmen mit diesen Assembler-Sprachen lernt, ist ordentliche Kommentare zu schreiben! Sechs Zeichen sind definitiv viel zu wenig für sinnvolle sprechende Namen, es gibt keine Typen, und eine Speicherstelle kann ebenso der Ort einer Variablen wie auch die Adresse einer Routine oder ein Sprungziel für ein jmp sein.
+
+% Wer hier schlampig kommentiert weiß am nächsten Morgen nicht mehr, was er am Tag davor gemacht hat! Ja, ein Quellcode soll selbsterklärend sein – aber das hat man wohl vergessen, den Ingenieuren, die diese Assembler verbrochen haben, zu erklären.
+
+% Wenn ein Anfänger diese Erfahrung ganz am Anfang seiner Laufbahn macht, dann ist das eine Lektion, die er nie vergessen wird.
+
+% Deshalb empfehle ich Assembler als erste Programmiersprache für Programmieranfänger! 
+
+
+When I am asked which programming language a beginner should learn first, my answer is usually: assembly language.
+
+Why assembly, of all things? Even though some assembly tools provide such excellent support that coding feels almost like using a high-level language, assembly remains decidedly unintuitive.
+
+And when I say \bdq{assembly}, I don't mean the kind with excellent tool support; I mean something like 6502 assembly – with its three-letter mnemonics and a six-character limit for naming memory locations. Anyone who chooses to work with that must have a certain masochistic streak~…
+
+But what you \textit{do} learn when writing programs in these assembly languages is how to write proper comments! Six characters are definitely far too few for meaningful, descriptive names; there are not data types; and a memory location could just as easily be a variable, the address of a routine, or the jump target for a \lstinline|jmp| instruction.
+
+If you are sloppy with your comments here, you won't have a clue the next morning what you did the day before! Yes, source code is supposed to be self-explanatory – but apparently, no one thought to explain that to the engineers who perpetrated these assembly languages.
+
+If a beginner has this experience right at the start of their career, it is a lesson they will never forget.
+
+\textit{That} is the primary reason why I recommend assembly language as the first programming language for beginners!
+
 %------------------------------------------------------------------------------
 
-\chapter{Some basic Considerations regarding Comments}
-%\chapter{Documentation Comments}\label{sec:DocumentationComments}
-
+\input{comments/Chapter_BasicConsiderations}
+\input{comments/Chapter_DocumentationComments}
 
 %==============================================================================
 % End of file!!

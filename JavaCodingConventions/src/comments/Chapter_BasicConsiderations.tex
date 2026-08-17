@@ -1,0 +1,61 @@
+\chapter{Some basic Considerations regarding Comments}
+Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+\item{Comments have to support the readability of source code.
+
+They do this by structuring the source code into sections and by providing hints on how to interpret the code.}
+
+\item{Comments should be used to give an overview on the code and to provide additional information that is not readily available in the code itself.
+
+They should contain only information that is relevant for reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class.
+
+The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date. In general, any comments that are likely to get out of date as the code evolves should be avoided.}
+
+\item{For Java source code, comments are part of or the source for the external documentation of that code.
+
+The Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}\index{javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
+
+\item{The frequency of comments reflects poor quality of code.
+
+Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
+
+One often heard advice is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But clearer to whom?
+
+With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
+
+Obviously, the advice: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema – and equally bad! This means that writing proper comments remains a complex art, but it follows some rules, and for the rest, this document will give some advice: refer to chapter \tqfullvref{sec:CommentsWhen} where this is discussed further.}
+
+\item{Comments should be in full sentence and using a clear language.
+
+All comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.}
+\end{enumerate}
+
+Java source code can generally have three kinds of comments:
+\begin{itemize}[nosep]
+\item{documentation comments}
+\item{implementation comments}
+\item{maintenance comments}
+\end{itemize}
+
+In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “\verb#/**…*/#” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation by the JavaDoc tool. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
+
+Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
+
+\textit{Maintenance comments} are technically a special form of implementation comments, but as they have a special function, they are covered separately in chapter \tqfullvref{sec:MaintenanceComments}.
+
+Some general rules are:
+\begin{itemize}
+\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
+
+\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
+
+\item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information). See also chapter \tqfullvref{sec:LineLength}.}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
+%==============================================================================
+% End of file!!
+%==============================================================================

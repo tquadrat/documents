@@ -182,6 +182,14 @@ literate=
 \newcommand{\keeplisting}[1]{%
   \needspace{#1\baselineskip}%
 }
+
+% Listings in tables
+\lstnewenvironment{tbllisting}[1][]{%
+  \let\nopagebreak\relax
+  \lstset{xleftmargin=.7cm}%
+  \lstset{#1}%
+}{}
+
 %==============================================================================
 % End of file!!
 %==============================================================================

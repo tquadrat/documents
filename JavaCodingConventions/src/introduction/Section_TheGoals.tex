@@ -1,4 +1,4 @@
-\section{The Goals}
+\section{The Goals}\label{sec:Goals}
 The main goal of coding conventions in general is to help you writing better code.
 
 So what is \textit{good code}?
@@ -34,25 +34,25 @@ For that you have to read the already existing code, and of course, you have to 
 
 No matter whether your code will meet all the other criteria that would make it maintainable: if it is not readable, it cannot really be maintainable. 
 
-\paragraph{Readable Code}\index{readable code} can be easily consumed by a human.
+\paragraph{Readable Code}\index{readable code}\pslabel{par:ReadableCode} can be easily consumed by a human.
 
 \begin{quote}
-\bdq{[…], programs must be written for people to read, and only incidentally for machines to execute.}\\
-Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs}
-\autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
+	\bdq{[…], programs must be written for people to read, and only incidentally for machines to execute.}\\
+	Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs} \autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
 \end{quote}
 
 \begin{quote}
-\bdq{Everybody can write code that can be read by a computer, but only good developers will write code that can be read by humans.}\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
-Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code} \autocite{Fowler:Refactoring}
+	\bdq{Everybody can write code that can be read by a computer, but only good developers will write code that can be read by humans.}\footnote{I agree in general, but also the converse is true: only developers that will write code that can be read by humans are good developers.} \\
+	Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code} \autocite{Fowler:Refactoring}
 \end{quote}
 
 \begin{quote}
-``\textbf{Reading code is more important than writing code.}
-Code is read much more often than it is written. Further, when writing code, we usually have the whole context in our head, and take our time; when reading code, we are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that's useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
+	``\textbf{Reading code is more important than writing code.}
 
-We are specifically unconcerned here with the amount of keyboarding that’s necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.'' \\
-Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines} \autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
+	Code is read much more often than it is written. Further, when writing code, we usually have the whole context in our head, and take our time; when reading code, we are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that's useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
+
+	We are specifically unconcerned here with the amount of keyboarding that’s necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.'' \\
+	Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines} \autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
 \end{quote}
 
 And from my own experience I would confirm that verbosity is your friend!\footnote{Refer to the \ngref, bullet point \ref{lst:ZoP:ExplicitVsImplicit}.}

@@ -1,60 +1,80 @@
 \chapter{Some basic Considerations regarding Comments}
-Comments are crucial for the understanding of source code, in any programming language. Source code without any comments is not maintainable, meaning it is worthless in the long run.
+Comments are crucial for the understanding of source code, in any programming language – not only in 6502 assembly. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{Comments have to support the readability of source code.
+The question is how much comments are needed, because the frequency of comments reflects poor quality of code. Unfortunately, code can be \bdq{under-commented} or \bdq{over-commented}, meaning there is a \bdq{frequency band} for comments that has to be hit for good quality code.
 
-They do this by structuring the source code into sections and by providing hints on how to interpret the code.}
+A common requirement is that the code must be self-explaining; one often heard advice in this context is: \bdq{When you feel compelled to add a comment, consider rewriting the code to make it clearer.} But clearer to whom? Who is the audience for the code and the comments?
 
-\item{Comments should be used to give an overview on the code and to provide additional information that is not readily available in the code itself.
+In chapter \tqfullref{sec:Goals}, I included on page \pageref{par:ReadableCode} a few quotes that I would like to repeat here:
 
-They should contain only information that is relevant for reading and understanding the program. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class.
+\begin{quote}
+	\bdq{[…], programs must be written for people to read, and only incidentally for machines to execute.}\\
+	Herold Abelson et. al.: \textit{Structure and Interpretation of Computer Programs} \autocite{Sussman:StructureAndInterpretationOfComputerPrograms}
+\end{quote}
 
-The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date. In general, any comments that are likely to get out of date as the code evolves should be avoided.}
+\begin{quote}
+	\bdq{Everybody can write code that can be read by a computer, but only good developers will write code that can be read by humans.} \\
+	Martin G. Fowler: \textit{Refactoring: Improving the Design of Existing Code} \autocite{Fowler:Refactoring}
+\end{quote}
 
-\item{For Java source code, comments are part of or the source for the external documentation of that code.
+\begin{quote}
+	``\textbf{Reading code is more important than writing code.}
+	
+	Code is read much more often than it is written. Further, when writing code, we usually have the whole context in our head, and take our time; when reading code, we are often context-switching, and may be in more of a hurry. Whether and how particular language features are used ought to be determined by their impact on future readers of the program, not its original author. Shorter programs can be preferable to longer ones, but shortening a program too much can omit information that's useful for understanding the program. The central issue here is to find the right size for the program such that understandability is maximized.
 
-The Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{JavaDoc}\index{javadoc}. The “Javadoc Guide”\autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the JavaDoc tool.\footnote{JavaDoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\autocite{DOXYGEN_HOMEPAGE}\index{doxygen} that was created primarily to generate the documentation for annotated C++ code, but it works also for Java, C and several other programming languages. But for Java sources, JavaDoc is the preferred tool.}}
+We are specifically unconcerned here with the amount of keyboarding that’s necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.'' \\
+	Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines} \autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
+\end{quote}
 
-\item{The frequency of comments reflects poor quality of code.
-
-Unfortunately, code can be “under-commented” or “over-commented”, meaning there is a “frequency band” for comments that has to be hit for good quality code.
-
-One often heard advice is: “When you feel compelled to add a comment, consider rewriting the code to make it clearer.” But clearer to whom?
+So we know now that human readers of a program are more important than the computer that will execute the code, but this does not answer the question regarding the intended audience sufficiently.
 
 With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
 
-Obviously, the advice: “Even if you don't think, a comment might be necessary, add it nevertheless” is the other extrema – and equally bad! This means that writing proper comments remains a complex art, but it follows some rules, and for the rest, this document will give some advice: refer to chapter \tqfullvref{sec:CommentsWhen} where this is discussed further.}
+Obviously, the advice: \bdq{Even if you don't think, a comment might be necessary, add it nevertheless} is the other extrema – and equally bad than the first advice, mentioned above!
 
-\item{Comments should be in full sentence and using a clear language.
+Consequently it means that writing proper comments remains a complex art, but it follows some rules, and for the rest, I will try to give some advice.
 
-All comments has to be in English language; they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.}
-\end{enumerate}
+First, Comments have to support the readability of source code. They can do this by structuring the source code into sections and by providing hints on how to interpret the code.
 
+Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
+
+The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
+
+And finally, comments should be in full sentence and using a clear language. They have to be in English language, and they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.
+
+\section{Documentation}
+Although the documentation is part of the deliveries for a software product, it is usually not part of the code itself.
+
+On the other hand, the documentation should be as close to the code as possible.
+
+For Java source code it is possible that comments are part of or the source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
+
+\section{Kinds of Comments}
 Java source code can generally have three kinds of comments:
 \begin{itemize}[nosep]
-\item{documentation comments}
-\item{implementation comments}
-\item{maintenance comments}
+	\item{Documentation Comments}
+	\item{Implementation Comments}
+	\item{Maintenance Comments}
+	\item{Structuring Comments}
 \end{itemize}
 
-In Java, the \textit{documentation comments} (also known as “doc comments” or “the JavaDoc”) are delimited by “\verb#/**…*/#” and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation by the JavaDoc tool. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
+In Java, the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}) are delimited by ``\verb#/**…*/#'' and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation by the Javadoc\index{javadoc} tool\footnote{As already said above, this is covered in \tqfullref{sec:DocumentationComments}.}. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
 
 Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
 
 \textit{Maintenance comments} are technically a special form of implementation comments, but as they have a special function, they are covered separately in chapter \tqfullvref{sec:MaintenanceComments}.
 
+The structuring comments are already covered in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations} when the skeletons for the various kinds of compilation units\index{compilation unit} where discussed.
+
+\section{General Rules}
 Some general rules are:
 \begin{itemize}
-\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described below.}
+	\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described in \tqfullref{sec:FileStructure}.}
 
-\item{Comments should never include special characters such as tabulator, form-feed and backspace or alike. In JavaDoc comments only (see below), most other non-ASCII characters should be escaped with their HTML equivalent.}
+	\item{Comments should never include control characters such as tabulator, form-feed and backspace or alike. In Javadoc\index{javadoc} comments only (see below), most non-ASCII\index{ASCII} characters should be escaped with their HTML\index{HTML} equivalent.}
 
-\item{While code lines can have any length, comment lines will always end in or before column 80, except when their contents cannot be wrapped (like URLs for references to additional information). See also chapter \tqfullvref{sec:LineLength}.}
+	\item{While code lines can have any length, comment lines will always end in or before column~80, except when their contents cannot be wrapped (like URLs for references to additional information). See also chapter \tqfullvref{sec:LineLength}.}
 \end{itemize}
-
-%------------------------------------------------------------------------------
 
 %==============================================================================
 % End of file!!

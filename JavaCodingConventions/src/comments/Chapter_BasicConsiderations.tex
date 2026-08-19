@@ -30,17 +30,19 @@ So we know now that human readers of a program are more important than the compu
 
 With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
 
-Obviously, the advice: \bdq{Even if you don't think, a comment might be necessary, add it nevertheless} is the other extrema – and equally bad than the first advice, mentioned above!
+Obviously, the advice: \bdq{Even if you think, a comment is not be necessary, add it nevertheless} is the other extrema – and equally bad than the first advice, mentioned above!
 
 Consequently it means that writing proper comments remains a complex art, but it follows some rules, and for the rest, I will try to give some advice.
 
-First, Comments have to support the readability of source code. They can do this by structuring the source code into sections and by providing hints on how to interpret the code.
+First, comments have to support the readability of source code. They can do this by structuring the source code into sections and by providing hints on how to interpret the code.
 
 Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
 
-The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
+The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is already present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
 
-And finally, comments should be in full sentence and using a clear language. They have to be in English language, and they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.
+And finally, comments should be in full sentence and using a clear language. They have to be in English language\footnote{Of course you can decide for any other language as well, but we already discussed in \tqfullvref{sec:Language} why English is preferred}, and they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.
+
+But the final answer regarding the audience is still missing; I will discuss this further in \tqfullvref{sec:CommentsWhen}.
 
 \section{Documentation}
 Although the documentation is part of the deliveries for a software product, it is usually not part of the code itself.
@@ -50,7 +52,7 @@ On the other hand, the documentation should be as close to the code as possible.
 For Java source code it is possible that comments are part of or the source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
 
 \section{Kinds of Comments}
-Java source code can generally have three kinds of comments:
+\Java source code can generally have four kinds of comments:
 \begin{itemize}[nosep]
 	\item{Documentation Comments}
 	\item{Implementation Comments}
@@ -67,7 +69,7 @@ Roughly, the documentation comments describe how to use the code (the API), unre
 The structuring comments are already covered in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations} when the skeletons for the various kinds of compilation units\index{compilation unit} where discussed.
 
 \section{General Rules}
-Some general rules are:
+Before we dive deeper into the details, here are a few ground rules that apply to all comments:
 \begin{itemize}
 	\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described in \tqfullref{sec:FileStructure}.}
 

@@ -1,10 +1,725 @@
 \chapter{Documentation Comments}\label{sec:DocumentationComments}
+The documentation for a program or application should be kept close to the source code, to make it easy to keep it current with that source code. Consequently, the authors of Java introduced the Javadoc tool\index{javadoc} as part of the \Java Development Kit (JDK).
+
+This tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++} code, but it works also for Java, C and several other programming languages. But for Java sources, Javadoc is the preferred tool.}. These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
+\keeplisting{14}
+\index{javadoc}\index{Markdown}
+\begin{lstlisting}
+/**
+ *  This is a documentation comment; it will be processed by the
+ *  Javadoc tool.
+ */
+ 
+/*
+ * This is a normal block comment that is ignored by the Javadoc
+ * tool.
+ */
+ 
+// And this is a line comment ...
+
+/// This is also a documentation comment, but in Markdown syntax.
+/// It will be also processed by the Javadoc tool.
+\end{lstlisting}
+
+Since Java~23, also the format shown in the lines~13 and 14 is possible for documentation comments \autocite{JEP467}. The \bsq{old} version uses HTML\index{HTML} tags to format the generated output, in addition to special Javadoc\index{javadoc} and optional custom tags. The new format allows to use Markdown\index{Markdown}\footnote{\autocite{MacFarlane:CommonMarkSpec} provides a good overview of CommonMark\index{Markdown!CommonMark}, a widely used Markdown\index{Markdown} dialect.} for the formatting; the Javadoc\index{javadoc} and custom tags are still working, and HTML\index{HTML} can be mixed in where required.
+
+The resulting output is basically the same for both formats, although you may be inclined to format your comments differently when using Markdown\index{Markdown}.
+
+The \bdq{Javadoc Guide}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code} and the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains the basics on how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.
+
+So far for the technical part~…
+
+It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their products. According to a rumor, the other reason is that programmers are too expensive to write simple documentation. The fact is, however, that skilled technical writers can easily command salaries on par with those of most programmers.
+
+Nevertheless, there is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code to extract the information from it that is necessary for the documentation – not to mention that the technical writers often do not have (write) access to the source code and are therefore not able to add the documentation comments.
+
+Furthermore there are two main target groups for the documentation that is generated from the documentation comments: the first group are the peer developers writing code interoperating with the already existing one, and the second group are the maintenance programmers that have to fix what's broken.
+
+A third group are the testers that are designing their tests based on the generated documentation.
+
+This alone suggests already that documentation comments should be written by the programmers themselves – programmers writing for programmers!
+
+If your product is a \nameref{sec:FunctionLibrary}, the generated documentation may be all that you provide to your clients; same for a \nameref{sec:FeatureLibrary}, although that usually requires additional documentation.
+
+However, even if the generated documentation is intended solely for internal use, it should be created with the same care as documentation for an external audience; in fact, internal documentation should be even more comprehensive and detailed, capturing elements from the deepest recesses of the "engine room" – things an external customer is better off never seeing. Another reason why the documentation comments belong to the responsibilities of the programmers.
+ 
+\section{The Contents of Documentation Comments} 
+
+\subsection{Structure}
+-------------
+ 
+ 
+ 
+ the second are programmers writing code interfacing with this one, using the public APIs. This means that each program element that can have a documentation comment must have a documentation comment! No exception! No excuse for missing documentation comments! The programmer must provide a documentation comment wherever it is possible. 
+
+
+
+
+
+
+ are delimited by ``\verb#/**…*/#'' 
 
 
 For Java source code, comments are part of or the source for the external documentation of that code.
 
-	The \Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{Javadoc}\index{javadoc}. The \bdq{Javadoc Guide} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++} code, but it works also for Java, C and several other programming languages. But for Java sources, Javadoc is the preferred tool.}
+	The \Java Development Kit (JDK) provides a tool that allows to externalize program comments, so that they can be used as the external documentation; the name of this tool is \textit{Javadoc}\index{javadoc}. The \bdq{Javadoc Guide} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code}, the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.
 
+
+
+
+
+
+
+
+Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \verb#Window|Preferences|Java|Compiler|Javadoc#.
+
+To achieve the same for IntelliJ IDEA, you go to \verb#File|Settings#, and there you select \verb#Editor|Inspections>Java>Javadoc#.
+
+Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records}\index{record} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
+
+\begin{lstlisting}
+/**
+ *  The {@code Example} class provides …
+ */
+public class Example
+{
+    /**
+     *  The inner class provides …
+     */
+    private static class InnerClass
+    {
+        …
+    }
+    //  class InnerClass
+     
+    …
+    
+    /**
+     *  This flag …
+     */
+    private boolean m_Flag;
+    …
+
+    /**
+     *  Method that performs some action …
+     *
+     *  @param  arg   The argument.
+     */
+    public final void method( int arg )
+    {
+        …
+    }   //  main()
+}   //  class Example
+\end{lstlisting}
+
+The first line of the documentation comments (“\verb#/**#”) for top level classes is not indented; subsequent lines for the documentation comment have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4~spaces for the first documentation comment line and 5~spaces thereafter (this is congruent for inner classes).
+
+If you need to give information about a class, interface, variable, or method that isn't appropriate for the public documentation, use an implementation comment immediately after the declaration. For example, internal details about the implementation of a class should go in such an implementation block comment following the class statement, not in the class documentation comment.
+
+Documentation comments should not be positioned inside a method or constructor definition block, because Java associates documentation comments with the first declaration after the comment.
+
+%------------------------------------------------------------------------------
+
+\subsection{Structure and Contents}\label{sec:StructureAndContents}
+Latest since the introduction of Java~9, the JavaDoc tool produces (more or less) correct HTML~5 documents from the JavaDoc comments in the source code. Therefore it is strongly recommended to use correct HTML~5 syntax inside the documentation comments itself. This means that tags has to be closed properly, empty tags like \verb#<br># and \verb#<img># are not closed, and so on.
+
+If the comment has more than one single paragraph, use the \verb#<p># tag; do not use the \verb#<br># tag:
+
+\begin{lstlisting}
+/**
+ *  Returns the status for this operation.
+ *
+ *  …
+ */
+ 
+/**
+ *  <p>Returns the status for this operation.</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+\end{lstlisting}
+
+The first sentence of each JavaDoc comment is taken to be placed on an overview. Per default, that sentence is defined as everything from the beginning until the first full stop followed by a blank (“\verb#. #”) or other whitespace, or the first not-inline HTML tag.
+
+This means that a comment like this
+
+\begin{lstlisting}
+// AVOID!!
+/**
+ *  <b>Returns the status for this operation.</b>
+ *
+ *  …
+ */
+\end{lstlisting}
+
+may cause some strange output (writing the comment like that – with the \verb#<b>…</b># tag – should be avoided anyway). Java~10 introduced the JavaDoc tag \nameref{sec:TagSummary} to address issues like this; it allows the programmer to explicitly specify what portion of the JavaDoc comment appears in the overview rather than relying on JavaDoc's default behaviour to determine the summary portion of the comment. Refer to \autocite{ORACLE_DOC_JAVADOC_TAG,DZONE_JAVADOC_SUMMARY} for the details and additional samples.
+
+The \nameref{sec:TagSummary} tag has to be used always when a documentation comment has more than one sentence:
+
+\begin{lstlisting}
+// OK – as single sentence
+/**
+ *  Returns the status for this operation.
+ *
+ *  …
+ */
+ 
+// AVOID!! – Two sentences. 
+/**
+ *  <p>Returns the status for this operation. The return value will 
+ *  never be {@code null}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+/**
+ *  <p>Returns the status for this operation.</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+// RECOMMENDED
+/**
+ *  <p>{@summary Returns the status for this operation.} The return 
+ *  value will never be {@code null}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+
+/**
+ *  <p>{@summary Returns the status for this operation.}</p>
+ *  <p>Possible return values are …</p>
+ *
+ *  …
+ */
+\end{lstlisting}
+
+The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \verb|<h#>|, with \verb|#| being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \verb#<h1># and \verb#<h2># are already used by JavaDoc itself; that means that you should only use \verb#<h3># to \verb#<h6># in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewComment}), you can make use of the all the \verb|<h#>| tags to structure that comment.
+
+When a class, method, constant, field is mentioned the first time in a documentation comment, the documentation for that element should be linked, using the \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
+
+Each \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tag has to be placed into a line of its own.
+
+Some examples:
+\begin{lstlisting}
+/**
+ *  <p>{@summary Searches the given key in the list and returns the
+ *  associated data.} If the key is
+ *  {@linkplain String#isBlank() blank},
+ *  the method will throw a
+ *  {@link BlankArgumentException},
+ *  while an empty will just not return a result.</p>
+ *
+ *  @param  key The key.
+ *  @returns An instance of
+ *      {@link Optional}
+ *      that holds the search result.
+ *  @throws IllegalArgumentException    The key is somehow invalid.
+ *
+public final Optional<Data> searchData( final String key ) { … }
+\end{lstlisting}
+
+JavaDoc creates links to the documentation of \lstinline|java.lang.IllegalArgumentException|, \lstinline|java.lang.String| and \lstinline|Data| automatically; it also creates a link to \lstinline|java.util.Optional| but it is recommeded to use the pattern shown here, even when this means that the comment holds two links to the \lstinline|Optional| class documentation.
+
+The names of classes, methods, constant, fields, parameters etc. as well as \lstinline|null|, \lstinline|true|, and \lstinline|false| have to be written in a monotype font. This can be achieved by encapsulating them in \lstinline|<code>…</code>| HTML tags or placing them inside the JavaDoc \nameref{sec:TagCode} tag. The monotype font is used automatically for everything inside a \nameref{sec:TagLink} tag.
+
+Each comment, including each text for a \nameref{sec:TagParam}, \nameref{sec:TagReturn}, and \nameref{sec:TagThrows} tag, ends with a full stop.
+
+The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the JavaDoc tool.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Overview Comment}\label{sec:OverviewComment}
+When the JavaDoc tool is called with the option \verb#-overview <filename># (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}), an ‘Overview’ comment is  added to the generated documentation. \verb#<filename># is the (fully-qualified)  filename of a valid HTML~5 document (The recommended name is \verb#overview.html#) containing general information about the project.
+
+You can put nearly everything here, from the project's history to manual on how to use the program or library, but you should not reproduce information that is given in the module, package, or class documentation comments.
+
+Several JavaDoc tags can be also used in the overview comment; for details refer to the chapter "Where Tags Can Be Used" in \autocite{ORACLE_DOC_JAVADOC_TAG}.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘module’ Comment}\label{sec:ModuleComment}
+The \verb#<module description># (refer to chapter \tqfullref{sec:ModuleDefinition}) describes the current module, its dependencies and what it provides. See the JavaDoc tags \nameref{sec:TagProvides} and \nameref{sec:TagUses} for details.
+
+If the project has just one module, the module comment can replace the overview comment.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘package’ Comment}\label{sec:PackageComment}
+Each and every Java package has to have a file named \verb#package-info.java#; the structure of that file was already discussed in chapter \tqfullvref{sec:PackageDocumentation}.
+
+The \verb#<package description># provides information about the package. So it describes the purpose of the classes in this package. It lists conventions that are common for all contained classes, it should specify their prerequisites.
+
+If the package defines a single API, it can describe the usage of that API, too. 
+
+The package comment can list the authors of the code, using the \nameref{sec:TagAuthor} tag\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})}, the version with the \nameref{sec:TagVersion} tag, when the package was created or with which version it was integrated with the \nameref{sec:TagSince} tag, and other things.
+
+It should not repeat details that are written already in the documentation of a class in that package, instead it should reference that class documentation. If those details are  important for the whole package, it should be considered to move them from the class comment to the package description and place a reference into the class documentation instead.
+
+The package comment for the main package of a project can replace the overview comment (if not the module comment is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘class’ Comment}\label{sec:ClassComment}
+The documentation comment for a class, an interface, an enum, a record\index{record} or an annotation (the ‘class comment’) describes that class, its purpose and its usage. If the class is not \lstinline|final|, the comment should provide some hints what the mount points\footnote{Another term for “mount point” is “extension point”, but I do not like this expression as we do not always “extend” a class on these points. Most often we replace existing behaviour to customise the class to our needs.} are and how to utilise them.
+
+Then the class comment should list the authors of the class, using the \nameref{sec:TagAuthor}\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})} tag, the class version (using the \nameref{sec:TagVersion} tag), and when the class was added to the project with the \nameref{sec:TagSince} tag, although this can be omitted if this information is already given within the package.
+
+In case of a parametrised type (a ‘generic’), it contains a \nameref{sec:TagParam} tag for each formal parameter.
+
+Here a real life sample for an interface:
+\begin{lstlisting}
+/**
+ *  <p>{@summary This is the basic interface for any kind of DAO 
+ *  (Data Access Object).} It is based on sample code from the book 
+ *  &quot;Java Persistence with Hibernate&quot;.</p>
+ *
+ *  @param  <T> The entity type for the DAO.
+ *  @param  <I> The type of the entity id.
+ *
+ *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version <version information>
+ *  @since 1.2.3
+ */
+public interface GenericDAO<T,I>
+{
+    …
+}   //  interface GenericDAO
+\end{lstlisting}
+
+The \verb#<version information># should be a reference to the version in the SCCS; if you are using Subversion, that line would look like this:
+\begin{lstlisting}
+/**
+ …
+ *  @version $Id:$
+ …
+ */
+\end{lstlisting}
+
+I also recommend to use the custom tags provided by the “Foundation JavaDoc” project\autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC} (see chapter \tqfullvref{sec:CustomTagsForJavaDoc}); then the same class documentation comment would look this:
+\begin{lstlisting}
+/**
+ *  This is the basic interface for any kind of DAO (Data Access
+ *  Object).
+ * 
+ *  @inspired &quot;Java Persistence with Hibernate&quot;
+ *
+ *  @param  <T> The entity type for the DAO.
+ *  @param  <I> The type of the entity id.
+ *
+ *  @extauthor Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version $Id:$
+ *  @since 1.2.3
+ *
+ *  @UMLGraph.link
+ */
+public interface GenericDAO<T,I>
+{
+    …
+}   //  interface GenericDAO
+\end{lstlisting}
+The tag \nameref{sec:TagExtAuthor} is an enhanced replacement for the \nameref{sec:TagAuthor} tag, and the tag \nameref{sec:TagUMLGraph} places an UML diagram for the current class to the generated documentation.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The ‘record’ Comment}\label{sec:RecordComment}
+The class comment for a record\index{record} is a bit special as it has to incorporate the documentation for the fields of the record as well as for the arguments for the constructor (as both are the same).
+
+The declaration for a record may look like this:
+\begin{lstlisting}[numbers=left,caption={A tupel class}]
+/**
+ *  <p>{@summary A tupel.} The first entry, usually referred to as 
+ *  the &quot;key&quot; identifies the object, the second one is the
+ *  &quot;value&quot;.</p>
+ *  <p>The sort order is determined only through the keys, therefore
+ *  {@link #compareTo(Tupel)}
+ *  is not consistent with
+ *  {@link #equals(Object)}.</p>
+ *
+ *  @param  <K> The type of the key.
+ *  @param  <V> The type of the value.
+ *
+ *  @param  key The key of the tupel; can be {@code null}.
+ *  @param  value   The value of the tupel; can be {@code null}.
+ *
+ *  @extauthor Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version $Id:$
+ *  @since 1.2.3
+ *
+ *  @UMLGraph.link
+ */
+public record Tupel<K extends Comparable<K>,V>( K key, V value ) implements Comparable<Tupel<K,V>
+{
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc} 
+     */
+    @Override
+    public final int compareTo( final Tupel<K,V> o )
+    {
+        final var retValue = Comparator.comparing( Tupel<K,V>::key )
+            .compare( this, o ); 
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  compareTo()
+}
+//  record Tupel
+\end{lstlisting}
+
+Although not explicitly declared, \lstinline|Tupel| has~…
+\begin{itemize}[nosep]
+\item{…~a constructor “\lstinline|Tupel( final K key, final V value )|”}
+\item{…~two attributes “\lstinline|public final K key|” and “\lstinline|publi8 final V value|}
+\item{…~the two accessor methods “\lstinline|K key()|” and “\lstinline|V value()|”}
+\item{…~and implementations for “\lstinline|equals()|”, “\lstinline|hashCode()|” and “\lstinline|toString()|”}
+\end{itemize}
+
+The documentation for these elements is generated either based on the arguments for the \nameref{sec:TagParam} tags (see lines~13 and 14) or from standard texts.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Field Comment}\label{sec:FieldComment}
+Attributes/properties, constants and enum values are all summarised under ‘field’ here.
+
+% Elaborate on comments for constants!!!!
+
+
+Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
+\begin{lstlisting}
+/**
+ *  Refer to
+ *  {@link #getValue()}.
+ */
+private final Value m_Value;
+
+// AVOID!!
+/**
+ *  @see #getOtherValue()}.
+ */
+private final Value m_OtherValue;
+\end{lstlisting}
+
+If there is no getter method for a field, or it is not \lstinline|private|, a proper description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
+
+It is always a good idea to describe the valid values for the field, its default value, and whether \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields – in particular because there should never be any non-\lstinline|final| non-\lstinline|private| fields at all.
+
+For a serialisable class, the fields that will be serialised should be tagged with \nameref{sec:TagSerial} and the appropriate description.
+
+Constants (\lstinline|public static final| fields) that are initialised with a literal have to use the \nameref{sec:TagValue} tag in there description. Also \lstinline|private static final| or \lstinline|protected static final| fields that are initialised with a literal should use the \nameref{sec:TagValue}.
+
+This looks like this:
+\begin{lstlisting}
+/**
+ *  The vested system property for the file encoding used by the JVM:
+ *  {@value}.
+ */
+public static final String PROPERTY_FILE_ENCODING = "file.encoding";
+\end{lstlisting}
+
+The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Method Comment}\label{sec:MethodComment}
+The documentation comment for a method describes its usage and its function within the class, together with its arguments, the return value, and any exception it may throw.
+
+For each method parameter there have to be a \nameref{sec:TagParam} tag that describes it in detail (if not already described in the main text of the method comment; in that case, a short sentence should be sufficient). The description has to cover the function of the parameter, its value range, and whether the parameter can be \lstinline|null|. Usually, \lstinline|null| is an invalid parameter value per default, so it has to be mentioned in the respective comment if it is allowed.
+
+It is not enough to only give the type of the parameter in the comment; in fact, this is obsolete as it can be easily taken from the method's signature.
+
+Usually, the return value (given the method is not of type \lstinline|void|) will be described in the comment for the \nameref{sec:TagReturn} tag; the tag is mandatory, and with some text, even if the return value is described already in the method description itself. The description for the return value should provide the possible values and their meanings, whether \lstinline|null| is a valid return value, and so on. 
+
+In particular, the comment for the \nameref{sec:TagReturn} tag has to describe which return values indicate special or error conditions.
+
+It is obsolete to give the type of the return value here; it can already be seen from the method's declaration.
+
+Next there has to be a \nameref{sec:TagThrows} tag for each checked exception that may be thrown by the method, describing the condition that may trigger that exception. It is also possible to add \nameref{sec:TagThrows} clauses for unchecked exceptions, but not required. Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} for additional details on exception handling.
+
+A method that implements an interface method or that overrides a method from a base class may be commented with the \nameref{sec:TagInheritDoc} tag instead of writing a full comment. The tag can be combined with additional text, too.
+
+The documentation comment for a non-\lstinline|final| \lstinline|public| or \lstinline|protected| method has to provide detailed information when and how it has to be overwritten; especially if the overriding method has to call the super implementation and when. Usually you should avoid the requirement for calling the super implementation, but that is not always appropriate or possible; refer to chapter \tqfullvref{sec:NonFinalMethods} about some more details regarding this topic.
+
+A comment for that case may look like this:\footnote{The tag @note is a custom tag; refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc}.}
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note Call this implementation {before|after} your code, to make
+ *      sure that the initialisations provided here are performed.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+For more details on this refer to chapter \tqfullvref{sec:ExtendingClassesOverridingMethods}.
+
+Usually, the documentation comment for a method does not reveal details about the method's implementation, but in case of empty “place holder methods” or mount points, a sentence like below does not harm.
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+If such a method has a dummy or default return value, there has to be an appropriate \nameref{sec:TagReturn} tag, specifying that value:
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ *  @return Always <the default value>.
+ */
+\end{lstlisting}
+ 
+Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected. This includes the modification of an argument; refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Constructor Comment}\label{sec:ConstructorComment}
+Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
+
+For an (empty) default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
+\begin{lstlisting}
+/**
+ *  Creates a new instance of {@code MyClass}.
+ */
+public MyClass() { /* Does nothing */ }
+\end{lstlisting}
+or
+\begin{lstlisting}
+/**
+ *  Default constructor for class {@code MyClass}.
+ */
+private MyClass() { /* Does nothing */ }
+\end{lstlisting}
+with the first alternative being the preferred one, because this comment can be used for every constructor, not only for the default ones.
+
+Of course, this comment do not say very much, but the constructor of a class is also not doing that much, and what it does is very obvious. But if the constructor has side effects, these should be described properly.
+
+A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The class for the \lstinline|Error| used in the \lstinline|throw| is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+\begin{lstlisting}
+/**
+ *  No instance is allowed for class {@code MyUtilityClass}.
+ */
+private MyUtilityClass() 
+{ 
+    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class ); 
+}   // MyUtilityClass()
+\end{lstlisting}
+
+If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
+
+Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
+
+Same as for a method, the documentation comment for a constructor has to describe all the side-effects caused by it; the modification of an argument is such a side-effect – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details. But in general, a constructor should not have any (visible) side-effects at all.
+
+%------------------------------------------------------------------------------
+
+\subsection{The JavaDoc Tags}\label{sec:JavaDocTags}
+The next two chapters describe the tags that should be used in your documentation comments where appropriate.
+
+One general rule for all JavaDoc tags: Do not insert line breaks between the parameters of a tag:
+\begin{lstlisting}
+// WRONG!!
+/*
+ *  …
+ *  @param args
+ *         The command line arguments
+ *  @param  otherArg
+ *          This parameter needs a very long explanatory comment that
+ *          requires a line break.
+ *  @throws IOException
+ *          Reading the file failed.
+ *  …
+ */
+
+// CORRECT:
+/*
+ *  …
+ *  @param  args   The command line arguments
+ *  @param  otherArg    This parameter needs a very long explanatory
+ *      comment that requires a line break.
+ *  @throws IOException Reading the file failed.
+ *  …
+ */
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
+
+\subsubsection{The Standard Doclet Tags}
+Most of the contents of this chapter was taken from the document “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG}. 
+
+The output of the JavaDoc tool is determined by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet|\footnote{Refer to \autocite{ORACLE_DOC_DOCLET_INTERFACE}.} that is specified on the command line for \verb#javadoc#. The \lstinline|Doclet| implementation is also responsible for the interpretation of the content of a documentation comment.
+
+If no explicit \lstinline|Doclet| class is specified, the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet|\autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}) is used; it understands the JavaDoc tags described below, and it provides an API for additional tags.
+
+Alternative implementations for the \lstinline|Doclet| interface may accept the same syntax as the standard doclet, they may handle the tags completely different or they can ignore them completely. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
+
+\paragraph{\lstinline|@author|}\label{sec:TagAuthor} Usage: \lstinline|@author <name-text>|
+
+The tag adds an “Author” entry with the specified name text to the generated documents when the \verb#-author# option is specified on the command line. A documentation comment can contain multiple \lstinline|@author| tags. Consider to use the alternative \nameref{sec:TagExtAuthor} tag instead.
+
+\paragraph{\lstinline|@code|}\label{sec:TagCode}  Usage: \lstinline|{@code <text>}|
+
+This is equivalent to \lstinline|<code>{@literal text}</code>|.
+
+It displays text in the code font without interpreting the text as HTML markup or nested JavaDoc tags. This enables you to use regular angle brackets (“\textless” and “\textgreater”) instead of the HTML entities (\verb#&lt;# and \verb#&gt;#) in documentation comments, such as in parameter types (\verb#<Object>#), inequalities ($3 < 4$), or arrows (-\textgreater).
+
+If you want the same functionality without the code font, then use the \nameref{sec:TagLiteral} tag. 
+
+\paragraph{\lstinline|@deprecated|}  Usage: \lstinline|{@deprecated <text>}|
+
+This tag is used in conjunction with the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotation to indicate that this API should no longer be used (even though it may continue to work).
+
+The first sentence of the text should tell the user when the API was deprecated and what to use as a replacement. Subsequent sentences can also explain why it was deprecated.
+
+A \nameref{sec:TagLink} tag that points to the replacement API should be added where feasible.
+
+\paragraph{\lstinline|@docRoot|}  Usage: \lstinline|{@docRoot}|
+
+Represents the relative path to the generated document's (destination) root directory from any generated page. This tag is useful when you want to include a file, such as a copyright page or company logo, that you want to reference from all generated pages.
+
+\paragraph{\lstinline|@exception|} This is a synonym for \nameref{sec:TagThrows}; it should not be used.
+
+\paragraph{\lstinline|@hidden|}  Usage: \lstinline|@hidden|
+
+Hides a program element from the generated API documentation. This tag may be used when it is not otherwise possible to design the API in a way that such items do not appear at all.
+
+\paragraph{\lstinline|@index|}  Usage: \lstinline|{@index <word> <description>}| or \lstinline|{@index "<phrase>" <description>}|
+
+Declares that a word or phrase, together with an optional short description, should appear in the index files generated by the standard doclet. The index entry will be linked to the word or phrase that will appear at this point in the generated documentation. The description may be used when the word or phrase to be indexed is not clear by itself, such as for an acronym.
+
+\paragraph{\lstinline|@inheritDoc|}\label{sec:TagInheritDoc}  Usage: \lstinline|{@inheritDoc}|
+
+Inherits (copies) the documentation comment from the nearest inheritable class or implementable interface into the current documentation comment at this tag's location. This enables you to write more general comments higher up the inheritance tree and to write around the copied text.
+
+\paragraph{\lstinline|@link|}\label{sec:TagLink}  Usage: \lstinline|{@link <module/package.class#member> <label>}|
+
+Inserts an inline link with a visible text label that points to the documentation for the specified module, package, class, or member name of a referenced class. 
+
+This tag is similar to the \nameref{sec:TagSee} tag. Both tags require the same references and accept the same syntax for \verb|<module/package.class#member>| and the label. The main difference is that the \lstinline|{@link}| tag generates an inline link rather than placing the link in the “See Also” section. The \lstinline|{@link}| tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (“\}”) inside the label, then use the HTML entity notation \verb|&#125;|.
+
+\paragraph{\lstinline|@linkplain|}\label{sec:TagLinkplain}  Usage: \lstinline|{@linkplain <module/package.class#member> <label>}|
+
+Behaves the same as the \nameref{sec:TagLink} tag, except the link label is displayed in plain text rather than code font. Useful when the label is plain text.
+
+\paragraph{\lstinline|@literal|}\label{sec:TagLiteral}  Usage: \lstinline|{@literal <text>}| 
+
+Same as the \nameref{sec:TagCode} tag, but the text is shown as plain text and not in the code font.
+
+\paragraph{\lstinline|@param|}\label{sec:TagParam}  Usage: \lstinline|@param <parameter-name> <description>|
+
+Adds a parameter with the specified parameter name followed by the specified description to the “Parameters” section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (“\verb#<…>#”) around such a parameter name to indicate the use of a type parameter.
+
+\paragraph{\lstinline|@provides|}\label{sec:TagProvides}  Usage: \lstinline|@provides <service-type> <description>|
+
+This tag may only appear in the documentation comment inside a \verb#module-info.java# file. It serves to document an implementation of a service that is provided by the module. The description may be used to specify how to obtain an instance of this service provider, and any important characteristics of the provider itself. 
+
+\paragraph{\lstinline|@return|}\label{sec:TagReturn}  Usage: \lstinline|@return <description>|
+
+Adds a “Returns” section with the description text to the documentation comment of a method.
+
+\paragraph{\lstinline|@see|}\label{sec:TagSee}  Adds a “See Also” heading with a link or text entry that points to a reference. The \lstinline|@see| tag has three variations; see \autocite{ORACLE_DOC_JAVADOC_TAG} for the details.
+
+\paragraph{\lstinline|@serial|}\label{sec:TagSerial} Used in the documentation comment for a default serializable field. See “Documenting Serializable Fields and Data for a Class”\autocite{ORACLE_DOC_OBJECT_SERIALIZATION:DocumentingSerializableFieldsData}. 
+
+\paragraph{\lstinline|@since|}\label{sec:TagSince}  Usage: \lstinline|@since <since-text>|
+
+Adds a “Since” heading with the specified \verb#<since-text># value to the generated documentation. The text has no special internal structure. This tag that this change or feature has existed since the software release specified by the \verb#<since-text># value, for example: \lstinline|@since 1.5|.
+
+Although it would possible to provide a date or something else, it is recommended to always use a version number with the \lstinline|@since| tag.
+
+\paragraph{\lstinline|@summary|}\label{sec:TagSummary}  Usage:  \lstinline|{@summary <text>}|
+
+Identifies  the summary of an API description, as an alternative to the default policy to identify and use the first sentence of the API description. The tag only has significance when used at the beginning of a description. In all cases, the tag is rendered by simply rendering its content.
+
+The \lstinline|{@summary}| tag has to be used always when a documentation comment has more than one sentence; see also chapter \tqvref{sec:StructureAndContents}.
+
+\paragraph{\lstinline|@throws|}\label{sec:TagThrows}  Usage: \lstinline|@throws <class-name> <description>|
+
+The \lstinline|@throws| tag adds a “Throws” subheading to the generated documentation, with the \verb#<class-name># and the description text. The class name is the name of the exception that might be thrown by the method, and the description provides information about the conditions for that exception to be thrown. 
+
+\paragraph{\lstinline|@uses|}\label{sec:TagUses}  Usage: \lstinline|@uses <service-type> <description>|
+
+This tag may only appear in the documentation comment inside a \verb#module-info.java# file. It serves to document that a service may be used by the module. The description may be used to specify the characteristics of the service that may be required, and what the module will do if no provider for the service is available.
+
+\paragraph{\lstinline|@value|}\label{sec:TagValue}  Usage: \lstinline|{@value}| or \lstinline|{@value <module/package.class#field>}|
+
+This tag is used to display the values of constant in the generated documentation. When the \lstinline|{@value}| tag is used without an argument in the documentation comment of a \lstinline|static final| field, it displays the value of that constant:
+\begin{lstlisting}
+/**
+ * The value of this constant is {@value}.
+ */
+public static final String SCRIPT_START = "<script>"
+\end{lstlisting}
+
+When used with the argument \verb|<module.package.class#field>| in any documentation comment, the \lstinline|{@value}>| tag displays the value of the specified constant:
+\begin{lstlisting}
+/**
+ * Evaluates the script starting with {@value #SCRIPT_START}.
+ */
+public final String evalScript( String script ) { … }
+\end{lstlisting}
+The argument \verb|<module.package.class#field>| takes a form similar to that of the \nameref{sec:TagLink}, the \nameref{sec:TagLinkplain}, or the \nameref{sec:TagSee} tag argument, except that the member always must be a \lstinline|static final| field.
+
+\paragraph{\lstinline|@version|}\label{sec:TagVersion}  Usage: \lstinline|@version <version-text>|
+
+Adds a “Version” subheading with the specified \verb#<version-text># value to the generated documents when the \verb#-version# option is specified on the command line. This tag is intended to hold the current release number of the software that this code is part of, as opposed to the \nameref{sec:TagSince} tag, which holds the release number where this code was introduced. The \verb#<version-text># value has no special internal structure.
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
+You can define your own JavaDoc tags; simple tags can be defined on the command line for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
+
+I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+
+\paragraph{\lstinline|@anchor|}\label{sec:TagAnchor}  Usage: \lstinline|{@anchor #<anchor-name> <text>}|
+
+This tag allows to add an HTML anchor to the generated documentation, where \verb#<anchor-name># is the name of the anchor to the given text. The hash symbol (‘\#’) before the name of the anchor is mandatory!
+
+\paragraph{\lstinline|@extauthor|}\label{sec:TagExtAuthor}  Usage: \lstinline|@extauthor <name-text> - <email-address>|
+
+This is a replacement for the \nameref{sec:TagAuthor} tag that renders the given email address as a \verb#mailto:# link in the generated documentation. It does not regard the option \verb#-author# on the command line\footnote{This is valid for version 0.1.0 of the library; it may have changed for a later version.}. 
+
+\paragraph{\lstinline|@href|}\label{sec:TagHref}  Usage: \lstinline|{@href <url> <text>}| or \lstinline|{@href <url>}|
+
+With this tag, an HTML hyperlink can be added to the generated documentation; it will be placed inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \verb#<url># is the target URL, while \verb#<text># is the clickable text. If the latter is omitted, the URL itself will be used instead.
+
+\paragraph{\lstinline|@inspired|}\label{sec:TagInspired}  Usage: \lstinline|@inspired <text>|
+
+Sometimes a piece of code was inspired by a document of some kind, a description of an algorithm, a product white paper, or whatever. This tag allows you to add a reference to that source of inspiration. 
+
+\paragraph{\lstinline|@modified|}\label{sec:TagModified}  Usage: \lstinline|@modified <name-text> - <email-address>|
+
+This is a variant of the \nameref{sec:TagExtAuthor} tag. It is meant to provide the name of the developer that modified the respective element without claiming to be an author.
+
+\paragraph{\lstinline|@note|}\label{sec:TagNote}  Usage: \lstinline|@note <text>|
+
+With this tag, it is easy to add important notes to the generated documentation for an element. All notes will be added to a bullet list placed immediately beneath the documentation text. The text for the \lstinline|@note| tag is somehow limited as it does not allow other JavaDoc tags.
+
+\paragraph{\lstinline|@thanks|}\label{sec:TagThanks}  Usage: \lstinline|@thanks <name-text> - <email-address>|
+
+Use this tag to mention someone who provided input to the respective element without being an author; that person might have wrote an article about the algorithm that was implemented by this element, or they may have reported a bug.
+
+Same as for the \nameref{sec:TagExtAuthor} and the \nameref{sec:TagModified} tags, the email address will be rendered to a \verb#mailto:# link in the generated documentation.
+
+\paragraph{\lstinline|@UMLGraph.link|}\label{sec:TagUMLGraph}  Usage: \lstinline|@UMLGraph.link|
+
+This adds an UML graph for the current class to the generated documentation.
+
+%------------------------------------------------------------------------------
 
 
 

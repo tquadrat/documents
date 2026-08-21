@@ -45,6 +45,64 @@ However, even if the generated documentation is intended solely for internal use
  
 \section{The Contents of Documentation Comments} 
 
+
+
+
+
+
+Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records}\index{record} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:
+
+\begin{lstlisting}
+/**
+ *  The {@code Example} class provides …
+ */
+public class Example
+{
+    /**
+     *  The inner class provides …
+     */
+    private static class InnerClass
+    {
+        …
+    }
+    //  class InnerClass
+     
+    …
+    
+    /**
+     *  This flag …
+     */
+    private boolean m_Flag;
+    …
+
+    /**
+     *  Method that performs some action …
+     *
+     *  @param  arg   The argument.
+     */
+    public final void method( int arg )
+    {
+        …
+    }   //  main()
+}   //  class Example
+\end{lstlisting}
+
+The first line of the documentation comments (“\verb#/**#”) for top level classes is not indented; subsequent lines for the documentation comment have one space of indentation (to vertically align the asterisks). All members, including inner classes, have 4~spaces for the first documentation comment line and 5~spaces thereafter (this is congruent for inner classes).
+
+If you need to give information about a class, interface, variable, or method that isn't appropriate for the public documentation, use an implementation comment immediately after the declaration. For example, internal details about the implementation of a class should go in such an implementation block comment following the class statement, not in the class documentation comment.
+
+Documentation comments should not be positioned inside a method or constructor definition block, because Java associates documentation comments with the first declaration after the comment.
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Structure}
 -------------
  

@@ -1,0 +1,35 @@
+\chapter{Structuring Comments}\label{sec:StructuringComments}
+Structuring comments are the most simple comments: they are used to separate the parts of a class (as defined in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
+\begin{lstlisting}[numbers=left,stepnumber=3,firstnumber=2]
+    /*------------------*\
+====** Enum Declaration **===========================================
+    \*------------------*/
+    /*---------------*\
+====** Inner Classes **==============================================
+    \*---------------*/
+    /*-----------*\
+====** Constants **==================================================
+    \*-----------*/
+    /*------------*\
+====** Attributes **=================================================
+    \*------------*/
+    /*------------------------*\
+====** Static Initialisations **=====================================
+    \*------------------------*/
+    /*--------------*\
+====** Constructors **===============================================
+    \*--------------*/
+    /*---------*\
+====** Methods **====================================================
+    \*---------*/
+\end{lstlisting}
+
+with the lines ending at column~80 (the samples here are shorter, to avoid a line break).
+
+If a class or interface does not have a particular part, the assigned structuring comment must be omitted.
+
+Of course you can decide to use another format for structuring comments in your projects, but you should not forgo it. These \bdq{headings} significantly facilitate navigation within the source code. 
+
+%==============================================================================
+% End of file!!
+%==============================================================================

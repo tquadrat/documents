@@ -1,7 +1,7 @@
 \chapter{Documentation Comments}\label{sec:DocumentationComments}
-The documentation for a program or application should be kept close to the source code, to make it easy to keep it current with that source code. Consequently, the authors of Java introduced the Javadoc tool\index{javadoc} as part of the \Java Development Kit (JDK).
+An often heard requirement is to keep the documentation for a program or application as close to the source code as possible, to make it easier to keep it current with that source code. Consequently, the authors of Java introduced the Javadoc tool\index{javadoc} as part of the \Java Development Kit (JDK).
 
-This tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++} code, but it works also for Java, C and several other programming languages. But for Java sources, Javadoc is the preferred tool.}. These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
+This tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
 \keeplisting{14}
 \index{javadoc}\index{Markdown}
 \begin{lstlisting}
@@ -21,33 +21,33 @@ This tool allows to externalize especially marked program comments, so that they
 /// It will be also processed by the Javadoc tool.
 \end{lstlisting}
 
-Since Java~23, also the format shown in the lines~13 and 14 is possible for documentation comments \autocite{JEP467}. The \bsq{old} version uses HTML\index{HTML} tags to format the generated output, in addition to special Javadoc\index{javadoc} and optional custom tags. The new format allows to use Markdown\index{Markdown}\footnote{\autocite{MacFarlane:CommonMarkSpec} provides a good overview of CommonMark\index{Markdown!CommonMark}, a widely used Markdown\index{Markdown} dialect.} for the formatting; the Javadoc\index{javadoc} and custom tags are still working, and HTML\index{HTML} can be mixed in where required.
+Since Java~23, also the format shown in the lines~13 and 14 is possible for documentation comments \autocite{JEP467}. The \bsq{old} version uses HTML\index{HTML} tags to control the formatting of the generated output, in addition to special Javadoc\index{javadoc} and optional custom tags. The new format allows to use Markdown\index{Markdown}\footnote{\autocite{MacFarlane:CommonMarkSpec} provides a good overview of CommonMark\index{Markdown!CommonMark}, a widely used Markdown\index{Markdown} dialect.} for that purpose; the Javadoc\index{javadoc} and custom tags are still working, and HTML\index{HTML} can be mixed in where required.
 
-The resulting output is basically the same for both formats, although you may be inclined to format your comments differently when using Markdown\index{Markdown}.
+I stuck with the \bsq{old} way to write documentation comments, because I personally don't see much advantage in using Markdown\index{Markdown}, but this is purely a matter of personal preferences. The resulting output is basically the same for both formats, although you may be inclined to format your comments slightly different when using Markdown\index{Markdown}.
 
 The \bdq{Javadoc Guide}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code} and the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains the basics on how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.
 
 So far for the technical part~…
 
-It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their products. According to a rumor, the other reason is that programmers are too expensive to write simple documentation. The fact is, however, that skilled technical writers can easily command salaries on par with those of most programmers.
+It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their products. According to a rumor, the other reason is that programmers are too expensive to write simple documentation. The fact is, however, that skilled technical writers can easily command salaries on par with those of most top programmers.
 
-Nevertheless, there is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code to extract the information from it that is necessary for the documentation – not to mention that the technical writers often do not have (write) access to the source code and are therefore not able to add the documentation comments.
+Nevertheless, there is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code and to extract the information from it that is necessary for the documentation – not to mention that the technical writers often do not have (write) access to the source code and are therefore being technically not able to add the documentation comments.
 
 Furthermore there are two main target groups for the documentation that is generated from the documentation comments: the first group are the peer developers writing code interoperating with the already existing one, and the second group are the maintenance programmers that have to fix what's broken.
 
-A third group are the testers that are designing their tests based on the generated documentation.
+A third group are the testers that are designing their tests based on the generated documentation, but they also use the design documents and the public documentation as their sources.
 
 This alone suggests already that documentation comments should be written by the programmers themselves – programmers writing for programmers!
 
-If your product is a \nameref{sec:FunctionLibrary}, the generated documentation may be all that you provide to your clients; same for a \nameref{sec:FeatureLibrary}, although that usually requires additional documentation.
+If your product is a \nameref{sec:FunctionLibrary}, the generated documentation may be all that you provide to your clients; same for a \nameref{sec:FeatureLibrary}, although that usually requires some documentation \textit{supplementing} the generated documentation, not substituting it.
 
-However, even if the generated documentation is intended solely for internal use, it should be created with the same care as documentation for an external audience; in fact, internal documentation should be even more comprehensive and detailed, capturing elements from the deepest recesses of the "engine room" – things an external customer is better off never seeing. Another reason why the documentation comments belong to the responsibilities of the programmers.
+However, even when the generated documentation is intended solely for internal use, it should be created with the same care as documentation for an external audience; in fact, internal documentation should be even more comprehensive and detailed, capturing elements from the deepest recesses of the \bdq{engine room} – things an external customer is better off never seeing. Another reason why the documentation comments belong to the responsibilities of the programmers.
  
 \section{The Contents of Documentation Comments} 
+The rule of thumb is that every program element that got a name requires a documentation comment. The exceptions are local variables\footnote{but refer to chapter \tqfullref{sec:LocalVariableComments}} and labels\index{label}.
 
 
-
-
+See \hyperref[lbl:DocumentationComments]{above}.
 
 
 Documentation comments describe Java modules, packages, classes\footnote{All types of \textit{classes}, including \textit{interfaces}, \textit{enums}, \textit{records}\index{record} and \textit{annotations}}, constructors, methods, and fields\footnote{All types of fields: \textit{attributes}, \textit{constants}, but also the \textit{enum values}}. Each documentation comment is set inside the comment delimiters “\verb#/**…*/#”, with one comment per module, package\footnote{The documentation comment for a Java package is special; refer to chapter \tqfullvref{sec:PackageDocumentation} for the details}, class, or member. This comment has to appear just before the declaration:

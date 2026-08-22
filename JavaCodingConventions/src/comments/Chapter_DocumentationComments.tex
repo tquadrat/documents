@@ -1,7 +1,8 @@
 \chapter{Documentation Comments}\label{sec:DocumentationComments}
 An often heard requirement is to keep the documentation for a program or application as close to the source code as possible, to make it easier to keep it current with that source code. Consequently, the authors of Java introduced the Javadoc tool\index{javadoc} as part of the \Java Development Kit (JDK).
 
-This tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
+\section{The \bsq{Javadoc} Tool}
+The Javadoc\index{javadoc} tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
 \keeplisting{14}
 \index{javadoc}\index{Markdown}
 \begin{lstlisting}
@@ -29,6 +30,7 @@ The \bdq{Javadoc Guide}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provi
 
 So far for the technical part~…
 
+\section{Responsibility} 
 It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their products. According to a rumor, the other reason is that programmers are too expensive to write simple documentation. The fact is, however, that skilled technical writers can easily command salaries on par with those of most top programmers.
 
 Nevertheless, there is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code and to extract the information from it that is necessary for the documentation – not to mention that the technical writers often do not have (write) access to the source code and are therefore being technically not able to add the documentation comments.
@@ -43,9 +45,37 @@ If your product is a \nameref{sec:FunctionLibrary}, the generated documentation 
 
 However, even when the generated documentation is intended solely for internal use, it should be created with the same care as documentation for an external audience; in fact, internal documentation should be even more comprehensive and detailed, capturing elements from the deepest recesses of the \bdq{engine room} – things an external customer is better off never seeing. Another reason why the documentation comments belong to the responsibilities of the programmers.
  
-\section{The Contents of Documentation Comments} 
-The rule of thumb is that every program element that got a name requires a documentation comment. The exceptions are local variables\footnote{but refer to chapter \tqfullref{sec:LocalVariableComments}} and labels\index{label}.
+\section{General Structure}\label{sec:DocCommentsGeneralStructure}
+As already mentioned \hyperref[lbl:DocumentationComments]{above}, regular documentation comments are block comments where the opening tag is immediately followed by another asterisk\footnote{… or where each line is introduced by three slashes: \bdq{\lstinline|/// …|}.}; they will be associated with the next program element that follows the closing tag\footnote{… or the last line of the comment.}.
 
+If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} tags. I recommend to use the tags always.
+
+Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|} Javadoc\index{javadoc} tag.
+
+\section{Program Elements with Documentation Comments} 
+The rule of thumb is that every program element that got a name requires a documentation comment. The exceptions are local variables\footnote{but refer to chapter \tqfullref{sec:LocalVariableComments}.} and labels\index{label}.
+
+This means that we have documentations comments for
+\begin{itemize}[nosep]
+	\item{modules}
+	\item{packages}
+	\item{classes\index{class}, interfaces\index{interface}, records\index{record}, \lstinline|enum|s\index{enum} and annotations\index{annotation}}
+	\item{methods\index{method} and constructors\index{constructor}}
+	\item{parameters and record\index{record} components}
+	\item{fields (attributes and constants) and \lstinline|enum|\index{enum} values}
+\end{itemize}
+
+%In addition, Javadoc\index{javadoc} allows you to generate a project overview as part of the documentation. The source for this is an HTML file that is typically stored outside the source tree. For the details, see \hyperref[sec:OverviewDoc]{below}.
+
+
+
+\subsection{The \bsq{Overview}}\label{sec:OverviewDoc}
+
+
+
+----
+
+Additionally, Javadoc allows you to add an \bdq{Overview}  
 
 See \hyperref[lbl:DocumentationComments]{above}.
 

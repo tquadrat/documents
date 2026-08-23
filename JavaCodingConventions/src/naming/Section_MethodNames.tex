@@ -8,7 +8,7 @@ That means that names like \lstinline|myMethod()| or \lstinline|doSomething()| a
 
  Chapter \tqref{sec:TheNamingDictionary:Verbs} beginning on page \pageref{sec:TheNamingDictionary:Verbs} contains a \bdq{Dictionary} for method\index{method} names; that is a list of verbs together with their implicit contract when used as a method\index{method} name or a part of it. I highly recommend to consult this list when searching a name for a new method\index{method}.
 
-Using digits in method\index{method} names is acceptable were it makes sense; so using the digit `\verb#4#' as replacement for the word ``\verb#for#'', and `\verb#2#' for the word ``\verb#to#'' is acceptable, but not really recommended. If you have different versions of a method\index{method}, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method\index{method} name.
+Using digits in method\index{method} names is acceptable were it makes sense; so using the digit \bsq{\texttt{4}} as replacement for the word \bdq{\texttt{for}}, and \bsq{\texttt{2}} for the word \bdq{\texttt{to}} is acceptable, but not really recommended. If you have different versions of a method\index{method}, you should not number them (\lstinline|toString1()|, \lstinline|toString2()|, …), but instead describe the difference. Remember that digits are not allowed as first characters of a method\index{method} name.
 
 %------------------------------------------------------------------------------
 
@@ -27,19 +27,17 @@ Some examples: \\
 \hline 
 \textbf{Property} & \textbf{Getter} & \textbf{Setter} \\ 
 \hline 
-\verb#name# & \lstinline|String getName()| & \lstinline|void setName(String)| \\ 
-\verb#title# & \lstinline|String getTitle()| & \lstinline|void setTitle(String)| \\ 
-\verb#valid# & \lstinline|boolean isValid()| & \lstinline|void setValid(boolean)| \\ 
-\verb#age# & \lstinline|int getAge()| & \lstinline|void setAge(int)| \\ 
-\verb#contractId# & \lstinline|ContractId getContractId()| & \lstinline|void setContractId(ContractId)| \\ 
+\texttt{name} & \lstinline|String getName()| & \lstinline|void setName(String)| \\ 
+\texttt{title} & \lstinline|String getTitle()| & \lstinline|void setTitle(String)| \\ 
+\texttt{valid} & \lstinline|boolean isValid()| & \lstinline|void setValid(boolean)| \\ 
+\texttt{age} & \lstinline|int getAge()| & \lstinline|void setAge(int)| \\ 
+\texttt{contractId} & \lstinline|ContractId getContractId()| & \lstinline|void setContractId(ContractId)| \\ 
 \hline 
 \end{tabular}
 
 The name of the property\index{property} is not necessarily identical with the name of the corresponding class\index{class} attribute\index{attribute}.
 
-The respective setter\index{method!setter method} will be omitted if a property\index{property!read-only} is read-only. Theoretically, it is possible that a property\index{property} can be changed, but not accessed; in such a case, you would just omit the respective getter\index{method!getter method} for that property\index{property}.
-
-\keeplisting{23}
+\keeplisting{22}
 A sample class could look like this:\footnote{I left out otherwise required comments and blank line for brevity, as well as probably required argument validations.}
 \begin{lstlisting}[caption={JavaBean}]
 public final class JavaBean
@@ -65,6 +63,8 @@ public final class JavaBean
 //  class JavaBean
 \end{lstlisting}
 
+The respective setter\index{method!setter method} will be omitted if a property\index{property!read-only} is read-only. Theoretically, it is possible that a property\index{property} can be changed, but not accessed; in such a case, you would just omit the respective getter\index{method!getter method} for that property\index{property}.
+
 The JavaBeans\index{JavaBean} concept is widely accepted and well supported by tools, but there are of course alternatives for \textit{getters}\index{method!getter method} as accessors\index{method!accessor method} and \textit{setters}\index{method!setter method} as mutators\index{method!mutator method}.
 
 Another popular approach names accessors\index{method!accessor method} and mutators\index{method!mutator method} directly after the properties\index{property}, without any prefix; the methods\index{method} from the example above would look like this:
@@ -73,11 +73,11 @@ Another popular approach names accessors\index{method!accessor method} and mutat
 \hline 
 \textbf{Property} & \textbf{Accessor} & \textbf{Mutator} \\ 
 \hline 
-\verb#name# & \lstinline|String name()| & \lstinline|void name(String)| \\ 
-\verb#title# & \lstinline|String title()| & \lstinline|void title(String)| \\ 
-\verb#isValid# & \lstinline|boolean isValid()| & \lstinline|void isValid(boolean)| \\ 
-\verb#age# & \lstinline|int age()| & \lstinline|void age(int)| \\ 
-\verb#contractId# & \lstinline|ContractId contractId()| & \lstinline|void contractId(ContractId)| \\ 
+\texttt{name} & \lstinline|String name()| & \lstinline|void name(String)| \\ 
+\texttt{title} & \lstinline|String title()| & \lstinline|void title(String)| \\ 
+\texttt{isValid} & \lstinline|boolean isValid()| & \lstinline|void isValid(boolean)| \\ 
+\texttt{age} & \lstinline|int age()| & \lstinline|void age(int)| \\ 
+\texttt{contractId} & \lstinline|ContractId contractId()| & \lstinline|void contractId(ContractId)| \\ 
 \hline 
 \end{tabular}
 
@@ -109,7 +109,7 @@ public final class Overloaded
 //  class Overloaded
 \end{lstlisting}
 
-Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches. So are the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} named just after the attributes itself \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordMembers}.
+Both approaches do have their merits and pitfalls, and at the end of days both will do the job. Even in the Java API itself you may find samples for both approaches: the accessors\index{method!accessor method} for the record\index{record} attributes\index{attribute} are named just after the attributes itself \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RecordMembers}.
 
 %------------------------------------------------------------------------------
 
@@ -145,7 +145,7 @@ public final class CollectionProperty
 //  class CollectionProperty
 \end{lstlisting}
 
-Conceptually, the method\index{method} \lstinline|CollectionProperty::hasChildren| is not an accessor\index{method!accessor method} for the property\index{property} \verb#Children#, but represents a property\index{property} of its own, with the name \verb#hasChildren#. But it is no getter\index{method!getter method}, because it does not match the respective naming convention (prefix \lstinline|get| or \lstinline|is|). But this could be healed by renaming the method\index{method} to \lstinline|CollectionProperty.isHavingChildren()|. Sometimes, it makes sense to return to the \ngref, and here to the bullet points \ref{lst:ZoP:SimpleVsComplex}, \ref{lst:ZoP:SpecialCases}, and \ref{lst:ZoP:Practicality}.
+Conceptually, the method\index{method} \lstinline|CollectionProperty::hasChildren| is not an accessor\index{method!accessor method} for the property\index{property} \texttt{Children}, but represents a property\index{property} of its own, with the name \texttt{hasChildren}. But it is no getter\index{method!getter method}, because it does not match the respective naming convention (prefix \lstinline|get| or \lstinline|is|); this could be healed by renaming the method\index{method} to \lstinline|CollectionProperty.isHavingChildren()|. Sometimes, it makes sense to return to the \ngref, and here to the bullet points \ref{lst:ZoP:SimpleVsComplex}, \ref{lst:ZoP:SpecialCases}, and \ref{lst:ZoP:Practicality}.
 
 %------------------------------------------------------------------------------
 

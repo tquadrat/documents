@@ -1,14 +1,12 @@
 \section{The Package Documentation}\label{sec:PackageDocumentation}
 A \lstinline|package|\index{package} in \Java serves more or less the same purpose as a namespace\index{namespace} in other languages, like Python\index{Python} or \mbox{C++}\index{C++}, but it is not exactly the same. Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:PackageDeclarations} for more on this topic.
 
-Different from the module\index{module}, there is no special source file that defines a \lstinline|package|\index{package}. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|; this folder structure is maintained for the \verb#*.class# files, too.
+Different from the module\index{module}, there is no special source file that defines a \lstinline|package|\index{package}. Instead all source files that are located in the same folder on the directory tree for the source code are in the same \lstinline|package|; this folder structure is maintained for the \texttt{*.class} files, too.
 
-Nevertheless, there is a need for package-level documentation, and it also should be possible to set annotations\index{annotation} to packages\index{package}.
-
-For the documentation of a package\index{package}, originally a file named \verb#package.html#\index{package.html} was used. It was placed into the package folder and contained an HTML\index{HTML} document with the package documentation. Although this still works, you should use the new \verb#package-info.java#\index{package-info.java} file instead, because only this allows annotations on package level. 
-A \verb#package-info.java#\index{package-info.java} looks like this:
+As there is a need for package-level documentation, and because it should be possible to set annotations\index{annotation} to packages\index{package}, the \texttt{package-info.java}\index{package-info.java} file in the package folder is used
 
 \keeplisting{20}
+A \texttt{package-info.java}\index{package-info.java} file looks like this:
 \begin{lstlisting}[caption={package-info.java}]
 /*
  * ==================================================================
@@ -31,17 +29,19 @@ import <AnAnnotation>
  */
 \end{lstlisting}
 
-The \verb#<package description># is a standard Javadoc comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
+Originally a file named \texttt{package.html}\index{package.html} was used; it contained an HTML\index{HTML} document with the package documentation. Although this still works, you should use not use it anymore, because it does not allow to set annotations on package level. 
 
-If the package is annotated\index{annotation}\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \lstinline|package …| line, and the imports for the annotations follow below.
+The \texttt{<package description>} is a standard Javadoc comment\index{javadoc} comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
 
-The chapter \tqfullvref{sec:Packages} discusses how to define the name of the package (\verb#<packagename>#).
+If the package is annotated\index{annotation}\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \bdq{\lstinline|package …|} line (line~13 in the sample above), and the imports for the annotations follow below.
+
+The chapter \tqfullvref{sec:Packages} discusses how to define the name of the package (\texttt{<packagename>}).
 
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-	\item{A \verb#package-info.java#\index{package-info.java} has a beginning and a closing comment as a regular Java source file. See \tqfullref{sec:BeginningComment} and \tqfullref{sec:ClosingComment}.}
-	\item{If the \verb#package-info.java#\index{package-info.java} imports, the \lstinline|import| statements follow the \lstinline|package| statement\index{package}, separated with an empty line.}
+	\item{A \texttt{package-info.java}\index{package-info.java} has a beginning and a closing comment like a regular Java source file. See \tqfullref{sec:BeginningComment} and \tqfullref{sec:ClosingComment}.}
+	\item{If the \texttt{package-info.java}\index{package-info.java} imports, the \lstinline|import| statements follow the \lstinline|package| statement\index{package}, separated with an empty line.}
 	\item{The package description provides complete information about the purpose of the package and its contents.}
 \end{enumerate}
 

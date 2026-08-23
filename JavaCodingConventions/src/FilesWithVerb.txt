@@ -1,6 +1,3 @@
-formattingCode/SubSection_IfStatements.tex
-formattingCode/Chapter_EmbeddedCode.tex
-formattingCode/Section_PackageDocumentation.tex
 formattingCode/SubSection_BlankSpaces.tex
 formattingCode/SubSection_SynchronizedStatements.tex
 formattingCode/SubSection_TryCatchStatements.tex
@@ -31,4 +28,3 @@ naming/Section_ModuleNames.tex
 naming/Section_ParameterNames.tex
 naming/Chapter_NamingDictionary.tex
 naming/Section_LocalVariableNames.tex
-naming/Section_MethodNames.tex

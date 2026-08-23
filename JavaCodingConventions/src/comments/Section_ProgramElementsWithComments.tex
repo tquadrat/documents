@@ -1,0 +1,23 @@
+\section{Program Elements with Documentation Comments} 
+The rule of thumb is that every program element that got a name requires a documentation comment. The exceptions are local variables\footnote{but refer to chapter \tqfullref{sec:LocalVariableComments}.} and labels\index{label}.
+
+This means that we have documentations comments for
+\begin{itemize}[nosep]
+	\item{modules}
+	\item{packages}
+	\item{classes\index{class}, interfaces\index{interface}, records\index{record}, \lstinline|enum|s\index{enum} and annotations\index{annotation}}
+	\item{methods\index{method} and constructors\index{constructor}}
+	\item{parameters and record\index{record} components}
+	\item{fields (attributes and constants) and \lstinline|enum|\index{enum} values}
+\end{itemize}
+
+In addition, Javadoc\index{javadoc} allows you to generate a project overview as part of the documentation. The source for this is an HTML file that is typically stored outside the source tree. For the details, see the chapter \hyperref[sec:OverviewDoc]{below}.
+
+%------------------------------------------------------------------------------
+
+\input{comments/SubSection_Overview}
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

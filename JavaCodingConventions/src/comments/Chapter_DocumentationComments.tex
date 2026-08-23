@@ -1,77 +1,14 @@
 \chapter{Documentation Comments}\label{sec:DocumentationComments}
 An often heard requirement is to keep the documentation for a program or application as close to the source code as possible, to make it easier to keep it current with that source code. Consequently, the authors of Java introduced the Javadoc tool\index{javadoc} as part of the \Java Development Kit (JDK).
 
-\section{The \bsq{Javadoc} Tool}
-The Javadoc\index{javadoc} tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
-\keeplisting{14}
-\index{javadoc}\index{Markdown}
-\begin{lstlisting}
-/**
- *  This is a documentation comment; it will be processed by the
- *  Javadoc tool.
- */
- 
-/*
- * This is a normal block comment that is ignored by the Javadoc
- * tool.
- */
- 
-// And this is a line comment ...
+%------------------------------------------------------------------------------
 
-/// This is also a documentation comment, but in Markdown syntax.
-/// It will be also processed by the Javadoc tool.
-\end{lstlisting}
+\input{comments/Section_TheJavadocTool}
+\input{comments/Section_Responsibility}
+\input{comments/Section_GeneralStructure}
+\input{comments/Section_ProgramElementsWithComments}
 
-Since Java~23, also the format shown in the lines~13 and 14 is possible for documentation comments \autocite{JEP467}. The \bsq{old} version uses HTML\index{HTML} tags to control the formatting of the generated output, in addition to special Javadoc\index{javadoc} and optional custom tags. The new format allows to use Markdown\index{Markdown}\footnote{\autocite{MacFarlane:CommonMarkSpec} provides a good overview of CommonMark\index{Markdown!CommonMark}, a widely used Markdown\index{Markdown} dialect.} for that purpose; the Javadoc\index{javadoc} and custom tags are still working, and HTML\index{HTML} can be mixed in where required.
-
-I stuck with the \bsq{old} way to write documentation comments, because I personally don't see much advantage in using Markdown\index{Markdown}, but this is purely a matter of personal preferences. The resulting output is basically the same for both formats, although you may be inclined to format your comments slightly different when using Markdown\index{Markdown}.
-
-The \bdq{Javadoc Guide}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code} and the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains the basics on how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.
-
-So far for the technical part~…
-
-\section{Responsibility} 
-It is a well known fact that most programmers are poor technical writers. That's one of the reasons why programmers rarely write the public documentation for their products. According to a rumor, the other reason is that programmers are too expensive to write simple documentation. The fact is, however, that skilled technical writers can easily command salaries on par with those of most top programmers.
-
-Nevertheless, there is no excuse why programmers do not write proper documentation comments into their source code. They are the only people that could write these comments because technical writers usually do neither have the time nor the required skills to analyse the code and to extract the information from it that is necessary for the documentation – not to mention that the technical writers often do not have (write) access to the source code and are therefore being technically not able to add the documentation comments.
-
-Furthermore there are two main target groups for the documentation that is generated from the documentation comments: the first group are the peer developers writing code interoperating with the already existing one, and the second group are the maintenance programmers that have to fix what's broken.
-
-A third group are the testers that are designing their tests based on the generated documentation, but they also use the design documents and the public documentation as their sources.
-
-This alone suggests already that documentation comments should be written by the programmers themselves – programmers writing for programmers!
-
-If your product is a \nameref{sec:FunctionLibrary}, the generated documentation may be all that you provide to your clients; same for a \nameref{sec:FeatureLibrary}, although that usually requires some documentation \textit{supplementing} the generated documentation, not substituting it.
-
-However, even when the generated documentation is intended solely for internal use, it should be created with the same care as documentation for an external audience; in fact, internal documentation should be even more comprehensive and detailed, capturing elements from the deepest recesses of the \bdq{engine room} – things an external customer is better off never seeing. Another reason why the documentation comments belong to the responsibilities of the programmers.
- 
-\section{General Structure}\label{sec:DocCommentsGeneralStructure}
-As already mentioned \hyperref[lbl:DocumentationComments]{above}, regular documentation comments are block comments where the opening tag is immediately followed by another asterisk\footnote{… or where each line is introduced by three slashes: \bdq{\lstinline|/// …|}.}; they will be associated with the next program element that follows the closing tag\footnote{… or the last line of the comment.}.
-
-If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} tags. I recommend to use the tags always.
-
-Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|} Javadoc\index{javadoc} tag.
-
-\section{Program Elements with Documentation Comments} 
-The rule of thumb is that every program element that got a name requires a documentation comment. The exceptions are local variables\footnote{but refer to chapter \tqfullref{sec:LocalVariableComments}.} and labels\index{label}.
-
-This means that we have documentations comments for
-\begin{itemize}[nosep]
-	\item{modules}
-	\item{packages}
-	\item{classes\index{class}, interfaces\index{interface}, records\index{record}, \lstinline|enum|s\index{enum} and annotations\index{annotation}}
-	\item{methods\index{method} and constructors\index{constructor}}
-	\item{parameters and record\index{record} components}
-	\item{fields (attributes and constants) and \lstinline|enum|\index{enum} values}
-\end{itemize}
-
-%In addition, Javadoc\index{javadoc} allows you to generate a project overview as part of the documentation. The source for this is an HTML file that is typically stored outside the source tree. For the details, see \hyperref[sec:OverviewDoc]{below}.
-
-
-
-\subsection{The \bsq{Overview}}\label{sec:OverviewDoc}
-
-
+%------------------------------------------------------------------------------
 
 ----
 
@@ -286,7 +223,7 @@ The \nameref{sec:TagSummary} tag has to be used always when a documentation comm
  */
 \end{lstlisting}
 
-The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \verb|<h#>|, with \verb|#| being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \verb#<h1># and \verb#<h2># are already used by JavaDoc itself; that means that you should only use \verb#<h3># to \verb#<h6># in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewComment}), you can make use of the all the \verb|<h#>| tags to structure that comment.
+The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \verb|<h#>|, with \verb|#| being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \verb#<h1># and \verb#<h2># are already used by JavaDoc itself; that means that you should only use \verb#<h3># to \verb#<h6># in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewDoc}), you can make use of the all the \verb|<h#>| tags to structure that comment.
 
 When a class, method, constant, field is mentioned the first time in a documentation comment, the documentation for that element should be linked, using the \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
 
@@ -318,15 +255,6 @@ The names of classes, methods, constant, fields, parameters etc. as well as \lst
 Each comment, including each text for a \nameref{sec:TagParam}, \nameref{sec:TagReturn}, and \nameref{sec:TagThrows} tag, ends with a full stop.
 
 The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the JavaDoc tool.
-
-%------------------------------------------------------------------------------
-
-\subsubsection{The Overview Comment}\label{sec:OverviewComment}
-When the JavaDoc tool is called with the option \verb#-overview <filename># (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}), an ‘Overview’ comment is  added to the generated documentation. \verb#<filename># is the (fully-qualified)  filename of a valid HTML~5 document (The recommended name is \verb#overview.html#) containing general information about the project.
-
-You can put nearly everything here, from the project's history to manual on how to use the program or library, but you should not reproduce information that is given in the module, package, or class documentation comments.
-
-Several JavaDoc tags can be also used in the overview comment; for details refer to the chapter "Where Tags Can Be Used" in \autocite{ORACLE_DOC_JAVADOC_TAG}.
 
 %------------------------------------------------------------------------------
 
@@ -615,7 +543,7 @@ Same as for a method, the documentation comment for a constructor has to describ
 
 %------------------------------------------------------------------------------
 
-\subsection{The JavaDoc Tags}\label{sec:JavaDocTags}
+\subsection{The Javadoc Tags}\label{sec:JavaDocTags}
 The next two chapters describe the tags that should be used in your documentation comments where appropriate.
 
 One general rule for all JavaDoc tags: Do not insert line breaks between the parameters of a tag:

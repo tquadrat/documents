@@ -1,0 +1,32 @@
+\section{The \bsq{Javadoc} Tool}
+The Javadoc\index{javadoc} tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
+\keeplisting{14}
+\index{javadoc}\index{Markdown}
+\begin{lstlisting}
+/**
+ *  This is a documentation comment; it will be processed by the
+ *  Javadoc tool.
+ */
+ 
+/*
+ * This is a normal block comment that is ignored by the Javadoc
+ * tool.
+ */
+ 
+// And this is a line comment ...
+
+/// This is also a documentation comment, but in Markdown syntax.
+/// It will be also processed by the Javadoc tool.
+\end{lstlisting}
+
+Since Java~23, also the format shown in the lines~13 and 14 is possible for documentation comments \autocite{JEP467}. The \bsq{old} version uses HTML\index{HTML} tags to control the formatting of the generated output, in addition to special Javadoc\index{javadoc} and optional custom tags. The new format allows to use Markdown\index{Markdown}\footnote{\autocite{MacFarlane:CommonMarkSpec} provides a good overview of CommonMark\index{Markdown!CommonMark}, a widely used Markdown\index{Markdown} dialect.} for that purpose; the Javadoc\index{javadoc} and custom tags are still working, and HTML\index{HTML} can be mixed in where required.
+
+I stuck with the \bsq{old} way to write documentation comments, because I personally don't see much advantage in using Markdown\index{Markdown}, but this is purely a matter of personal preferences. The resulting output is basically the same for both formats, although you may be inclined to format your comments slightly different when using Markdown\index{Markdown}.
+
+The \bdq{Javadoc Guide}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_GUIDE} provides an overview of the tool\footnote{see \autocite{ORACLE_DOC_JAVADOC_MAN} on how to invoke the tool on your source code} and the \bdq{Documentation Comment Specification for the Standard Doclet} \autocite{ORACLE_DOC_JAVADOC_TAG} explains the basics on how to write the comments for a proper documentation generated with the Javadoc\index{javadoc} tool.
+
+So far for the technical part~…
+
+%==============================================================================
+% End of file!!
+%==============================================================================

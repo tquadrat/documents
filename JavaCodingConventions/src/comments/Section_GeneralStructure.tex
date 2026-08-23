@@ -1,0 +1,38 @@
+\section{General Structure}\label{sec:DocCommentsGeneralStructure}
+As already mentioned \hyperref[lbl:DocumentationComments]{above}, regular documentation comments are block comments where the opening tag is immediately followed by another asterisk\footnote{… or where each line is introduced by three slashes: \bdq{\lstinline|/// …|}.}; they will be associated with the next program element that follows the closing tag\footnote{… or the last line of the comment.}.
+
+If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} tags. I recommend to use the tags always.
+
+Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|}\index{@summary} Javadoc\index{javadoc} tag.
+
+The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{@inheritDoc}. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
+
+Depending on the program element to which the documentation comment belongs, a series of Javadoc tags follows the text, after a blank line.
+
+The general structure of a documentation comment therefore looks like this:
+\keeplisting{8}
+\begin{lstlisting}
+/**
+ *  <p>{@summary A brief description of the program element.} Some
+ *  more about the program element, if appropriate.</p>
+ *  <p>Optional additional information regarding the program 
+ *  element.</p>
+ *
+ *  –– Several Javadoc tags with additional information …
+ */
+\end{lstlisting}
+
+The Markdown\index{Markdown} alternative would look like this:
+\keeplisting{6}
+\begin{lstlisting}
+/// {@summary A brief description of the program element.} Some
+/// more about the program element, if appropriate.
+///
+/// Optional additional information regarding the program element.
+///
+/// –– Several Javadoc tags with additional information …
+\end{lstlisting}
+
+%==============================================================================
+% End of file!!
+%==============================================================================

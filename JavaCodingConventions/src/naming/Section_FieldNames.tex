@@ -8,22 +8,22 @@ I distinguish generally two types of fields\index{field} that will have differen
 %------------------------------------------------------------------------------
 
 \subsection{Names for Attributes}\label{sec:AttributeNames}
-The identifier for an attribute\index{field!attribute} has to be prefixed with ``\verb#m_#'', usually followed by the property\index{property} name (see \tqfullvref{sec:NamesOfProperties}) with the first letter capitalised:
-\begin{lstlisting}!local
+The identifier for an attribute\index{field!attribute} has to be prefixed with \bdq{\texttt{m\_}}, usually followed by the property\index{property} name (see \tqfullvref{sec:NamesOfProperties}) with the first letter capitalised:
+\begin{lstlisting}
 private String m_AString;
-private boolean m_IsValid;https://docs.oracle.com/en/java/javase/14/language/records.html
+private boolean m_IsValid;
 private String m_HTMLHeader;
 private MessageProvider m_MessageProvider;
 \end{lstlisting}
-This ensures that the names of local variables and formal parameters of methods\index{method} or constructors\index{constructor} will be always distinct from those of attributes\index{field!attribute}, and therefore neither local variables nor parameters can collide with or hide an attribute\index{field!attribute}. Another consequence is that it is not necessary to use \lstinline|this.| when accessing an attribute\index{field!attribute}.
+This ensures that the names of local variables and formal parameters of methods\index{method} or constructors\index{constructor} will be always distinct from those of attributes\index{field!attribute}, and therefore neither local variables nor parameters can collide with or hide an attribute\index{field!attribute}. Another consequence is that it is not necessary to use \bdq{\lstinline|this.|} when accessing an attribute\index{field!attribute}.
 
 Aside this, anything else that was said about the naming of local variables in chapter \tqref{sec:NamesForLocalVariables} is also valid for the naming of attributes\index{field!attribute}.
 
-Of course not all attributes\index{field!attribute} of a class\index{class} are properties\index{property}. They could hold an internal status as well or may serve other purposes. But the naming rules remain the same:  the prefix ``\verb#m_#'' is followed by a name describing the purpose of the attribute\index{field!attribute}, typed in \textit{CamelCase} with the first letter capitalised.
+Of course not all attributes\index{field!attribute} of a class\index{class} are properties\index{property}. They could hold an internal status as well or may serve other purposes. But the naming rules remain the same:  the prefix \bdq{\texttt{m\_}} is followed by a name describing the purpose of the attribute\index{field!attribute}, typed in \textit{CamelCase} with the first letter capitalised.
 
-Eclipse\index{Eclipse} knows a configuration setting for the attribute\index{field!attribute} https://docs.oracle.com/en/java/javase/14/language/records.htmlname prefix (\verb#Window|Preferences|Java|Code Style#). Setting the prefix list there to “\verb#m_#” makes sure that the generation of getters\index{method!getter method} and setters\index{method!setter method} will work as expected.
+Eclipse\index{Eclipse} knows the configuration setting \texttt{Window|Preferences|Java|Code Style} for the attribute\index{field!attribute} name prefix. Setting the prefix list there to \bdq{\texttt{m\_}} makes sure that the generation of getters\index{method!getter method} and setters\index{method!setter method} will work as expected.
 
-For IntelliJ~IDEA\index{IntelliJ IDEA}, a similar setting can be found at \verb#File|Settings#, where you select under \verb#Editor|Code Style|Java# the tab \verb#Code Generation#.
+For IntelliJ~IDEA\index{IntelliJ IDEA}, a similar setting can be found at \texttt{File|Settings}, where you select under \texttt{Editor|Code Style|Java} the tab \texttt{Code Generation}.
 
 %------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ Constants\index{constant} in Java are fields\index{field!constant} of primitive 
 
 Our definition for a constant\index{field!constant} is even more restrictive: that public static final field\index{field} has to be initialised with a compile-time constant\index{constant} value. This basically limits constants\index{field!constant} to \bdq{magic numbers}\index{magic number} and texts.\footnote{This limitation is imposed by the documentation rules, refer to \tqfullvref{sec:FieldComment}.}
 
-According to the \ccjpl, the name of a constant\index{field!constant} ``should be all uppercase with words separated by underscores (`\verb#_#')'' \autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
+According to the \ccjpl, the name of a constant\index{field!constant} \bdq{should be all uppercase with words separated by underscores (\bsq{\texttt{\_}})} \autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
 
 \keeplisting{5}
 Some samples for valid constants\index{field!constant}
@@ -93,9 +93,9 @@ static
 }
 \end{lstlisting}
 
-In case you have a constant\index{constant} value (a magic number\index{magic number}, a message string or alike) that should not be public for some reason, you can name that either as a regular field\index{field!attribute} (an attribute with the ``\verb#m_#'' prefix) or as a regular constant\index{field!constant} as described above. For a local constant\index{local constant} (a local variable as an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants\index{field!constant}. 
+In case you have a constant\index{constant} value (a magic number\index{magic number}, a message string or alike) that should not be public for some reason, you can name that either as a regular field\index{field!attribute} (an attribute with the \bdq{\texttt{m\_}} prefix) or as a regular constant\index{field!constant} as described above. For a local constant\index{local constant} (a local variable as an alias for a magic number\index{magic number} or a message string~…), use the naming pattern for constants\index{field!constant}. 
 
-Sometimes you may have classes, groups, families or categories of constants\index{constant} (e.g. the tags in an XML\index{XML} document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants\index{field!constant}. For the column names of the table \verb#PERSON#, the constants\index{field!constant} may be defined as shown in this example:
+Sometimes you may have classes, groups, families or categories of constants\index{constant} (e.g. the tags in an XML\index{XML} document, the column names of a database table, or message texts). It has proved that it supports the readability of the code if this is reflected in the names for those constants\index{field!constant}. For the column names of the table \texttt{PERSON}, the constants\index{field!constant} may be defined as shown in this example:
 \keeplisting{4}
 \index{java.lang!String}
 \begin{lstlisting}
@@ -105,7 +105,7 @@ public final static String PERSON_COL_MaidenName = "maiden_name";
 public final static String PERSON_COL_Title = "title";
 …
 \end{lstlisting}
-The \textit{camelCased} suffix is the \bsq{real} name, while the part that follows the stronger rules for a constant\index{field!constant} name is just indicating the \bdq{constant category}, \verb#PERSON_COL# in this case.
+The \textit{camelCased} suffix is the \bsq{real} name, while the part that follows the stronger rules for a constant\index{field!constant} name is just indicating the \bdq{constant category}, \texttt{PERSON\_COL} in this case.
 
 %------------------------------------------------------------------------------
 
@@ -136,9 +136,9 @@ public record MyRecord( int number, String text ) {};
 	Attributes\index{field!attribute} basically are fields\index{field} that get their value during runtime, while constants are public static final fields\index{field}.
 	
 	Constants\index{field!constant} are fields that are \textit{public}, \textit{static} and \textit{final}, and are initialised with a compile-time constant\index{constant} value.}
-	\item{The name for an attribute\index{field!attribute} is prefixed with ``\verb#m_#'', followed by the name in \textit{CamelCase}, with an uppercase first letter.}
+	\item{The name for an attribute\index{field!attribute} is prefixed with \bdq{\texttt{m\_}}, followed by the name in \textit{CamelCase}, with an uppercase first letter.}
 
-	\item{The names of constants\index{field!constant} are all uppercase, with underscores (\verb#_#) as separators between words.
+	\item{The names of constants\index{field!constant} are all uppercase, with underscores (\bdq{\texttt{\_}}) as separators between words.
 	
 	To group constants\index{field!constant} it is possible to name them using a regular constant name (all uppercase~…) followed by an underscore as prefix, and the name in CamelCase.}
 	

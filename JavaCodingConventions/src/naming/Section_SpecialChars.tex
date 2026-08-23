@@ -26,7 +26,7 @@ A \bsq{Java letter-or-digit} is a character for which the method\\ \lstinline|Ch
 Letters and digits may be drawn from the entire Unicode character set, which supports most writing scripts in use in the world today, including the large sets for Chinese, Japanese, and Korean. This allows programmers to use identifiers in their programs that are written in their native languages.''
 \end{quote}
 
-And about the dollar sign (``\verb#$#'') and the underscore (``\verb#_#''), it says further: \bdq{The dollar sign should be used only in mechanically generated source code or, rarely, to access pre-existing names on legacy systems. The underscore may be used in identifiers formed of two or more characters, but it cannot be used as a one-character identifier due to being a keyword\footnote{Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}.}.} 
+And about the dollar sign (\bdq{\texttt{\$}}) and the underscore (\bdq{\texttt{\_}}), it says further: \bdq{The dollar sign should be used only in mechanically generated source code or, rarely, to access pre-existing names on legacy systems. The underscore may be used in identifiers formed of two or more characters, but it cannot be used as a one-character identifier due to being a keyword\footnote{Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Declarations}.}.} 
 
 It is a little-known fact that the method \lstinline|Character::isJavaIdentifierPart|\index{java.lang!Character!isJavaIdentifierPart()} also returns \lstinline|true| for all currency symbols, and consequently, the euro symbol \bdq{€} can also be used for an identifier.
 

@@ -4,7 +4,7 @@ According to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:LabeledStatements}, in 
 <label>: <statement>
 \end{lstlisting}
 
-As Java does not allow the use of \lstinline|goto|\index{goto}\footnote{… despite it is a reserved keyword: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}.}, labels\index{label} are mainly used with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements. Consequently, labels will be assigned mostly to \lstinline|switch|\index{switch} (the ``\verb#case L:#'' variant only), \lstinline|for|\index{for}, \lstinline|while|\index{while} and \lstinline|do-while|\index{while!do} statements.
+As Java does not allow the use of \lstinline|goto|\index{goto}\footnote{… despite it is a reserved keyword: \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Keywords}.}, labels\index{label} are mainly used with the \lstinline|break|\index{break} and \lstinline|continue|\index{continue} statements. Consequently, labels will be assigned mostly to \lstinline|switch|\index{switch} (the \bdq{\texttt{case L:}} variant only), \lstinline|for|\index{for}, \lstinline|while|\index{while} and \lstinline|do-while|\index{while!do} statements.
 
 \keeplisting{13}
 But I found labels\index{label} particularly useful to give a name to an arbitary code block or a statement, in particular when the related code block is quite long and/or complex\footnote{Of course, you could also move this code into a private method. This is discussed in \tqfullvref{sec:InlineVsMethods}.}:

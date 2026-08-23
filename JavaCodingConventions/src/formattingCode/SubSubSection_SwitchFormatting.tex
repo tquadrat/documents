@@ -4,9 +4,9 @@ The general use of blanks, round brackets, curly braces and linefeeds was alread
 
 The branches (\lstinline|case|\index{switch!case} or \lstinline|default|\index{switch!default}) are indented one level and will be separated from each other by a blank line, to improve the readability.
 
-Although not required (at least not for the ``\verb#case L:#'' variant), curly braces should be used for complex branch statements/expressions, also for readbility. The curly braces for the branches are indented to the same level to the same level as the \lstinline|case|/\lstinline|default|\index{switch!case}\index{switch!default} keywords, while the branch code itself is indented one additional level.
+Although not required (at least not for the \bdq{\texttt{case L:}} variant), curly braces should be used for complex branch statements/expressions, also for readbility. The curly braces for the branches are indented to the same level to the same level as the \lstinline|case|/\lstinline|default|\index{switch!case}\index{switch!default} keywords, while the branch code itself is indented one additional level.
 
-The code for a branch should be short; I suggest that a branch should be limited to less than ten lines. If it is just onle line and it is short enough, the whole branch should be written as a single line, in particular for the ``\verb#case L ->#'' variant:
+The code for a branch should be short; I suggest that a branch should be limited to less than ten lines. If it is just onle line and it is short enough, the whole branch should be written as a single line, in particular for the \bdq{\texttt{case L ->}} variant:
 
 \index{switch!case}\index{switch!break}
 \begin{lstlisting}
@@ -41,7 +41,7 @@ Place \lstinline|case null|\index{switch!case null} as first, and \lstinline|def
 \item{The blank line separating the branches is mandatory.}
 \item{No empty branch! A branch must contain at least a comment.
 
-An exception for the ``\verb#case L:#'' variant are branches with the same code.}
+An exception for the \bdq{\texttt{case L:}} variant are branches with the same code.}
 \item{Avoid ‘fall-through’!}
 \item{Although it looks like one, a \lstinline|switch| expression\index{switch!expression} is not a lambda\index{lambda}.
 

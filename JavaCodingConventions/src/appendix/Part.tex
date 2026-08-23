@@ -149,7 +149,7 @@ tbd
 %------------------------------------------------------------------------------
 
 \section{The Reason why Prefix Notation should be preferred over Postfix Notation}
-At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \verb#++# and \verb#--#. As a C++ method, the prefix implementation may look like this:
+At chapter \tqvref{item:PrefixVsPostfix} I recommend to use always the prefix version of an unary operator if the result of the operation is not further used. This has its reason in the implementation for the operators \texttt{++} and \texttt{--}. As a \mbox{C++}\index{C++} method, the prefix implementation may look like this:
 \begin{lstlisting}[language=C++]
 int prefixIncrement( int& n )
 {
@@ -243,10 +243,10 @@ public final class MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Load JDK~Logging Configuration}\label{sec:LoadJDKLoggingConfiguration}
-The default configuration for the JDK~Logging can be found in the configuration file \verb#${JAVA_HOME}/conf/logging.properties#; if you want to use a different file, you can announce that by providing the JVM command line argument \verb#-Djava.util.logging.config.file=<filename># . This also allows you to easily replace one logging configuration by another.
+The default configuration for the JDK~Logging can be found in the configuration file \texttt{\$\{JAVA\_HOME\}/conf/logging.properties}; if you want to use a different file, you can announce that by providing the JVM command line argument \texttt{-Djava.util.logging.config.file=<filename>}. This also allows you to easily replace one logging configuration by another.
 
 But in most cases, you want that a fixed logging configuration is used. You can enforce that by providing the configuration file as a resource and load that in the class with the method \lstinline|main()| like this:
-\begin{lstlisting}[numbers=left,caption={Load Logging Configuration from Resource}]
+\begin{lstlisting}[caption={Load Logging Configuration from Resource}]
 …
 
     /*------------------------*\

@@ -254,29 +254,7 @@ The names of classes, methods, constant, fields, parameters etc. as well as \lst
 
 Each comment, including each text for a \nameref{sec:TagParam}, \nameref{sec:TagReturn}, and \nameref{sec:TagThrows} tag, ends with a full stop.
 
-The document “How to Write Doc Comments for the Javadoc Tool”\autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the JavaDoc tool.
 
-%------------------------------------------------------------------------------
-
-\subsubsection{The ‘module’ Comment}\label{sec:ModuleComment}
-The \verb#<module description># (refer to chapter \tqfullref{sec:ModuleDefinition}) describes the current module, its dependencies and what it provides. See the JavaDoc tags \nameref{sec:TagProvides} and \nameref{sec:TagUses} for details.
-
-If the project has just one module, the module comment can replace the overview comment.
-
-%------------------------------------------------------------------------------
-
-\subsubsection{The ‘package’ Comment}\label{sec:PackageComment}
-Each and every Java package has to have a file named \verb#package-info.java#; the structure of that file was already discussed in chapter \tqfullvref{sec:PackageDocumentation}.
-
-The \verb#<package description># provides information about the package. So it describes the purpose of the classes in this package. It lists conventions that are common for all contained classes, it should specify their prerequisites.
-
-If the package defines a single API, it can describe the usage of that API, too. 
-
-The package comment can list the authors of the code, using the \nameref{sec:TagAuthor} tag\footnote{Or the tag \nameref{sec:TagExtAuthor}, refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc})}, the version with the \nameref{sec:TagVersion} tag, when the package was created or with which version it was integrated with the \nameref{sec:TagSince} tag, and other things.
-
-It should not repeat details that are written already in the documentation of a class in that package, instead it should reference that class documentation. If those details are  important for the whole package, it should be considered to move them from the class comment to the package description and place a reference into the class documentation instead.
-
-The package comment for the main package of a project can replace the overview comment (if not the module comment is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
 
 %------------------------------------------------------------------------------
 

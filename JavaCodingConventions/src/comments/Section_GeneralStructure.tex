@@ -3,9 +3,9 @@ As already mentioned \hyperref[lbl:DocumentationComments]{above}, regular docume
 
 If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} tags. I recommend to use the tags always.
 
-Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|}\index{@summary} Javadoc\index{javadoc} tag.
+Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|}\index{summary@"@summary} Javadoc\index{javadoc} tag.
 
-The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{@inheritDoc}. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
+The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{inheritDoc@"@inheritDoc}. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
 
 Depending on the program element to which the documentation comment belongs, a series of Javadoc tags follows the text, after a blank line.
 

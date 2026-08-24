@@ -29,9 +29,9 @@ import <AnAnnotation>
  */
 \end{lstlisting}
 
-Originally a file named \texttt{package.html}\index{package.html} was used; it contained an HTML\index{HTML} document with the package documentation. Although this still works, you should use not use it anymore, because it does not allow to set annotations on package level. 
+Originally a file named \texttt{package.html}\index{package.html|see {package-info.java}} was used; it contained an HTML\index{HTML} document with the package documentation. Although this still works, you should use not use it anymore, because it does not allow to set annotations on package level. 
 
-The \texttt{<package description>} is a standard Javadoc comment\index{javadoc} comment (refer to the chapter \tqfullvref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \ref{sec:PackageComment}.
+The \texttt{<package description>} is a standard Javadoc comment\index{javadoc} (refer to the chapter \tqfullref{sec:DocumentationComments}) and can be as lengthy as necessary. It will be discussed in detail in chapter \tqfullvref{sec:PackageComment}.
 
 If the package is annotated\index{annotation}\footnote{I recommend to used the \lstinline|@API| annotation even on the package level (refer to chapter \tqfullvref{sec:APIAnnotation} for details).}, the annotations have to be placed directly before the \bdq{\lstinline|package …|} line (line~13 in the sample above), and the imports for the annotations follow below.
 

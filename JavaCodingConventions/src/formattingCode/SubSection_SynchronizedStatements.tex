@@ -14,7 +14,7 @@ synchronized( <expression> )
 The curly braces are mandatory according the Java syntax; their placement follows the rules for any other code block. A single-line \lstinline|synchronized|\index{synchronized} statement is therefore not possible.
 
 \keeplisting{8}
-\jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} says, that the type of \verb#<expression># has to be a reference type. That means that
+\jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Synchronized} says, that the type of \texttt{<expression>} has to be a reference type. That means that
 \begin{lstlisting}
 // DOES NOT WORK!!
 final int i = 5;
@@ -61,7 +61,7 @@ In this case you have to rely on the method \lstinline|provideLockObject()| to r
 So do not use local or temporary objects with the expression for \lstinline|synchronized|\index{synchronized}.
 
 \keeplisting{16}
-In case you declare a field only to provide the monitor for synchronisation, you should name it as `\verb#Guard#’\index{guard object}.
+In case you declare a field only to provide the monitor for synchronisation, you should name it as \bsq{\texttt{Guard}}\index{guard object}.
 \begin{lstlisting}
 public final MyClass
 {
@@ -87,7 +87,7 @@ Refer to \tqfullvref{sec:ParameterParenthesis} on how to place the white space.}
 \item{The curly braces  for the code block are aligned with the keyword, the code is indented one level relative to the curly braces.}
 \item{The \lstinline|synchronised|\index{synchronized} expression should be a final reference field, at best.
 
-If that field exists only for this purpose, it should be named accordingly, as `\verb#Guard#’\index{guard object}.}
+If that field exists only for this purpose, it should be named accordingly, as \bsq{\texttt{Guard}}\index{guard object}.}
 \item{An empty \lstinline|synchronized|\index{synchronized} block does not make any sense and should be removed.}
 \end{enumerate}
 

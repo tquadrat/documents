@@ -2456,7 +2456,7 @@ The arguments must be checked for \lstinline|null|, but also to ensure that they
 
 \item{Consolidate the validation methods in one place.
 
-To avoid that you repeat yourself on validating the arguments (refer to the \ngref~ bullet point \ref{lst:ZoP:DRY}) you should consider to provide a utility class\index{utility class} as central location for validation methods; using (domain) value types would be an alternative (refer to chapter \tqfullvref{sec:ValueTypes}).}
+To avoid that you repeat yourself on validating the arguments (refer to the \ngref~ bullet point \ref{lst:ZoP:DRY}) you should consider to provide a utility class\index{class!utility class} as central location for validation methods; using (domain) value types would be an alternative (refer to chapter \tqfullvref{sec:ValueTypes}).}
 
 \item{Validate any return value.
 
@@ -2749,7 +2749,7 @@ public static final <T extends CharSequence> T requireNotBlankArgument( final T 
 }   //  requireNotBlankArgument()
 \end{lstlisting}
 
-As said, the methods above are implemented in the utility class \lstinline|Objects|\autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}\index{org.tquadrat.foundation.lang!Objects} from the package \lstinline|org.tquadrat.foundation.lang|\index{org.tquadrat.foundation.lang} that also provides reimplementations of the methods from \lstinline|java.util.Objects|\index{java.util!Objects}; these methods throw now \lstinline|NullArgumentException|\index{org.tquadrat.foundation.exception!NullArgumentException} instead of \lstinline|NullPointerException|\index{java.lang!NullPointerException}.
+As said, the methods above are implemented in the utility class\index{class!utility class} \lstinline|Objects|\index{org.tquadrat.foundation.lang!Objects} \autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS} from the package \lstinline|org.tquadrat.foundation.lang|\index{org.tquadrat.foundation.lang} that also provides reimplementations of the methods from \lstinline|java.util.Objects|\index{java.util!Objects}; these methods throw now \lstinline|NullArgumentException|\index{org.tquadrat.foundation.exception!NullArgumentException} instead of \lstinline|NullPointerException|\index{java.lang!NullPointerException}.
 
 That utility class provides some more methods that support the validation of arguments; for the details, refer to \autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}.
 
@@ -5392,7 +5392,7 @@ public Person( final String id, final String lastName, final String firstName, f
 
 When you call that constructor, there are a lot of strings on the arguments list, and when you miss a name, suddenly the new person got the person id of a contact as its first name. This problem was already discussed in the chapters \tqfullvref{sec:SwapToCompilerErrors}, \tqfullref{sec:MultipleSameTypeArgs} and \tqfullvref{sec:GenericParameterTypes}, and using value types were suggested as a solution.
 
-Another issue is that you have to validate the provided person ids before storing them. Most probably this happened already elsewhere, perhaps already several times, but the constructor is public and you have to do it here again. Of course you can provide (and you should do!) the validation method through a utility class\index{utility class}, but it still costs time and CPU cycles.
+Another issue is that you have to validate the provided person ids before storing them. Most probably this happened already elsewhere, perhaps already several times, but the constructor is public and you have to do it here again. Of course you can provide (and you should do!) the validation method through a utility class\index{class!utility class}, but it still costs time and CPU cycles.
 
 Using a value type – in this case, a ‘domain value type’ as it is defined for a specific problem domain – could solve this:
 \index{java.lang!Comparable}\index{java.lang!Comparable!compareTo()}\index{java.lang!String!compareTo()}\index{org.tquadrat.foundation.lang!Objects!requireValidArgument}\index{java.lang!Object!toString()}\index{java.lang!Object!clone()}\index{java.lang!CloneNotSupportedException}\index{org.tquadrat.foundation.exception!UnexpectedExceptionError}\index{java.lang!Object!toString()}

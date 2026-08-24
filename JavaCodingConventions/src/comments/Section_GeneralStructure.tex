@@ -5,7 +5,7 @@ If the comment text has more than one paragraph, each paragraph must be enclosed
 
 Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\{\nameref{sec:TagSummary} …\}}\index{summary@"@summary} Javadoc\index{javadoc} tag.
 
-When the names of classes\index{class}, methods\index{method}, constants\index{field!constant}, attributes\index{field}, parameters etc. as well as \lstinline|null|, \lstinline|true|, and \lstinline|false| are mentioned in the comment text, they have to be written in a monotype font. This can be achieved by encapsulating them in \bdq{\lstinline|<code>…</code>|} HTML\index{HTML} tags or placing them inside the JavaDoc \bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code} tag. The monotype font is used automatically for everything inside a \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag.
+When the names of classes\index{class}, methods\index{method}, constants\index{field!constant}, attributes\index{field}, parameters etc. as well as \lstinline|null|, \lstinline|true|, and \lstinline|false| are mentioned in the comment text, they have to be written in a monotype font. This can be achieved by encapsulating them in \bdq{\lstinline|<code>…</code>|} HTML\index{HTML} tags or placing them inside the JavaDoc \bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code} tag. The monotype font is used automatically for everything inside a \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
 
 Each comment, including each text following a \bdq{\nameref{sec:TagParam}}\index{param@"@param}, \bdq{\nameref{sec:TagReturn}}\index{return@"@return}, and \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag, ends with a full stop.
 
@@ -25,9 +25,9 @@ Each comment, including each text following a \bdq{\nameref{sec:TagParam}}\index
 
 
 
-The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{inheritDoc@"@inheritDoc}. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
-
 Depending on the program element to which the documentation comment belongs, a series of Javadoc tags follows the text, after a blank line.
+
+Finally, it is possible to add one or more \bsq{\nameref{sec:TagSee}}\index{see@"@see} tags, after another blank line.
 
 The general structure of a documentation comment therefore looks like this:
 \keeplisting{8}

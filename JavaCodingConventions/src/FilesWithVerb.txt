@@ -14,7 +14,6 @@ introduction/Section_OtherProgrammingLanguages.tex
 introduction/Section_TypesOfProducts.tex
 JavaCodingConventions.tex
 naming/DomainGlossary.tex
-naming/Section_ClassNames.tex
 naming/Section_FileNames.tex
 naming/Section_CaseOfNames.tex
 naming/Section_PackageNames.tex

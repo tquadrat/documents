@@ -383,6 +383,55 @@ This implementation is basically a PoC; currently it is not part of any library.
 \lstinputlisting[numbers=left,caption={PostProcessor.java}]{PostProcessor.java}
 
 %------------------------------------------------------------------------------
+\subsection{Tupel}\label{sec:Tupel}
+
+An enhanced tupel …
+
+\paragraph{The Code} \
+\begin{lstlisting}[caption={A tupel class}]
+/**
+ *  <p>{@summary A tupel.} The first entry, usually referred to as 
+ *  the &quot;key&quot; identifies the object, the second one is the
+ *  &quot;value&quot;.</p>
+ *  <p>The sort order is determined only through the keys, therefore
+ *  {@link #compareTo(Tupel)}
+ *  is not consistent with
+ *  {@link #equals(Object)}.</p>
+ *
+ *  @param  <K> The type of the key.
+ *  @param  <V> The type of the value.
+ *
+ *  @param  key The key of the tupel; can be {@code null}.
+ *  @param  value   The value of the tupel; can be {@code null}.
+ *
+ *  @extauthor Thomas Thrien - thomas.thrien@tquadrat.org
+ *  @version $Id:$
+ *  @since 1.2.3
+ *
+ *  @UMLGraph.link
+ */
+public record Tupel<K extends Comparable<K>,V>( K key, V value ) implements Comparable<Tupel<K,V>>
+{
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc} 
+     */
+    @Override
+    public final int compareTo( final Tupel<K,V> o )
+    {
+        final var retValue = Comparator.comparing( Tupel<K,V>::key )
+            .compare( this, o ); 
+
+        //---* Done *------------------------------------------------
+        return retValue;
+    }   //  compareTo()
+}
+//  record Tupel
+\end{lstlisting}
+
+%------------------------------------------------------------------------------
 
 \subsection{ThreadGroup}\label{sec:ThreadGroup}
 The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.

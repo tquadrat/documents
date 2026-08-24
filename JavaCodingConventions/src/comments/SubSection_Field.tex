@@ -1,0 +1,45 @@
+\subsection{The Field Comment}\label{sec:FieldComment}
+Attributes/properties, constants and enum values are all summarised under ‘field’ here.
+
+% Elaborate on comments for constants!!!!
+
+
+Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
+\begin{lstlisting}
+/**
+ *  Refer to
+ *  {@link #getValue()}.
+ */
+private final Value m_Value;
+
+// AVOID!!
+/**
+ *  @see #getOtherValue()}.
+ */
+private final Value m_OtherValue;
+\end{lstlisting}
+
+If there is no getter method for a field, or it is not \lstinline|private|, a proper description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
+
+It is always a good idea to describe the valid values for the field, its default value, and whether \lstinline|null| is a possible value for a reference. This is a must for non-\lstinline|final| \lstinline|public| or \lstinline|protected| fields – in particular because there should never be any non-\lstinline|final| non-\lstinline|private| fields at all.
+
+For a serialisable class, the fields that will be serialised should be tagged with \nameref{sec:TagSerial} and the appropriate description.
+
+Constants (\lstinline|public static final| fields) that are initialised with a literal have to use the \nameref{sec:TagValue} tag in there description. Also \lstinline|private static final| or \lstinline|protected static final| fields that are initialised with a literal should use the \nameref{sec:TagValue}.
+
+This looks like this:
+\begin{lstlisting}
+/**
+ *  The vested system property for the file encoding used by the JVM:
+ *  {@value}.
+ */
+public static final String PROPERTY_FILE_ENCODING = "file.encoding";
+\end{lstlisting}
+
+The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

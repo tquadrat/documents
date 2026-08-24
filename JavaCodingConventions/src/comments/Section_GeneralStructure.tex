@@ -1,9 +1,29 @@
 \section{General Structure}\label{sec:DocCommentsGeneralStructure}
 As already mentioned \hyperref[lbl:DocumentationComments]{above}, regular documentation comments are block comments where the opening tag is immediately followed by another asterisk\footnote{… or where each line is introduced by three slashes: \bdq{\lstinline|/// …|}.}; they will be associated with the next program element that follows the closing tag\footnote{… or the last line of the comment.}.
 
-If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} tags. I recommend to use the tags always.
+If the comment text has more than one paragraph, each paragraph must be enclosed in \bdq{\lstinline|<p>…</p>|} HTML\index{HTML} tags. I recommend to use the tags always.
 
-Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\lstinline|\{@summary …\}|}\index{summary@"@summary} Javadoc\index{javadoc} tag.
+Javadoc\index{javadoc} uses the first sentence of each documentation comment as a brief description of the program element within the overview of the enclosing element. Unfortunately, the detection of the first sentence is not very reliable. Therefore, the text intended to serve as the brief description is enclosed in a \bdq{\{\nameref{sec:TagSummary} …\}}\index{summary@"@summary} Javadoc\index{javadoc} tag.
+
+When the names of classes\index{class}, methods\index{method}, constants\index{field!constant}, attributes\index{field}, parameters etc. as well as \lstinline|null|, \lstinline|true|, and \lstinline|false| are mentioned in the comment text, they have to be written in a monotype font. This can be achieved by encapsulating them in \bdq{\lstinline|<code>…</code>|} HTML\index{HTML} tags or placing them inside the JavaDoc \bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code} tag. The monotype font is used automatically for everything inside a \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag.
+
+Each comment, including each text following a \bdq{\nameref{sec:TagParam}}\index{param@"@param}, \bdq{\nameref{sec:TagReturn}}\index{return@"@return}, and \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag, ends with a full stop.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{inheritDoc@"@inheritDoc}. Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
 
@@ -18,7 +38,7 @@ The general structure of a documentation comment therefore looks like this:
  *  <p>Optional additional information regarding the program 
  *  element.</p>
  *
- *  –– Several Javadoc tags with additional information …
+ *  – Several Javadoc tags with additional information …
  */
 \end{lstlisting}
 
@@ -30,7 +50,7 @@ The Markdown\index{Markdown} alternative would look like this:
 ///
 /// Optional additional information regarding the program element.
 ///
-/// –– Several Javadoc tags with additional information …
+/// – Several Javadoc tags with additional information …
 \end{lstlisting}
 
 The document \bdq{How to Write Doc Comments for the Javadoc Tool}\index{javadoc} \autocite{ORACLE_DOC_JAVADOC_HOWTO} is already a little bit older and therefore outdated in parts, but it still provides some useful hints on how to write proper documentation comments that should be processed by the Javadoc\index{javadoc} tool.

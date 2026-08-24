@@ -97,7 +97,15 @@ literate=
   {–}{{--}}1
   {`}{{~}}1
 }
-
+\lstdefinelanguage{Comment}
+{
+ %morekeywords={off},
+ %sensitive=false,
+ morecomment=[l]{*},
+ %morecomment=[s]{/*}{*/},
+ %morestring=[b]",
+ }
+ 
 \colorlet{shadecolor}{gray!10}
 \makeindex[options={-s JavaCodingConventions.ist}]
 

@@ -223,11 +223,6 @@ The \nameref{sec:TagSummary} tag has to be used always when a documentation comm
  */
 \end{lstlisting}
 
-The documentation comments for modules, packages and classes may get longer, so that you want to structure it by giving headlines to sections. Usually this is done through the HTML tag \verb|<h#>|, with \verb|#| being a number in the range from 1 to 6. You can use these tags in the documentation comments, too, but the tags \verb#<h1># and \verb#<h2># are already used by JavaDoc itself; that means that you should only use \verb#<h3># to \verb#<h6># in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewDoc}), you can make use of the all the \verb|<h#>| tags to structure that comment.
-
-When a class, method, constant, field is mentioned the first time in a documentation comment, the documentation for that element should be linked, using the \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tags. This is not necessary if the type is used for a formal parameter or the return value. In these cases, JavaDoc generates these links automatically.
-
-Each \nameref{sec:TagLink} or \nameref{sec:TagLinkplain} tag has to be placed into a line of its own.
 
 Some examples:
 \begin{lstlisting}

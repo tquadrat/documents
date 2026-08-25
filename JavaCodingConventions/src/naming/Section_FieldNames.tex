@@ -3,7 +3,7 @@ I distinguish generally two types of fields\index{field} that will have differen
 
 \paragraph{Attributes}\index{field!attribute} are mutable or immutable fields\index{field}, that get their values during runtime; that they may get assigned a default value at compile time that may never change during runtime is irrelevant.
 
-\paragraph{Constants}\index{field!constant} are usually static final fields\index{field} that get their values always during compile time. They should have an immutable type, like a primitive or \lstinline|java.lang.String|\index{java.lang!String}.
+\paragraph{Constants}\index{field!constant} are usually static final fields\index{field} that get their values always during compile time\index{compile-time constant}. They should have an immutable type, like a primitive or \lstinline|java.lang.String|\index{java.lang!String}.
 
 %------------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ This means that a constant\index{field!constant} in Java exists only by conventi
 
 Constants\index{field!constant} in Java are fields\index{field} of primitive or immutable types\index{immutable type} that are declared as public, static and final.
 
-Our definition for a constant\index{field!constant} is even more restrictive: that public static final field\index{field} has to be initialised with a compile-time constant\index{ compile-time constant} value. This basically limits constants\index{field!constant} to \bdq{magic numbers}\index{magic number} and texts.\footnote{This limitation is imposed by the documentation rules, refer to \tqfullvref{sec:FieldComment}.}
+Our definition for a constant\index{field!constant} is even more restrictive: that public static final field\index{field} has to be initialised with a compile-time constant\index{compile-time constant} value. This basically limits constants\index{field!constant} to \bdq{magic numbers}\index{magic number} and texts.\footnote{This limitation is imposed by the documentation rules, refer to \tqfullvref{sec:FieldComment}.}
 
 According to the \ccjpl, the name of a constant\index{field!constant} \bdq{should be all uppercase with words separated by underscores (\bsq{\texttt{\_}})} \autocite{SUN_CODE_CONVENTIONS:NamingConventions}.
 

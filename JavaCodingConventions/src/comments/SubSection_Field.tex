@@ -1,23 +1,25 @@
 \subsection{The Field Comment}\label{sec:FieldComment}
-Attributes/properties, constants and enum values are all summarised under ‘field’ here.
+Attributes/properties\index{field!attribute}\index{property}, constants\index{field!constant} and \lstinline|enum|\index{enum} values are all summarised under \bsq{field}\index{field} here.
 
-% Elaborate on comments for constants!!!!
-
-
-Each and every field will have a comment, the ‘field comment‘, describing it. For \lstinline|private| fields it can be sufficient to refer to the related getter method instead of writing a lengthy comment into the field comment itself; do not use the \nameref{sec:TagSee} tag instead of the \nameref{sec:TagLink} tag:
+Each and every field\index{field} will have a comment, the \bsq{field comment}, describing it. For private fields\index{field} it can be sufficient to refer to the related getter method\index{method!getter method} instead of writing a lengthy comment into the field comment itself; but do not use the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag instead of the \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag:
 \begin{lstlisting}
 /**
- *  Refer to
+ *  <p>{@summary For the description of the property 'value' refer to
  *  {@link #getValue()}.
  */
 private final Value m_Value;
 
-// AVOID!!
+// AVOID!! Do not use @see
 /**
  *  @see #getOtherValue()}.
  */
 private final Value m_OtherValue;
 \end{lstlisting}
+
+% Elaborate on comments for constants!!!!
+
+
+
 
 If there is no getter method for a field, or it is not \lstinline|private|, a proper description is mandatory. Usually one sentence might be sufficient, although \lstinline|public| constants may require a full fledged usage description if that is not given elsewhere (for example, in the class comment or the package comment) and a reference to that description could be placed here.
 

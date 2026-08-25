@@ -1,5 +1,5 @@
 \chapter{Some basic Considerations regarding Comments}
-Comments are crucial for the understanding of source code, in any programming language – not only in 6502 assembly. Source code without any comments is not maintainable, meaning it is worthless in the long run.
+Comments are crucial for the understanding of source code, in any programming language – not only in 6502\index{6502} assembly\index{assembly}. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
 The question is how much comments are needed, because the frequency of comments reflects poor quality of code. Unfortunately, code can be \bdq{under-commented} or \bdq{over-commented}, meaning there is a \bdq{frequency band} for comments that has to be hit for good quality code.
 
@@ -52,7 +52,46 @@ On the other hand, the documentation should be as close to the code as possible.
 For Java source code it is possible that comments are part of or the source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
 
 \section{Kinds of Comments}
-\Java source code can generally have four kinds of comments:
+\subsection{The Syntax}
+Syntactically, the \Java programming language knows two types of comments:
+\begin{itemize}[nosep]
+	\item{Block Comments\index{block comment}}
+	\item{Single-line Comments\index{single-line comment}}
+\end{itemize}
+
+A \textit{block comment}\pslabel{lbl:BlockComment}\index{block comment} is delimited by \bdq{\lstinline|/*|} and \bdq{\lstinline|*/|}, everything inbetween belongs to the comment. The indentation of the opening tag is aligned with the indentation of the surrounding code, and if the block comment spans multiple lines, the asterisk of the closing tag is aligned with the asterisk of the opening tag.
+
+For a multi-line block comment, no text will be placed to the lines with the opening and the closing tag, and usually, each comment line starts with an asterisk that is aligned with that of the opening tag.
+
+\keeplisting{5}
+This looks like shown below:
+\begin{lstlisting}
+/* A block-comment with just one line */
+
+/*
+ * A multi-line block comment.
+ */
+\end{lstlisting}
+
+Instead of a block comment\index{block comment} with just one line, you should preferably use a single-line comment\index{single-line comment}. But one-line block comments comes often handy when you have to place a comment into an otherwise empty code block.
+
+In Java, a \textit{single-line comment}\pslabel{lbl:SingleLineComment}\index{single-line comment} begins with \bdq{\lstinline|//|} and ends at the end of the line. This means it can be placed after a statement, in the same line.\footnote{A block comment also can start in the same line after a statement, but that is not recommended.}
+
+\keeplisting{7}
+I use single-line comments\index{single-line comment} mainly as headings, so I gave them a special format:
+\begin{lstlisting}
+//---* A heading *---------------------------------------------------
+
+final var localVariable; // Short description of localVariable
+
+//---* Done! *-------------------------------------------------------
+return;
+\end{lstlisting}
+
+Longer comments should be placed always into a block comment\index{block comment} instead of spanning it over multiple single-line comments\index{single-line comment}. 
+
+\subsection{The Semantics}
+Semantically, Java source code can have generally four kinds of comments:
 \begin{itemize}[nosep]
 	\item{Documentation Comments}
 	\item{Implementation Comments}
@@ -60,7 +99,7 @@ For Java source code it is possible that comments are part of or the source for 
 	\item{Structuring Comments}
 \end{itemize}
 
-In Java, the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}) are delimited by \bdq{\texttt{/**…*/}} and cannot be placed everywhere; they will be externalised for the generation of the program/library documentation by the Javadoc\index{javadoc} tool\footnote{As already said above, this is covered in \tqfullref{sec:DocumentationComments}.}. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
+In Java, the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}) will be externalised for the generation of the program/library documentation by the Javadoc\index{javadoc} tool\footnote{As already said above, this is covered in \tqfullref{sec:DocumentationComments}.}. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
 
 Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
 

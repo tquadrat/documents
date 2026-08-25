@@ -1,5 +1,5 @@
 \subsection{The ‘package’ Comment}\label{sec:PackageComment}
-The documentation documment for a package\index{package}  lives in a dedicated file, the \texttt{package-info.java}\index{package-info.java}, that exists mainly for that comment; refer to \tqfullvref{sec:PackageDocumentation}.
+The documentation comment for a package\index{package} lives in a dedicated file, the \texttt{package-info.java}\index{package-info.java}, that exists mainly for that comment; refer to \tqfullvref{sec:PackageDocumentation}.
 
 Such a file has to be there for each Java package\index{package}.
 
@@ -9,11 +9,11 @@ Furthermore, it contains conventions that applies equally to all classes\index{c
 
 If the package\index{package} defines a single API, it can describe the usage of that API, too. 
 
-The package comment can list the authors of the code, using the \nameref{sec:TagAuthor}\index{author@"@author} tag, the version with the \nameref{sec:TagVersion}\index{version@"@version} tag, when the package\index{package} was created or with which version it was integrated, using the \nameref{sec:TagSince}\index{since@"@since} tag, and other things.
+The package comment can list the authors of the code, using the \bdq{\nameref{sec:TagAuthor}}\index{author@"@author} tag, the version with the \bdq{\nameref{sec:TagVersion}}\index{version@"@version} tag, the date when the package\index{package} was created or with which version it was integrated, using the \bdq{\nameref{sec:TagSince}}\index{since@"@since} tag, and other things.
 
 It should not repeat details that are written already in the documentation of a class\index{class} in that package, instead it should reference that class documentation. If those details are  important for the whole package, it should be considered to move them from the class comment to the package description and place a reference into the class documentation instead.
 
-The package comment for the main package\index{package!main package} of a project can replace the overview comment (if not the module comment is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
+The package comment for the main package\index{package!main package} of a project can replace the \hyperref[sec:OverviewDoc]{overview comment} (if not the \hyperref[sec:ModuleComment]{module comment} is used for this\footnote{Not all projects will produce modules, so it is possible that your project does not have a module definition file at all.}).
 
 %==============================================================================
 % End of file!!

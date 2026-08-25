@@ -1,19 +1,20 @@
 \section{The \bsq{Javadoc} Tool}
-The Javadoc\index{javadoc} tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments where the opening tag is immediately followed by another asterisk:
-\keeplisting{14}
+The Javadoc\index{javadoc} tool allows to externalize especially marked program comments, so that they can be used as the external documentation\footnote{Javadoc\index{javadoc} is not the only tool for this purpose; another well known tool is Doxygen\index{doxygen} \autocite{DOXYGEN_HOMEPAGE} that was created primarily to generate the documentation for annotated \mbox{C++}\index{C++} code, but it works also for Java, C\index{C} and several other programming languages. But for Java sources, Javadoc\index{javadoc} is the preferred tool.}. \pslabel{lbl:DocumentationComments}These comments are the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}); technically, these are block comments\index{block comment} (see \hyperref[lbl:BlockComment]{above}) where the opening tag is immediately followed by another asterisk:
+\keeplisting{10}
 \index{javadoc}\index{Markdown}
-\begin{lstlisting}
+\begin{lstlisting}[firstnumber=1]
 /**
  *  This is a documentation comment; it will be processed by the
  *  Javadoc tool.
  */
- 
+
 /*
  * This is a normal block comment that is ignored by the Javadoc
  * tool.
  */
- 
-// And this is a line comment ...
+
+//---* A program heading *------------------------------------------- 
+// And this is a single-line comment ...
 
 /// This is also a documentation comment, but in Markdown syntax.
 /// It will be also processed by the Javadoc tool.

@@ -1,4 +1,82 @@
-The comment text for an overriding method can be replaced by the Javadoc\index{javadoc} tag \bdq{\lstinline|\{@inheritDoc\}|}\index{inheritDoc@"@inheritDoc}. 
+\subsection{The Method Comment}\label{sec:MethodComment}
+The documentation comment for a method\index{method} (the \bsq{method} comment) describes its usage and its function within the class\index{class}, together with its parameters, the return value, and any exception it may throw.
+
+Any side effects must be documented here, as well as any instances where the method's\index{method} actual behavior differs from what one would expect based on its name – refer to page \pageref{princ:NamingConventions:NamesAsContract}, and to chapter \tqfullvref{sec:TheNamingDictionary:Verbs}.
+
+The comment text for an overriding method\index{method} can be replaced by the Javadoc\index{javadoc} tag \bdq{\{\nameref{sec:TagInheritDoc}\}}\index{inheritDoc@"@inheritDoc}. It is possible to add additional text to that inherited from the overridden method\index{method}. In fact, the tag \bdq{\{\nameref{sec:TagInheritDoc}\}}\index{inheritDoc@"@inheritDoc} copies the full method comment, including the additional tags for parameters, return values and exceptions.
+
+Otherwise, for each method\index{method} parameter a \bdq{\nameref{sec:TagParam}} tag must be added that describes the parameter in detail (if not already described in the main text of the method comment; in that case, a short sentence should be sufficient). The description has to cover the function of the parameter, its value range, and whether the parameter can be \lstinline|null|. Usually, \lstinline|null| is assumed to be an invalid argument value per default, so it has to be mentioned in the respective comment if it is allowed.
+
+It is not enough to only give the type of the parameter in the comment; in fact, this is obsolete as it can be easily taken from the method's signature.
+
+
+
+
+
+
+
+
+
+Usually, the return value (given the method is not of type \lstinline|void|) will be described in the comment for the \nameref{sec:TagReturn} tag; the tag is mandatory, and with some text, even if the return value is described already in the method description itself. The description for the return value should provide the possible values and their meanings, whether \lstinline|null| is a valid return value, and so on. 
+
+In particular, the comment for the \nameref{sec:TagReturn} tag has to describe which return values indicate special or error conditions.
+
+It is obsolete to give the type of the return value here; it can already be seen from the method's declaration.
+
+Next there has to be a \nameref{sec:TagThrows} tag for each checked exception that may be thrown by the method, describing the condition that may trigger that exception. It is also possible to add \nameref{sec:TagThrows} clauses for unchecked exceptions, but not required. Refer to chapter \tqfullvref{sec:GeneralExceptionHandling} for additional details on exception handling.
+
+A method that implements an interface method or that overrides a method from a base class may be commented with the \nameref{sec:TagInheritDoc} tag instead of writing a full comment. The tag can be combined with additional text, too.
+
+The documentation comment for a non-\lstinline|final| \lstinline|public| or \lstinline|protected| method has to provide detailed information when and how it has to be overwritten; especially if the overriding method has to call the super implementation and when. Usually you should avoid the requirement for calling the super implementation, but that is not always appropriate or possible; refer to chapter \tqfullvref{sec:NonFinalMethods} about some more details regarding this topic.
+
+A comment for that case may look like this:\footnote{The tag @note is a custom tag; refer to chapter \tqfullvref{sec:CustomTagsForJavaDoc}.}
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note Call this implementation {before|after} your code, to make
+ *      sure that the initialisations provided here are performed.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+For more details on this refer to chapter \tqfullvref{sec:ExtendingClassesOverridingMethods}.
+
+Usually, the documentation comment for a method does not reveal details about the method's implementation, but in case of empty “place holder methods” or mount points, a sentence like below does not harm.
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ */
+\end{lstlisting}
+
+If such a method has a dummy or default return value, there has to be an appropriate \nameref{sec:TagReturn} tag, specifying that value:
+\begin{lstlisting}
+/**
+ *  …
+ *
+ *  @note This implementation does nothing.
+ *
+ *  …
+ *  @return Always <the default value>.
+ */
+\end{lstlisting}
+ 
+Finally it is absolutely crucial that the documentation comment provides all information about possible side effects of a call to the method, even more when these side effects are unexpected. This includes the modification of an argument; refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
+
+
+
+
+
+
+
+
+
+
 
 %==============================================================================
 % End of file!!

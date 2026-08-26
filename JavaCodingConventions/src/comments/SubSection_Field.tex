@@ -1,7 +1,7 @@
 \subsection{The Field Comment}\label{sec:FieldComment}
 Attributes/properties\index{field!attribute}\index{property}, constants\index{field!constant} and \lstinline|enum|\index{enum} values are all summarised under \bsq{field}\index{field} here.
 
-Each and every field\index{field} must have a comment, the \bsq{field comment}, describing it. For private fields\index{field} it can be sufficient to refer to the related getter method\index{method!getter method}\footnote{Of course you have to provide a complete documentation of the property\index{property} there; just a line with a \bdq{\{\nameref{sec:TagReturn} …\}}\index{return@"@return} inline tag will not do the job for the getter method\index{method!getter method} in this case.} instead of writing a lengthy comment into the field comment itself; but do not use the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag instead of the \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag:
+Each and every field\index{field} must have a documentation comment, the \bsq{field comment}, describing it. For private fields\index{field} it can be sufficient to refer to the related getter method\index{method!getter method}\footnote{Of course you have to provide a complete documentation of the property\index{property} with the method\index{method!getter method}; just a line with a \bdq{\{\nameref{sec:TagReturn} …\}}\index{return@"@return} inline tag will not do the job for the getter method\index{method!getter method} in this case.} instead of writing a lengthy comment into the field comment itself; but do not use the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag instead of the \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag:
 \begin{lstlisting}
 /**
  *  <p>{@summary For the description of the property 'value' refer to
@@ -18,19 +18,13 @@ private final Value m_OtherValue;
 
 If there is no getter method\index{method!getter method} for the field\index{field}, or if it is not private, a proper description is mandatory. One sentence is enough in most cases, but you are not limited to that.
 
-It is always a good idea to describe the valid values for the field\index{field}, its default value, and whether \lstinline|null| is a possible value for a reference. This is a hard requirement for all non-final non-private fields\index{field} – in particular because there should \textit{never} be any non-final non-private fields\index{field} at all!
+It is always a good idea to describe the valid values for the field\index{field}, its default value, and whether \lstinline|null| is a possible value    . This is a hard requirement for all non-final non-private fields\index{field} – in particular because there should \textit{never} be any non-final non-private fields\index{field} at all!
 
 For a serialisable class\index{class}\index{serialization}, the fields\index{field} that will be serialised should be tagged with \bdq{\nameref{sec:TagSerial}}\index{serial@"@serial} and the appropriate description.
 
 % Elaborate on comments for constants!!!!
 
-
-
-
-
-Constants (\lstinline|public static final| fields) that are initialised with a literal have to use the \nameref{sec:TagValue} tag in there description. Also \lstinline|private static final| or \lstinline|protected static final| fields that are initialised with a literal should use the \nameref{sec:TagValue}.
-
-This looks like this:
+A constant\index{field!constant} is a public static final field that is initialised with a compile-time constant\index{compile-time constant}. The comment for that field must show the constant value, and this is achieved through the tag \bdq{\{\nameref{sec:TagValue}\}}\index{value@"@value}. The documentation for this source code  
 \begin{lstlisting}
 /**
  *  The vested system property for the file encoding used by the JVM:
@@ -38,9 +32,20 @@ This looks like this:
  */
 public static final String PROPERTY_FILE_ENCODING = "file.encoding";
 \end{lstlisting}
+will be generated like this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocConstant1}
+\end{center}
 
-The comments for enum values are nothing else than field comments for constants – in fact, an enum value is exactly that: a \lstinline|public static final| field initialised with an instance of the enum type.
+In another documentation comment, the value of the constant\index{field!constant} can be referenced using the \bdq{\{\nameref{sec:TagValue} …\}}\index{value@"@value} like this:
+\keeplisting{3}
+\begin{lstlisting}[language=Comment]
+…
+ *  {@value #PROPERTY_FILE_ENCODING}
+…
+\end{lstlisting}
 
+Here the \textit{value} of the constant\index{field!constant} is the clickable link, not its name. That distinguishes it from a reference through the \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag.
 
 %==============================================================================
 % End of file!!

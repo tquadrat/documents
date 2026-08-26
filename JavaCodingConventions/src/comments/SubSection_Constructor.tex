@@ -1,0 +1,49 @@
+\subsection{The Constructor Comment}\label{sec:ConstructorComment}
+
+
+
+\}
+
+
+Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
+
+For an (empty) default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
+\begin{lstlisting}
+/**
+ *  Creates a new instance of {@code MyClass}.
+ */
+public MyClass() { /* Does nothing */ }
+\end{lstlisting}
+or
+\begin{lstlisting}
+/**
+ *  Default constructor for class {@code MyClass}.
+ */
+private MyClass() { /* Does nothing */ }
+\end{lstlisting}
+with the first alternative being the preferred one, because this comment can be used for every constructor, not only for the default ones.
+
+Of course, this comment do not say very much, but the constructor of a class is also not doing that much, and what it does is very obvious. But if the constructor has side effects, these should be described properly.
+
+A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The class for the \lstinline|Error| used in the \lstinline|throw| is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+\begin{lstlisting}
+/**
+ *  No instance is allowed for class {@code MyUtilityClass}.
+ */
+private MyUtilityClass() 
+{ 
+    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class ); 
+}   // MyUtilityClass()
+\end{lstlisting}
+
+If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
+
+Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
+
+Same as for a method, the documentation comment for a constructor has to describe all the side-effects caused by it; the modification of an argument is such a side-effect – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details. But in general, a constructor should not have any (visible) side-effects at all.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

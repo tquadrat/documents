@@ -251,46 +251,6 @@ Each comment, including each text for a \nameref{sec:TagParam}, \nameref{sec:Tag
 
 %------------------------------------------------------------------------------
 
-\subsubsection{The Constructor Comment}\label{sec:ConstructorComment}
-Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
-
-For an (empty) default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
-\begin{lstlisting}
-/**
- *  Creates a new instance of {@code MyClass}.
- */
-public MyClass() { /* Does nothing */ }
-\end{lstlisting}
-or
-\begin{lstlisting}
-/**
- *  Default constructor for class {@code MyClass}.
- */
-private MyClass() { /* Does nothing */ }
-\end{lstlisting}
-with the first alternative being the preferred one, because this comment can be used for every constructor, not only for the default ones.
-
-Of course, this comment do not say very much, but the constructor of a class is also not doing that much, and what it does is very obvious. But if the constructor has side effects, these should be described properly.
-
-A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The class for the \lstinline|Error| used in the \lstinline|throw| is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
-\begin{lstlisting}
-/**
- *  No instance is allowed for class {@code MyUtilityClass}.
- */
-private MyUtilityClass() 
-{ 
-    throw new PrivateConstructorForStaticClassCalledError( MyUtilityClass.class ); 
-}   // MyUtilityClass()
-\end{lstlisting}
-
-If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
-
-Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
-
-Same as for a method, the documentation comment for a constructor has to describe all the side-effects caused by it; the modification of an argument is such a side-effect – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details. But in general, a constructor should not have any (visible) side-effects at all.
-
-%------------------------------------------------------------------------------
-
 \subsection{The Javadoc Tags}\label{sec:JavaDocTags}
 The next two chapters describe the tags that should be used in your documentation comments where appropriate.
 
@@ -445,6 +405,49 @@ Adds a “Version” subheading with the specified \verb#<version-text># value t
 %------------------------------------------------------------------------------
 
 \subsubsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
+
+
+
+Keine offiziellen Tags, aber JDK-Konvention (per Custom-Taglet, nicht vom Standard-Doclet erzwungen):
+
+\paragraph{\lstinline|@apiNote|}\label{sec:TagApiNote}\index{apiNote@"@apiNote} Usage: \lstinline|@apiNote <text>|
+
+\paragraph{\lstinline|@implNote|}\label{sec:TagImplNote}\index{implNote@"@implNote} Usage: \lstinline|@implNote <text>|
+
+\paragraph{\lstinline|@implSpec|}\label{sec:TagImplSpec}\index{implSpec@"@implSpec} Usage: \lstinline|@implSpec <text>|
+
+
+@apiNote
+@implSpec
+@implNote
+
+Falls du willst, kann ich dir zu einzelnen Tags (z. B. @snippet oder {@index}, die für dich als Bibliotheks-Maintainer besonders relevant sein könnten) Details oder Beispiele geben.
+
+Welches Custom-Taglet implementiert @apiNote, @implSpec und @implNote?
+
+Kein eigenes Taglet – es ist genau umgekehrt: Die Unterstützung wurde weder in javadoc selbst noch im Standard-Doclet eingebaut. Stattdessen nutzt der Standard-Doclet sein generisches Custom-Tag-Feature, das über die Kommandozeilenoption `-tag` konfiguriert wird.
+
+Konkret werden `@apiNote`, `@implSpec` und `@implNote` einfach als generische **Simple-Tags** über `-tag`-Optionen registriert, z. B.:
+
+```
+javadoc -tag 'apiNote:a:API Note:' \
+        -tag 'implSpec:a:Implementation Requirements:' \
+        -tag 'implNote:a:Implementation Note:'
+```
+
+Diese Optionen wurden von den JDK-Makefiles selbst gesetzt, um die JDK-eigene Dokumentation zu erzeugen – es gibt also intern keine spezielle Taglet-Klasse dafür, sondern nur `com.sun.tools.doclets.internal.toolkit.taglets.SimpleTaglet` (später `jdk.javadoc.internal.doclets.toolkit.taglets.SimpleTaglet`), die generische Engine hinter jedem `-tag`-definierten Tag.
+
+Für dich als Bibliotheks-Maintainer heißt das: Wenn du diese drei Tags in `org.tquadrat.foundation` unterstützen willst, musst du sie selbst per `-tag`-Option an dein `javadoc`/Gradle-Javadoc-Task übergeben (die Reihenfolge der `-tag`-Optionen bestimmt dabei die Ausgabereihenfolge im generierten HTML, falls mehrere an derselben Stelle auftreten).
+
+
+
+
+
+
+
+
+
+
 You can define your own JavaDoc tags; simple tags can be defined on the command line for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
 
 I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.

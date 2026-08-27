@@ -1,6 +1,13 @@
 %\RequirePackage{lmodern}
 \documentclass[11pt,a4paper, titlepage, parskip=half, headsepline, footsepline, cleardoublepage=current, headheight=1cm]{scrbook}
 %\usepackage{DejaVuSansMono}
+
+%---* Reset the footnote counter when starting a new part *----------
+\usepackage{chngcntr}
+\counterwithout*{footnote}{chapter}
+\counterwithin*{footnote}{part}
+%--------------------------------------------------------------------
+
 \usepackage{dejavu}
 \usepackage[T1]{fontenc}
 \usepackage{scrhack}

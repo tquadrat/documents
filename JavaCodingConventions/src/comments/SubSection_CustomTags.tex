@@ -1,0 +1,87 @@
+\subsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
+
+
+
+Keine offiziellen Tags, aber JDK-Konvention (per Custom-Taglet, nicht vom Standard-Doclet erzwungen):
+
+\paragraph{\lstinline|@apiNote|}\label{sec:TagApiNote}\index{apiNote@"@apiNote} Usage: \lstinline|@apiNote <text>|
+
+\paragraph{\lstinline|@implNote|}\label{sec:TagImplNote}\index{implNote@"@implNote} Usage: \lstinline|@implNote <text>|
+
+\paragraph{\lstinline|@implSpec|}\label{sec:TagImplSpec}\index{implSpec@"@implSpec} Usage: \lstinline|@implSpec <text>|
+
+
+@apiNote
+@implSpec
+@implNote
+
+Falls du willst, kann ich dir zu einzelnen Tags (z. B. @snippet oder {@index}, die für dich als Bibliotheks-Maintainer besonders relevant sein könnten) Details oder Beispiele geben.
+
+Welches Custom-Taglet implementiert @apiNote, @implSpec und @implNote?
+
+Kein eigenes Taglet – es ist genau umgekehrt: Die Unterstützung wurde weder in javadoc selbst noch im Standard-Doclet eingebaut. Stattdessen nutzt der Standard-Doclet sein generisches Custom-Tag-Feature, das über die Kommandozeilenoption `-tag` konfiguriert wird.
+
+Konkret werden `@apiNote`, `@implSpec` und `@implNote` einfach als generische **Simple-Tags** über `-tag`-Optionen registriert, z. B.:
+
+```
+javadoc -tag 'apiNote:a:API Note:' \
+        -tag 'implSpec:a:Implementation Requirements:' \
+        -tag 'implNote:a:Implementation Note:'
+```
+
+Diese Optionen wurden von den JDK-Makefiles selbst gesetzt, um die JDK-eigene Dokumentation zu erzeugen – es gibt also intern keine spezielle Taglet-Klasse dafür, sondern nur `com.sun.tools.doclets.internal.toolkit.taglets.SimpleTaglet` (später `jdk.javadoc.internal.doclets.toolkit.taglets.SimpleTaglet`), die generische Engine hinter jedem `-tag`-definierten Tag.
+
+Für dich als Bibliotheks-Maintainer heißt das: Wenn du diese drei Tags in `org.tquadrat.foundation` unterstützen willst, musst du sie selbst per `-tag`-Option an dein `javadoc`/Gradle-Javadoc-Task übergeben (die Reihenfolge der `-tag`-Optionen bestimmt dabei die Ausgabereihenfolge im generierten HTML, falls mehrere an derselben Stelle auftreten).
+
+
+
+
+
+
+
+
+
+
+You can define your own JavaDoc tags; simple tags can be defined on the command line for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
+
+I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+
+\paragraph{\lstinline|@anchor|}\label{sec:TagAnchor}  Usage: \lstinline|{@anchor #<anchor-name> <text>}|
+
+This tag allows to add an HTML anchor to the generated documentation, where \verb#<anchor-name># is the name of the anchor to the given text. The hash symbol (‘\#’) before the name of the anchor is mandatory!
+
+\paragraph{\lstinline|@extauthor|}\label{sec:TagExtAuthor}  Usage: \lstinline|@extauthor <name-text> - <email-address>|
+
+This is a replacement for the \nameref{sec:TagAuthor} tag that renders the given email address as a \verb#mailto:# link in the generated documentation. It does not regard the option \verb#-author# on the command line\footnote{This is valid for version 0.1.0 of the library; it may have changed for a later version.}. 
+
+\paragraph{\lstinline|@href|}\label{sec:TagHref}  Usage: \lstinline|{@href <url> <text>}| or \lstinline|{@href <url>}|
+
+With this tag, an HTML hyperlink can be added to the generated documentation; it will be placed inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \verb#<url># is the target URL, while \verb#<text># is the clickable text. If the latter is omitted, the URL itself will be used instead.
+
+\paragraph{\lstinline|@inspired|}\label{sec:TagInspired}  Usage: \lstinline|@inspired <text>|
+
+Sometimes a piece of code was inspired by a document of some kind, a description of an algorithm, a product white paper, or whatever. This tag allows you to add a reference to that source of inspiration. 
+
+\paragraph{\lstinline|@modified|}\label{sec:TagModified}  Usage: \lstinline|@modified <name-text> - <email-address>|
+
+This is a variant of the \nameref{sec:TagExtAuthor} tag. It is meant to provide the name of the developer that modified the respective element without claiming to be an author.
+
+\paragraph{\lstinline|@note|}\label{sec:TagNote}  Usage: \lstinline|@note <text>|
+
+With this tag, it is easy to add important notes to the generated documentation for an element. All notes will be added to a bullet list placed immediately beneath the documentation text. The text for the \lstinline|@note| tag is somehow limited as it does not allow other JavaDoc tags.
+
+\paragraph{\lstinline|@thanks|}\label{sec:TagThanks}  Usage: \lstinline|@thanks <name-text> - <email-address>|
+
+Use this tag to mention someone who provided input to the respective element without being an author; that person might have wrote an article about the algorithm that was implemented by this element, or they may have reported a bug.
+
+Same as for the \nameref{sec:TagExtAuthor} and the \nameref{sec:TagModified} tags, the email address will be rendered to a \verb#mailto:# link in the generated documentation.
+
+\paragraph{\lstinline|@UMLGraph.link|}\label{sec:TagUMLGraph}  Usage: \lstinline|@UMLGraph.link|
+
+This adds an UML graph for the current class to the generated documentation.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

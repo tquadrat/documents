@@ -1,32 +1,22 @@
 \subsection{The Constructor Comment}\label{sec:ConstructorComment}
+In principle, a constructor\index{constructor} is simply a special form of a method\index{method}, albeit one without a return value. Consequently, the rules for documenting a method\index{method} also apply to documenting a constructor\index{constructor}.
 
-
-
-\}
-
-
-Basically, a constructor is a special kind of a method, so the same rules are valid for the documentation comment for a constructor than for the documentation comment for a method, as given in chapter \tqref{sec:MethodComment}.
-
-For an (empty) default constructor, the constructor comment may be as simple as this, no matter if it is \lstinline|public|, \lstinline|private|, or \lstinline|protected|:
-\begin{lstlisting}
+However, since all constructors\index{constructor} essentially do the same thing – creating an instance of the class in which they are defined – you can actually use the same comment text every time, and it does not matter whether the constructor\index{constructor} is public, protected or private:
+\keeplisting{4}
+\begin{lstlisting}[caption={Simple Constructor}]
 /**
  *  Creates a new instance of {@code MyClass}.
  */
 public MyClass() { /* Does nothing */ }
 \end{lstlisting}
-or
-\begin{lstlisting}
-/**
- *  Default constructor for class {@code MyClass}.
- */
-private MyClass() { /* Does nothing */ }
-\end{lstlisting}
-with the first alternative being the preferred one, because this comment can be used for every constructor, not only for the default ones.
 
-Of course, this comment do not say very much, but the constructor of a class is also not doing that much, and what it does is very obvious. But if the constructor has side effects, these should be described properly.
+Of course, this comment does not say that much, but a constructor is not doing much more than instantiating the class instance, and that is very obvious. You do not need to add that the (default) constructor\index{constructor} is empty; it is sufficient that this is documented in the body. 
 
-A class that does have only \lstinline|static| methods\footnote{Such a class is called a “Utility Class”; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a \lstinline|private| constructor like this:\footnote{The class for the \lstinline|Error| used in the \lstinline|throw| is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
-\begin{lstlisting}
+You can modify or enhance the suggested comment text according your needs. So if the constructor\index{constructor} has side effects, these should be described properly. But in general, a constructor\index{constructor} should not have any side-effects at all. 
+
+A class that does have only static methods\index{method}\footnote{Such a class is called a \bdq{Utility Class}\index{class!utility class}; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a private constructor like this:\footnote{The class for the \lstinline|Error|\index{class!class!error class} used in the \lstinline|throw| statement is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+\keeplisting{5}
+\begin{lstlisting}[caption={Utility Class Constructor}]
 /**
  *  No instance is allowed for class {@code MyUtilityClass}.
  */
@@ -36,12 +26,9 @@ private MyUtilityClass()
 }   // MyUtilityClass()
 \end{lstlisting}
 
-If a constructor takes parameters, there has to be a \nameref{sec:TagParam} tag for each of them, exactly like for a method.
+The parameters of a constructor\index{constructor} must be documented in the same way as that for a method\index{method}, with the \bdq{\nameref{sec:TagParam}}\index{param@"@param}. If the constructor\index{constructor} modifies one of its arguments, this is a serious side effect and needs to be documented – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
 
-Although constructors should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \nameref{sec:TagThrows} tag and a description of the conditions for the particular exception – as far as it is possible or make sense. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
-
-Same as for a method, the documentation comment for a constructor has to describe all the side-effects caused by it; the modification of an argument is such a side-effect – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details. But in general, a constructor should not have any (visible) side-effects at all.
-
+Although constructors\ should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag and a description of the conditions for the particular exception. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
 
 %==============================================================================
 % End of file!!

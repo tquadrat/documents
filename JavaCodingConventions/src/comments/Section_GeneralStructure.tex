@@ -35,7 +35,36 @@ public static final String TABLE_Persons = "persons";
 
 Other so-called inline tags can be used within the comment text for formatting or to include external references. Refer to chapter \tqfullvref{sec:JavaDocTags} for a full list.
 
-Each comment, including each text following a \bdq{\nameref{sec:TagParam}}\index{param@"@param}, \bdq{\nameref{sec:TagReturn}}\index{return@"@return}, and \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag, ends with a full stop.
+Each comment, including each text following a \bdq{\nameref{sec:TagParam}}\index{param@"@param}, \bdq{\nameref{sec:TagReturn}}\index{return@"@return}, and \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag, ends with a full stop. Also the arguments for the block tags follow the tag in the same line, even when there is more than one parameters. Longer texts will break at column~80 or before, and will be continued on the next line, indented by one level. 
+\keeplisting{20}
+This looks like this:
+\begin{lstlisting}
+// WRONG!!
+/*
+ *  …
+ *  @param args
+ *         The command line arguments
+ *  @param  otherArg
+ *          This parameter needs a very long explanatory comment that
+ *          requires a line break.
+ *  @return
+ *          The status of this operation.  
+ *  @throws IOException
+ *          Reading the file failed.
+ *  …
+ */
+
+// CORRECT:
+/*
+ *  …
+ *  @param  args   The command line arguments
+ *  @param  otherArg    This parameter needs a very long explanatory
+ *      comment that requires a line break.
+ *  @return The status of this operation.  
+ *  @throws IOException Reading the file failed.
+ *  …
+ */
+\end{lstlisting}
 
 When a documentation comment gets longer, you may want to structure it by giving headlines to sections. Usually this is done through the HTML\index{HTML} tag \bdq{\lstinline|<h#>|}, with \verb|#| being a number in the range from~1 to~6. You can use these tags in the documentation comments, too, but the tags \bdq{\lstinline|<h1>|} and \bdq{\lstinline|<h2>|} are already used by Javadoc itself; that means that you should only use \bdq{\lstinline|<h3>|} to \bdq{\lstinline|<h6>|} in your documentation comments. Only in the overview comment (refer to chapter \tqfullvref{sec:OverviewDoc}), you can make use of all the \bdq{\lstinline|<h#>|} tags to structure that comment.
 

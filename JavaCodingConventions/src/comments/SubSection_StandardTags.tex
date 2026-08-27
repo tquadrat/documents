@@ -1,45 +1,63 @@
 \subsection{The Standard Doclet Tags}
-Most of the contents of this chapter was taken from the document “Documentation Comment Specification for the Standard Doclet”\autocite{ORACLE_DOC_JAVADOC_TAG}. 
+Most of the contents of this chapter is quoted from the document \bdq{JavaDoc Documentation Comment Specification for the Standard Doclet (JDK 25)} \autocite{ORACLE_DOC_JAVADOC_TAG}. 
 
-The output of the JavaDoc tool is determined by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet|\footnote{Refer to \autocite{ORACLE_DOC_DOCLET_INTERFACE}.} that is specified on the command line for \verb#javadoc#. The \lstinline|Doclet| implementation is also responsible for the interpretation of the content of a documentation comment.
+The output of the Javadoc\index{javadoc} tool is determined by the implementation of the interface \lstinline|jdk.javadoc.doclet.Doclet| \autocite{ORACLE_DOC_DOCLET_INTERFACE} that is specified on the command line for \texttt{javadoc} by the options \texttt{-doclet} and \texttt{-docletpath} \autocite{ORACLE_TOOL:javadoc:options}. The \lstinline|Doclet| implementation is also responsible for interpreting the content of the documentation comments.
 
-If no explicit \lstinline|Doclet| class is specified, the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet|\autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}) is used; it understands the JavaDoc tags described below, and it provides an API for additional tags.
+If no explicit \lstinline|Doclet| class is specified on the command line, the standard doclet (provided through the class \lstinline|jdk.javadoc.doclet.StandardDoclet| \autocite{ORACLE_DOC_STANDARDDOCLET_CLASS}) is used; it understands the Javadoc tags described below, and it provides an API for additional tags.
 
 Alternative implementations for the \lstinline|Doclet| interface may accept the same syntax as the standard doclet, they may handle the tags completely different or they can ignore them completely. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
 
-\paragraph{\lstinline|@author|}\label{sec:TagAuthor} Usage: \lstinline|@author <name-text>|
+%--------------------------------------------------------------------
 
-The tag adds an “Author” entry with the specified name text to the generated documents when the \verb#-author# option is specified on the command line. A documentation comment can contain multiple \lstinline|@author| tags. Consider to use the alternative \nameref{sec:TagExtAuthor} tag instead.
+\paragraph{\lstinline|@author|}\label{sec:TagAuthor}\index{author@"@author} Usage: \lstinline|@author <name-text>|
 
-\paragraph{\lstinline|@code|}\label{sec:TagCode}  Usage: \lstinline|{@code <text>}|
+The tag adds an \bdq{\textsf{Author:}} entry with the specified name to the generated documentation when the \texttt{-author} option is specified on the command line for the Javadoc\index{javadoc}. A documentation comment can contain multiple \nameref{sec:TagAuthor} tags. Consider to use the custom \bdq{\nameref{sec:TagExtAuthor}}\index{extauthor@"@extauthor}  tag instead.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@code|}\label{sec:TagCode}\index{code@"@code}  Usage: \lstinline|{@code <text>}|
 
 This is equivalent to \lstinline|<code>{@literal text}</code>|.
 
-It displays text in the code font without interpreting the text as HTML markup or nested JavaDoc tags. This enables you to use regular angle brackets (“\textless” and “\textgreater”) instead of the HTML entities (\verb#&lt;# and \verb#&gt;#) in documentation comments, such as in parameter types (\verb#<Object>#), inequalities ($3 < 4$), or arrows (-\textgreater).
+It displays text in the code font without interpreting the text as HTML\index{HTML} markup or nested Javadoc tags. This enables you to use regular angle brackets (\bdq{\textless} and \bdq{\textgreater}) instead of the HTML\index{HTML} entities (\texttt{\&lt;} and \texttt{\&gt;}) in documentation comments, such as in parameter types (\texttt{<Object>}), inequalities ($3 < 4$), or arrows (\texttt{-\textgreater}).
 
-If you want the same functionality without the code font, then use the \nameref{sec:TagLiteral} tag. 
+Use the \bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal} tag if you want the same functionality without the code font. 
 
-\paragraph{\lstinline|@deprecated|}  Usage: \lstinline|{@deprecated <text>}|
+%--------------------------------------------------------------------
 
-This tag is used in conjunction with the \lstinline|@Deprecated|\autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotation to indicate that this API should no longer be used (even though it may continue to work).
+\paragraph{\lstinline|@deprecated|}\index{deprecated@"@deprecated}  Usage: \lstinline|@deprecated <text>|
+
+This tag is used in conjunction with the \lstinline|@Deprecated| \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotation to indicate that this API should no longer be used (even though it may continue to work).
 
 The first sentence of the text should tell the user when the API was deprecated and what to use as a replacement. Subsequent sentences can also explain why it was deprecated.
 
-A \nameref{sec:TagLink} tag that points to the replacement API should be added where feasible.
+A \bdq{\{\nameref{sec:TagLink} …\}}\index{link@"@link} tag that points to the replacement API should be added where feasible.
+
+
+%--------------------------------------------------------------------
 
 \paragraph{\lstinline|@docRoot|}  Usage: \lstinline|{@docRoot}|
 
 Represents the relative path to the generated document's (destination) root directory from any generated page. This tag is useful when you want to include a file, such as a copyright page or company logo, that you want to reference from all generated pages.
 
-\paragraph{\lstinline|@exception|} This is a synonym for \nameref{sec:TagThrows}; it should not be used.
+%--------------------------------------------------------------------
 
-\paragraph{\lstinline|@hidden|}  Usage: \lstinline|@hidden|
+\paragraph{\lstinline|@exception|} This is a synonym for the \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag; it should not be used.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@hidden|}\index{hidden@"@hidden}  Usage: \lstinline|@hidden|
 
 Hides a program element from the generated API documentation. This tag may be used when it is not otherwise possible to design the API in a way that such items do not appear at all.
 
-\paragraph{\lstinline|@index|}  Usage: \lstinline|{@index <word> <description>}| or \lstinline|{@index "<phrase>" <description>}|
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@index|}\index{index@"@index}  Usage: \lstinline|{@index <word> <description>}| or\\  
+\lstinline|    {@index "<phrase>"  <description>}|
 
 Declares that a word or phrase, together with an optional short description, should appear in the index files generated by the standard doclet. The index entry will be linked to the word or phrase that will appear at this point in the generated documentation. The description may be used when the word or phrase to be indexed is not clear by itself, such as for an acronym.
+
+%--------------------------------------------------------------------
 
 \paragraph{\lstinline|@inheritDoc|}\label{sec:TagInheritDoc}  Usage: \lstinline|{@inheritDoc}|
 

@@ -13,8 +13,17 @@ An often heard requirement is to keep the documentation for a program or applica
 
 \section{Tips and Tricks}
 \subsection{Special Characters}
+
+If you need to use the right curly brace (\bdq{\}}) inside the link label, then use the HTML entity notation \texttt{\&\#125;}.
+
+\bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal}
+\bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code}
+
 \lipsum(1)
-\subsection{Embedding Code Snippets}
+\subsection{Embedding Code Snippets}\label{sec:EmbeddingCodeSnippets}
+
+\bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
+
 \lipsum(1)
 \subsection{IDE Support}
 Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \texttt{Window | Preferences | Java | Compiler | Javadoc}.

@@ -59,31 +59,47 @@ Declares that a word or phrase, together with an optional short description, sho
 
 %--------------------------------------------------------------------
 
-\paragraph{\lstinline|@inheritDoc|}\label{sec:TagInheritDoc}  Usage: \lstinline|{@inheritDoc}|
+\paragraph{\lstinline|@inheritDoc|}\label{sec:TagInheritDoc}\index{inheritDoc@"@inheritDoc}  Usage: \lstinline|{@inheritDoc}|
 
-Inherits (copies) the documentation comment from the nearest inheritable class or implementable interface into the current documentation comment at this tag's location. This enables you to write more general comments higher up the inheritance tree and to write around the copied text.
+Inherits (copies) the documentation comment from the nearest inheritable class\index{class} or implementable interface\index{interface} into the current documentation comment at this tag's location. This enables you to write more general comments higher up the inheritance tree and to write around the copied text.
 
-\paragraph{\lstinline|@link|}\label{sec:TagLink}  Usage: \lstinline|{@link <module/package.class#member> <label>}|
+%--------------------------------------------------------------------
 
-Inserts an inline link with a visible text label that points to the documentation for the specified module, package, class, or member name of a referenced class. 
+\paragraph{\lstinline|@link|}\label{sec:TagLink}\index{link@"@link}  Usage: \lstinline|{@link <module/package.class#member> <label>}|
 
-This tag is similar to the \nameref{sec:TagSee} tag. Both tags require the same references and accept the same syntax for \verb|<module/package.class#member>| and the label. The main difference is that the \lstinline|{@link}| tag generates an inline link rather than placing the link in the “See Also” section. The \lstinline|{@link}| tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (“\}”) inside the label, then use the HTML entity notation \verb|&#125;|.
+Inserts an inline link with a visible text label that points to the documentation for the specified module, package, class, or member name of a referenced class. The label will be rendered in the code font, and if it is omitted, the link target is used instead.
 
-\paragraph{\lstinline|@linkplain|}\label{sec:TagLinkplain}  Usage: \lstinline|{@linkplain <module/package.class#member> <label>}|
+This tag is similar to the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag. Both tags require the same references and accept the same syntax for \bdq{\texttt{<module/package.class\#member>}} and the label. The main difference is that the \bdq{\{\nameref{sec:TagLink} …\}} tag generates an inline link rather than placing the link in the \bdq{\textbf{\textsf{See Also:}}} section. The \bdq{\{\nameref{sec:TagLink} …\}} tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (\bdq{\}}) inside the label, then use the HTML entity notation \bdq{\texttt{\&\#125;}}.
 
-Behaves the same as the \nameref{sec:TagLink} tag, except the link label is displayed in plain text rather than code font. Useful when the label is plain text.
+%--------------------------------------------------------------------
 
-\paragraph{\lstinline|@literal|}\label{sec:TagLiteral}  Usage: \lstinline|{@literal <text>}| 
+\paragraph{\lstinline|@linkplain|}\label{sec:TagLinkplain}\index{linkplain@"@linkplain}  Usage: \lstinline|{@linkplain <module/package.class#member> <label>}|
 
-Same as the \nameref{sec:TagCode} tag, but the text is shown as plain text and not in the code font.
+Behaves the same as the \bdq{\nameref{sec:TagLink}}\index{link@"@link} tag, except the link label is displayed in plain text rather than code font. Useful when the label is plain text.
 
-\paragraph{\lstinline|@param|}\label{sec:TagParam}  Usage: \lstinline|@param <parameter-name> <description>|
+%--------------------------------------------------------------------
 
-Adds a parameter with the specified parameter name followed by the specified description to the “Parameters” section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (“\verb#<…>#”) around such a parameter name to indicate the use of a type parameter.
+\paragraph{\lstinline|@literal|}\label{sec:TagLiteral}\index{literal@"@literal}  Usage: \lstinline|{@literal <text>}| 
 
-\paragraph{\lstinline|@provides|}\label{sec:TagProvides}  Usage: \lstinline|@provides <service-type> <description>|
+Displays text without interpreting the text as HTML\index{HTML} markup or nested Javadoc tags.  This enables you to use regular angle brackets (\bdq{\textless} and \bdq{\textgreater}) instead of the HTML\index{HTML} entities (\texttt{\&lt;} and \texttt{\&gt;}) in documentation comments, such as in parameter types (\texttt{<Object>}), inequalities ($3 < 4$), or arrows (\texttt{-\textgreater}).
 
-This tag may only appear in the documentation comment inside a \verb#module-info.java# file. It serves to document an implementation of a service that is provided by the module. The description may be used to specify how to obtain an instance of this service provider, and any important characteristics of the provider itself. 
+For example, the documentation comment text \lstinline|{@literal A<B>C}| displays unchanged in the generated HTML\index{HTML} page in your browser, as \bdq{\textsf{A<B>C}}. The \bdq{\texttt{<B>}} is not interpreted as bold (and it is not in code font). 
+
+If you want the same functionality with the text in code font, then use the \bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code} tag.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@param|}\label{sec:TagParam}\index{param@"@param}  Usage: \lstinline|@param <parameter-name> <description>|
+
+Adds a parameter with the specified parameter name followed by the specified description to the \bdq{\textbf{\textsf{Parameters:}}} section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (\bdq{\texttt{<…>}}) around the parameter name to indicate it as a type parameter.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@provides|}\label{sec:TagProvides}\index{provides@"@provides}  Usage: \lstinline|@provides <service-type> <description>|
+
+This tag may only appear in the documentation comment inside a \texttt{module-info.java}\index{module-info.java} file. It serves to document an implementation of a service that is provided by the module. The description may be used to specify how to obtain an instance of this service provider, and any important characteristics of the provider itself. 
+
+%--------------------------------------------------------------------
 
 \paragraph{\lstinline|@return|}\label{sec:TagReturn}  Usage: \lstinline|@return <description>|
 

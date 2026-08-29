@@ -1,0 +1,29 @@
+\section{Additional Files}\label{sec:AdditionalFiles}
+In any documentation comment you can add references to external locations for additional information through the HTML\index{HTML} \lstinline|<href>| tag:
+\keeplisting{3}
+\begin{lstlisting}[language=Comment]
+…
+*  For additional information, refer to 
+*  <href a="https://stackoverflow.com/">Stack Overflow</href>.
+…  
+\end{lstlisting}
+
+Or you use the custom tag \bdq{\{\nameref{sec:TagHref}\}} for that purpose:
+\keeplisting{3}
+\begin{lstlisting}[language=Comment]
+…
+*  For additional information, refer to 
+*  {@href https://stackoverflow.com/ Stack Overflow}.
+…  
+\end{lstlisting}
+The output will be the same in both cases.
+
+Additional data (screenshots, images, charts, texts, sample code, scripts,~…) that is not available through an URL or should not be accessed from the network can be added to the generated documentation. The respective files will be placed to a \bdq{\texttt{doc-files}}\index{doc-files} subfolder that can be added to each package\index{package} folder. HTML\index{HTML} and Markdown\index{Markdown} files are parsed by the Javadoc\index{javadoc} tool, meaning that you can use the Javadoc\index{javadoc} tag in there.
+
+% How to refer to the doc-files?
+% Images??
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

@@ -7,6 +7,13 @@ If no explicit \lstinline|Doclet| class is specified on the command line, the st
 
 Alternative implementations for the \lstinline|Doclet| interface may accept the same syntax as the standard doclet, they may handle the tags completely different or they can ignore them completely. However, due to the support by many tools, the syntax supported by the standard doclet has become a \textit{de facto} standard.
 
+The following table summarizes which tags can be used in which contexts \autocite{ORACLE_DOC_JAVADOC_TAG:Where}.
+
+%------------------------------------------------------------------------------
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/TagUsage.tbl.tex}
+
 %--------------------------------------------------------------------
 
 \paragraph{\lstinline|@author|}\label{sec:TagAuthor}\index{author@"@author} Usage: \lstinline|@author <name-text>|
@@ -25,7 +32,7 @@ Use the \bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal} tag if y
 
 %--------------------------------------------------------------------
 
-\paragraph{\lstinline|@deprecated|}\index{deprecated@"@deprecated}  Usage: \lstinline|@deprecated <text>|
+\paragraph{\lstinline|@deprecated|}\label{sec:TagDeprecated}\index{deprecated@"@deprecated}  Usage: \lstinline|@deprecated <text>|
 
 This tag is used in conjunction with the \lstinline|@Deprecated| \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotation to indicate that this API should no longer be used (even though it may continue to work).
 
@@ -69,13 +76,13 @@ Inherits (copies) the documentation comment from the nearest inheritable class\i
 
 Inserts an inline link with a visible text label that points to the documentation for the specified module, package, class, or member name of a referenced class. The label will be rendered in the code font, and if it is omitted, the link target is used instead.
 
-This tag is similar to the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag. Both tags require the same references and accept the same syntax for \bdq{\texttt{<module/package.class\#member>}} and the label. The main difference is that the \bdq{\{\nameref{sec:TagLink} …\}} tag generates an inline link rather than placing the link in the \bdq{\textbf{\textsf{See Also:}}} section. The \bdq{\{\nameref{sec:TagLink} …\}} tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (\bdq{\}}) inside the label, then use the HTML entity notation \bdq{\texttt{\&\#125;}}.
+This tag is similar to the \bdq{\nameref{sec:TagSee}}\index{see@"@see} tag. Both tags require the same references and accept the same syntax for \bdq{\texttt{<module/package.class\#member>}} and the label. The main difference is that the \bdq{\{\nameref{sec:TagLink} …\}} tag generates an inline link rather than placing the link in the \bdq{\textsf{See Also:}} section. The \bdq{\{\nameref{sec:TagLink} …\}} tag begins and ends with curly braces to separate it from the rest of the inline text. If you need to use the right curly brace (\bdq{\}}) inside the label, then use the HTML entity notation \bdq{\texttt{\&\#125;}}.
 
 %--------------------------------------------------------------------
 
 \paragraph{\lstinline|@linkplain|}\label{sec:TagLinkplain}\index{linkplain@"@linkplain}  Usage: \lstinline|{@linkplain <module/package.class#member> <label>}|
 
-Behaves the same as the \bdq{\nameref{sec:TagLink}}\index{link@"@link} tag, except the link label is displayed in plain text rather than code font. Useful when the label is plain text.
+This tag behaves the same as the \bdq{\nameref{sec:TagLink}}\index{link@"@link} tag, except the link label is displayed in plain text rather than code font. For \bdq{\nameref{sec:TagLinkplain}}\index{linkplain@"@linkplain} the label is usually plain text, and it should considered to be mandatory.
 
 %--------------------------------------------------------------------
 
@@ -91,7 +98,7 @@ If you want the same functionality with the text in code font, then use the \bdq
 
 \paragraph{\lstinline|@param|}\label{sec:TagParam}\index{param@"@param}  Usage: \lstinline|@param <parameter-name> <description>|
 
-Adds a parameter with the specified parameter name followed by the specified description to the \bdq{\textbf{\textsf{Parameters:}}} section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (\bdq{\texttt{<…>}}) around the parameter name to indicate it as a type parameter.
+Adds a parameter with the specified parameter name followed by the specified description to the \bdq{\textsf{Parameters:}} section. The parameter name can be the name of a parameter in a method or constructor, or the name of a type parameter of a class, method, or constructor. Use angle brackets (\bdq{\texttt{<…>}}) around the parameter name to indicate it as a type parameter.
 
 %--------------------------------------------------------------------
 
@@ -101,58 +108,115 @@ This tag may only appear in the documentation comment inside a \texttt{module-in
 
 %--------------------------------------------------------------------
 
-\paragraph{\lstinline|@return|}\label{sec:TagReturn}  Usage: \lstinline|@return <description>|
+\paragraph{\lstinline|@return|}\label{sec:TagReturn}\index{return@"@return}  Usage: \lstinline|@return <description>| or\\
+\lstinline|    {@return <description>}|
 
-Adds a “Returns” section with the description text to the documentation comment of a method.
+When used as a block tag, \bdq{\nameref{sec:TagReturn}}\index{return@"@return} adds a \bdq{\textsf{Returns:}} section with the description text to the documentation comment of a method\index{method}.
 
-\paragraph{\lstinline|@see|}\label{sec:TagSee}  Adds a “See Also” heading with a link or text entry that points to a reference. The \lstinline|@see| tag has three variations; see \autocite{ORACLE_DOC_JAVADOC_TAG} for the details.
+The use as an inline tag \bdq{\{\nameref{sec:TagReturn}\}}\index{return@"@return} sets the comment text to \bdq{Returns <description>.} and adds a \bdq{\textsf{Returns:}} section with the description. See page \pageref{sec:ReturnValue} with a sample on how to use this tag. 
 
-\paragraph{\lstinline|@serial|}\label{sec:TagSerial} Used in the documentation comment for a default serializable field. See “Documenting Serializable Fields and Data for a Class”\autocite{ORACLE_DOC_OBJECT_SERIALIZATION:DocumentingSerializableFieldsData}. 
+%--------------------------------------------------------------------
 
-\paragraph{\lstinline|@since|}\label{sec:TagSince}  Usage: \lstinline|@since <since-text>|
+\paragraph{\lstinline|@see|}\label{sec:TagSee}\index{see@"@see} \  
 
-Adds a “Since” heading with the specified \verb#<since-text># value to the generated documentation. The text has no special internal structure. This tag that this change or feature has existed since the software release specified by the \verb#<since-text># value, for example: \lstinline|@since 1.5|.
+Adds a \bdq{\textsf{See Also:}} heading with a link or text entry that points to a reference. The tag has three variations; see the respective section in \autocite{ORACLE_DOC_JAVADOC_TAG} for the details.
 
-Although it would possible to provide a date or something else, it is recommended to always use a version number with the \lstinline|@since| tag.
+When referencing a program element, the link has the same syntax as for the \bdq{\{\nameref{sec:TagLink}\}}\index{link@"@link} tag.
 
-\paragraph{\lstinline|@summary|}\label{sec:TagSummary}  Usage:  \lstinline|{@summary <text>}|
+%--------------------------------------------------------------------
 
-Identifies  the summary of an API description, as an alternative to the default policy to identify and use the first sentence of the API description. The tag only has significance when used at the beginning of a description. In all cases, the tag is rendered by simply rendering its content.
+\paragraph{\lstinline|@serial|, \lstinline|@serialData|, \lstinline|@serialField|} \ 
 
-The \lstinline|{@summary}| tag has to be used always when a documentation comment has more than one sentence; see also chapter \tqvref{sec:StructureAndContents}.
+Used in the documentation comment for a default serializable field. See \bdq{Documenting Serializable Fields and Data for a Class} \autocite{ORACLE_DOC_OBJECT_SERIALIZATION:DocumentingSerializableFieldsData} on how to use these tags.
 
-\paragraph{\lstinline|@throws|}\label{sec:TagThrows}  Usage: \lstinline|@throws <class-name> <description>|
+%--------------------------------------------------------------------
 
-The \lstinline|@throws| tag adds a “Throws” subheading to the generated documentation, with the \verb#<class-name># and the description text. The class name is the name of the exception that might be thrown by the method, and the description provides information about the conditions for that exception to be thrown. 
+\paragraph{\lstinline|@since|}\label{sec:TagSince}\index{since@"@since}  Usage: \lstinline|@since <since-text>|
+
+Adds a \bdq{\textsf{Since:}} heading with the specified \texttt{<since-text>} value to the generated documentation. The text specifies when the respective program element was first introduced. It has no special internal structure, but it is recommended that it should be just a version number or alike. Consecutive \bdq{\nameref{sec:TagSince}}\index{since@"@since} tags can be used for additional information: 
+\keeplisting{4}
+\begin{lstlisting}[language=Comment]
+…
+*  @since 3.4.5
+*  @since modified in version 3.4.7
+*  @since fixed in version 4.0.0
+…
+\end{lstlisting}
+results in
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocSince1}
+\end{center}
+This will be discussed again in \tqfullvref{sec:MaintenanceComments}.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@snippet|}\label{sec:TagSnippet}\index{snippet@"@snippet}  Usage: \lstinline|{@snippet <attributes>}|
+
+Includes a fragment, or "snippet", of example code in the generated documentation. This tag is discussed in detail in \tqfullvref{sec:EmbeddingCodeSnippets}. 
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@summary|}\label{sec:TagSummary}\index{summary@"@summary}  Usage:  \lstinline|{@summary <text>}|
+
+Identifies  the summary of an API description, as an alternative to the default policy to identify and use the \textit{first sentence} of the API description. The tag only has significance when used at the beginning of a description. In all cases, the tag is rendered by simply rendering its content.
+
+You should use the \bdq{\{\nameref{sec:TagSummary} …\}} tag always because the identification of the first sentences is unreliable under some circumstances.
+
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@throws|}\label{sec:TagThrows}\index{throws@"@throws}  Usage: \lstinline|@throws <class-name> <description>|
+
+The \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag adds a \bdq{\textsf{Throws:}} subheading to the generated documentation, with the \texttt{<class-name>} and the description text. The class name is the name of the exception\index{class!exception class} that might be thrown by the method\index{method}, and the description provides information about the conditions for that exception to be thrown. 
+
+%--------------------------------------------------------------------
 
 \paragraph{\lstinline|@uses|}\label{sec:TagUses}  Usage: \lstinline|@uses <service-type> <description>|
 
-This tag may only appear in the documentation comment inside a \verb#module-info.java# file. It serves to document that a service may be used by the module. The description may be used to specify the characteristics of the service that may be required, and what the module will do if no provider for the service is available.
+This tag may only appear in the documentation comment inside a \texttt{module-info.java}\index{module-info.java} file. It serves to document that a service may be used by the module. The description may be used to specify the characteristics of the service that may be required, and what the module will do if no provider for the service is available.
 
-\paragraph{\lstinline|@value|}\label{sec:TagValue}  Usage: \lstinline|{@value}| or \lstinline|{@value <module/package.class#field>}|
+%--------------------------------------------------------------------
 
-This tag is used to display the values of constant in the generated documentation. When the \lstinline|{@value}| tag is used without an argument in the documentation comment of a \lstinline|static final| field, it displays the value of that constant:
+\paragraph{\lstinline|@value|}\label{sec:TagValue}\index{value@"@value}  Usage: \lstinline|{@value <format>}| or \\ 
+\lstinline|    {@value <format> <module/package.class#field>}|
+
+The \bdq{\{\nameref{sec:TagValue} …\}} tag is used either in the documentation comment for a constant\index{field!constant} to display the value of that constant\footnote{Refer to \pageref{sec:Constants} and \pageref{lbl:Constant}.} or within the documentation comment for other program elements to refer to the value of that constant.
+
+\keeplisting{10}
+Basically, this looks like this:
 \begin{lstlisting}
 /**
- * The value of this constant is {@value}.
+ *  The default size: {@value}.
  */
-public static final String SCRIPT_START = "<script>"
-\end{lstlisting}
+public static final int DEFAULT_SIZE = 22;
 
-When used with the argument \verb|<module.package.class#field>| in any documentation comment, the \lstinline|{@value}>| tag displays the value of the specified constant:
-\begin{lstlisting}
 /**
- * Evaluates the script starting with {@value #SCRIPT_START}.
+ *  <p>{@summary Calculates the volume.}</p>
+ *  <p>Uses the
+ *  {@link #DEFAULT_SIZE}
+ *  of
+ *  {@value #DEFAULT_SIZE}
+ *  to determine the final volume.</p>
+ *
+ *  @return The final volume.
  */
-public final String evalScript( String script ) { … }
+public final int calcVolume() { … }
 \end{lstlisting}
-The argument \verb|<module.package.class#field>| takes a form similar to that of the \nameref{sec:TagLink}, the \nameref{sec:TagLinkplain}, or the \nameref{sec:TagSee} tag argument, except that the member always must be a \lstinline|static final| field.
+The generated output is this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocValue1}
+\end{center}
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocValue2}
+\end{center}
 
-\paragraph{\lstinline|@version|}\label{sec:TagVersion}  Usage: \lstinline|@version <version-text>|
+The optional \texttt{<format>} argument can be used to change the appearance of the constant value. If provided, it must conform to the definition of a format string, as specified in the documentation for \lstinline|java.util.Formatter| \autocite{ORACLE_DOC_FORMATTER_CLASS}. 
 
-Adds a “Version” subheading with the specified \verb#<version-text># value to the generated documents when the \verb#-version# option is specified on the command line. This tag is intended to hold the current release number of the software that this code is part of, as opposed to the \nameref{sec:TagSince} tag, which holds the release number where this code was introduced. The \verb#<version-text># value has no special internal structure.
+%--------------------------------------------------------------------
+
+\paragraph{\lstinline|@version|}\label{sec:TagVersion}\index{version@"@version}  Usage: \lstinline|@version <version-text>|
+
+Adds a \bdq{\textsf{Version:}} subheading with the specified \texttt{<version-text>} value to the generated documents when the \bdq{\texttt{-version}} option is specified on the command line for the Javadoc\index{javadoc} tool. This tag is intended to hold the current revision of the program element, as opposed to the \bdq{\nameref{sec:TagSince}}\index{since@"@since} tag, which holds the release number when this code was introduced. The \texttt{<version-text>} value has no special internal structure, but it is recommended that is is a version number.
 
 %==============================================================================
 % End of file!!
 %==============================================================================
-

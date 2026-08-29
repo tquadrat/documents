@@ -20,11 +20,9 @@ If there is no getter method\index{method!getter method} for the field\index{fie
 
 It is always a good idea to describe the valid values for the field\index{field}, its default value, and whether \lstinline|null| is a possible value    . This is a hard requirement for all non-final non-private fields\index{field} – in particular because there should \textit{never} be any non-final non-private fields\index{field} at all!
 
-For a serialisable class\index{class}\index{serialization}, the fields\index{field} that will be serialised should be tagged with \bdq{\nameref{sec:TagSerial}}\index{serial@"@serial} and the appropriate description.
+For a serialisable class\index{class}\index{serialization}, the fields\index{field} that will be serialised should be tagged with \bdq{\lstinline|@serial|}\index{serial@"@serial} and the appropriate description.
 
-% Elaborate on comments for constants!!!!
-
-A constant\index{field!constant} is a public static final field that is initialised with a compile-time constant\index{compile-time constant}. The comment for that field must show the constant value, and this is achieved through the tag \bdq{\{\nameref{sec:TagValue}\}}\index{value@"@value}. The documentation for this source code  
+A constant\index{field!constant}\pslabel{lbl:Constant} is a public static final field that is initialised with a compile-time constant\index{compile-time constant}. The comment for that field must show the constant value, and this is achieved through the tag \bdq{\{\nameref{sec:TagValue}\}}\index{value@"@value}. The documentation for this source code  
 \begin{lstlisting}
 /**
  *  The vested system property for the file encoding used by the JVM:

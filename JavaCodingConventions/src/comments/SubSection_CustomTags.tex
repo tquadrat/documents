@@ -1,50 +1,128 @@
 \subsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
+The Javadoc\index{javadoc} tool allows to add custom tags that can be used within the documentation comments.
 
+There are two different ways to add custom tags. The easier one is to configure them just on the command line for the tool, the more flexible one requires to write Java code that implements the interface \lstinline|jdk.javadoc.doclet.Taglet|\index{jdk.javadoc.doclet!Taglet} \autocite{ORACLE_DOC_TAGLET_INTERFACE}.
 
+\subsubsection{Simple Custom Tags}\label{sec:SimpleCustomTags}
+A simple custom tag is configured completely on the command line for the invocation of the Javadoc\index{javadoc} tool. This approach allows only block tag, but the text for these tags comes with full support for all inline tags.
 
-Keine offiziellen Tags, aber JDK-Konvention (per Custom-Taglet, nicht vom Standard-Doclet erzwungen):
+\keeplisting{2}
+The command line option for a new simple custom tag looks like this:
+\begin{lstlisting}[numbers=none,language={}]
+-tag <name>[:[<locations>]:<header>]
+\end{lstlisting}
+
+This specifies a custom block tag \texttt{<name>}. For the Javadoc\index{javadoc} tool to spell-check tag names, it is important to include a \texttt{-tag} option for every custom tag that is present in the source code, disabling (with \texttt{X} as the location) those that aren't being output in the current run.
+
+\texttt{<locations>} is a combination of the letters below, in either uppercase or lowercase, that determine where the custom tag is allowed:
+\begin{itemize}[nosep]
+	\item{\texttt{A}: all declarations}
+	\item{\texttt{C}: constructors\index{constructor}}
+	\item{\texttt{F}: fields\index{field}}
+	\item{\texttt{M}: methods\index{method}}
+	\item{\texttt{O}: the overview page and other documentation files in doc-files subdirectories}
+	\item{\texttt{P}: packages\index{package}}
+	\item{\texttt{S}: modules\index{module}}
+	\item{\texttt{T}: types (classes\index{class} and interfaces\index{interface})}
+	\item{\texttt{X}: nowhere: the tag is disabled, and will be ignored, together with its argument}
+\end{itemize}
+
+Finally, \texttt{<header>} is the tag heading that is rendered in bold, followed by the tag's single argument in the next line.
+
+\keeplisting{2}
+For the command line option
+\begin{lstlisting}[numbers=none,language={}]
+-tag implNote:a:Implementation Note:
+\end{lstlisting}
+and the source code below
+\keeplisting{10}
+\begin{lstlisting}
+/**
+ *  {@summary Retrieves data from the queue.}
+ *  
+ *  @param  <T> The type of the data in the queue.
+ *  @param  queue   The queue.
+ *  @return An instance of
+ *      {@link Optional}
+ *      that holds the retrieved data.
+ *  
+ *  @implNote The method may not block; if the queue is (currently) empty,
+ *      the implementation must return
+ *      {@linkplain Optional#empty() empty}.
+ */
+public <T> T retrieveData( final Queue<T> queue );
+\end{lstlisting}
+the output will look like this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocCustomTag1}
+\end{center}
+
+The colon (\bdq{:}) is always the separator. To include a colon in the tag name, escape it with a backslash. Omitting a value for \texttt{<header>} causes the name to be the heading, and if no location is specified, the tag can be used everywhere (same as \texttt{A} was specified). Refer also to \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}.
+
+The three tags below are defined per convention and widely used throughout the official documentation of the \Java API:
 
 \paragraph{\lstinline|@apiNote|}\label{sec:TagApiNote}\index{apiNote@"@apiNote} Usage: \lstinline|@apiNote <text>|
 
+This tag is used to provided some notes regarding the API.
+
 \paragraph{\lstinline|@implNote|}\label{sec:TagImplNote}\index{implNote@"@implNote} Usage: \lstinline|@implNote <text>|
+
+With this tag, you can add notes on how an implementation looks like (or should look like) to a program element.
 
 \paragraph{\lstinline|@implSpec|}\label{sec:TagImplSpec}\index{implSpec@"@implSpec} Usage: \lstinline|@implSpec <text>|
 
+This tag is added to provide information about the specification that is the base of the implementation for the respective program element.
 
-@apiNote
-@implSpec
-@implNote
+\keeplisting{4}
+To use these tags, they must be registered on the command line like this:
+\begin{lstlisting}[numbers=none,language=sh]
+javadoc -tag apiNote:a:API Note: \
+        -tag implSpec:a:Implementation Requirements: \
+        -tag implNote:a:Implementation Note:
+\end{lstlisting}
 
-Falls du willst, kann ich dir zu einzelnen Tags (z. B. @snippet oder {@index}, die für dich als Bibliotheks-Maintainer besonders relevant sein könnten) Details oder Beispiele geben.
+%------------------------------------------------------------------------------
 
-Welches Custom-Taglet implementiert @apiNote, @implSpec und @implNote?
+\subsubsection{Custom Taglets}\label{sec:CustomTaglets}
+An introduction to implementing custom taglets would go beyond the scope of this book. However, the documentation for the \lstinline|jdk.javadoc.doclet.Taglet|\index{jdk.javadoc.doclet!Taglet} \autocite{ORACLE_DOC_TAGLET_INTERFACE} already provides a useful starting point.
 
-Kein eigenes Taglet – es ist genau umgekehrt: Die Unterstützung wurde weder in javadoc selbst noch im Standard-Doclet eingebaut. Stattdessen nutzt der Standard-Doclet sein generisches Custom-Tag-Feature, das über die Kommandozeilenoption `-tag` konfiguriert wird.
+Custom taglets do allow also the implementation of inline tags, on the other hand, they do not support to include the already existing inline tags.
 
-Konkret werden `@apiNote`, `@implSpec` und `@implNote` einfach als generische **Simple-Tags** über `-tag`-Optionen registriert, z. B.:
+If you want to use custom taglets, you have to provide the path to the implementing classes with the command line option \mbox{\texttt{-tagletpath}}; multiple locations are separated by a colon (\bdq{:}) on Linux/Unix operating systems, or by a semi-colon (\bdq{;}) on Windows.
 
-```
-javadoc -tag 'apiNote:a:API Note:' \
-        -tag 'implSpec:a:Implementation Requirements:' \
-        -tag 'implNote:a:Implementation Note:'
-```
-
-Diese Optionen wurden von den JDK-Makefiles selbst gesetzt, um die JDK-eigene Dokumentation zu erzeugen – es gibt also intern keine spezielle Taglet-Klasse dafür, sondern nur `com.sun.tools.doclets.internal.toolkit.taglets.SimpleTaglet` (später `jdk.javadoc.internal.doclets.toolkit.taglets.SimpleTaglet`), die generische Engine hinter jedem `-tag`-definierten Tag.
-
-Für dich als Bibliotheks-Maintainer heißt das: Wenn du diese drei Tags in `org.tquadrat.foundation` unterstützen willst, musst du sie selbst per `-tag`-Option an dein `javadoc`/Gradle-Javadoc-Task übergeben (die Reihenfolge der `-tag`-Optionen bestimmt dabei die Ausgabereihenfolge im generierten HTML, falls mehrere an derselben Stelle auftreten).
-
-
-
-
-
-
-
-
-
-
-You can define your own JavaDoc tags; simple tags can be defined on the command line for the JavaDoc tool (see the option \verb#-tag# in \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) or by implementing the interface \lstinline|jdk.javadoc.doclet.Taglet|\autocite{ORACLE_DOC_TAGLET_INTERFACE}.
+Next you need to register each Taglet implementation with the option \mbox{\texttt{-tagletclass}} (one entry per class).
 
 I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+
+The command line for this would look like this:
+\keeplisting{20}
+\begin{lstlisting}
+-tagletpath /path/to/org.tquadrat.foundation.javadoc-0.25.4.jar:\
+/path/to/apiguardian-api-1.1.2.jar:/path/to/jakarta.activation-2.0.1.jar \
+\
+-taglet org.tquadrat.foundation.javadoc.AuthorTaglet \
+-taglet org.tquadrat.foundation.javadoc.AnchorTaglet \
+-taglet org.tquadrat.foundation.javadoc.HRefTaglet \
+-taglet org.tquadrat.foundation.javadoc.FALSETaglet \
+-taglet org.tquadrat.foundation.javadoc.IgnoreTaglet \
+-taglet org.tquadrat.foundation.javadoc.ImageTaglet \
+-taglet org.tquadrat.foundation.javadoc.IncludeTaglet \
+-taglet org.tquadrat.foundation.javadoc.InspiredTaglet \
+-taglet org.tquadrat.foundation.javadoc.ModifiedTaglet \
+-taglet org.tquadrat.foundation.javadoc.NoteTaglet \
+-taglet org.tquadrat.foundation.javadoc.NULLTaglet \
+-taglet org.tquadrat.foundation.javadoc.ThanksTaglet \
+-taglet org.tquadrat.foundation.javadoc.ToDoTaglet \
+-taglet org.tquadrat.foundation.javadoc.TRUETaglet \
+-taglet org.tquadrat.foundation.javadoc.UmlGraphLinkTaglet \
+-taglet org.tquadrat.foundation.javadoc.UnderlineTaglet \
+\
+-tag hidden -tag note -tag param -tag return -tag throws -tag author -tag extauthor -tag thanks -tag modified -tag version -tag since -tag see -tag inspired -tag spec -tag provides -tag uses -tag UMLGraph.link -tag deprecated -tag todo \
+-tag apiNote:a:API Note: \ 
+-tag implSpec:a:Implementation Requirements: \
+-tag implNote:a:Implementation Note: 
+\end{lstlisting}
+
 
 \paragraph{\lstinline|@anchor|}\label{sec:TagAnchor}  Usage: \lstinline|{@anchor #<anchor-name> <text>}|
 

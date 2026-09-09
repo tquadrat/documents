@@ -172,6 +172,36 @@ You should use the \bdq{\{\nameref{sec:TagSummary} …\}} tag always because the
 
 %--------------------------------------------------------------------
 
+\paragraph{\lstinline|@systemProperty|}\label{sec:TagSystemProperty}\index{systemProperty@"@systemProperty}  Usage:  \lstinline|{@systemProperty <name>}|
+
+Add the name of a system property to the documentation; the name is shown in the code font. 
+
+At the same time adds the tag the system property to the generated index.
+
+\keeplisting{9}
+The documentation comment
+\begin{lstlisting}
+/**
+ *  <p>{@summary The definition of a processor.}</p>
+ *  <p>The exact implementation is determined by the system property
+ *  {@systemProperty processor.implementation}.</p>
+ */
+public interface Processor
+{
+    …
+}
+\end{lstlisting}
+is rendered like this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocSystemProperty1}
+\end{center}
+and the index entry looks like this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocIndex1}
+\end{center}
+
+%--------------------------------------------------------------------
+
 \paragraph{\lstinline|@throws|}\label{sec:TagThrows}\index{throws@"@throws}  Usage: \lstinline|@throws <class-name> <description>|
 
 The \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag adds a \bdq{\textsf{Throws:}} subheading to the generated documentation, with the \texttt{<class-name>} and the description text. The class name is the name of the exception\index{class!exception class} that might be thrown by the method\index{method}, and the description provides information about the conditions for that exception to be thrown. 

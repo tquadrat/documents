@@ -9,36 +9,13 @@ An often heard requirement is to keep the documentation for a program or applica
 \input{comments/Section_ProgramElementsWithComments}
 \input{comments/Section_AdditionalFiles}
 \input{comments/Section_JavadocTags}
+\input{comments/Section_TipsAndTricks}
 
 %------------------------------------------------------------------------------
 \section{Generate the Documentation}\label{sec:RunJavadoc}
 The documentation on how to run the Javadoc\index{javadoc} tool can be found at \autocite{ORACLE_DOC_JAVADOC_MAN}.
 
 \lipsum(1)
-
-%------------------------------------------------------------------------------
-
-\section{Tips and Tricks}
-\subsection{Special Characters}
-
-If you need to use the right curly brace (\bdq{\}}) inside the link label, then use the HTML entity notation \texttt{\&\#125;}.
-
-\bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal}
-\bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code}
-
-\lipsum(1)
-\subsection{Embedding Code Snippets}\label{sec:EmbeddingCodeSnippets}
-
-\bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
-
-\autocite{JEP413}
-\autocite{Baeldung:CodeSnippets}  \autocite{ORACLE_DOC_JAVADOC_GUIDE:Snippets}  \autocite{Korando:CodeSnippets} 
-
-\lipsum(1)
-\subsection{IDE Support}
-Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \texttt{Window | Preferences | Java | Compiler | Javadoc}.
-
-To achieve the same for IntelliJ IDEA, you go to \texttt{File | Settings}, and there you select \texttt{Editor | Inspections > Java > Javadoc}.
 
 %==============================================================================
 % End of file!!

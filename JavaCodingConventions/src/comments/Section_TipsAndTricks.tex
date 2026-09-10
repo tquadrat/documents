@@ -1,0 +1,26 @@
+\section{Tips and Tricks}
+\subsection{Special Characters}\label{sec:DocCommentSpecialChars}
+The documentation comments are parsed by the Javadoc\index{javadoc} tool and then translated to HTML\index{HTML}. During that process, the comments will be scanned for the various Javadoc tags, mentioned \hyperref[sec:JavaDocTags]{above}. Additionally, the DocLint feature validates the output as proper HTML5\index{HTML}.
+
+If you need to use the right curly brace (\bdq{\}}) inside the link label, then use the HTML entity notation \texttt{\&\#125;}.
+
+\bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal}
+\bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code}
+
+\lipsum(1)
+\subsection{Embedding Code Snippets}\label{sec:EmbeddingCodeSnippets}
+
+\bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
+
+\autocite{JEP413}
+\autocite{Baeldung:CodeSnippets}  \autocite{ORACLE_DOC_JAVADOC_GUIDE:Snippets}  \autocite{Korando:CodeSnippets} 
+
+\lipsum(1)
+\subsection{IDE Support}
+Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \texttt{Window | Preferences | Java | Compiler | Javadoc}.
+
+To achieve the same for IntelliJ IDEA, you go to \texttt{File | Settings}, and there you select \texttt{Editor | Inspections > Java > Javadoc}.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

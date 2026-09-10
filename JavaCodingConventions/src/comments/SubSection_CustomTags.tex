@@ -1,7 +1,7 @@
 \subsection{Custom Tags for JavaDoc}\label{sec:CustomTagsForJavaDoc}
 The Javadoc\index{javadoc} tool allows to add custom tags that can be used within the documentation comments.
 
-There are two different ways to add custom tags. The easier one is to configure them just on the command line for the tool, the more flexible one requires to write Java code that implements the interface \lstinline|jdk.javadoc.doclet.Taglet|\index{jdk.javadoc.doclet!Taglet} \autocite{ORACLE_DOC_TAGLET_INTERFACE}.
+There are two different ways to add custom tags. The easier one is to configure them just on the command line for the tool, the more flexible one requires to write Java code that implements the \lstinline|jdk.javadoc.doclet.Taglet|\index{jdk.javadoc.doclet!Taglet} \autocite{ORACLE_DOC_TAGLET_INTERFACE} interface.
 
 \subsubsection{Simple Custom Tags}\label{sec:SimpleCustomTags}
 A simple custom tag is configured completely on the command line for the invocation of the Javadoc\index{javadoc} tool. This approach allows only block tag, but the text for these tags comes with full support for all inline tags.
@@ -90,20 +90,20 @@ Custom taglets do allow also the implementation of inline tags, on the other han
 
 If you want to use custom taglets, you have to provide the path to the implementing classes with the command line option \mbox{\texttt{-tagletpath}}; multiple locations are separated by a colon (\bdq{:}) on Linux/Unix operating systems, or by a semi-colon (\bdq{;}) on Windows.
 
-Next you need to register each Taglet implementation with the option \mbox{\texttt{-tagletclass}} (one entry per class).
+Next each Taglet implementation class needs to be registered with the command line option \mbox{\texttt{-tagletclass}} (one entry per class).
 
-I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+I created a set of custom tags that I use regularly, and that I also recommend for your documentation comments. The respective library (\bdq{tquadrat’s Javadoc Extensions} or short \bsq{foundation-javadoc}) can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
 
-The command line for this would look like this:
+The command line for this would look like this:\footnote{Check the project's website at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC} for the current version.}
 \keeplisting{20}
 \begin{lstlisting}
 -tagletpath /path/to/org.tquadrat.foundation.javadoc-0.25.4.jar:\
 /path/to/apiguardian-api-1.1.2.jar:/path/to/jakarta.activation-2.0.1.jar \
 \
--taglet org.tquadrat.foundation.javadoc.AuthorTaglet \
 -taglet org.tquadrat.foundation.javadoc.AnchorTaglet \
--taglet org.tquadrat.foundation.javadoc.HRefTaglet \
+-taglet org.tquadrat.foundation.javadoc.AuthorTaglet \
 -taglet org.tquadrat.foundation.javadoc.FALSETaglet \
+-taglet org.tquadrat.foundation.javadoc.HRefTaglet \
 -taglet org.tquadrat.foundation.javadoc.IgnoreTaglet \
 -taglet org.tquadrat.foundation.javadoc.ImageTaglet \
 -taglet org.tquadrat.foundation.javadoc.IncludeTaglet \
@@ -123,30 +123,76 @@ The command line for this would look like this:
 -tag implNote:a:Implementation Note: 
 \end{lstlisting}
 
+The purpose of the \texttt{-tag} options here is to determine the order in which the block tags appear in the final documentation. The command line for the Javadoc\index{javadoc} tool is further discussed in chapter \tqfullref{sec:RunJavadoc}.
 
+\bdq{tquadrat’s Javadoc Extensions} provides the following custom taglets:
+
+\keeplisting{4}
 \paragraph{\lstinline|@anchor|}\label{sec:TagAnchor}  Usage: \lstinline|{@anchor #<anchor-name> <text>}|
 
-This tag allows to add an HTML anchor to the generated documentation, where \verb#<anchor-name># is the name of the anchor to the given text. The hash symbol (‘\#’) before the name of the anchor is mandatory!
+This tag allows to add an HTML anchor to the generated documentation, where \texttt{\#<anchor-name>} is the name of the anchor to the given text. The hash symbol (\bsq{\#}) before the name of the anchor is mandatory!
 
-\paragraph{\lstinline|@extauthor|}\label{sec:TagExtAuthor}  Usage: \lstinline|@extauthor <name-text> - <email-address>|
+%------------------------------------------------------------------------------
 
-This is a replacement for the \nameref{sec:TagAuthor} tag that renders the given email address as a \verb#mailto:# link in the generated documentation. It does not regard the option \verb#-author# on the command line\footnote{This is valid for version 0.1.0 of the library; it may have changed for a later version.}. 
+\keeplisting{5}
+\paragraph{\lstinline|@author|}\label{sec:TagExtAuthor}  Usage: \lstinline|@author <name-text> - <email-address>| or \\
+\lstinline|    @extauthor <name-text> - <email-address>|
+
+This is a replacement for the \nameref{sec:TagAuthor}\index{author@"@author} tag that renders the given email address as a \texttt{mailto:} link in the generated documentation. It does not regard the option \mbox{\texttt{-author}} on the command line\footnote{This is valid for the current version 0.25.4 of the library; it may have changed for a later version.}.
+
+The \lstinline|@extauthor| was introduced because some versions of the Javadoc\index{javadoc} did not allow to overwrite the standard \nameref{sec:TagAuthor}\index{author@"@author} tag.
+
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@false|}\label{sec:TagFALSE}  Usage: \lstinline|{@false}|
+
+This is a shortcut for \lstinline|{@code false}|\index{code@"@code}.
+
+%------------------------------------------------------------------------------
 
 \paragraph{\lstinline|@href|}\label{sec:TagHref}  Usage: \lstinline|{@href <url> <text>}| or \lstinline|{@href <url>}|
 
-With this tag, an HTML hyperlink can be added to the generated documentation; it will be placed inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \verb#<url># is the target URL, while \verb#<text># is the clickable text. If the latter is omitted, the URL itself will be used instead.
+With this tag, an HTML hyperlink can be added to the generated documentation; it will be placed inside the description text, but different from the \nameref{sec:TagLink} and \nameref{sec:TagLinkplain} tags, it allows to refer to arbitrary external resources, not only to other documented elements. Obviously, \texttt{<url>} is the target URL, while \texttt{<text>} is the clickable text. If the latter is omitted, the URL itself will be used instead.
+
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@ignore|}\label{sec:TagIgnore}  Usage: \lstinline|{@ignore <text>}|
+
+With this tag text can be added to the documentation comment that is not shown in the generated documentation.
+
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@image|}\label{sec:TagImage}  Usage: \lstinline|{@image <url> <attributes>}|
+
+The tag allows to add a picture to the generated documentation. \texttt{<url>} is the location of the image file, while \texttt{<attributes>} are HTML\index{HTML} attributes that are allowed for the \lstinline|<img>| tag.
+
+%------------------------------------------------------------------------------
 
 \paragraph{\lstinline|@inspired|}\label{sec:TagInspired}  Usage: \lstinline|@inspired <text>|
 
-Sometimes a piece of code was inspired by a document of some kind, a description of an algorithm, a product white paper, or whatever. This tag allows you to add a reference to that source of inspiration. 
+Sometimes a piece of code was inspired by a document of some kind, a description of an algorithm, a product white paper, or whatever. This tag allows you to add a reference to that source of inspiration.
+
+Refer also to \nameref{sec:TagSpec}\index{spec@"@spec}, \nameref{sec:TagImplNote}\index{implNote@"@implNote}, \nameref{sec:TagImplSpec}\index{implSpec@"@implSpec} and \nameref{sec:TagApiNote}\index{apiNote@"@apiNote} as they are somehow related. In particular if the reference to the inspiration is only a URL, the \nameref{sec:TagSpec}\index{spec@"@spec} is preferred.
+
+%------------------------------------------------------------------------------
 
 \paragraph{\lstinline|@modified|}\label{sec:TagModified}  Usage: \lstinline|@modified <name-text> - <email-address>|
 
 This is a variant of the \nameref{sec:TagExtAuthor} tag. It is meant to provide the name of the developer that modified the respective element without claiming to be an author.
 
+%------------------------------------------------------------------------------
+
 \paragraph{\lstinline|@note|}\label{sec:TagNote}  Usage: \lstinline|@note <text>|
 
-With this tag, it is easy to add important notes to the generated documentation for an element. All notes will be added to a bullet list placed immediately beneath the documentation text. The text for the \lstinline|@note| tag is somehow limited as it does not allow other JavaDoc tags.
+With this tag, it is easy to add important notes to the generated documentation for an element. All notes will be added to a bullet list placed immediately beneath the documentation text. The text for the \lstinline|@note| tag is somehow limited as it does not allow other Javadoc tags.
+
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@null|}\label{sec:TagNULL}  Usage: \lstinline|{@null}|
+
+This is a shortcut for \lstinline|{@code null}|\index{code@"@code}.
+
+%------------------------------------------------------------------------------
 
 \paragraph{\lstinline|@thanks|}\label{sec:TagThanks}  Usage: \lstinline|@thanks <name-text> - <email-address>|
 
@@ -154,10 +200,29 @@ Use this tag to mention someone who provided input to the respective element wit
 
 Same as for the \nameref{sec:TagExtAuthor} and the \nameref{sec:TagModified} tags, the email address will be rendered to a \verb#mailto:# link in the generated documentation.
 
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@todo|}\label{sec:TagTodo}  Usage: \lstinline|@todo <todo.md>|
+
+This tag copies the contents of the Markdown\index{Markdown} file specified by \texttt{<todo.md>} into the generated documentation. This is meant as a ToDo list or list of open issues, and that is reflected by the heading that is added to the generated documentation.
+
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@true|}\label{sec:TagTRUE}  Usage: \lstinline|{@true}|
+
+This is a shortcut for \lstinline|{@code true}|\index{code@"@code}.
+
+%------------------------------------------------------------------------------
+
 \paragraph{\lstinline|@UMLGraph.link|}\label{sec:TagUMLGraph}  Usage: \lstinline|@UMLGraph.link|
 
 This adds an UML graph for the current class to the generated documentation.
 
+%------------------------------------------------------------------------------
+
+\paragraph{\lstinline|@underline|}\label{sec:TagUnderline}  Usage: \lstinline|{@underline <text>}|
+
+Use this tag to add underlined text to the generated documentation.
 
 %==============================================================================
 % End of file!!

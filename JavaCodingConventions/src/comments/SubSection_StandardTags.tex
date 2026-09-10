@@ -164,6 +164,14 @@ Includes a fragment, or "snippet", of example code in the generated documentatio
 
 %--------------------------------------------------------------------
 
+\paragraph{\lstinline|@spec|}\label{sec:TagSpec}\index{spec@"@spec}  Usage: \lstinline|@spec <url> <title>|
+
+Identifies an external specification in terms of its URL and title. The \texttt{<url>} may be absolute or relative. A relative URL will be evaluated against a \bdq{base URL} that is set with the command line option \mbox{\texttt{--spec-base-url}}.
+
+All tags specifying the same URL must provide the same corresponding title; conversely, tags with different URLs must have different titles.
+
+%--------------------------------------------------------------------
+
 \paragraph{\lstinline|@summary|}\label{sec:TagSummary}\index{summary@"@summary}  Usage:  \lstinline|{@summary <text>}|
 
 Identifies  the summary of an API description, as an alternative to the default policy to identify and use the \textit{first sentence} of the API description. The tag only has significance when used at the beginning of a description. In all cases, the tag is rendered by simply rendering its content.

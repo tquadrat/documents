@@ -2,12 +2,33 @@
 \subsection{Special Characters}\label{sec:DocCommentSpecialChars}
 The documentation comments are parsed by the Javadoc\index{javadoc} tool and then translated to HTML\index{HTML}. During that process, the comments will be scanned for the various Javadoc tags, mentioned \hyperref[sec:JavaDocTags]{above}. Additionally, the DocLint feature validates the output as proper HTML5\index{HTML}.
 
-If you need to use the right curly brace (\bdq{\}}) inside the link label, then use the HTML entity notation \texttt{\&\#125;}.
+That means that the use of some characters in the comment text can cause problems. These characters are:
+\begin{itemize}[nosep]
+	\item{\bsq{\texttt{\textless}} and \bsq{\texttt{\textgreater}} as they are used for HTML\index{HTML} tags}
+	\item{\bsq{\texttt{\&}} because it introduces an HTML\index{HTML} entity}
+	\item{\bsq{\texttt{@}} that is the lead-in for a Javadoc\index{javadoc} tag}
+	\item{\bsq{\texttt{\}}} as it terminates an inline Javadoc\index{javadoc} tag}
+	\item{double-quotes (\bsq{\texttt{"}}) are also problematic for HTML\index{HTML} code}
+	\item{the combination \bsq{\texttt{*/}} causes issues because it terminates the comment}
+\end{itemize} 
 
-\bdq{\{\nameref{sec:TagLiteral} …\}}\index{literal@"@literal}
-\bdq{\{\nameref{sec:TagCode} …\}}\index{code@"@code}
+There are different solutions for the individual characters, depending on the context:
+\begin{itemize}
+	\item{In most cases, the inline Javadoc tag \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} helps; with the exception of the closing curly brace(\bdq{\texttt{\}}}) and \bsq{\texttt{*/}}, the text within the tag is displayed in the generated documentation exactly as specified.}
 
-\lipsum(1)
+	\item{For \bsq{\texttt{\textless}}, \bsq{\texttt{\textgreater}}, \bsq{\texttt{\&}}, \texttt{\bsq{@}}, \bsq{\texttt{"}} and \bsq{\texttt{*/}}, you can use the HTML\index{HTML} entities: \bdq{\texttt{\&lt;}}, \bdq{\texttt{\&gt;}}, \bdq{\texttt{\&amp;}}, \bdq{\texttt{\&\#64;}}, \bdq{\texttt{\&quot;}} and \bdq{\texttt{\&ast;/}} (or \bdq{\texttt{\&\#42;/}}), but of course not inside a \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} or \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag.}
+
+	\item{If you need text in code font that should contain the closing curly brace (\bsq{\texttt{\}}}), you cannot use the \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag; instead you must wrap it in the HTML\index{HTML} \lstinline|<code>| tag.}
+
+	\item{Text in code font that must contain HTML\index{HTML} entities (like \bdq{\texttt{\&ast;/}} for \bsq{\texttt{*/}}) must be wrapped HTML\index{HTML} \lstinline|<code>| tag, too.}
+
+	\item{If you need to use the right curly brace (\bdq{\texttt{\}}}) inside the link label of a \bdq{\{\nameref{sec:TagLink}\}}\index{link@"@link} or \bdq{\{\nameref{sec:TagLinkplain}\}}\index{linkplain@"@linkplain} tag, then use the HTML\index{HTML} entity notation \bdq{\texttt{\&\#125;}} for it.
+	
+	You can also use other HTML\index{HTML} entities inside those link labels, like \bdq{\texttt{\&ast;/}} for \bsq{\texttt{*/}}.}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
 \subsection{Embedding Code Snippets}\label{sec:EmbeddingCodeSnippets}
 
 \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
@@ -16,6 +37,9 @@ If you need to use the right curly brace (\bdq{\}}) inside the link label, then 
 \autocite{Baeldung:CodeSnippets}  \autocite{ORACLE_DOC_JAVADOC_GUIDE:Snippets}  \autocite{Korando:CodeSnippets} 
 
 \lipsum(1)
+
+%------------------------------------------------------------------------------
+
 \subsection{IDE Support}
 Eclipse can be configured in a way that it will issue warnings or even errors for missing documentation comments: see \texttt{Window | Preferences | Java | Compiler | Javadoc}.
 

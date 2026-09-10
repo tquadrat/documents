@@ -16,7 +16,7 @@ There are different solutions for the individual characters, depending on the co
 \begin{itemize}
 	\item{In most cases, the inline Javadoc tag \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} helps; with the exception of the closing curly brace(\bdq{\texttt{\}}}) and \bsq{\texttt{*/}}, the text within the tag is displayed in the generated documentation exactly as specified.}
 
-	\item{For \bsq{\texttt{\textless}}, \bsq{\texttt{\textgreater}}, \bsq{\texttt{\&}}, \texttt{\bsq{@}}, \bsq{\texttt{"}} and \bsq{\texttt{*/}}, you can use the HTML\index{HTML} entities: \bdq{\texttt{\&lt;}}, \bdq{\texttt{\&gt;}}, \bdq{\texttt{\&amp;}}, \bdq{\texttt{\&\#64;}}, \bdq{\texttt{\&quot;}} and \bdq{\texttt{\&ast;/}} (or \bdq{\texttt{\&\#42;/}}), but of course not inside a \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} or \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag.}
+	\item{For \bsq{\texttt{\textless}}, \bsq{\texttt{\textgreater}}, \bsq{\texttt{\&}}, \bsq{\texttt{@}}, \bsq{\texttt{"}} and \bsq{\texttt{*/}}, you can use the HTML\index{HTML} entities: \bdq{\texttt{\&lt;}}, \bdq{\texttt{\&gt;}}, \bdq{\texttt{\&amp;}}, \bdq{\texttt{\&\#64;}}, \bdq{\texttt{\&quot;}} and \bdq{\texttt{\&ast;/}} (or \bdq{\texttt{\&\#42;/}}), but of course not inside a \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} or \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag.}
 
 	\item{If you need text in code font that should contain the closing curly brace (\bsq{\texttt{\}}}), you cannot use the \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag; instead you must wrap it in the HTML\index{HTML} \lstinline|<code>| tag.}
 
@@ -24,7 +24,14 @@ There are different solutions for the individual characters, depending on the co
 
 	\item{If you need to use the right curly brace (\bdq{\texttt{\}}}) inside the link label of a \bdq{\{\nameref{sec:TagLink}\}}\index{link@"@link} or \bdq{\{\nameref{sec:TagLinkplain}\}}\index{linkplain@"@linkplain} tag, then use the HTML\index{HTML} entity notation \bdq{\texttt{\&\#125;}} for it.
 	
-	You can also use other HTML\index{HTML} entities inside those link labels, like \bdq{\texttt{\&ast;/}} for \bsq{\texttt{*/}}.}
+	You can also use other HTML\index{HTML} entities inside those link labels, like \bdq{\texttt{\&ast;/}} for \bsq{\texttt{*/}}, or \bdq{\texttt{\&\#64;}} for \bsq{\texttt{@}}; the latter is quite often used when refering to an annotation\index{annotation} class:
+	
+\keeplisting{4}
+\begin{lstlisting}[language=Comment]
+*  …
+*  {@link Override &#64;Override}
+*  …
+\end{lstlisting}}
 \end{itemize}
 
 %------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ Of course, this comment does not say that much, but a constructor is not doing m
 
 You can modify or enhance the suggested comment text according your needs. So if the constructor\index{constructor} has side effects, these should be described properly. But in general, a constructor\index{constructor} should not have any side-effects at all. 
 
-A class that does have only static methods\index{method}\footnote{Such a class is called a \bdq{Utility Class}\index{class!utility class}; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a private constructor like this:\footnote{The class for the \lstinline|Error|\index{class!class!error class} used in the \lstinline|throw| statement is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
+A class that does have only static methods\index{method}\footnote{Such a class is called a \bdq{Utility Class}\index{class!utility class}; refer to \tqfullvref{sec:UtilityClasses} for more details.} should have a private constructor like this:\footnote{The class for the \lstinline|Error|\index{class!error class} used in the \lstinline|throw| statement is described in \autocite{TQUADRAT_ORG_FOUNDATION_PRIVATECONSTRUCTORFORSTATICCLASSCALLEDERROR}.}
 \keeplisting{5}
 \begin{lstlisting}[caption={Utility Class Constructor}]
 /**

@@ -53,10 +53,11 @@ For Java source code it is possible that comments are part of or the source for 
 
 \section{Kinds of Comments}
 \subsection{The Syntax}
-Syntactically, the \Java programming language knows two types of comments:
+Syntactically, the \Java programming language knows the following types of comments:
 \begin{itemize}[nosep]
 	\item{Block Comments\index{block comment}}
 	\item{Single-line Comments\index{single-line comment}}
+	\item{Trailing or end-of-line Comments\index{trailing comment}}
 \end{itemize}
 
 A \textit{block comment}\pslabel{lbl:BlockComment}\index{block comment} is delimited by \bdq{\lstinline|/*|} and \bdq{\lstinline|*/|}, everything inbetween belongs to the comment. The indentation of the opening tag is aligned with the indentation of the surrounding code, and if the block comment spans multiple lines, the asterisk of the closing tag is aligned with the asterisk of the opening tag.
@@ -81,14 +82,19 @@ In Java, a \textit{single-line comment}\pslabel{lbl:SingleLineComment}\index{sin
 I use single-line comments\index{single-line comment} mainly as headings, so I gave them a special format:
 \begin{lstlisting}
 //---* A heading *---------------------------------------------------
-
-final var localVariable; // Short description of localVariable
+…
 
 //---* Done! *-------------------------------------------------------
 return;
 \end{lstlisting}
 
 Longer comments should be placed always into a block comment\index{block comment} instead of spanning it over multiple single-line comments\index{single-line comment}. 
+
+\keeplisting{2}
+A trailing comment is technically a single-line comment that is placed after a statement in the same line:
+\begin{lstlisting}
+final var localVariable; // Short description of localVariable
+\end{lstlisting}
 
 \subsection{The Semantics}
 Semantically, Java source code can have generally four kinds of comments:

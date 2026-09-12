@@ -1,0 +1,28 @@
+\section{Generate the Documentation}\label{sec:RunJavadoc}
+In this chapter, we will discuss the command line options for the Javadoc\index{javadoc}, based on the documentation that can be found at \autocite{ORACLE_DOC_JAVADOC_MAN}. That assumes that you start \lstinline|javadoc|\index{javadoc} from the command line directly.
+
+Alternatively, you can launch it through Ant\index{Apache Ant}\index{ant|see {Apache Ant}} \autocite{APACHE_ANT}, Gradle\index{Gradle} \autocite{GRADLE} or Maven\index{Apache Maven} \autocite{APACHE_MAVEN}, or you can even write your own starter program. But the command line options will remain the same, although they may be hidden behind some other names; the documentation of the respective tool will help here:
+
+\begin{itemize}
+	\item{for Ant\index{Apache Ant} see \autocite{APACHE_ANT:Javadoc}}
+	\item{for Gradle\index{Gradle} see \autocite{GRADLE:Javadoc}}
+	\item{for Maven\index{Apache Maven} see \autocite{APACHE_MAVEN:Javadoc}}
+\end{itemize}
+
+If you start \lstinline|javadoc|\index{javadoc} from the command line, I recommend to write all command line options to an \bsq{\texttt{options}} file that you refer to with the \verb#@# option:
+\begin{lstlisting}[numbers=none,language=sh]
+javadoc @options @packages @sources -d <destination-folder>
+\end{lstlisting}
+
+For this command line, the \bsq{\texttt{packages}} file would contain the packages that should be considered for the documentation, and the \bsq{\texttt{sources}} file contains the source directories. \bsq{\texttt{<destination-folder>}} is the target for the generated documentation.
+
+\subsubsection{Scope of the generated Documentation}\label{sec:GenerationScope}
+The scope of the generated documentation depends on the type of product you have to deliver (refer to \tqfullvref{sec:TypesOfProducts}) and the audience for that documentation.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope.tbl.tex}
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

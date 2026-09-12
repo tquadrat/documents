@@ -52,10 +52,70 @@ Sometimes it is helpful to embed code into the generated documentation, either a
 
 This can be achieved in several ways, described below.
 
-\subsubsection{Plain HTML}
+\subsubsection{Plain HTML}\index{HTML}
+The fastest approach for embedding a code snippet into the generated documentation is to use the HTML\index{HTML} tags \bsq{\texttt{<pre>}} and \bsq{\texttt{<code>}} for it:
+\keeplisting{8}
+\begin{lstlisting}[language=Comment]
+ …
+ *  <pre><code>public final String supplier()
+ *  {
+ *    /*
+ *     * Return the constant value.
+ *     &ast;/
+ *    return "value";
+ *  }  //  supplier()</code></pre>
+ …
+\end{lstlisting}
+
+That looks like this:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocPreCode1}
+\end{center}
+
+The command line option \mbox{\bsq{\texttt{-{}-syntax-highlight}}} enabled syntax highlighting here.
+
+\keeplisting{8}
+This is how the documentation of the \Java API does it:
+\begin{lstlisting}[language=Comment]
+ …
+ *  <hr>
+ *  <div class="source-container"><pre>public final String supplier()
+ *  {
+ *    /*
+ *     * Return the constant value.
+ *     &ast;/
+ *    return "value";
+ *  }  //  supplier()</pre></div>
+ *  <hr>
+ …
+\end{lstlisting}
+
+\keeplisting{9}
+It allows to add line numbers to the code snippet:
+\begin{lstlisting}[language=Comment]
+ …
+ *  <hr>
+ *  <div class="source-container"><pre><span class="source-line-no">01</span>public final String supplier()
+ *  <span class="source-line-no">02</span>{
+ *  <span class="source-line-no">03</span>  /*
+ *  <span class="source-line-no">04</span>   * Return the constant value.
+ *  <span class="source-line-no">05</span>   &ast;/
+ *  <span class="source-line-no">06</span>  return "value";
+ *  <span class="source-line-no">07</span>}  //  supplier()</pre></div>
+ *  <hr>
+ …
+\end{lstlisting}
+
+This would be the result:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocPreCode2}
+\end{center}
+ 
 
 \subsubsection{The Javadoc Tag \bsq{\{@snippet\}}}
-The line below includes the contents of the file \texttt{sample.html} into the generated documentation through the \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} tag:
+The tag \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} was introduced for the Javadoc\index{javadoc} tool with Java~18, and it was specified through JEP 413 \autocite{JEP413}. It allows several options to shape the include code snippet, including syntax highlighting. The documentation in \autocite{ORACLE_DOC_JAVADOC_TAG} for this tag is insufficient (at best), I recommend these articles if you want to dive deeper into possibilities of that tag: \autocite{Baeldung:CodeSnippets,ORACLE_DOC_JAVADOC_GUIDE:Snippets,Korando:CodeSnippets}.
+
+The line below includes the contents of the file \texttt{sample.html} into the generated documentation through the standard Javadoc\index{javadoc} \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} tag:
 \keeplisting{5}
 \begin{lstlisting}[language=Comment]
  …
@@ -83,8 +143,6 @@ The result looks like this\footnote{Compare this with the output from the \bdq{\
 	\includegraphics[scale=0.55]{comments/JavadocSnippet1}
 \end{center}
 
-The \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} was introduced with Java~18, and it was specified through JEP 413 \autocite{JEP413}. It allows several options to shape the include code snippet, including syntax highlighting. The documentation in  \autocite{ORACLE_DOC_JAVADOC_TAG} for this tag is insufficient (at best), I recommend these articles if you want to dive deeper into possibilities of that tag: \autocite{Baeldung:CodeSnippets,ORACLE_DOC_JAVADOC_GUIDE:Snippets,Korando:CodeSnippets}.
-
 \subsubsection{The Custom Tag \bsq{\{@include\}}}
 The custom tag \bdq{\{\nameref{sec:TagInclude}\}} is part of \bdq{tquadrat’s Javadoc Extensions} (or short \bsq{foundation-javadoc}), my Javadoc extensions library that I described already in \tqfullref{sec:CustomTaglets}. It can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
 
@@ -93,7 +151,7 @@ To embed code snippets, you would usually use the process-mode \texttt{SOURCE} o
 The latter allows that just specified parts of a source file are included into the documentation.
 
 Aside the different presentation, the main differences between the \bdq{\{\nameref{sec:TagInclude}\}} tag with process-mode \texttt{SOURCE} and the standard tag
-\bdq{\{\nameref{sec:TagSnippet}\}}\index{snippet@"@snippet} are that the latter comes with a copy link, while does not allow for line numbers.
+\bdq{\{\nameref{sec:TagSnippet}\}}\index{snippet@"@snippet} are that the latter comes with a copy link, while it does not allow for line numbers.
  
 For more details on the \bdq{\{\nameref{sec:TagInclude}\}} tag, refer to \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
 

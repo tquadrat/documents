@@ -168,6 +168,50 @@ The tag allows to add a picture to the generated documentation. \texttt{<url>} i
 
 %------------------------------------------------------------------------------
 
+\paragraph{\lstinline|@include|}\label{sec:TagInclude}  Usage: \lstinline|{@include <source>:<process-mode>|
+
+This tag allows you to include the contents of an external file in different ways, determined by the \texttt{<process-mode>}. It can be used to embed source code snippets into the documentation, but also to load text modules. 
+
+\keeplisting{5}
+Valid values for \texttt{<process-mode>} are:
+\begin{itemize}[nosep]
+	\item PLAIN
+	\item ESCAPE
+	\item MARKDOWN
+	\item SOURCE
+\end{itemize}
+
+The code below includes the contents of the same file:
+\keeplisting{8}
+\begin{lstlisting}[language=Comment]
+ …
+ *  <hr>
+ *  <p>{@include ${includes}/sample.html:PLAIN}</p>
+ *  <hr>
+ *  <p>{@include ${includes}/sample.html:ESCAPE}</p>
+ *  <hr>
+ *  <p>{@include ${includes}/sample.html:SOURCE}</p>
+ *  <hr>
+ …
+\end{lstlisting}
+
+For \bdq{\texttt{<process-mode> = PLAIN}} the output looks like this: 
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocIncludePlain}
+\end{center}
+\bdq{\texttt{<process-mode> = ESCAPE}} is rendered like this: 
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocIncludeEscape}
+\end{center}
+And \bdq{\texttt{<process-mode> = SOURCE}} results a below: 
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocIncludeSource}
+\end{center}
+
+For more details on the \bdq{\{\nameref{sec:TagInclude}\}} tag, refer to \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+
+%------------------------------------------------------------------------------
+
 \paragraph{\lstinline|@inspired|}\label{sec:TagInspired}  Usage: \lstinline|@inspired <text>|
 
 Sometimes a piece of code was inspired by a document of some kind, a description of an algorithm, a product white paper, or whatever. This tag allows you to add a reference to that source of inspiration.

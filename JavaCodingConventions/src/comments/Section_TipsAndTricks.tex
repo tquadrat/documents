@@ -16,7 +16,23 @@ There are different solutions for the individual characters, depending on the co
 \begin{itemize}
 	\item{In most cases, the inline Javadoc tag \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} helps; with the exception of the closing curly brace(\bdq{\texttt{\}}}) and \bsq{\texttt{*/}}, the text within the tag is displayed in the generated documentation exactly as specified.}
 
-	\item{For \bsq{\texttt{\textless}}, \bsq{\texttt{\textgreater}}, \bsq{\texttt{\&}}, \bsq{\texttt{@}}, \bsq{\texttt{"}} and \bsq{\texttt{*/}}, you can use the HTML\index{HTML} entities: \bdq{\texttt{\&lt;}}, \bdq{\texttt{\&gt;}}, \bdq{\texttt{\&amp;}}, \bdq{\texttt{\&\#64;}}, \bdq{\texttt{\&quot;}} and \bdq{\texttt{\&ast;/}} (or \bdq{\texttt{\&\#42;/}}), but of course not inside a \bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} or \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag.}
+	\item{For 
+	\bsq{\texttt{\textless}}, 
+	\bsq{\texttt{\textgreater}}, 
+	\bsq{\texttt{\&}}, 
+	\bsq{\texttt{@}}, 
+	\bsq{\texttt{"}} and 
+	\bsq{\texttt{*/}}, you can use the 
+	HTML\index{HTML} entities: 
+	\bdq{\texttt{\&lt;}}, 
+	\bdq{\texttt{\&gt;}}, 
+	\bdq{\texttt{\&amp;}}, 
+	\bdq{\texttt{\&\#64;}}, 
+	\bdq{\texttt{\&quot;}} and 
+	\bdq{\texttt{\&ast;/}} (or 
+	\bdq{\texttt{\&\#42;/}}), but of course not inside a 
+	\bdq{\{\nameref{sec:TagLiteral}\}}\index{literal@"@literal} or 
+	\bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag.}
 
 	\item{If you need text in code font that should contain the closing curly brace (\bsq{\texttt{\}}}), you cannot use the \bdq{\{\nameref{sec:TagCode}\}}\index{code@"@code} tag; instead you must wrap it in the HTML\index{HTML} \lstinline|<code>| tag.}
 
@@ -37,13 +53,23 @@ There are different solutions for the individual characters, depending on the co
 %------------------------------------------------------------------------------
 
 \subsection{Embedding Code Snippets}\label{sec:EmbeddingCodeSnippets}
+Sometimes it is helpful to embed code into the generated documentation, either as a sample on how a method is used, a snippet that explains the implementation, a script that is used to start the program, or a section from a configuration file.
 
+This can be achieved in several ways, described below.
+
+\subsubsection{Plain HTML}
+
+\subsubsection{The Javadoc Tag \nameref{sec:TagSnippet}}
 \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
 
 \autocite{JEP413}
 \autocite{Baeldung:CodeSnippets}  \autocite{ORACLE_DOC_JAVADOC_GUIDE:Snippets}  \autocite{Korando:CodeSnippets} 
 
-\lipsum(1)
+\lipsum[1]
+
+\subsubsection{The Custom Tag \nameref{sec:TagInclude}}
+
+\lipsum[1]
 
 %------------------------------------------------------------------------------
 

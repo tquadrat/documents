@@ -3,14 +3,9 @@
 The documentation comments are parsed by the Javadoc\index{javadoc} tool and then translated to HTML\index{HTML}. During that process, the comments will be scanned for the various Javadoc tags, mentioned \hyperref[sec:JavaDocTags]{above}. Additionally, the DocLint feature validates the output as proper HTML5\index{HTML}.
 
 That means that the use of some characters in the comment text can cause problems. These characters are:
-\begin{itemize}[nosep]
-	\item{\bsq{\texttt{\textless}} and \bsq{\texttt{\textgreater}} as they are used for HTML\index{HTML} tags}
-	\item{\bsq{\texttt{\&}} because it introduces an HTML\index{HTML} entity}
-	\item{\bsq{\texttt{@}} that is the lead-in for a Javadoc\index{javadoc} tag}
-	\item{\bsq{\texttt{\}}} as it terminates an inline Javadoc\index{javadoc} tag}
-	\item{double-quotes (\bsq{\texttt{"}}) are also problematic for HTML\index{HTML} code}
-	\item{the combination \bsq{\texttt{*/}} causes issues because it terminates the comment}
-\end{itemize} 
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/SpecialChars.tbl.tex}
 
 There are different solutions for the individual characters, depending on the context:
 \begin{itemize}

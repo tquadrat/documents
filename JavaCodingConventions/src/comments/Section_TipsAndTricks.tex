@@ -113,7 +113,7 @@ This would be the result:
  
 
 \subsubsection{The Javadoc Tag \bsq{\{@snippet\}}}
-The tag \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} was introduced for the Javadoc\index{javadoc} tool with Java~18, and it was specified through JEP 413 \autocite{JEP413}. It allows several options to shape the include code snippet, including syntax highlighting. The documentation in \autocite{ORACLE_DOC_JAVADOC_TAG} for this tag is insufficient (at best), I recommend these articles if you want to dive deeper into possibilities of that tag: \autocite{Baeldung:CodeSnippets,ORACLE_DOC_JAVADOC_GUIDE:Snippets,Korando:CodeSnippets}.
+The tag \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} was introduced for the Javadoc\index{javadoc} tool with Java~18, and it was specified through JEP 413 \autocite{JEP413}. It allows several options to shape the embedded code snippet, including syntax highlighting. The documentation in \autocite{ORACLE_DOC_JAVADOC_TAG} for this tag is insufficient (at best), I recommend these articles if you want to dive deeper into possibilities of that tag: \autocite{Baeldung:CodeSnippets,ORACLE_DOC_JAVADOC_GUIDE:Snippets,Korando:CodeSnippets}.
 
 The line below includes the contents of the file \texttt{sample.html} into the generated documentation through the standard Javadoc\index{javadoc} \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} tag:
 \keeplisting{5}
@@ -126,7 +126,7 @@ The line below includes the contents of the file \texttt{sample.html} into the g
 \end{lstlisting}
 
 \keeplisting{7}
-If also allows to embed the code snippet directly into the documentation comment:
+It also allows to embed the code snippet directly into the documentation comment:
 \begin{lstlisting}[language=Comment]
  …
  *  <hr>

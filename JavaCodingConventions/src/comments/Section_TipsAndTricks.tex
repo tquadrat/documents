@@ -54,17 +54,48 @@ This can be achieved in several ways, described below.
 
 \subsubsection{Plain HTML}
 
-\subsubsection{The Javadoc Tag \nameref{sec:TagSnippet}}
-\bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet}
+\subsubsection{The Javadoc Tag \bsq{\{@snippet\}}}
+The line below includes the contents of the file \texttt{sample.html} into the generated documentation through the \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} tag:
+\keeplisting{5}
+\begin{lstlisting}[language=Comment]
+ …
+ *  <hr>
+ *  {@snippet file="sample.html"}
+ *  <hr>
+ …
+\end{lstlisting}
 
-\autocite{JEP413}
-\autocite{Baeldung:CodeSnippets}  \autocite{ORACLE_DOC_JAVADOC_GUIDE:Snippets}  \autocite{Korando:CodeSnippets} 
+\keeplisting{7}
+If also allows to embed the code snippet directly into the documentation comment:
+\begin{lstlisting}[language=Comment]
+ …
+ *  <hr>
+ *  {@snippet :
+ *  <h3>Included Section</h3>
+ *  <p>This section was included from an external file through the {@snippet} tag.</p>
+ *  <p>It does allow to place code snippets into the generated documentation; it is not limited to HTML or Java.</p>}
+ *  <hr>
+ …
+\end{lstlisting}
 
-\lipsum[1]
+The result looks like this\footnote{Compare this with the output from the \bdq{\{\nameref{sec:TagInclude}\}} tag on page \pageref{sec:TagInclude}.}:
+\begin{center}
+	\includegraphics[scale=0.55]{comments/JavadocSnippet1}
+\end{center}
 
-\subsubsection{The Custom Tag \nameref{sec:TagInclude}}
+The \bdq{\{\nameref{sec:TagSnippet} …\}}\index{snippet@"@snippet} was introduced with Java~18, and it was specified through JEP 413 \autocite{JEP413}. It allows several options to shape the include code snippet, including syntax highlighting. The documentation in  \autocite{ORACLE_DOC_JAVADOC_TAG} for this tag is insufficient (at best), I recommend these articles if you want to dive deeper into possibilities of that tag: \autocite{Baeldung:CodeSnippets,ORACLE_DOC_JAVADOC_GUIDE:Snippets,Korando:CodeSnippets}.
 
-\lipsum[1]
+\subsubsection{The Custom Tag \bsq{\{@include\}}}
+The custom tag \bdq{\{\nameref{sec:TagInclude}\}} is part of \bdq{tquadrat’s Javadoc Extensions} (or short \bsq{foundation-javadoc}), my Javadoc extensions library that I described already in \tqfullref{sec:CustomTaglets}. It can be found at \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
+
+To embed code snippets, you would usually use the process-mode \texttt{SOURCE} or the previously not mentioned process-mode \texttt{SOURCE\_SNIPPET}.
+
+The latter allows that just specified parts of a source file are included into the documentation.
+
+Aside the different presentation, the main differences between the \bdq{\{\nameref{sec:TagInclude}\}} tag with process-mode \texttt{SOURCE} and the standard tag
+\bdq{\{\nameref{sec:TagSnippet}\}}\index{snippet@"@snippet} are that the latter comes with a copy link, while does not allow for line numbers.
+ 
+For more details on the \bdq{\{\nameref{sec:TagInclude}\}} tag, refer to \autocite{TQUADRAT_ORG_FOUNDATION_JAVADOC}.
 
 %------------------------------------------------------------------------------
 

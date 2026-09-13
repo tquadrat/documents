@@ -15,58 +15,271 @@
     \endlastfoot
 %------------------------------------------------------------------------------
 
-\multirow{3}{*}{\makecell{\nameref{sec:FunctionLibrary}}} 
-  & \makecell{Users \\ External Developers} 
-  & \makecell[l]{\texttt{-protected} 
-  \\ \texttt{-{}-showMembers protected}} \\
+\multirow{3}{*}{\makecell{\nameref{sec:FunctionLibrary}\index{product type!function library}}} 
+  & \makecell{Users \\ Ext. Developers} 
+  & \makecell[l]{\texttt{-{}-expand-requires transitive}
+  \\ \texttt{-nodeprecated}
+  \\ \texttt{-notimestamp}
+  \\ \texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}-show-types protected}
+  \\ \texttt{-subpackages …}
+  } \\
 \cline{2-3}
   & Testers
-  & \makecell[l]{\texttt{-protected} 
-  \\ \texttt{-{}-showMembers protected}} \\
+  & \makecell[l]{\texttt{-author}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-linksource}
+  \\\texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}-show-types protected}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-subpackages …}
+  } \\
 \cline{2-3}
-  & \makecell[l]{Internal Developers \\
-  Sustaining Engineers \\
-  Maintenance Staff}
-  & \makecell[l]{\texttt{-private} 
-  \\ \texttt{-{}-showMembers private}} \\
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-author}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-linksource}
+  \\ \texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}-show-types private}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-subpackages …}
+  } \\
 \hline
 
 %------------------------------------------------------------------------------
 
-\multirow{4}{*}{\makecell{\nameref{sec:FeatureLibrary}}} 
+\multirow{4}{*}{\makecell{\nameref{sec:FeatureLibrary}\index{product type!feature library}}} 
   & \makecell{Users} 
   & \makecell[l]{\texttt{-public} 
-  \\ \texttt{-{}-showMembers public}} \\
+  \\ \texttt{-{}-show-members public}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types public}
+  \\ \texttt{-notimestamp}
+  } \\
 \cline{2-3}
-  & \makecell{External Developers} 
+  & \makecell{Ext. Developers} 
   & \makecell[l]{\texttt{-protected} 
-  \\ \texttt{-{}-showMembers protected}} \\
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-notimestamp}
+  } \\
 \cline{2-3}
   & Testers
   & \makecell[l]{\texttt{-protected} 
-  \\ \texttt{-{}-showMembers protected}} \\
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
 \cline{2-3}
-  & \makecell[l]{Internal Developers \\
-  Sustaining Engineers \\
-  Maintenance Staff}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
   & \makecell[l]{\texttt{-private} 
-  \\ \texttt{-{}-showMembers private}} \\
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
 \hline
 
 %------------------------------------------------------------------------------
+
+\multirow{2}{*}{\makecell{\nameref{sec:Tool}\index{product type!tool}}} 
+  & Testers
+  & \makecell[l]{\texttt{-public} 
+  \\ \texttt{-{}-show-members public}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\cline{2-3}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\multirow{2}{*}{\makecell{\hyperref[sec:StandaloneApplication]{Standalone} 
+\\ \hyperref[sec:StandaloneApplication]{Application}\index{product type!standalone application} 
+\\ (non-customizable)}} 
+  & Testers
+  & \makecell[l]{\texttt{-public} 
+  \\ \texttt{-{}-show-members public}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\cline{2-3}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\hline
+
+\multirow{3}{*}{\makecell{\hyperref[sec:StandaloneApplication]{Standalone} 
+\\ \hyperref[sec:StandaloneApplication]{Application}\index{product type!standalone application} 
+\\ (customizable)}} 
+  & \makecell{Ext. Developers} 
+  & \makecell[l]{\texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-notimestamp}
+  } \\
+\cline{2-3}
+  & Testers
+  & \makecell[l]{\texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\cline{2-3}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\multirow{2}{*}{\makecell{\hyperref[sec:ServerbasedApplication]{Server-based} 
+\\ \hyperref[sec:ServerbasedApplication]{Application}\index{product type!server-based application}}} 
+  & Testers
+  & \makecell[l]{\texttt{-author}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-linksource}
+  \\ \texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-sourcetab 4}
+  } \\
+\cline{2-3}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\hline
+
+%------------------------------------------------------------------------------
+
+\multirow{2}{*}{\makecell{\nameref{sec:Extension}\index{product type!extension}}} 
+  & Testers
+  & \makecell[l]{\texttt{-protected} 
+  \\ \texttt{-{}-show-members protected}
+  \\ \texttt{-{}-expand-requires transitive}
+  \\ \texttt{-{}-show-module-contents api}
+  \\ \texttt{-{}-show-packages exported}
+  \\ \texttt{-{}.show-types protected}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\cline{2-3}
+  & \makecell[l]{Sustaining \\
+  Maintenance}
+  & \makecell[l]{\texttt{-private} 
+  \\ \texttt{-{}-show-members private}
+  \\ \texttt{-{}-expand-requires all}
+  \\ \texttt{-{}-show-module-contents all}
+  \\ \texttt{-{}-show-packages all}
+  \\ \texttt{-{}.show-types private}
+  \\ \texttt{-linksource}
+  \\ \texttt{-sourcetab 4}
+  \\ \texttt{-{}-date …}
+  \\ \texttt{-author}
+  } \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \end{longtable}
 
 %==============================================================================
 % End of file!!
 %==============================================================================
-
-%	\item{\hyperref[sec:Tool]{Tools}\index{product type!tool}\index{tool|see {product type}}}
-	
-%	\item{\hyperref[sec:StandaloneApplication]{Standalone Applications}\index{product type!standalone application}\index{standalone application|see {product type}}}
-
-%	\item{\hyperref[sec:ServerbasedApplication]{Server-based Applications}\index{product type!server-based application}\index{server-based application|see {product type}}}
-	
-%	\item{\hyperref[sec:Extension]{Extensions}\index{product type!extension}\index{extension|see {product type}}}
-
-%	\item{\hyperref[sec:ScriptInJava]{Scripts}\index{product type!script}\index{script (Java)|see {product type}}}
-

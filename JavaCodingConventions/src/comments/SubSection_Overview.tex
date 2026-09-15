@@ -1,7 +1,7 @@
 \subsection{The \bsq{Overview}}\label{sec:OverviewDoc}
-The Overview page is not a typical documentation comment; its source is an HTML\index{HTML} document that is referenced through the command line parameter \bdq{\texttt{-overview <filename>}} (see \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) when the Javadoc tool\index{javadoc} is called to generate the documentation for your project. Obviously, \bdq{\texttt{<filename>}} is the (fully-qualified)  filename of that file. The recommended name is \bdq{\texttt{overview.html}}.
+The Overview page is not a typical documentation comment; its source is an HTML\index{HTML} document that is referenced through the command line option \mbox{\bsq{\texttt{-overview}}} (see \tqfullvref{sec:Locations} and \autocite{ORACLE_DOC_JAVADOC_MAN:StandardDocletOptions}) when the Javadoc tool\index{javadoc} is called to generate the documentation for your project. It takes the the (fully-qualified) name of that file as the argument; the recommended filename is \bdq{\texttt{overview.html}}.
 
-The file itself should be a valid HTML~5\index{HTML} document; you can omit the \lstinline|<head>| section because the Javadoc\index{javadoc} will copy only the whole \lstinline|<body>| section as is into the generated documentation.
+The file itself should be a valid HTML~5\index{HTML} document; you can omit the \lstinline|<head>| section because the Javadoc\index{javadoc} will copy only a section \lstinline|<main>| into the generated documentation, or, if this does not exist, the whole \lstinline|<body>| section.
 
 Several Javadoc\index{javadoc} tags can be also used in the overview document; for details refer to the section \bdq{Where Tags Can Be Used}in \autocite{ORACLE_DOC_JAVADOC_TAG}.
 

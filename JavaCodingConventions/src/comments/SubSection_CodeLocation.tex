@@ -1,0 +1,47 @@
+\subsection{Locations}\label{sec:Locations}
+This chapter discusses the options that describe where the Javadoc\index{javadoc} command finds the source files that should be documented and the additional libraries.
+
+Basically, the Javadoc\index{javadoc} tool uses the same environment as the \Java compiler \texttt{javac}\index{javac}, and it inherits some command line options from it. Consequently, additional information about the command line options from this chapter can be found at the manual pages for \texttt{javac} \autocite{ORACLE_TOOL:javac}.
+
+First we need the \texttt{CLASSPATH}; the Javadoc\index{javadoc} tool needs basically the same \texttt{CLASSPATH} that is needed by the \Java compiler \texttt{javac}\index{javac} to build the project. This is provided by the command line option \mbox{\bsq{\texttt{-{}-class-path}}}. It takes the references to the dependencies, separated by a semi-colon (\bdq{\texttt{;}}) when running on Windows, or a colon (\bdq{\texttt{:}}) otherwise.
+
+If the project is using modules\index{module}, they need to be added to the \mbox{\texttt{MODULE\_PATH}}, too. This is done by the command line option \mbox{\bsq{\texttt{-{}-module-path}}} that provides the references to the modules\index{module} in the same way as the \mbox{\bsq{\texttt{-{}-class-path}}} option.
+
+You may specify the location of the source files through the \mbox{\bsq{\texttt{-{}-source-path}}} option. It takes the path of the source folder. This works fine for non-modularised projects, or if there is just one single module\index{module} that should be documented.
+
+But if you need to create the documentation for a set of modules\index{module}, you have to use the option \mbox{\bsq{\texttt{-{}-module-source-path <\textit{module-name}>=<\textit{file-path}>}}} instead. \mbox{\texttt{<\textit{module-name}>}} is the name of the module\index{module} as specified in the respective \mbox{\texttt{module-info.java}}\index{module-info.java} file. A \mbox{\bsq{\texttt{-{}-module-source-path}}} option is required for each module that should get part of the generated documentation.
+
+Multiple folders can be given as the \mbox{\texttt{<\textit{file-path}>}}, separated by semi-colon (\bdq{\texttt{;}}) on Windows, or by  colon (\bdq{\texttt{:}}) otherwise.
+
+The location where the generated output should be stored is given through the \mbox{\bsq{\texttt{-d}}} command line option.
+
+You can provide your own CSS\index{CSS} stylesheet to the generated documentation. With the command line option \mbox{\bsq{\texttt{-{}-main-stylesheet}}} you replace the default stylesheet, and you can add additional CSS\index{CSS} stylesheets with the option \mbox{\bsq{\texttt{-{}-add-stylesheet}}}; repeat the option for each stylesheet you want to add.
+
+In chapter \tqref{sec:OverviewDoc} I mentioned the overview document that can be included into the generated documentation, and that this is referenced by the command line option \mbox{\bsq{\texttt{-overview}}}.
+
+The Javadoc\index{javadoc} tag \bdq{\{\nameref{sec:TagSnippet}\}} that was described in detail in chapter \tqref{sec:JavaDocSnippetTag} on page \pageref{sec:JavaDocSnippetTag} allows a relative path for an external snippet. With the command line option \mbox{\bsq{\texttt{-{}-snippet-path}}}, a list of directories, separated by the platform path separator,is specified that will searched for the snippet files.
+
+\subsubsection{The Command Line Options}
+
+\paragraph{\texttt{-{}-add-stylesheet}} Provides the file name for an addition CSS\index{CSS} stylesheet.
+
+\paragraph{\texttt{-{}-class-path}/\texttt{-classpath}/\texttt{-cp}} The build \texttt{CLASSPATH} for the project.
+
+\paragraph{\texttt{-d}} The destination folder.
+
+\paragraph{\texttt{-{}-main-stylesheet}/\texttt{-stylesheetfile}} Provides the file for a CSS\index{CSS} stylesheet that replaces the default one.
+
+\paragraph{\texttt{-{}-module-path}/\texttt{-p}} The build \mbox{\texttt{MODULE\_PATH}} for the project.
+
+\paragraph{\texttt{-{}-module-source-path}} The location for the source code of a single module\index{module} in case the documentation should be generated for multiple modules\index{module}.
+
+\paragraph{\texttt{-overview}} The file for the overview document.
+
+\paragraph{\texttt{-{}-snippet-path}} A search path for snippet files.
+
+\paragraph{\texttt{-{}-source-path}/\texttt{-sourcepath}} The source code location in case the documentation for only a single module\index{module} should be generated.
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

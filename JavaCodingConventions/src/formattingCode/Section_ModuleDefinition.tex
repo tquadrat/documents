@@ -1,7 +1,7 @@
 \section{The Module Definition}\label{sec:ModuleDefinition}
 Modules\index{module} have been introduced to Java with version~9, as a result of the Jigsaw project\index{Project Jigsaw|see {Java Platform Module System}}\index{Java Platform Module System} \autocite{OPENJDK:ProjectJigsaw}, today mostly referenced as JPMS.
 
-A module will be defined in the file \verb#module-info.java#\index{module-info.java} that is located in the root of the source tree for the project. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}. According to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit} is the \verb#module-info.java#\index{module-info.java} file a special kind of a compilation unit\index{compilation unit}: a \bdq{Modular Compilation Unit}\index{compilation unit!modular}. Basically, that file will look like this:
+A module will be defined in the file \mbox{\texttt{module-info.java}}\index{module-info.java} that is located in the root of the source tree for the project. Details can be found in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:ModuleDeclarations}. According to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:CompilationUnit} is the \mbox{\texttt{module-info.java}}\index{module-info.java} file a special kind of a compilation unit\index{compilation unit}: a \bdq{Modular Compilation Unit}\index{compilation unit!modular}. Basically, that file will look like this:
 \begin{lstlisting}[numbers=left, caption={module-info.java},morekeywords={exports,module,opens,provides,requires,to,transitive,uses,var,with,yield}]
 /*
  * ==================================================================
@@ -36,16 +36,16 @@ module <modulename>
  *  End of File
  */
 \end{lstlisting}
-How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}, modularisation\index{modularisation} in general (and the contents of a \verb#module-info.java#\index{module-info.java} in detail) is discussed in \tqfullvref{sec:Modularisation}.
+How to define the name of the module (\lstinline|<modulename>|) is covered in chapter \tqfullvref{sec:Modules}, modularisation\index{modularisation} in general is discussed in \tqfullvref{sec:Modularisation}.
 
-The \verb#<module description># will be discussed in chapter \tqfullvref{sec:ModuleComment}.
+The \texttt{<module description>} will be discussed in chapter \tqfullvref{sec:ModuleComment}.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-	\item{A \verb#module-info.java#\index{module-info.java} has a beginning and a closing comment as a regular Java source file. See \tqfullref{sec:BeginningComment} and \tqfullref{sec:ClosingComment}.}
-	\item{It is possible that a \verb#module-info.java#\index{module-info.java} will import something.
+	\item{A \mbox{\texttt{module-info.java}}\index{module-info.java} has a beginning and a closing comment as a regular Java source file. See \tqfullref{sec:BeginningComment} and \tqfullref{sec:ClosingComment}.}
+	\item{It is possible that a \mbox{\texttt{module-info.java}}\index{module-info.java} imports something through an \lstinline|import| statement.
 
-The \lstinline|import| statements follow the beginning comment, separated with an empty line.}
+These \lstinline|import| statements follow the beginning comment, separated with an empty line.}
 	\item{The module description provides brief information about the purpose of the module.}
 	\item{Following the module definition block, there has to be a comment that repeats the module name.}
 	\item{Each keyword \lstinline|requires|, \lstinline|exports|, \lstinline|opens|, \lstinline|uses| and \lstinline|provides| has its own line.

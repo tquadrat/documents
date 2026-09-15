@@ -16,10 +16,14 @@ javadoc -d <destination-folder> @options @packages @sources
 
 For this command line, the \bsq{\texttt{packages}} file would contain the packages that should be considered for the documentation, and the \bsq{\texttt{sources}} file contains the source directories. \bsq{\texttt{<destination-folder>}} is the target for the generated documentation.
 
+In the following chapters, we discuss the most important command line options for the \texttt{javadoc}\index{javadoc} command. One set of options (\mbox{\bsq{\texttt{-tag}}}, \mbox{\bsq{\texttt{-taglet}}} and \mbox{\bsq{\texttt{-tagletpath}}}) was already discussed in chapter \tqfullvref{sec:CustomTagsForJavaDoc}.
+
 %------------------------------------------------------------------------------
 
-\include{comments/SubSection_GenerationScope}
-\include{comments/SubSection_ExternalLinks}
+\input{comments/SubSection_RuntimeOptions}
+\input{comments/SubSection_CodeLocation}
+\input{comments/SubSection_GenerationScope}
+\input{comments/SubSection_ExternalLinks}
 
 %==============================================================================
 % End of file!!

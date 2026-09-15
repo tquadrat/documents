@@ -18,10 +18,27 @@ Or you use the custom tag \bdq{\{\nameref{sec:TagHref}\}} for that purpose:
 \end{lstlisting}
 The output will be the same in both cases.
 
-Additional data (screenshots, images, charts, texts, sample code, scripts,~…) that is not available through an URL or should not be accessed from the network can be added to the generated documentation. The respective files will be placed to a \bdq{\texttt{doc-files}}\index{doc-files} subfolder that can be added to each package\index{package} folder. HTML\index{HTML} and Markdown\index{Markdown} files are parsed by the Javadoc\index{javadoc} tool, meaning that you can use the Javadoc\index{javadoc} tag in there.
+Additional data (screenshots, images, charts, texts, sample code, scripts,~…) that is not available through an URL or should not be accessed from the network can be added to the generated documentation. The respective files will be placed to a \mbox{\bdq{\texttt{doc-files}}}\index{doc-files} subfolder that can be added to each package\index{package} folder. HTML\index{HTML} and Markdown\index{Markdown} files are parsed by the Javadoc\index{javadoc} tool, meaning that you can use the Javadoc\index{javadoc} tags in there.
 
-% How to refer to the doc-files?
-% Images??
+You refer to the files in the \mbox{\bdq{\texttt{doc-files}}}\index{doc-files} subfolder like this:
+\keeplisting{3}
+\begin{lstlisting}[language=Comment]
+…
+*  For additional information, see 
+*  <href a="docfiles/additional_information.html">here</href>.
+…  
+\end{lstlisting}
+
+Images stored in the \mbox{\bdq{\texttt{doc-files}}}\index{doc-files} subfolder are added to the generated documentation like this:
+\keeplisting{3}
+\begin{lstlisting}[language=Comment]
+…
+*  This is how the generated GUI looks like: 
+*  <img src="doc-files/generated_gui.jpg" alt="GUI Screenshot">.
+…  
+\end{lstlisting}
+
+Although you can refer to the \mbox{\bdq{\texttt{doc-files}}}\index{doc-files} subfolder of other packages\index{package} through an URL like \mbox{\bdq{\texttt{../<\textit{package}>/doc-files/}}}, this is not recommended.
 
 %==============================================================================
 % End of file!!

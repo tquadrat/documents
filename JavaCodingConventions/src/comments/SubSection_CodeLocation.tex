@@ -21,6 +21,8 @@ In chapter \tqref{sec:OverviewDoc} I mentioned the overview document that can be
 
 The Javadoc\index{javadoc} tag \bdq{\{\nameref{sec:TagSnippet}\}} that was described in detail in chapter \tqref{sec:JavaDocSnippetTag} on page \pageref{sec:JavaDocSnippetTag} allows a relative path for an external snippet. With the command line option \mbox{\bsq{\texttt{-{}-snippet-path}}}, a list of directories, separated by the platform path separator,is specified that will searched for the snippet files.
 
+The command line option \mbox{\bsq{\texttt{-{}-spec-base-url}}} provides a base URL for the resolution of relative URLs from the Javadoc\index{javadoc} tag \bdq{\nameref{sec:TagSpec}}. 
+
 \subsubsection{The Command Line Options}
 
 \paragraph{\texttt{-{}-add-stylesheet}} Provides the file name for an addition CSS\index{CSS} stylesheet.
@@ -40,6 +42,8 @@ The Javadoc\index{javadoc} tag \bdq{\{\nameref{sec:TagSnippet}\}} that was descr
 \paragraph{\texttt{-{}-snippet-path}} A search path for snippet files.
 
 \paragraph{\texttt{-{}-source-path}/\texttt{-sourcepath}} The source code location in case the documentation for only a single module\index{module} should be generated.
+
+\paragraph{\texttt{-{}-spec-base-url}} The base URL for relatived URLs specified by the  \bdq{\nameref{sec:TagSpec}} tag.
 
 %==============================================================================
 % End of file!!

@@ -11,8 +11,11 @@ For a function library\index{product type!function library}, the \bdq{users} are
 
 For tools\index{product type!tool}, extensions\index{product type!extension}, standalone\index{product type!standalone application} and server-based applications\index{product type!server-based application}, no Javadoc\index{javadoc} documentation will be generated for the public. Only when a standalone application\index{product type!standalone application} allows customisation, it may make sense to generate a Javadoc\index{javadoc} documentation for the public API that can be used by external developers for the customisations.
 
+Usually, all modules\index{module} on the module source path are documented. But if required (e.g. for a documentation targeted to an external audience) the modules\index{module} that should be part of the generated documentation can be explicitly listed with the command line option \mbox{\bsq{\texttt{-{}-module}}}; that allows to omit purely internal modules\index{module}.
+
+The \mbox{\bsq{\texttt{-version}}} option controls that the \bdq{\nameref{sec:TagVersion}} tags are included into the generated documentation.
+
 \subsubsection{The Command Line Options}
-The meaning of the command line options is described below:
 
 \paragraph{\texttt{-author}} If set, the value of the \nameref{sec:TagAuthor} tag will be included into the generated documentation. It might be omitted for documentation meant for the public.
 
@@ -21,6 +24,8 @@ The meaning of the command line options is described below:
 \paragraph{\texttt{-{}-expand-requires}} Instructs the Javadoc\index{javadoc} tool to expand the set of modules to be documented. If not set, only the modules given explicitly on the command lin are documents. With the argument \bsq{\texttt{transitive}}, all the required transitive dependencies of those modules are included, and the argument \bsq{\texttt{all}} includes all dependencies. 
 
 \paragraph{\texttt{-linksource}}\label{par:linksource} Adds an HTML\index{HTML} version of each source file to the documentation and links the respective program elements to it. As it reveals all the details, it is usually used only for internal documentations. The option \bsq{\texttt{-sourcetab}} determines the number of blank that should be used to replace tab characters in the source.
+
+\paragraph{-{}-module} A list of modules that should be documented.
 
 \paragraph{-nodeprecated} Prevents the generation of the documentation for any deprecated element. It might by useful for function\index{product type!function library} and feature libraries\index{product type!feature library} when you want to prevent that deprecated APIs are still used. 
 
@@ -45,6 +50,10 @@ The value \bsq{\texttt{all}} displays all of the module's packages in the docume
 The internal documentation for testers, sustaining and maintenance staff it is sufficient to just give the name of the root package here, because it needs to contain all packages.
 
 For the public documentation you must decide individually which packages should be revealed.
+
+\paragraph{\texttt{-use}} Triggers the generation of a \bdq{\textbf{Use}} page for each documented package and class. It describes where the respective class or package is used or referenced. This can be useful to assess the impact of changes to the respective class or package.
+
+\paragraph{\texttt{-version}} Adds the \bdq{\nameref{sec:TagVersion}} tag to the generated documentation.
 
 %==============================================================================
 % End of file!!

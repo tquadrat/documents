@@ -7,9 +7,9 @@ For that you add a \mbox{\bsq{\texttt{-link}}} option to the command line of the
 
 The \mbox{\bsq{\texttt{-link}}} option requires that the machine executing the \texttt{javadoc}\index{javadoc} command has internet access to the location of the external documentation. If this is not possible, you can use the \mbox{\bsq{\texttt{-linkoffline}}} option instead of \mbox{\bsq{\texttt{-link}}}.
 
-\mbox{\bsq{\texttt{-linkoffline}}} takes two URLs; the first is again the base URL for the generated links in your documentation. But the second determines the location of the  \mbox{\texttt{package-list}} or \mbox{\texttt{element-list}} file, and this can point to a local copy of these files.
+The \mbox{\bsq{\texttt{-linkoffline}}} option takes two URLs; the first is again the base URL for the generated links in your documentation. But the second URI determines the location of the  \mbox{\texttt{package-list}} or \mbox{\texttt{element-list}} file, and this can point to the location of a local copy of these files.
 
-\mbox{\bsq{\texttt{-linkoffline}}} can be used also if \mbox{\texttt{package-list}} or \mbox{\texttt{element-list}} are stored not in the default location that is identified by the base URL.
+This option can also be used if the \mbox{\texttt{package-list}} or \mbox{\texttt{element-list}} file is inaccessible at its standard location determined by the base URL.
 
 Add one \mbox{\bsq{\texttt{-link}}} or \mbox{\bsq{\texttt{-linkoffline}}} for each external library whose documentation you want to link to.
 

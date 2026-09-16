@@ -1,6 +1,21 @@
 \subsection{Runtime Options}\label{sec:RuntimeOptions}
+The \Java compiler \texttt{javac}\index{javac} allows code to be compiled for versions other than the current (native) version. Similarly, the Javadoc\index{javadoc} tool can be configured to generate documentation based on an older \Java version. The command line options for that are either \mbox{\bsq{\texttt{-{}-source}}} or \mbox{\bsq{\texttt{-{}-release}}}, taking the number of the respective version as argument. The options are mutually exclusive. 
+
+With the command line option \mbox{\bsq{\texttt{-{}-enable-preview}}} you enables preview language features from the \Java version that was specifed with \mbox{\bsq{\texttt{-{}-source}}} or \mbox{\bsq{\texttt{-{}-release}}}.
+
+As a rule of thumb, you should use the same settings regarding the \Java version and the preview features for \texttt{javadoc}\index{javadoc} that you have used for \texttt{javac}\index{javac}.
+
+The amount of messages issued by the Javadoc\index{javadoc} tool during runtime can be shaped by the command line options \mbox{\bsq{\texttt{-quiet}}} and \mbox{\bsq{\texttt{-verbose}}}. With \mbox{\bsq{\texttt{-quiet}}}, the tool will only emit warnings and errors. The \mbox{\bsq{\texttt{-verbose}}} option causes the printing of additional message providing the amount of time needed to parse each source file. If neither of these options is given, \texttt{javadoc}\index{javadoc} issues warnings, errors and notes, plus messages for loading the source files.
 
 \subsubsection{The Command Line Options}
+
+\paragraph{\texttt{-{}-enable-preview}} Enables preview language features.
+
+\paragraph{\texttt{-quiet}} Limits the output from the Javadoc\index{javadoc} tool.
+
+\paragraph{\texttt{-{}-release}/\texttt{-{}-source}/\texttt{-source}} The \Java version that should be assumed for the documentation.\footnote{For \texttt{javac}\index{javac}, the meanings of \mbox{\bsq{\texttt{-{}-source}}} and \mbox{\bsq{\texttt{-{}-release}}} are slightly different, but for \texttt{javadoc}\index{javadoc}, they can be seen as equivalent.}
+
+\paragraph{\texttt{-verbose}} Triggers additional output from the Javadoc\index{javadoc} tool.
  
 %==============================================================================
 % End of file!!

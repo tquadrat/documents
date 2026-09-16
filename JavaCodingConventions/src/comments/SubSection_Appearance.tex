@@ -1,0 +1,53 @@
+\subsection{Appearance Settings}\label{sec:AppearanceSettings}
+Finally, there are some command line option for the Javadoc\index{javadoc} tool that can be used to change the appearance of the generated documentation. In \nameref{sec:Locations} \hyperref[sec:Locations]{above}, we mentioned already the options \mbox{\bsq{\texttt{-{}-main-stylesheet}}} and \mbox{\bsq{\texttt{-{}-add-stylesheet}}} that replaces the default stylesheet or add additional CSS\index{CSS} stylesheets.
+
+To some extent does the options \mbox{\bsq{\texttt{-tag}}}, \mbox{\bsq{\texttt{-taglet}}} and \mbox{\bsq{\texttt{-tagletpath}}} (already discussed in chapter \tqfullvref{sec:CustomTagsForJavaDoc}) also belong to this category.
+
+With \mbox{\bsq{\texttt{-locale en\_GB}}} you set the language for the generated documentation to British English. The argument \mbox{\bdq{\texttt{en\_US}}} would set it to American English.
+
+The generated documentation should use the UTF-8 character set. This will be configured through the command line setting \mbox{\bsq{\texttt{-charset "utf-8"}}}. With \mbox{\bsq{\texttt{-docencoding "utf-8"}}} you set the encoding of the generated HTML\index{HTML} files also the UTF-8. If you set both \mbox{\bsq{\texttt{-charset}}} and \mbox{\bsq{\texttt{-docencoding}}}, they must have the same arguments.
+
+It is possible with the options \mbox{\bsq{\texttt{-header}}}, \mbox{\bsq{\texttt{-top}}} and \mbox{\bsq{\texttt{-bottom}}} to add text to each generated documentation page. All three take HTML\index{HTML} snippets as there arguments.
+
+The value that is provided for \mbox{\bsq{\texttt{-bottom}}} appears at the very bottom of each generated documentation page. This is used quite often for a copyright statement or something similar.
+
+The argument for \mbox{\bsq{\texttt{-top}}} is displayed on the very top of each generated page, even above the navigation bar. It can be used for a page header and may contain even a graphical logo.
+
+\mbox{\bsq{\texttt{-header}}} finally provides an argument that appears right from the navigation menu within the same coloured bar; it should be a short text, perhaps the project name or alike.
+
+The option \mbox{\bsq{\texttt{-windowtitle}}} allows to set a value for the HTML\index{HTML} \lstinline|<title>| tag; this value should be plain text (no HTML contents). It appears in the title bar of the browser window that shows the generated documentation, and it is used as the title for the browser bookmarks if not overwritten.
+
+Finally the option \mbox{\bsq{\texttt{-doctitle}}}; it provides the header section of the generated overview page (the first page that opens when you view the generated documentation). It can contain any HTML\index{HTML} code. But if you do not provide \mbox{\bsq{\texttt{-windowtitle}}}, it should be a plain text because in that case it is also used as the window title.
+
+\subsubsection{The Command Line Options}
+
+\paragraph{\texttt{-{}-add-stylesheet}} Provides the file name for an addition CSS\index{CSS} stylesheet.
+
+\paragraph{\texttt{-bottom}} Stuff that is shown at the very bottom of each generated page.
+
+\paragraph{\texttt{-charset}} Specifies the character set for the generated documentation.
+
+\paragraph{\texttt{-docencoding}} The encoding for the generated documentation.
+
+\paragraph{\texttt{-doctitle}} The header for the entry page.
+
+\paragraph{\texttt{-header}} Stuff that is shown at the navigation bar of each generated page.
+
+\paragraph{\texttt{-locale}} Sets the language for the generated documentation.
+
+\paragraph{\texttt{-{}-main-stylesheet}/\texttt{-stylesheetfile}} Provides the file for a CSS\index{CSS} stylesheet that replaces the default one.
+
+\paragraph{\texttt{-tag}} Refers to a custom tag.
+
+\paragraph{\texttt{-taglet}} Specifies the implementation of a custom tag.
+
+\paragraph{\texttt{-tagletpath}} Provides the \texttt{CLASSPATH} for the custom tag implemenations.
+
+\paragraph{\texttt{-top}} Stuff that is shown at the very top of each generated page, above the navigation bar.
+
+\paragraph{\texttt{-windowtitle}} The value for the HTML\index{HTML} \lstinline|<title>| tag.
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

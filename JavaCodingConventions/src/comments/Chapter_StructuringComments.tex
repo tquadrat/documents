@@ -1,34 +1,79 @@
 \chapter{Structuring Comments}\label{sec:StructuringComments}
-Structuring comments are the most simple comments: they are used to separate the parts of a class (as defined in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations}) from each other. They have the form
+Structuring comments basically help with navigating the source code, and therefore, they are the most simple type of comments. 
+
+First, we have the \bdq{headers} that we already described in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations}\footnote{Lines are ending at column~80, but to avoid a line break here, the samples are shortened.}:
 \begin{lstlisting}[numbers=left,stepnumber=3,firstnumber=2]
     /*------------------*\
-====** Enum Declaration **===========================================
+====** Enum Declaration **========================… …===================
     \*------------------*/
     /*---------------*\
-====** Inner Classes **==============================================
+====** Inner Classes **===========================… …===================
     \*---------------*/
     /*-----------*\
-====** Constants **==================================================
+====** Constants **===============================… …===================
     \*-----------*/
     /*------------*\
-====** Attributes **=================================================
+====** Attributes **==============================… …===================
     \*------------*/
     /*------------------------*\
-====** Static Initialisations **=====================================
+====** Static Initialisations **==================… …===================
     \*------------------------*/
     /*--------------*\
-====** Constructors **===============================================
+====** Constructors **============================… …===================
     \*--------------*/
     /*---------*\
-====** Methods **====================================================
+====** Methods **=================================… …===================
     \*---------*/
 \end{lstlisting}
 
-with the lines ending at column~80 (the samples here are shorter, to avoid a line break).
+They are used to separate the parts of a class from each other. If a class or interface does not have a particular part, the assigned structuring comment must be omitted.
 
-If a class or interface does not have a particular part, the assigned structuring comment must be omitted.
+Of course you can decide to use another format for structuring comments in your projects, but you should not forgo it. These \bdq{headings} significantly facilitate navigation within the source code.
 
-Of course you can decide to use another format for structuring comments in your projects, but you should not forgo it. These \bdq{headings} significantly facilitate navigation within the source code. 
+The other type of structuring comments are the \bdq{element end comments}, repeating the name of the element in a comment after the closing curly brace.
+
+For a type, that comment is in a line of its own and contains the kind of the type:
+
+\keeplisting{4}
+\begin{lstlisting}
+public final class MyClass
+{
+    …
+}
+//  class MyClass
+\end{lstlisting}
+\keeplisting{4}
+\begin{lstlisting}
+public final interface MyInterface
+{
+    …
+}
+//  interface MyInterface
+\end{lstlisting}
+\keeplisting{4}
+\begin{lstlisting}
+public final enum MyEnum
+{
+    …
+}
+//  enum MyEnum
+\end{lstlisting}
+
+For a method or a constructor, the comment follows on the same line as the closing curly brace:
+\keeplisting{3}
+\begin{lstlisting}
+public MyClass()
+{ 
+    … 
+}   //  MyClass()
+\end{lstlisting}
+\keeplisting{3}
+\begin{lstlisting}
+public final void MyMethod()
+{ 
+    … 
+}   //  MyMethod()
+\end{lstlisting}
 
 %==============================================================================
 % End of file!!

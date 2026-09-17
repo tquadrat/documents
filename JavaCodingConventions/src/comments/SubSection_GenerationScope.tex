@@ -4,16 +4,66 @@ The scope of the generated documentation depends on the type of product you have
 
 The table below shows the command line options that determine the volume of the generated documentation for the product types and audiences.
 
+\paragraph{\nameref{sec:FunctionLibrary}}\index{product type!function library}\
+
 \renewcommand{\cellalign}{tl}
-\LTXtable{\linewidth}{comments/Scope.tbl.tex}
+\LTXtable{\linewidth}{comments/Scope1.tbl.tex}
 
-For a function library\index{product type!function library}, the \bdq{users} are external developers that integrate that library into their product. That is slightly different for a feature library\index{product type!feature library}: the users will just add the library, while external developers dig deeper (admittedly, this distinction is rather arbitrary).
+For a function library\index{product type!function library}, the \bdq{users} are external developers that integrate that library into their product.
 
-For tools\index{product type!tool}, extensions\index{product type!extension}, standalone\index{product type!standalone application} and server-based applications\index{product type!server-based application}, no Javadoc\index{javadoc} documentation will be generated for the public. Only when a standalone application\index{product type!standalone application} allows customisation, it may make sense to generate a Javadoc\index{javadoc} documentation for the public API that can be used by external developers for the customisations.
+\paragraph{\nameref{sec:FeatureLibrary}}\index{product type!feature library}\
 
-Usually, all modules\index{module} on the module source path are documented. But if required (e.g. for a documentation targeted to an external audience) the modules\index{module} that should be part of the generated documentation can be explicitly listed with the command line option \mbox{\bsq{\texttt{-{}-module}}}; that allows to omit purely internal modules\index{module}.
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope2.tbl.tex}
 
-The \mbox{\bsq{\texttt{-version}}} option controls that the \bdq{\nameref{sec:TagVersion}} tags are included into the generated documentation.
+For a feature library\index{product type!feature library}, the users will just drop in the library into their product, using a different API than the external developers that dig deeper. Some library products have descriptive names for these different APIs, like \bdq{Porcelain} and \bdq{Plumbing} for the high-level and the low-level API.
+
+But of course it is possible that your feature library\index{product type!feature library} has just one API; in that case you have to decide whether your audience fits better into the \bdq{Users} or into the \bdq{External Developers} category.
+
+\paragraph{\nameref{sec:Tool}}\index{product type!tool}\
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope3.tbl.tex}
+
+A Javadoc\index{javadoc} documentation for the public is not generated for tools\index{product type!tool}.
+
+\paragraph{\nameref{sec:StandaloneApplication}}\index{product type!standalone application}\
+
+Standalone applications\index{product type!standalone application} exists basically in two different flavours. One flavour is an application that has to be used as is, without any option for the user to modify or enhance its behaviour. 
+
+The other flavour are applications that allow some customization based on Java. It means that there is a API or SPI that can be extended.
+
+While the first does not need a public Javadoc\index{javadoc} documentation (similar to a tool), it would make sense for the second one to generate a documentation for the API that should be used for the extension.
+
+Applications that provide an extension API based on another language (JavaScript\index{JavaScript} based on Nashorn\index{Nashorn} \autocite{Nashorn}, Jython\index{Jython} \autocite{Jython,Jython:GitHub}, or a proprietary DSL\index{DSL}) belong to the first category when it comes to the generation of a Javadoc\index{javadoc} documentation.
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope4.tbl.tex}
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope5.tbl.tex}
+
+\clearpage
+\paragraph{\nameref{sec:ServerbasedApplication}}\index{product type!server-base application}\
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope6.tbl.tex}
+
+Usually, no Javadoc\index{javadoc} documentation for an external audience is generated for  server-based applications\index{product type!server-based application}.
+
+\clearpage
+\paragraph{\nameref{sec:Extension}}\index{product type!extension}\
+
+\renewcommand{\cellalign}{tl}
+\LTXtable{\linewidth}{comments/Scope7.tbl.tex}
+
+Extensions\index{product type!extension} do not need a public Javadoc\index{javadoc} documentation.
+
+\paragraph{Other Settings}\
+
+All modules\index{module} on the module source path are documented usually. But if required (e.g. for a documentation targeted to an external audience) the modules\index{module} that should be part of the generated documentation can be explicitly listed with the command line option \mbox{\bsq{\texttt{-{}-module}}}; that allows to prevents the documentation for purely internal modules\index{module} from being published.
+
+The \mbox{\bsq{\texttt{-version}}} option controls that the \bdq{\nameref{sec:TagVersion}} tags are included into the generated documentation. It should be set always.
 
 \subsubsection{The Command Line Options}
 

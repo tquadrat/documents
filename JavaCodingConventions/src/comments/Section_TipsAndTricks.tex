@@ -54,7 +54,7 @@ This can be achieved in several ways, described below.
 
 \subsubsection{Plain HTML}\index{HTML}
 The fastest approach for embedding a code snippet into the generated documentation is to use the HTML\index{HTML} tags \bsq{\texttt{<pre>}} and \bsq{\texttt{<code>}} for it:
-\keeplisting{8}
+\keeplisting{6}
 \begin{lstlisting}[language=Comment]
  …
  *  <pre><code>public final String supplier()
@@ -67,7 +67,7 @@ The fastest approach for embedding a code snippet into the generated documentati
  …
 \end{lstlisting}
 
-That looks like this:
+In the generated documentation, that looks like this:
 \begin{center}
 	\includegraphics[scale=0.55]{comments/JavadocPreCode1}
 \end{center}
@@ -90,7 +90,7 @@ This is how the documentation of the \Java API does it:
  …
 \end{lstlisting}
 
-\keeplisting{9}
+\keeplisting{7}
 It allows to add line numbers to the code snippet:
 \begin{lstlisting}[language=Comment]
  …
@@ -106,7 +106,7 @@ It allows to add line numbers to the code snippet:
  …
 \end{lstlisting}
 
-This would be the result:
+This is how it is rendered into the generated documentation:
 \begin{center}
 	\includegraphics[scale=0.55]{comments/JavadocPreCode2}
 \end{center}
@@ -138,7 +138,7 @@ It also allows to embed the code snippet directly into the documentation comment
  …
 \end{lstlisting}
 
-The result looks like this\footnote{Compare this with the output from the \bdq{\{\nameref{sec:TagInclude}\}} tag on page \pageref{sec:TagInclude}.}:
+In the generated documentation, the result looks like this\footnote{Compare this with the output from the \bdq{\{\nameref{sec:TagInclude}\}} tag on page \pageref{sec:TagInclude}.}:
 \begin{center}
 	\includegraphics[scale=0.55]{comments/JavadocSnippet1}
 \end{center}

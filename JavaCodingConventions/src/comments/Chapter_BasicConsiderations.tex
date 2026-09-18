@@ -1,11 +1,7 @@
 \chapter{Some basic Considerations regarding Comments}
 Comments are crucial for the understanding of source code, in any programming language – not only in 6502\index{6502} assembly\index{assembly}. Source code without any comments is not maintainable, meaning it is worthless in the long run.
 
-The question is how much comments are needed, because the frequency of comments reflects poor quality of code. Unfortunately, code can be \bdq{under-commented} or \bdq{over-commented}, meaning there is a \bdq{frequency band} for comments that has to be hit for good quality code.
-
-A common requirement is that the code must be self-explaining; one often heard advice in this context is: \bdq{When you feel compelled to add a comment, consider rewriting the code to make it clearer.} But clearer to whom? Who is the audience for the code and the comments?
-
-In chapter \tqfullref{sec:Goals}, I included on page \pageref{par:ReadableCode} a few quotes that I would like to repeat here:
+A common requirement is that code must be self-explaining. In chapter \tqfullref{sec:Goals}, I included on page \pageref{par:ReadableCode} a few quotes that I would like to repeat here:
 
 \begin{quote}
 	\bdq{[…], programs must be written for people to read, and only incidentally for machines to execute.}\\
@@ -25,6 +21,37 @@ In chapter \tqfullref{sec:Goals}, I included on page \pageref{par:ReadableCode} 
 We are specifically unconcerned here with the amount of keyboarding that’s necessary to input or to edit a program. While concision may be a nice bonus for the author, focusing on it misses the main goal, which is to improve the understandability of the resulting program.'' \\
 	Stuart W. Marks: \textit{Local Variable Type Inference – Style Guidelines} \autocite{Marks:LocalVariableTypeInference:ReadingIsMoreImportantThanWriting}
 \end{quote}
+
+So we know now that human readers of a program are more important than the computer that will execute the code.
+
+But if the code is supposed to be self-explanatory, why do I still need comments? Short answer: because not everyone has the same understanding of the programming language! At the two extremes, you have rookies on one side and experts on the other – with a wide range of levels in between. Not to mention your own future self.
+
+Furthermore, comments should explain why the code is written the way it is rather than in another way. There is often more than one way to implement something, and a comment should clarify why that specific approach was chosen. This is particularly important when the obvious solution was not selected or when the chosen implementation deviates from established best practices.
+
+Comments will also provide information that the code contains only implicitely, or that it does not contain at all. These could be dependencies to external configurations or information about type and allowed values for parameters. This is generally grouped under the term \bdq{program documentation} – we will come back to this later.
+
+The question is how much comments are needed, because the frequency of comments reflects poor quality of code. Unfortunately, code can be \bdq{under-commented} or \bdq{over-commented}, meaning there is a \bdq{frequency band} for comments that has to be hit for good quality code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Implementation comments should help to understand the code.
+
+
+
+
+
+
+A common requirement is that the code must be self-explaining; one often heard advice in this context is: \bdq{When you feel compelled to add a comment, consider rewriting the code to make it clearer.} But clearer to whom? Who is the audience for the code and the comments?
 
 So we know now that human readers of a program are more important than the computer that will execute the code, but this does not answer the question regarding the intended audience sufficiently.
 
@@ -50,68 +77,6 @@ Although the documentation is part of the deliveries for a software product, it 
 On the other hand, the documentation should be as close to the code as possible.
 
 For Java source code it is possible that comments are part of or the source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
-
-\section{Kinds of Comments}
-\subsection{The Syntax}
-Syntactically, the \Java programming language knows the following types of comments:
-\begin{itemize}[nosep]
-	\item{Block Comments\index{block comment}}
-	\item{Single-line Comments\index{single-line comment}}
-	\item{Trailing or end-of-line Comments\index{trailing comment}}
-\end{itemize}
-
-A \textit{block comment}\pslabel{lbl:BlockComment}\index{block comment} is delimited by \bdq{\lstinline|/*|} and \bdq{\lstinline|*/|}, everything inbetween belongs to the comment. The indentation of the opening tag is aligned with the indentation of the surrounding code, and if the block comment spans multiple lines, the asterisk of the closing tag is aligned with the asterisk of the opening tag.
-
-For a multi-line block comment, no text will be placed to the lines with the opening and the closing tag, and usually, each comment line starts with an asterisk that is aligned with that of the opening tag.
-
-\keeplisting{5}
-This looks like shown below:
-\begin{lstlisting}
-/* A block-comment with just one line */
-
-/*
- * A multi-line block comment.
- */
-\end{lstlisting}
-
-Instead of a block comment\index{block comment} with just one line, you should preferably use a single-line comment\index{single-line comment}. But one-line block comments comes often handy when you have to place a comment into an otherwise empty code block.
-
-In Java, a \textit{single-line comment}\pslabel{lbl:SingleLineComment}\index{single-line comment} begins with \bdq{\lstinline|//|} and ends at the end of the line. This means it can be placed after a statement, in the same line.\footnote{A block comment also can start in the same line after a statement, but that is not recommended.}
-
-\keeplisting{7}
-I use single-line comments\index{single-line comment} mainly as headings, so I gave them a special format:
-\begin{lstlisting}
-//---* A heading *---------------------------------------------------
-…
-
-//---* Done! *-------------------------------------------------------
-return;
-\end{lstlisting}
-
-Longer comments should be placed always into a block comment\index{block comment} instead of spanning it over multiple single-line comments\index{single-line comment}. 
-
-\keeplisting{2}
-A trailing comment is technically a single-line comment that is placed after a statement in the same line:
-\begin{lstlisting}
-final var localVariable; // Short description of localVariable
-\end{lstlisting}
-
-\subsection{The Semantics}
-Semantically, Java source code can have generally four kinds of comments:
-\begin{itemize}[nosep]
-	\item{Documentation Comments}
-	\item{Implementation Comments}
-	\item{Maintenance Comments}
-	\item{Structuring Comments}
-\end{itemize}
-
-In Java, the \textit{documentation comments} (also known as \bdq{doc comments} or \bdq{the Javadoc}) will be externalised for the generation of the program/library documentation by the Javadoc\index{javadoc} tool\footnote{As already said above, this is covered in \tqfullref{sec:DocumentationComments}.}. Obviously, \textit{implementation comments} are the other comments, that are not externalized and published.
-
-Roughly, the documentation comments describe how to use the code (the API), unrelated to the implementation, while the implementation comments describe what the code is doing and why.
-
-\textit{Maintenance comments} are technically a special form of implementation comments, but as they have a special function, they are covered separately in chapter \tqfullvref{sec:MaintenanceComments}.
-
-The structuring comments are already covered in chapter \tqfullvref{sec:ClassAndInterfaceDeclarations} when the skeletons for the various kinds of compilation units\index{compilation unit} where discussed.
 
 \section{General Rules}
 Before we dive deeper into the details, here are a few ground rules that apply to all comments:

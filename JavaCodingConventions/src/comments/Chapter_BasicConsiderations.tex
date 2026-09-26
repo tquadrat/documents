@@ -28,10 +28,174 @@ But if the code is supposed to be self-explanatory, why do I still need comments
 
 Furthermore, comments should explain why the code is written the way it is rather than in another way. There is often more than one way to implement something, and a comment should clarify why that specific approach was chosen. This is particularly important when the obvious solution was not selected or when the chosen implementation deviates from established best practices.
 
+This is the purpose of the implementation comments; they should help to understand the code, and in a way, they also serve to structure the source code.
+
 Comments will also provide information that the code contains only implicitely, or that it does not contain at all. These could be dependencies to external configurations or information about type and allowed values for parameters. This is generally grouped under the term \bdq{program documentation} – we will come back to this later.
+
+Then comments can help navigate the source code. This is the role of structuring comments.
+
+Finally, maintenance comments indicate where the original source code had been modified later.
 
 The question is how much comments are needed, because the frequency of comments reflects poor quality of code. Unfortunately, code can be \bdq{under-commented} or \bdq{over-commented}, meaning there is a \bdq{frequency band} for comments that has to be hit for good quality code.
 
+It should be obvious that this only affects the implementation comments; the use of the other types are determined by strict rules.
+
+So we need to answer the question: when do we have to add an implementation comment to our source code?\pslabel{sec:CommentsWhen}
+
+As code must explain itself, there is one often heard advice in this context is: \bdq{When you feel compelled to add a comment, consider rewriting the code to make it clearer.} But clearer to whom? Who is the audience for the code and the comments?
+
+We know already that human readers of a program are more important than the computer that will execute the code, but this does not answer the question regarding the intended audience.
+
+Assume that you have to iterate over the lines in a file. Empty lines should be ignored, same as lines starting with a hash symbol. All other lines will be printed to the console, prefixed by a line number.
+
+\keeplisting{30}
+A rookie may solve this like below:
+\index{java.io!IOException}\index{java.io!File}\index{java.io!FileInputStream}\index{java.io!InputStreamReader}\index{java.io!BufferedReader}\index{java.io!BufferedReader!readLine()}\index{java.util!Objects!nonNull()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!System!out}\index{java.io!PrintStream!print()}\index{java.io!PrintStream!println()}
+\begin{lstlisting}
+public final void parseFile() throws IOException
+{
+    final var file = new File( "./input.file" );
+    final var inputStream = new FileInputStream( file );
+    final var streamReader = new InputStreamReader( inputStream );
+    final var reader = new BufferedReader( streamReader );
+
+    var LineNumber = 0; // The line counter.
+    
+    /*
+     * Read the first line of the file. If it is null, the file is
+     * empty, otherwise parse that line.
+     */
+    var line = reader.readLine();
+    while( nonNull( line ) )
+    {
+        /*
+         * A line is considered empty if it contains whitespace only.
+         * When starting with a #, it should be ignored, too.
+         */
+        if( !line.isBlank() && !line.startsWith( "#" ) )
+        {
+            /*
+             * Increase the line number.
+             */
+            lineNumber = lineNumber + 1;
+            
+            /*
+             * Print the line number and a spacer.
+             */
+            out.print( lineNumber + " - " );
+            
+            /*
+             * Print a valid line.
+             */
+            out.println( line );
+        }
+(|\clearpage|)        
+        /*
+         * Read the next line.
+         */
+        line = reader.readLine();
+    }
+}   //  parseFile()  
+\end{lstlisting}
+
+With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments, and use some shortcuts.
+
+\keeplisting{14}
+An intermediate's version of the code may look like this:
+\index{java.io!IOException}\index{java.io!File}\index{java.io!FileInputStream}\index{java.io!FileReader}\index{java.io!BufferedReader}\index{java.io!BufferedReader!readAllLine()}\index{java.util!Objects!nonNull()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!System!out}\index{java.io!PrintStream!printf()}
+\begin{lstlisting}
+public final void parseFile() throws IOException
+{
+    final var file = new File( "./input.file" );
+    final var reader = new BufferedReader( new FileReader( file ) );
+
+    var lineNumber = 0;
+
+    final var lines = reader.readAllLines();
+    for( final var line : lines )
+    {
+        if( !line.isBlank() && !line.startsWith( "#" ) )
+        {
+            out.printf( "%d - %s%n", ++lineNumber, line );
+        }
+    }
+}   //  parseFile()  
+\end{lstlisting}
+
+It is using a method that returns all lines at once into a \lstinline|List| instance and runs an enhanced \lstinline|for|\index{for!enhanced} loop.
+
+\keeplisting{9}
+And the most sophisticated (?) version is this:
+\index{java.io!IOException}\index{java.util.concurrent.atomic!AtomicInteger}\index{java.util.concurrent.atomic!AtomicInteger!incrementAndGet()}\index{java.nio.files!Path}\index{java.nio.files!Files!lines()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!map()}\index{java.util.function!Predicate!not()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!formatted()}\index{java.util.stream!Stream!forEach()}\index{java.lang!System!out}\index{java.io!PrintStream!println()}
+\begin{lstlisting}
+public final void parseFile() throws IOException
+{
+    final var lineNumber = new AtomicInteger( 0 );
+    lines( Path.of( ".", "input.file" ) )
+        .filter( not( String::isBlank ) )
+        .filter( l -> !l.startsWith( "#" ) )
+        .map( l -> "%d - %s".formatted( lineNumber.incrementAndGet(), l ) )
+        .forEach( out::println );
+}   //  parseFile()  
+\end{lstlisting}
+
+Do you need comments to understand this version?
+
+If you are familiar with the Stream API, the code should be understandable even without comments. The only potentially surprising aspect is the use of \lstinline|AtomicInteger|\index{java.util.concurrent.atomic!AtomicInteger} instead of a simple \lstinline|int|. This is because only final variables may be referenced within a lambda. But does this require a comment? Or at least justifies one?
+
+\keeplisting{6}
+What about this version?
+\index{java.io!IOException}\index{java.nio.files!Path}\index{java.nio.files!Files!lines()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!iterate()}\index{java.util.function!Predicate!not()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!formatted()}\index{java.util.stream!Stream!forEach()}\index{java.lang!System!out}\index{java.io!PrintStream!println()}\index{org.tquadrat.foundation.stream!StreamUtils!zip()}
+\begin{lstlisting}
+public final void parseFile() throws IOException
+{
+    zip( 
+        lines( Path.of( ".", "input.file" ) )
+            .filter( not( String::isBlank ) )
+            .filter( l -> !l.startsWith( "#" ) ),
+        Stream.<Integer>iterate( 1, i -> ++i ),
+        (l,i) -> "%d - %s".formatted( i, l ) 
+    ).forEach( out::println );
+}   //  parseFile()  
+\end{lstlisting}
+
+Confessed, the method
+\index{org.tquadrat.foundation.stream!StreamUtils!zip()}
+\begin{lstlisting}[numbers=none]
+public static <L,R,O> Stream<O> zip( final BaseStream<L,Stream<L>> lefts, final BaseStream<R,Stream<R>> rights, final BiFunction<L,R,O> combiner )
+\end{lstlisting} 
+\autocite{TQUADRAT_ORG_FOUNDATION_STREAMUTILS:zip}
+is not part of the \Java Runtime Library, but with some experience, it is possible to understand how the code works.
+
+We do not want to discuss here which version is the best, fastest, most stable or whatever one.
+
+The question was: would you as the author of one of these consider to rephrase the code because you think a comment would be necessary to understand your initial version of the code?
+
+Probably not, because from your point of view the code was quite understandable – you aren't a rookie!
+
+And in the vast majority of cases, the reason for using the more sophisticated implementation is not simply that the programmer wants to show off how clever they are. Often, these implementations are genuinely faster, require less memory, or are easier for the runtime environment to optimize.
+
+But if you are a rookie, you would definitely appreciate some comments that help to understand the code, at least for the last version.
+
+\keeplisting{10}
+Perhaps writing the code like this should help already – still without a comment:
+\index{java.io!IOException}\index{java.nio.files!Path}\index{java.nio.files!Files!lines()}\index{java.util.stream!Stream!filter()}\index{java.util.stream!Stream!iterate()}\index{java.util.function!Predicate!not()}\index{java.lang!String!isBlank()}\index{java.lang!String!startsWith()}\index{java.lang!String!formatted()}\index{java.util.stream!Stream!forEach()}\index{java.lang!System!out}\index{java.io!PrintStream!println()}\index{org.tquadrat.foundation.stream!StreamUtils!zip()}
+\begin{lstlisting}
+public final void parseFile() throws IOException
+{
+    final var lines = lines( Path.of( ".", "input.file" ) )
+        .filter( not( String::isBlank ) )
+        .filter( l -> !l.startsWith( "#" ) );
+    final var lineNumbers = Stream.<Integer>iterate( 1, i -> ++i );
+    final BiFunction<String,Integer,String> combiner = (l,i) -> "%d - %s".formatted( i, l );
+    zip( lines, lineNumbers, combiner )
+        .forEach( out::println );
+}   //  parseFile()  
+\end{lstlisting}
+
+Another, often heard advice is: \bdq{Even if you think, a comment is not necessary, add it nevertheless}.
+
+This is the other extrema, and raises the same question about the audience, although with a slightly different focus.
 
 
 
@@ -41,23 +205,9 @@ The question is how much comments are needed, because the frequency of comments 
 
 
 
+ – with the result, that newbies do not have any help to understand the code written by the experts.
 
-
-
-Implementation comments should help to understand the code.
-
-
-
-
-
-
-A common requirement is that the code must be self-explaining; one often heard advice in this context is: \bdq{When you feel compelled to add a comment, consider rewriting the code to make it clearer.} But clearer to whom? Who is the audience for the code and the comments?
-
-So we know now that human readers of a program are more important than the computer that will execute the code, but this does not answer the question regarding the intended audience sufficiently.
-
-With increasing programming experience, things get more and more obvious to the programmers, so they write lesser comments – with the result, that newbies do not have any help to understand the code written by the experts.
-
-Obviously, the advice: \bdq{Even if you think, a comment is not be necessary, add it nevertheless} is the other extrema – and equally bad than the first advice, mentioned above!
+Obviously, the advice is the other extrema – and equally bad than the first advice, mentioned above!
 
 Consequently it means that writing proper comments remains a complex art, but it follows some rules, and for the rest, I will try to give some advice.
 

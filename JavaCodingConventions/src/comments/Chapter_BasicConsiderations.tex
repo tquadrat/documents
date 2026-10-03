@@ -196,41 +196,34 @@ public final void parseFile() throws IOException
 Another, often heard advice is: \bdq{Even if you think, a comment is not necessary, add it nevertheless}.
 
 This is the other extreme, raising the same question regarding the audience—albeit with a slightly different focus: the programmer must now decide which hat to wear when writing the comment.
-If the comment is understandable even to a five-year-old, it is likely too verbose for a rookie. Alternatively, the comment might simply duplicate the code, rendering it superfluous.
 
+If the comment is understandable even to a five-year-old, it is likely too verbose even for a rookie. Or the comment simply duplicates the code, rendering it superfluous as well.
 
+I have summarized my recommendations regarding when implementation comments should be added and what they should contain in the chapter \tqfullref{sec:ImplementationComments} below.
 
-
-
-
-
- – with the result, that newbies do not have any help to understand the code written by the experts.
-
-Obviously, the advice is the other extrema – and equally bad than the first advice, mentioned above!
-
-Consequently it means that writing proper comments remains a complex art, but it follows some rules, and for the rest, I will try to give some advice.
-
-First, comments have to support the readability of source code. They can do this by structuring the source code into sections and by providing hints on how to interpret the code.
-
-Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
-
-The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is already present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
-
-And finally, comments should be in full sentence and using a clear language. They have to be in English language\footnote{Of course you can decide for any other language as well, but we already discussed in \tqfullvref{sec:Language} why English is preferred}, and they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.
-
-But the final answer regarding the audience is still missing; I will discuss this further in \tqfullvref{sec:CommentsWhen}.
-
-\section{Documentation}
+\section{Comments and Documentation}
 Although the documentation is part of the deliveries for a software product, it is usually not part of the code itself.
 
 On the other hand, the documentation should be as close to the code as possible.
 
-For Java source code it is possible that comments are part of or the source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
+For Java source code it is possible that the contained comments are part of or the only source for the external documentation of that code. This is covered in \tqfullvref{sec:DocumentationComments}.
 
 \section{General Rules}
 Before we dive deeper into the details, here are a few ground rules that apply to all comments:
 \begin{itemize}
-	\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters, with the exception of structuring comments as described in \tqfullref{sec:FileStructure} and \tqfullref{sec:StructuringComments}.}
+	\item{Comments should not be enclosed in large boxes drawn with asterisks or other characters (usually referred to as \bdq{ASCII art}\index{ASCII art}), with the exception of structuring comments as described in \tqfullref{sec:FileStructure} and \tqfullref{sec:StructuringComments}.
+	
+	The asterisk that is used with \hyperref[sec:BlockComments]{block comments}\index{block comment} to prefix a new line is so well established that some people even think that it is part of the syntax – meaning it is not seen as \bdq{ASCII art}\index{ASCII art} at all.}
+	
+	\item{Remove comments only when you also remove the associated code.
+	
+	If a comment is obviously wrong, fix it. You can do this either by replacing the wrong part, or by adding a correction statement to the original comment.}
+	
+	\item{Feel free to enhance a comment at any time! When it helps you to understand the code better, it probably will help someone else as well.
+	
+	This means also that you should consider to add new comments to the code where it seems appropriate.}
+	
+	\item{Comments must be in full sentences and they must using a clear language. They have to be in English language\footnote{Of course you can decide for any other language as well, but we already discussed in \tqfullvref{sec:Language} why English is preferred}, and they should be grammatically correct and without typos.\footnote{…~but it is still much more important that there is at least \textit{some} comment than a correctly spelled one.} This improves readability and helps to avoid misunderstandings.}
 
 	\item{Comments should never include control characters such as tabulator, form-feed and backspace or alike. In Javadoc\index{javadoc} comments only (see \hyperref[sec:DocumentationComments]{below}), most non-ASCII\index{ASCII} characters should be escaped with their HTML\index{HTML} equivalent.}
 

@@ -3,7 +3,7 @@ In Java, classes\index{class}, interfaces\index{interface}, enums\index{enum}, r
 
 According to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}, several special characters are allowed also for class names, but this coding convention forbids them – even the underscore (“\_”)! Especially the dollar sign (“\$”) can cause serious issues as this is used internally for the names of inner\index{inner class|see {class}}\index{class!inner class} and anynomous classes\index{anonymous class|see {class}}\index{class!anonymous class}, as well as for the classes that will be generared for lambdas\index{lambda}.
 
-As numerical characters should also be avoided in class names, the rule is that a class name consists from uppercase and lowercase ASCII letters only.
+As numerical characters should also be avoided in class names, the rule is that a class name consists from uppercase and lowercase ASCII\index{ASCII} letters only.
 
 %------------------------------------------------------------------------------
 
@@ -52,8 +52,11 @@ Annotations\index{annotation} are a special type of an interface, distinguished 
 
 \begin{itemize}[nosep]
 	\item{\lstinline|@Text| \autocite{TQUADRAT_ORG_FOUNDATION_TEXT}}
+	
 	\item{\lstinline|@Translation| \autocite{TQUADRAT_ORG_FOUNDATION_TRANSLATION}}
+	
 	\item{\lstinline|@Generated| \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
+	
 	\item{\lstinline|@Deprecated| \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION}}
 \end{itemize}
 
@@ -61,12 +64,17 @@ Annotations\index{annotation} are a special type of an interface, distinguished 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 	\item{A class\index{class} name is written in \textit{CamelCase}, with the first letter capitalized.}
+	
 	\item{Use whole words, mainly nouns.
 	
 	Acronyms and abbreviations must be avoided. Only abbreviations that are better known than the long form might be acceptable.}
-	\item{Use only ASCII letters for the name.}
+	
+	\item{Use only ASCII\index{ASCII} letters for the name.}
+	
 	\item{No prefix for the name of an interface\index{interface}.}
+	
 	\item{The name for an \lstinline|enum|\index{enum} has to be the singular form, not plural.}
+	
 	\item{\texttt{Record} must not be part of the name for a \lstinline|record|\index{record} class.}
 \end{enumerate}
 

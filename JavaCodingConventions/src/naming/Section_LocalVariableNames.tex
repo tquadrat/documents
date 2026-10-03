@@ -1,8 +1,8 @@
 \section{Local Variable Names}\label{sec:NamesForLocalVariables}
 \subsection{Names for Local Variables}
-The identifiers for local variables have to be in \textit{camelCase}, with a lowercase first letter. Internal words start with capital letters, as already described in \tqvref{sec:CaseOfNames}. The names should contain neither the underscore (“\verb#_#”) nor any other special characters or non-ASCII letters, although allowed according to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, otherwise they are allowed as additional characters. But they should be used with care and only were necessary.
+The identifiers for local variables have to be in \textit{camelCase}, with a lowercase first letter. Internal words start with capital letters, as already described in \tqvref{sec:CaseOfNames}. The names should contain neither the underscore (\bdq{\texttt{\_}}) nor any other special characters or non-ASCII\index{ASCII} letters, although allowed according to \jls \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Identifiers}; they also should not start with those characters. Digits are forbidden as first characters already by the language specification, otherwise they are allowed as additional characters. But they should be used with care and only were necessary.
 
-Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit '\verb#4#' as replacement for the word “\verb#for#”, and '\verb#2#' for the word “\verb#to#” is acceptable, yet not really recommended.
+Variable names should be short yet meaningful – with a clear priority on being meaningful. The choice of a variable name should be mnemonic – that is, designed to indicate the intent of its use to the casual observer. As for class names, abbreviations and acronyms should be avoided. Using the digit \bsq{\texttt{4}} as replacement for the word \bdq{\texttt{for}}, and \bsq{\texttt{2}} for the word \bdq{\texttt{to}} is acceptable, yet not really recommended.
 
 Do not (never!) use a prefix to indicate the type of a variable (a practice known as \bsq{Hungarian Notation}\index{Hungarian Notation} \autocite{WIKIPEDIA:Hungarian_notation,Jack:HungarianNotation})! \Java is a strongly typed language and the compiler will take care that variables are only used according to their types.\footnote{While the use of the Hungarian Notation\index{Hungarian Notation} – in particular the \bsq{Systems Hungarian} variant – for the naming of variables is discouraged for strongly typed languages like Java, Scala\index{Scala} or \mbox{C++}\index{C++}, because it does not provide any benefit, this may be different for languages like PHP\index{PHP}, Python\index{Python}, C\index{C}, JavaScript\index{JavaScript} or even Groovy\index{Groovy}: for these languages the type prefix may help the programmers to assign the semantically correct type to a variable when syntactically any (or most) types are correct.}
 
@@ -29,7 +29,7 @@ for( final Component value : values )
 }    
 \end{lstlisting}
 
-Using the name of the type for the variable (with a lower case first letter, of course) for the name of a local variable name is completely acceptable in case this is sufficient to explain the function of the variable; but prefixes like “\verb#my#” or “\verb#the#” must be avoided. And not all types are truly suitable as names for local variables; the best example of an unsuitable type is \lstinline|String|\index{java.lang!String}.
+Using the name of the type for the variable (with a lower case first letter, of course) for the name of a local variable name is completely acceptable in case this is sufficient to explain the function of the variable; but prefixes like \bdq{\texttt{my}} or \bdq{\texttt{the}} must be avoided. And not all types are truly suitable as names for local variables; the best example of an unsuitable type is \lstinline|String|\index{java.lang!String}.
 \keeplisting{9}
 \begin{lstlisting}
 // RECOMMENDED
@@ -67,7 +67,7 @@ public final String retrieveMessage( final String string,  final String... strin
 }   //  retrieveMessage()
 \end{lstlisting}
 
-Sometimes it is also a good idea to use the type name as a suffix or prefix for the name of the local variable, especially if the current block declares more than one variable of the respective type. In such a case, the rest of the name could be used to indicate how variables belong together or what they distinguishes them from each other.
+Sometimes it is also a good idea to use the type name\footnote{The full type name, not an abbreviated form, as for the Hungarian Notation\index{Hungarian Notation}.} as a suffix or prefix for the name of the local variable, especially if the current block declares more than one variable of the respective type. In such a case, the rest of the name could be used to indicate how variables belong together or what they distinguishes them from each other.
 \keeplisting{8}
 \begin{lstlisting}
 public final ResultData loadData( Connection connection, … )

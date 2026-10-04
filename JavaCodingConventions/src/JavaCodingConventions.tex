@@ -3183,37 +3183,37 @@ But it is a valuable addition to our tool box that complements inheritance.
 %------------------------------------------------------------------------------
 
 \section{Method Signatures}\label{sec:MethodSignatures}
-The question how to define the signature of a method or constructor is important not only for a public API; doing it right helps with building better readable code in general.
+The question how to define the signature\index{signature} of a method or constructor is important not only for a public API; doing it right helps with building better readable code in general.
 
-At first you need to understand what the ‘method signature’ is in Java; it is what identifies a method and distinguishes it from another.
+At first you need to understand what the \bsq{method signature}\index{signature} is in Java; it is what identifies a method and distinguishes it from another.
 
-In Java, the method signature is the name of the method plus the sequence of the types of formal parameters for that method. Neither the names of the formal parameters nor the return type nor any declared exceptions are part of the signature. This reflects in the method \lstinline|Class::getMethod|\autocite{ORACLE_DOC_CLASS:getMethod,ORACLE_DOC_CLASS:getDeclaredMethod}\index{java.lang!Class!getMethod()}\index{java.lang!Class!getDeclaredMethod()} that takes just the method name and a list of \lstinline|Class|\index{java.lang!Class} instances as arguments to identify a method inside a class.
+In Java, the method signature\index{signature} is the name of the method plus the sequence of the types of formal parameters for that method. Neither the names of the formal parameters nor the return type nor any declared exceptions are part of the signature\index{signature}. This reflects in the method \lstinline|Class::getMethod|\autocite{ORACLE_DOC_CLASS:getMethod,ORACLE_DOC_CLASS:getDeclaredMethod}\index{java.lang!Class!getMethod()}\index{java.lang!Class!getDeclaredMethod()} that takes just the method name and a list of \lstinline|Class|\index{java.lang!Class} instances as arguments to identify a method inside a class.
 
 %\subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{The selected name for a method has to be meaningful.
+	\item{The selected name for a method has to be meaningful.
 
-For more details on this, refer to \ref{princ:NamingConventions:MeaningfulNames} in chapter \tqfullref{sec:NamingConventions}, and to chapter \tqfullref{sec:NamesForMethods} that exhausts the topic regarding the naming of methods.}
+	For more details on this, refer to \ref{princ:NamingConventions:MeaningfulNames} in chapter \tqfullref{sec:NamingConventions}, and to chapter \tqfullref{sec:NamesForMethods} that exhausts the topic regarding the naming of methods.}
 
-\item{The type for an argument should be as general as possible.
+	\item{The type for an argument should be as general as possible.
 
 That type from a class hierarchy, that provides exact all required functionality, has to be chosen as the type for the argument.}\label{princ:MethodSignatures:General}
 
-\item{An argument should be as specific as possible.
+	\item{An argument should be as specific as possible.
 
 At a first glance this seems to contradict \ref{princ:MethodSignatures:General}, but as that refers to the general type only, does this principle refers also to the value. It means that you should prefer to provide the object itself instead of a key to it, or its string representation.
 
 In this context, \ref{princ:MethodSignatures:NoCast} is important, too.}
 
-\item{Do not cast the provided argument value.
+	\item{Do not cast the provided argument value.
 
 If you need to cast the given argument value, you have most probably chosen the wrong argument type, although there are exceptions to the rule – especially if you have to implement an interface or to override a method from a foreign class. \lstinline|Object::equals| is a good sample for such an exception to this rule.}\label{princ:MethodSignatures:NoCast}
 
-\item{Keep the parameters list short.
+	\item{Keep the parameters list short.
 
 Method calls with a long list of arguments are difficult to read and to understand, and they are error prone.}
 
-\item{Avoid to have multiple arguments with the same type on the parameters list.
+	\item{Avoid to have multiple arguments with the same type on the parameters list.
 
 This is also error prone and may cause errors that are really nasty to debug.}
 \end{enumerate}
@@ -3398,7 +3398,7 @@ final var parts = splitString( buffer.toString() );
 Of course, there will be always methods that will be called only with \lstinline|String| instances as the arguments, and  never with an instance of \lstinline|CharBuffer|\autocite{ORACLE_DOC_CHARBUFFER_CLASS} or \lstinline|StringBuilder|\autocite{ORACLE_DOC_STRINGBUILDER_CLASS}, just because of the context they are defined in. Then it does not make any sense at all to define the formal parameter as \lstinline|CharSequence|.
 
 \subsection{\lstinline|boolean| Arguments}\label{sec:BooleanArguments}
-You should avoid method or constructor signatures that have formal parameters of type \lstinline|boolean|\index{boolean} or \lstinline|java.lang.Boolean|\index{java.lang!Boolean}. A single flag for a setter is acceptable, but something like the constructor below will cause issues:
+You should avoid method or constructor signatures\index{signature} that have formal parameters of type \lstinline|boolean|\index{boolean} or \lstinline|java.lang.Boolean|\index{java.lang!Boolean}. A single flag for a setter is acceptable, but something like the constructor below will cause issues:
 \begin{lstlisting}[numbers=left]
 public final MyClass
 {
@@ -3560,9 +3560,9 @@ public final MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Multiple Parameters with same Type}\label{sec:MultipleSameTypeArgs}
-Chapter \tqref{sec:BooleanArguments} describes the problem that multiple \lstinline|boolean| parameters can cause in a method or constructor signature.
+Chapter \tqref{sec:BooleanArguments} describes the problem that multiple \lstinline|boolean| parameters can cause in a method or constructor signature\index{signature}.
 
-It should be obvious that long parameter lists with only \lstinline|int|, \lstinline|String| or \lstinline|MyClass| arguments (or whatever else~…) will cause the same kind of problems. Therefore you should avoid that kind of signature declarations.
+It should be obvious that long parameter lists with only \lstinline|int|, \lstinline|String| or \lstinline|MyClass| arguments (or whatever else~…) will cause the same kind of problems. Therefore you should avoid that kind of signature\index{signature} declarations.
 
 Unfortunately, the solution is not that simple as for \lstinline|boolean| arguments.
 
@@ -3608,12 +3608,12 @@ public void assignDataType( final JDBCType type );
 \end{lstlisting}
 the valid arguments are limited to the values in the enum class, and the argument validation can be reduced to a simple \lstinline|null| check. The compiler will reliably protect you from using an invalid data type~…
 
-But it also it helps to protect your code from other bugs; assume a method with the following method signature:
+But it also it helps to protect your code from other bugs; assume a method with the following method signature\index{signature}
 \begin{lstlisting}
 public void assignDataTypeToColumn( final int type, final int columnIndex )
 {
     …
-}	//	assignDataTypeToColumn()
+}   //  assignDataTypeToColumn()
 \end{lstlisting}
 
 The compiler will not complain about this method invocation:
@@ -3676,9 +3676,9 @@ Value types and domain value types are covered in more detail in chapter \tqvref
 %------------------------------------------------------------------------------
 
 \subsection{Arrays and \lstinline|varargs| as Arguments}
-The signatures \lstinline|myMethod( final String... args )| (using \verb#vararg#) and \lstinline|myMethod( final String [] args )| are basically the same. There is only a difference on how to call a method with one or the other signature.
+The signatures\index{signature} \lstinline|myMethod( final String... args )| (using \verb#vararg#) and \lstinline|myMethod( final String [] args )| are basically the same. There is only a difference on how to call a method with one or the other signature\index{signature}.
 
-The only option for the call to the variant with the array argument signature looks like this:
+The only option for the call to the variant with the array argument signature\index{signature} looks like this:
 \begin{lstlisting}
 public final void myMethod( final String [] args ) { … }
 
@@ -3700,7 +3700,7 @@ myMethod( args );
 myMethod( "value1", "value2", … );
 \end{lstlisting}
 
-The only other difference is that a \verb#vararg# has to be the last formal parameter in a method or constructor signature, while a mere array argument can be anywhere on the parameters list.
+The only other difference is that a \verb#vararg# has to be the last formal parameter in a method or constructor signature\index{signature}, while a mere array argument can be anywhere on the parameters list.
 
 Internally, the arguments are represented as arrays in both cases; this means, the body would look identically irrespectively the kind of the formal parameter.
 
@@ -4923,7 +4923,7 @@ public final class CardboardBox
 //  class CardboardBox
 \end{lstlisting}
 
-Again, the signature of the constructor contains multiple formal parameters of the same type, but we solved the problem here by rearranging them in the body of the constructor.
+Again, the signature\index{signature} of the constructor contains multiple formal parameters of the same type, but we solved the problem here by rearranging them in the body of the constructor.
 
 The real issue with this constructor is different: from the code, we cannot see how large a cardboard box is~… The instance that you create with
 \begin{lstlisting}
@@ -8211,7 +8211,7 @@ public UnchainedConstructors2( String [] text )
 
 According to the language specification, the call to this() has to be the very first statement of the constructor. This is the same as for the call to the super constructor with super().
 
-The issue is solved like shown below. Instead of repeating the initialisation steps that are necessary for each constructor, they are placed in an additional constructor with a different (usually shorter) signature, named the “common constructor” (and in this example, it is also the default constructor, but this is not always the case).
+The issue is solved like shown below. Instead of repeating the initialisation steps that are necessary for each constructor, they are placed in an additional constructor with a different (usually shorter) signature\index{signature}, named the “common constructor” (and in this example, it is also the default constructor, but this is not always the case).
 \begin{lstlisting}[numbers=left]
 public class ChainedConstructors2
 {

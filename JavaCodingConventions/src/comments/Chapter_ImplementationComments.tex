@@ -4,7 +4,7 @@ Implementation comments should help to understand the code. This can be achieved
 \section{Comments to organize the Code}
 When I started to learn programming, our teachers encouraged us to start with flow diagrams and alike, to sketch out the basic structure of the program that was refined in the later steps.
 
-Later this sketching out was already done as \bdq{source code}, so that the first \bdq{version} of a program (or method\index{method}/function\index{function} looked like this (here for the C\index{C} programming language):
+Later this sketching out was already done as \bdq{source code}, so that the first \bdq{version} of a program (or method\index{method}/function\index{function}) looked like this (here for the C\index{C} programming language):
 \keeplisting{14}
 \begin{lstlisting}[language=C]
 int main( int argc, char *argv[] )
@@ -27,7 +27,7 @@ int main( int argc, char *argv[] )
 
 This compiles well, but does obviously nothing~…
 
-As the code is further refined, certain steps are moved into separate methods or functions. Nevertheless, I leave the corresponding comment in the code, even though it is no longer strictly necessary.
+As the code is further refined, certain steps are moved into separate methods or functions. Nevertheless, I leave the corresponding comment in the code, even though it is no longer strictly necessary. Among other things, it helps during development to keep track what is still needed.
 
 %------------------------------------------------------------------------------
 
@@ -142,7 +142,57 @@ Providing a comment for local variables makes sense here because I used the orig
 %------------------------------------------------------------------------------
 
 \section{Comments for Method Arguments}\label{sec:MethodArgumentComments}
-The name for a variable should explain the function of that variable in the given context (refer to chapter \tqfullvref{sec:NamesForLocalVariables}), and for short sequences of code, that meaning can be easily deducted from the context. Consequently it should not be required to write comments for local variable (different from the parameters of a method – see \tqfullvref{sec:MethodParameterComments}). Nevertheless, sometimes it makes sense to provide that kind of additional information.
+Chapter \tqvref{sec:MethodSignatures} discusses how the signature\index{signature} for a method\index{method} or a constructor\index{constructor} should be designed. The key requirements are:
+\begin{itemize}[nosep]
+	\item{Keep the parameter list short!}
+	\item{Avoid (more than one) boolean parameters! See page \pageref{sec:BooleanArguments}.}
+	\item{Avoid (too many) parameters of the same type! See page \pageref{sec:MultipleSameTypeArgs}.}
+\end{itemize}
+
+These requirements are often difficult – or sometimes even impossible – to meet. Furthermore, methods\index{method} or constructors\index{constructor} with excessively long or overly complex parameter lists are frequently found in 3\textsuperscript{rd} party libraries.
+
+Coding the call to these methods\index{method} or constructors\index{constructor} are inherently error prone because mixing up two arguments or missing one can go undetected by the compiler.
+
+In such cases, it makes perfect sense to add comments to the arguments. This will of course not help the compiler, but it documents the developer's intention and helps to fix the error.\footnote{Here it would help if \Java would support named arguments.}
+
+\keeplisting{12}
+Assume the following method declaration:
+\begin{lstlisting}
+/**
+ *  <p>{@summary Draws a circle on the canvas.}</p>
+ *
+ *  @param  x   The {@code x} coordinate for the center of the circle.
+ *  @param  y   The {@code y} coordinate for the center of the circle.
+ *  @param  radius  The radius of the circle.
+ */
+public final void drawCircle( final double x, final double y, final radius )
+{
+    …
+}
+\end{lstlisting}
+
+\keeplisting{5}
+When this method\index{method} is called with variables, the meaning of the arguments is reasonably clear - or perhaps not\footnote{Keep in mind that it is not required that the variables are named as \lstinline|x|, \lstinline|y| and \lstinline|d|.}:
+\begin{lstlisting}
+drawCircle(
+    x, y, // The center of the circle.
+    d / 2 // The radius as half of the diameter.
+);
+\end{lstlisting}
+
+\keeplisting{5}
+But when called with literal values, a comment for each argument is strongly recommended:
+\begin{lstlisting}
+drawCircle(
+    5.678, // The x coordinate for the center of the circle. 
+    7.322, // The y coordinate for the center of the circle.
+    12.44  // The radius for the circle.
+);
+\end{lstlisting}
+
+The chapter \tqfullref{sec:MethodSignatures} provides several strategies to avoid this situation.
+
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 
@@ -152,7 +202,8 @@ The name for a variable should explain the function of that variable in the give
 
 
  
-But if the code is supposed to be self-explanatory, why do I still need comments? Short answer: because not everyone has the same understanding of the programming language! At the two extremes, you have rookies on one side and experts on the other – with a wide range of levels in between. Not to mention your own future self.
+But if the code is suThese requirements are often difficult—or sometimes even impossible—to meet. Furthermore, methods with excessively long or overly complex parameter lists are frequently found in third-party libraries.
+In such cases, it makes perfect sense to add comments to the arguments.pposed to be self-explanatory, why do I still need comments? Short answer: because not everyone has the same understanding of the programming language! At the two extremes, you have rookies on one side and experts on the other – with a wide range of levels in between. Not to mention your own future self.
 
 Furthermore, comments should explain why the code is written the way it is rather than in another way. There is often more than one way to implement something, and a comment should clarify why that specific approach was chosen. This is particularly important when the obvious solution was not selected or when the chosen implementation deviates from established best practices.
 
@@ -451,7 +502,7 @@ As you can see, for this use case it is acceptable to continue a long comment in
 \end{lstlisting}
 can be considered also as valid. But in general, lengthy trailing comments like these should be avoided.
 
-Another use case for these kind of comments is to provide information about the arguments of a method call; usually, you should avoid method signatures where this is required (the formal parameter of the method should be sufficient to explain the argument), but sometimes it makes still sense:
+Another use case for these kind of comments is to provide information about the arguments of a method call; usually, you should avoid method signatures\index{signature} where this is required (the formal parameter of the method should be sufficient to explain the argument), but sometimes it makes still sense:
 \begin{lstlisting}
 …
 drawCircle(

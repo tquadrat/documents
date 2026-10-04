@@ -484,7 +484,7 @@ A \bsq{log} method writes something to a logging subsystem of some kind. The met
 \makecell{\lstinline|main()| \\ \lstinline|main( <arg> )|\pslabel{verb:main}} & 
 The method \lstinline|main()| is the entry point for any Java program; refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_main} for the details about the \lstinline|main()| method.
 
-The signature for the \lstinline|main()| method that is found most often in literature about the \Java programming language is
+The signature\index{signature} for the \lstinline|main()| method that is found most often in literature about the \Java programming language is
 \begin{tbllisting}
 public static void main( String [] args )
 \end{tbllisting}
@@ -492,7 +492,7 @@ but I prefer it as
 \begin{tbllisting}
 public static final void main( final String... args )
 \end{tbllisting}
-because it reflects the command line better. Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main} about the signatures. \\
+because it reflects the command line better. Refer to \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Invoke_Test.main} about the signatures\index{signature}. \\
 \hline
 
 %------------------------------------------------------------------------------

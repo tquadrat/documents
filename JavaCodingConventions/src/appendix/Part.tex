@@ -434,7 +434,7 @@ public record Tupel<K extends Comparable<K>,V>( K key, V value ) implements Comp
 %------------------------------------------------------------------------------
 
 \subsection{ThreadGroup}\label{sec:ThreadGroup}
-The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.
+The class \lstinline|java.lang.ThreadGroup|\autocite{ORACLE_DOC_THREADGROUP_CLASS} provides a method \lstinline|uncaughtException()| that has the same signature\index{signature} as the \lstinline|UncaughtExceptionHandler::uncaughtException|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER:uncaughtException} method.
 
 The method \lstinline|java.lang.ThreadGroup:uncaughtException| is called by the Java Virtual Machine when a thread in this thread group stops because of an uncaught exception, and no specific \lstinline|Thread.UncaughtExceptionHandler|\autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} instance was installed
 to that thread.

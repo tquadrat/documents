@@ -194,8 +194,96 @@ The chapter \tqfullref{sec:MethodSignatures} provides several strategies to avoi
 
 %------------------------------------------------------------------------------
 
+\section{Description of the used Algorithm}
+A short description of the algorithm or the pattern that was implemented by the current source code is always helpful. Even just mentioning its name can make a difference when hunting a bug, because it documents the programmer's intention. But in case the implementation will be changed, such a comment needs to be adjusted as well.
+
+However, the algorithm or the implemented pattern can also be described in a documentation comment, insofar as this might be relevant to the user.
+
 %------------------------------------------------------------------------------
 
+\section{Comments for Broken Rules}
+An implementation comment must be added whenever your code hurts or ignores one of the rules, guidelines, or recommendations from this document, or when you do not follow an accepted best practice; same when you use a short-cut.
+
+\keeplisting{4}
+It is a very well accepted best practice to check that a value is not zero before using it as the divisor:
+\begin{lstlisting}
+…
+final var value = 7.0 / a; // a != 0.0 was already checked above
+…
+\end{lstlisting}
+
+\keeplisting{6}
+Another rule is to check the arguments of a method\index{method} before their first use, even for private methods\index{method}:
+\begin{lstlisting}
+private void callProcessor( final Processor p )
+{
+    initialise( p );
+    p.execute(); // p != null was checked in initialise( p )
+}
+\end{lstlisting}
+
+\keeplisting{8}
+It is also a good practice to check the return value of a method\index{method} call:
+\begin{lstlisting}
+…
+/*
+ * bar.getQ() will never return null, so an explicit check on
+ * null for q was omitted
+ */
+q = bar.getQ();
+q.execute();
+…
+\end{lstlisting}
+
+In all these samples, arguments or values are not checked for \lstinline|null| or zero, \textit{because this was already done elsewhere} – and not necessarily just one line above the current location. The comment tells a maintenance engineer that the check was made – at least in the initial version of the code – and that the root cause for the problem might be elsewhere (perhaps because someone eliminated that other location or at least the value check there).
+
+Non-obvious class casts can be seen as a short-cut or a broken rule, but they should be always explained with a comment, in order to document that you knew what you did. You find this quite often when collections are used with their raw type\index{raw type}, like in the sample below. \lstinline|List values|\index{java.util!List} is basically equivalent to \lstinline|List<Object> values|\index{java.util!List}\index{java.lang!Object}, and usually, the given \lstinline|List|\index{java.util!List} instance contains instances of other classes than just \lstinline|Object|\index{java.lang!Object}.
+\keeplisting{12}
+\begin{lstlisting}
+private final void valueProcessor( List values )
+{
+    …
+    Value value;
+    for( Object o : values )
+    {
+        /*
+         * We know that values can only contain Value objects;
+         * otherwise this method would not have been called to
+         * process the list.
+         */
+        value = (Value) o;
+        …
+}
+\end{lstlisting}
+
+First, the use of the raw type\index{raw type} for an otherwise parameterized type\index{parameterized type} is usually bad practice, or you have to deal with some legacy code. Having a list of \lstinline|Value| objects declared as a \lstinline|List<Object>|\index{java.util!List} is bad design or also legacy. Nevertheless, it deserves a comment.
+
+The implementation of \lstinline|valueProcessor()| above makes sense here because a check like
+\begin{lstlisting}
+if( o instanceof Value ) value = (Value) o;
+\end{lstlisting}
+is relatively expensive – especially if the contract for this private method\index{method} is that it is called only with lists containing objects of type \lstinline|Value| so that the check would fail only in very, very, very rare cases. And finally: what else can be done in cases where the object is not of the right type other than throwing a \lstinline|ClassCastException|\index{java.lang!ClassCastException}? That's the same that is done implicitely by the code above in such a case, too.
+
+The version
+\begin{lstlisting}
+if( o instanceof Value value )
+{
+    …
+}
+\end{lstlisting}
+instead of
+\begin{lstlisting}
+if( o instanceof Value ) value = (Value) o;
+\end{lstlisting}
+might be clearer, but it is not less expensive.
+
+Another broken rule that is requiring a comment is a fall-through in a \lstinline|switch|\index{switch}, as said already in chapter \tqfullvref{sec:SwitchStatements}.
+
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
 
 
 
@@ -700,67 +788,6 @@ public Data customAction( final Data data ) { /* Does nothing */ }
 The usage of the annotation \lstinline|@MountPoint|\index{mountpoint} \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT} is described in the chapters \tqfullvref{sec:NonFinalClasses} and \tqfullvref{sec:NonFinalMethods}, a sample implementation can be found in chapter \tqvref{sec:MountPoint}.
 
 %------------------------------------------------------------------------------
-
-\subsection{Description of the used Algorithm}
-A short description of the algorithm that was implemented by the current source code is always helpful; even just mentioning its name can make a difference when hunting a bug. But in case the implementation changes, such a comment needs to be adjusted as well.
-
-The same is valid for the pattern that you implement with your code, although this belongs more often into the documentation comments.
-
-%------------------------------------------------------------------------------
-
-\subsection{Broken Rules}
-Whenever you hurt or ignore one of the rules, guidelines, or recommendations from this document, it is worth a comment; same when you use a short-cut.
-
-Some examples:
-\begin{lstlisting}
-value = 7.0 / a; // a != 0.0 was already checked above
-
-o.execute(); // o != null was checked in foo.bar( o )
-
-/*
- * bar.getQ() will never return null, so an explicit check on
- * null for q was omitted
- */
-q = bar.getQ();
-q.execute();
-\end{lstlisting}
-In all these samples, arguments or values are not checked for \lstinline|null| or zero, \textit{because this was already done elsewhere} – and not necessarily just one line above the current location. The comment tells a maintenance engineer that the check was made – at least in the initial version of the code – and that the root cause for the problem might be elsewhere (perhaps because someone eliminated that other location or at least the value check there).
-
-Non-obvious class casts can be seen as a short-cut or a broken rule, but they should be always explained with a comment, in order to document that you knew what you did:
-\begin{lstlisting}
-private final void valueProcessor( List<Object> values )
-{
-    …
-    Value value;
-    for( Object o : values )
-    {
-        /*
-         * We know that values can only contain Value objects;
-         * otherwise this method would not have been called to
-         * process the list.
-         */
-        value = (Value) o;
-        …
-}
-\end{lstlisting}
-This makes sense here because a check like
-\begin{lstlisting}
-if( o instanceof Value ) value = (Value) o;
-\end{lstlisting}
-is relatively expensive – especially if the contract for this \lstinline|private| method is that it is called only with lists containing \lstinline|Value| objects so that the check would not be positive only in very, very, very rare cases. And finally: what else can be done in cases where the object is not of the right type than throwing a ClassCastException? That's the same that is done by the code above in such a case, too.
-
-First, the version
-\begin{lstlisting}
-if( o instanceof Value value )
-{
-    …
-}
-\end{lstlisting}
-might be clearer, but it is not less expensive.
-
-Second, having a list of \lstinline|Value| objects declared as a \lstinline|List<Object>| is bad design anyway – or legacy code (and still bad design).
-
-A fall-through in a \lstinline|switch| is another broken rule and needs a comment, as said already in chapter \tqfullvref{sec:SwitchStatements}.
 
 %------------------------------------------------------------------------------
 

@@ -291,6 +291,10 @@ if( o instanceof Value )
 \end{lstlisting}
 might be clearer, but it is not less expensive.
 
+A rule says that your code should never catch explicitly \lstinline|java.lang.Throwable|\index{java.lang!Throwable}, \lstinline|java.lang.Exception|\index{java.lang!Exception} nor \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, and in particular never \lstinline|java.lang.Error|\index{java.lang!Error} or one of its child classes.
+
+So when your code catches one of these exceptions, you should provide a comment why you are doing that (and why you think it is allowed in your special case~… – you remember bullet point ~\ref{lst:ZoP:SpecialCases} of the \ngref?).
+
 Another broken rule that requires a comment is a fall-through in a \lstinline|switch|\index{switch!statement} statement in the the \bdq{\texttt{case L:}} variant, as said already on page \pageref{sec:TraditionalSwitch} in chapter \tqfullref{sec:SwitchStatements}.
 
 \keeplisting{14}
@@ -341,7 +345,7 @@ for( var i = 0; i < maxValue; ++i ) { /* empty */ }
 \end{lstlisting}
 But loops with an empty body are always dangerous because the compiler may optimize them away as the do not have an impact (other than wasting time).
 
-Ignoring (\bdq{swallowing}) an exception:
+Ignoring (\bdq{swallowing}) an exception:\pslabel{lbl:SwallowException}
 \begin{lstlisting}
 InputStream input = null; // null if file cannot be opened 
 try
@@ -367,105 +371,66 @@ public void customAction( final Data data ) { /* Does nothing */ }
 \end{lstlisting}
 
 %------------------------------------------------------------------------------
+
 \section{Swallowed Exceptions}
 The \ngref{} says in bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} that errors may not be ignored and that exceptions may not be swallowed. So swallowing (ignoring) and exception is a serious break of rules – so serious that I decided to give it its own chapter instead of covering it in chapter \tqref{sec:CommentsForBrokenRules} \hyperref[sec:CommentsForBrokenRules]{above}.
 
 When an exception is thrown, it means that the program (or the system) is in an abnormal state, and that the current operations flow cannot continue.
 
 When your code catches an exception, there are only two options:
-\begin{itemize}
+\begin{enumerate}
 	\item{You enhance the exception with additional information~…}
 	\item{…~or your code brings the system back to a normal state.}
-\end{itemize}
+\end{enumerate}
 The details are handled in chapter \tqfullref{sec:GeneralExceptionHandling}.
 
-; this is most often done by an empty \lstinline|catch|\index{try!catch} block, and we already discussed that above.
+In the second case, the caught exception is \bsq{\textit{swallowed}}, although not necessarily ignored. This is most often done by an empty \lstinline|catch|\index{try!catch} block, and we already discussed that \hyperref[lbl:SwallowException]{above} where I also provided some sample code. Below you find an improved version of that code:
 
 \begin{lstlisting}
-InputStream input = null; // null if file cannot be opened 
-try
-{
-    input = new FileInputStream( "myFile" );
-}
-catch( final FileNotFoundException ignored ) { /* Deliberately ignored */ }
-
-// Better
 final InputStream input; // null if file cannot be opened
 try
 {
     input = new FileInputStream( "myFile" );
 }
-catch( final FileNotFoundException ignored ) 
+catch( final FileNotFoundException _ ) 
 { 
-    input = null;
+    input = null; // The file was not found.
 }
 \end{lstlisting}
+The exception is still swallowed, but the system state returned to normal according to the specification as described by the comments.
 
+It is always a good idea to write the respective comment into the \lstinline|catch|\index{try!catch} block, even an explanation is already provided elsewhere, like in the sample above.
 
-
-
-But people forget that \lstinline|catch| blocks like those below will also swallow the exception, although it does not look like that:
-\begin{lstlisting}[numbers=left]
+Especially a \lstinline|catch|\index{try!catch} block like 
+\begin{lstlisting}
 …
 catch{ final Exception e }
 {
     e.printStackTrace();
 }    
-
-…
-catch{ final IOException e }
-{
-    m_Logger.atError()
-        .withThrowable( e )
-        .log( "Opening the file failed" );
-}
-
-…
-catch( final NumberFormatException e )
-{
-    m_LastError = e;
-}       
 \end{lstlisting}
-All this might be intended, but at a first glance it looks like a mistake. This mean that a comment is mandatory each time an exception is swallowed, no matter if silently or not, meaning the exception is logged somewhere. If the program is continued after an exception was caught, write a comment (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
+requires some lengthy explanation; it might be intended, but at a first and even a second glance it looks like a mistake. 
 
-Also when you catch \lstinline|java.lang.Error| or a child class of it, or \lstinline|java.lang.Throwable|\index{java.lang!Throwable}, you should provide a comment why you are doing that (and why you think it is allowed in your special case~…).
+This means that a comment is mandatory each time an exception is swallowed, no matter if silently or not. If the program is continued after an exception was caught, a comment is needed.
 
 %------------------------------------------------------------------------------
-%------------------------------------------------------------------------------
+
+\section{Comments on Suppressed Warnings}
+
+\###
+
+With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.
+
 %------------------------------------------------------------------------------
 
 \section{Add your Thoughts}
-If something strikes you as odd while reading or writing code, you should document it with a comment. Admittedly, this advice makes less sense for code you have just written yourself. However, it is all the more relevant for code written by others that you need to use – whether it comes from an external library or was written by another team member. Or even code you have to fix as a sustaining engineer.
+Finally, if something strikes you as odd while reading or writing code, you should document it with a comment. Admittedly, this advice makes less sense for code you have just written yourself. However, it is all the more relevant for code written by others that you need to use – whether it comes from an external library or was written by another team member. Or even code you have to fix as a sustaining engineer.
 
 Samples for that could be a missing documentation of the valid values for the arguments of a method\index{method} or which return values are possible. Doubts whether a method\index{method} is really thread-safe\index{thread-safe} are another.
 
 Often these kinds of comments are marked with \bdq{\lstinline|XXX|} or \bdq{\lstinline|FIXME|} so that they are easier to find.
 
 Of course, when you find something fishy, you should not only leave a comment in the source code. Raise a bug in your organisation's ticketing system or send around emails or whatever is appropriate.
-
-%------------------------------------------------------------------------------
-
-\part*{Under Construction}
-
-Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
-
-The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is already present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
-
-
-But the final answer regarding the audience is still missing; I will discuss this further in \tqfullvref{sec:CommentsWhen}.
-
-%------------------------------------------------------------------------------
-
-
-%------------------------------------------------------------------------------
-
-%------------------------------------------------------------------------------
-
-\subsection{Suppressed Warnings}
-With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.
-
-%------------------------------------------------------------------------------
-
 
 %==============================================================================
 % End of file!!

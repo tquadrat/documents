@@ -201,7 +201,7 @@ However, the algorithm or the implemented pattern can also be described in a doc
 
 %------------------------------------------------------------------------------
 
-\section{Comments for Broken Rules}
+\section{Comments for Broken Rules}\label{sec:CommentsForBrokenRules}
 The \ngref{} says in bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality}: \bdq{\textit{Special cases aren't special enough to break the rules although practicality beats purity}}. You will encounter lots of occasions in your daily work where this seems to fit – according to your opinion! Others may think differently about that, but a comment at least tells them why you wrote the codes as you did.
 
 And by the way: \bdq{practicality} does not mean \bdq{laziness in typing}.
@@ -321,7 +321,7 @@ The general rule here is that a comment should be added when something may be as
 
 %------------------------------------------------------------------------------
 
-\subsection{Comments for Empty Code Blocks}
+\section{Comments for Empty Code Blocks}\label{sec:CommentsForEmptyCodeBlocks}
 Empty code blocks are forbidden. That means that the sequence \bdq{\lstinline|\{\}|} may not occur anywhere in your source code. If there is really no code in a block, there has to be at least a comment, just to show that this code block is intentionally empty. For a \lstinline|catch|\index{try!catch} block, there should be a good (at least some) explanation, why it is empty (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
 
 \paragraph{Some examples}\
@@ -367,37 +367,19 @@ public void customAction( final Data data ) { /* Does nothing */ }
 \end{lstlisting}
 
 %------------------------------------------------------------------------------
-%------------------------------------------------------------------------------
-%------------------------------------------------------------------------------
-%------------------------------------------------------------------------------
+\section{Swallowed Exceptions}
+The \ngref{} says in bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} that errors may not be ignored and that exceptions may not be swallowed. So swallowing (ignoring) and exception is a serious break of rules – so serious that I decided to give it its own chapter instead of covering it in chapter \tqref{sec:CommentsForBrokenRules} \hyperref[sec:CommentsForBrokenRules]{above}.
 
-\section{Add your Thoughts}
-If something strikes you as odd while reading or writing code, you should document it with a comment. Admittedly, this advice makes less sense for code you have just written yourself. However, it is all the more relevant for code written by others that you need to use – whether it comes from an external library or was written by another team member. Or even code you have to fix as a sustaining engineer.
+When an exception is thrown, it means that the program (or the system) is in an abnormal state, and that the current operations flow cannot continue.
 
-Samples for that could be a missing documentation of the valid values for the arguments of a method\index{method} or which return values are possible. Doubts whether a method\index{method} is really thread-safe\index{thread-safe} are another.
+When your code catches an exception, there are only two options:
+\begin{itemize}
+	\item{You enhance the exception with additional information~…}
+	\item{…~or your code brings the system back to a normal state.}
+\end{itemize}
+The details are handled in chapter \tqfullref{sec:GeneralExceptionHandling}.
 
-Often these kinds of comments are marked with \bdq{\lstinline|XXX|} or \bdq{\lstinline|FIXME|} so that they are easier to find.
-
-Of course, when you find something fishy, you should not only leave a comment in the source code. Raise a bug in your organisation's ticketing system or send around emails or whatever is appropriate.
-
-%------------------------------------------------------------------------------
-
-\part*{Under Construction}
-
-Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
-
-The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is already present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
-
-
-But the final answer regarding the audience is still missing; I will discuss this further in \tqfullvref{sec:CommentsWhen}.
-
-%------------------------------------------------------------------------------
-
-
-%------------------------------------------------------------------------------
-
-\subsection{Swallowed Exceptions}
-The \ngref{} says in bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} that errors may not be ignored and that exceptions may not be swallowed; this is most often done by an empty \lstinline|catch| block.
+; this is most often done by an empty \lstinline|catch|\index{try!catch} block, and we already discussed that above.
 
 \begin{lstlisting}
 InputStream input = null; // null if file cannot be opened 
@@ -447,6 +429,35 @@ catch( final NumberFormatException e )
 All this might be intended, but at a first glance it looks like a mistake. This mean that a comment is mandatory each time an exception is swallowed, no matter if silently or not, meaning the exception is logged somewhere. If the program is continued after an exception was caught, write a comment (see also chapter \tqfullref{sec:GeneralExceptionHandling}).
 
 Also when you catch \lstinline|java.lang.Error| or a child class of it, or \lstinline|java.lang.Throwable|\index{java.lang!Throwable}, you should provide a comment why you are doing that (and why you think it is allowed in your special case~…).
+
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+
+\section{Add your Thoughts}
+If something strikes you as odd while reading or writing code, you should document it with a comment. Admittedly, this advice makes less sense for code you have just written yourself. However, it is all the more relevant for code written by others that you need to use – whether it comes from an external library or was written by another team member. Or even code you have to fix as a sustaining engineer.
+
+Samples for that could be a missing documentation of the valid values for the arguments of a method\index{method} or which return values are possible. Doubts whether a method\index{method} is really thread-safe\index{thread-safe} are another.
+
+Often these kinds of comments are marked with \bdq{\lstinline|XXX|} or \bdq{\lstinline|FIXME|} so that they are easier to find.
+
+Of course, when you find something fishy, you should not only leave a comment in the source code. Raise a bug in your organisation's ticketing system or send around emails or whatever is appropriate.
+
+%------------------------------------------------------------------------------
+
+\part*{Under Construction}
+
+Then they should be used to give an overview on the code and to provide additional information that is not readily available in the code itself. But it has to be relevant for the current context. For example, information about how the corresponding package is built or in what directory it resides should not be included as a comment to a class, but it might be useful in the comment for that package.
+
+The discussion of non-trivial or non-obvious design decisions is appropriate, but the duplication of information that is already present in (and clear from) the code must be avoided. It is too easy for redundant comments to get out of date when the code changes.
+
+
+But the final answer regarding the audience is still missing; I will discuss this further in \tqfullvref{sec:CommentsWhen}.
+
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
 
 %------------------------------------------------------------------------------
 

@@ -416,10 +416,17 @@ This means that a comment is mandatory each time an exception is swallowed, no m
 %------------------------------------------------------------------------------
 
 \section{Comments on Suppressed Warnings}
+The \texttt{javac}\index{javac} Java compiler does also some \bdq{linting}. The term stems from a UNIX\index{UNIX} utility named \texttt{lint} that performs a static code analysis of C\index{C} source code \autocite{WIKIPEDIA:lint}. 
 
-\###
+For the \texttt{javac}\index{javac} it means that the compiler scans the source for code that is legal Java but suspicious, error-prone, or discouraged. The compiler accepts it, but \texttt{javac}\index{javac} can emit optional warnings about it.
 
-With the \lstinline|@SuppressWarnings| annotation\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow “hurting the rules”. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules, an additional comment is required only in cases it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.
+All IDEs\index{IDE} have a similar and much more sophisticated feature that issues warnings already on typing.
+
+Now it is a fixed rule that the build process may not issue any warnings. This affects also the warnings from the linting process.
+
+With the \lstinline|@SuppressWarnings| annotation\index{annotation}\index{java.lang!SuppressWarnings} \autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION}, you can switch off a compiler warning or error caused by code that is somehow \bdq{hurting the rules}. Basically, the \lstinline|@SuppressWarnings| annotation is a replacement for a comment about that deviation from the rules. An additional comment is only required in cases where it is not obvious why that annotation was applied. More details on this are provided in \tqfullvref{sec:CompilerWarningsAndErrors}.
+
+Some warnings that are introduced by an IDE\index{IDE} cannot be switched off by the annotation\index{annotation}; they require a specific comment.
 
 %------------------------------------------------------------------------------
 
@@ -435,4 +442,3 @@ Of course, when you find something fishy, you should not only leave a comment in
 %==============================================================================
 % End of file!!
 %==============================================================================
-

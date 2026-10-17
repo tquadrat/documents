@@ -1,13 +1,10 @@
 \chapter{Maintenance Comments}\label{sec:MaintenanceComments}
-It is very likely that source code is modified more than once during its lifetime: bugs are fixed, functionality is added or removed, refactorings are applied, or the code is migrated to other platforms or newer versions of the programming language, of the underlying libraries, of the connected systems and/or of the operating system.
+Even after first released, it is very likely that source code is modified more than once during its lifetime: bugs are fixed, functionality is added or removed, refactorings are applied, or the code is migrated to other platforms or newer versions of the programming language, of the underlying libraries, of the connected systems and/or of the operating system.
 
+Often those changes got commented in the source; these comments are  are usually referred to as \bdq{Maintenance Comments}.
 
-\bdq{\nameref{sec:TagSince}}
-
-
-There is a practice that all the changes made in the code will be commented in the code. These comments are usually referred to as “Maintenance Comments”.
-
-This may look like this:\footnote{The abbreviation “FSP” stands for “Field Service Patch” …}
+Some organisations even defined rules on how these maintenance comments have to look like, as in the sample below:
+\keeplisting{23}
 \begin{lstlisting}
 …
 //<<BEGIN FSP-0815 – applied by Mirabel Madrigal
@@ -15,7 +12,7 @@ This may look like this:\footnote{The abbreviation “FSP” stands for “Field
 …
 //>>END FSP-0815
 …
-//<<BEGIN FSP-4711 – applied by Micky Mouse
+//<<BEGIN FSP-4711 – applied by Richard Rawlings
 //<Old Code>
 //…
 //>><<
@@ -23,7 +20,7 @@ This may look like this:\footnote{The abbreviation “FSP” stands for “Field
 …
 //>>END FSP-4711
 …
-//<<BEGIN FSP-4917 – applied by Donald Duck
+//<<BEGIN FSP-4917 – applied by Donald Duffy
 //<Old Code>
 //…
 //>>
@@ -36,15 +33,42 @@ This may look like this:\footnote{The abbreviation “FSP” stands for “Field
 …
 \end{lstlisting}
 
-Also it looks good at a first glance, it has proved that this is not a good practice at all, and a really bad practice if dealing with code that is managed by an SCCS.
+The abbreviation \bsq{\texttt{FSP}}\index{FSP|see {Field Service Patch}} stands for \bdq{Field Service Patch}\index{Field Service Patch}.
 
-First, this practice causes problems for the compare tools coming with the SCCS – at least it will make it more difficult to read the comparison results from those tools.\footnote{Most comparison tools will recognise the out-commenting of the old code as a change and the new code as additional code instead of the replacement for the old code. This is at least confusing when a code revisions are made on the fix.} And the main function of those comments – documenting the changes – is much better served by the SCCS tools themselves.
+Although it looks good at a first glance, it has proved that this kind commenting maintenance changes is not a good practice at all, and a really bad practice if dealing with code that is managed by an SCCS\index{SCCS} like Git\index{Git} \autocite{Git} or Subversion\index{Apache Subversion} \autocite{APACHE_SUBVERSION}.
 
-Second, this gets even worse when the fix needs a fix. Just think about overlapping changes, like FSP-4712 changes lines from the new code of FSP-4711, together with lines directly below, or changes that has to be partially reverted, and so on.
+\begin{itemize}
+	\item{First, this practice causes problems for the compare tools coming with the SCCS\index{SCCS} – at least it will make it more difficult to read the comparison results from those tools.That's because most comparison tools will recognise the out-commenting of the old code as a change and the new code as additional code instead of the replacement for the old code. This is at least confusing when code revisions are made on the fix. And the main function of those comments – documenting the changes – is much better served by the SCCS\index{SCCS} tools themselves.}
+	
+	\item{Second, this gets even worse when the fix needs a fix. Just think about overlapping changes, like \texttt{FSP-4712} changes lines from the new code of \texttt{FSP-4711}, together with lines directly below, or changes that has to be partially reverted, and so on.}
+	
+	\item{And finally, the comments does not help to identify if you are currently running the patched code, or the old one. I will discuss this in more detail \hyperref[sec:CommentVsAnnotations]{below}.}
+\end{itemize}
 
-And finally, the comments does not help to identify if your are currently running the patched code, or the old one.
+Nowadays, change requests of all kinds are tracked within ticket systems like Jira\index{Jira|see {Atlassian Jira}}\index{Atlassian Jira}\footnote{Of course, Jira is more than just a \textit{ticket system}, but it serves quite well as one.} \autocite{AtlassianJira}, where each ticket (= change request) gets an id (like those \texttt{FSP}\index{Field Service Patch} number above), and this id is also used when the code related to the change request is committed to the SCCS\index{SCCS}, as part of the commit label.
 
-On the other hand, nothing can be said against adding a line to the file or class comment that lists the patches that were applied to the code.
+All SCCS\index{SCCS} provides a feature to search for the contents of commit labels, and that allows you to identify the changes made for a given change request, much better as any comment could do.
+
+On the other hand, nothing can be said against adding a comment to code that refers to the change request by its ticket id. So when you added a method or field, you can use the Javadoc\index{javadoc} tag \bdq{\nameref{sec:TagSince}}\index{since@"@since} with the ticket id instead or in addition of the version number. It can be even used when the method was only modified.
+
+Usually, functionality will not be removed immediately, especially not when exposed through the API.
+
+
+
+deprecated
+
+
+
+
+
+
+
+There is a practice that all the changes made in the code will be commented in the code. These comments
+
+This may look like this:
+
+
+
 
 Therefore I recommend to introduce an annotation that can be used to mark elements that are affected by a fix.
 

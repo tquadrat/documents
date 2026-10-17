@@ -26,14 +26,14 @@ public interface GenericDAO<T,I>
 }   //  interface GenericDAO
 \end{lstlisting}
 
-The version information for the \nameref{sec:TagVersion}\index{version@"@version} tag (line~10) should be a reference to the version in the SCCS\index{SCCS}; if you are using Subversion\index{Subversion}, that line would look like this:
+The version information for the \nameref{sec:TagVersion}\index{version@"@version} tag (line~10) should be a reference to the version in the SCCS\index{SCCS}\index{Source Code Control System|see {SCCS}}; if you are using Subversion\index{Subversion}, that line would look like this:
 \begin{lstlisting}[firstnumber=9,language=Comment]
  …
  *  @version $Id:$
  …
 \end{lstlisting}
 
-The string \verb#$Id:$# will be replaced during checkin with information provided by Subversion\index{Subversion} if \bdq{\textit{keyword replacement}} is enabled. git\index{git} does not provide something similar out-of-the-box.
+The string \bsq{\texttt{\$Id:\$}} will be replaced during checkin with information provided by Subversion\index{Subversion|see {Apache Subversion}}\index{Apache Subversion} \autocite{APACHE_SUBVERSION} if \bdq{\textit{keyword replacement}} is enabled. Git\index{Git} \autocite{Git} does not provide something similar out-of-the-box.
 
 The class comment for a record\index{record} is a bit special as it has to incorporate the documentation for the record components (the fields of the record) as well as that for the constructor parameters (as both are the same). You use the \nameref{sec:TagParam}\index{param@"@param} tag for that.
 

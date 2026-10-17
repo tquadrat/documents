@@ -1,5 +1,5 @@
 \section{Types of Products}\label{sec:TypesOfProducts}
-The rationale behind some of the coding conventions and guardrails depends on the type of product\index{product type} being delivered. This applies in particular to the coding guidelines in part \tqfullvref{sec:CodingGuidelines}. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms \bsq{Plug-In}\index{plugin}, \bsq{Framework}\index{framework} and \bsq{Server}\index{server} on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}\index{product type!feature library}, and a \textit{Server} is a \textit{Standalone Application}\index{product type!standalone application} (what else could a server be?), while a \textit{Plug-In} is an \textit{Extension}\index{product type!extension}.}:
+The rationale behind some of the coding conventions and guardrails depends on the type of product\index{product type} being delivered. This applies in particular to the coding guidelines in part \tqfullvref{sec:CodingGuidelines}. Basically, we can distinguish the following types that will be explained in the following chapters\footnote{If you miss the terms \bsq{Plug-In}\index{plugin}, \bsq{Framework}\index{framework} and \bsq{Server}\index{server} on the list above: a \textit{Framework} is in this regard a \textit{Feature Library}\index{product type!feature library}, and a \textit{Server}\index{server} is a \textit{Standalone Application}\index{product type!standalone application} (what else could a server be?), while a \textit{Plug-In} is an \textit{Extension}\index{product type!extension}.}:
 
 \begin{itemize}[nosep]
 	\item{\hyperref[sec:FunctionLibrary]{Function Libraries}\index{product type!function library}\index{function library|see {product type}}}
@@ -57,7 +57,7 @@ Applications with a GUI\index{GUI} are usually built on AWT\index{AWT} (refer to
 
 Samples are text editors like jEdit\index{jEdit} \autocite{JEDIT}, an IDE\index{IDE}\index{integrated development environment|see {IDE}}, an application server\index{application server} like WebSphere\index{IBM WebSphere}\index{WebSphere|see {IBM WebSphere}} \autocite{IBM_WEBSPHERE} or a web container\index{web container} like Tomcat\index{Apache Tomcat}\index{Tomcat|see {Apache Tomcat}} \autocite{APACHE_TOMCAT}.
 
-A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, \hyperref[sec:Tool]{above}, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache ActiveMQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes (all previously mentioned in \tqfullref{sec:FeatureLibrary}).
+A gray area candidate is jAlbum\index{jAlbum} that I already mentioned as a tool, \hyperref[sec:Tool]{above}, others are the H2 Database Engine\index{H2}, ActiveMQ\index{Apache ActiveMQ} or Jetty\index{Eclipse Jetty} in their standalone/server modes (all previously mentioned in \tqref{sec:FeatureLibrary}).
 
 %------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ Other samples are \bsq{Maillets}\index{maillet} for James\index{Apache James} \a
 %------------------------------------------------------------------------------
 
 \subsection{Extension}\label{sec:Extension}
-An extension\index{product type!extension} or plugin\index{plugin} requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors\index{annotation processor} \autocite{ORACLE_DOC_PROCESSOR_INTERFACE} are samples for this (they change the behaviour of the Java compiler\index{javac}), as well as plugins for Maven\index{Apache Maven} \autocite{APACHE_MAVEN}or Gradle\index{Gradle} \autocite{GRADLE}.
+An extension\index{product type!extension} or plugin\index{plugin} requires also an environment to run in, but it is not an application as such. It just changes the behaviour of that environment. Annotation processors\index{annotation processor} \autocite{ORACLE_DOC_PROCESSOR_INTERFACE} are samples for this (they change the behaviour of the Java compiler\index{javac}), as well as plugins for Maven\index{Apache Maven} \autocite{APACHE_MAVEN} or Gradle\index{Gradle} \autocite{GRADLE}.
 
 Extensions written in Java are also possible for programs that are not written in Java themselves; examples for that are Apache OpenOffice\index{Apache OpenOffice} \autocite{APACHE_OPENOFFICE} (refer to \autocite{APACHE_OPENOFFICE:ExtensionsInJava} for an overview) and LibreOffice\index{LibreOffice} \autocite{LIBREOFFICE}\footnote{Although \textit{how} to create these extensions in Java is quite well hidden in the documentation for LibreOffice~…}.
 
@@ -80,9 +80,9 @@ Extensions written in Java are also possible for programs that are not written i
 \subsection{Script}\label{sec:ScriptInJava}
 The capability to write scripts\index{product type!script} in \Java is quite new.
 
-The foundation for scripts written in Java was laid in Java~11 with the implementation of JEP~330\autocite{JEP330}, allowing to launch Java programs directly as source code.
+The foundation for scripts written in Java was laid in Java~11 with the implementation of JEP~330 \autocite{JEP330}, allowing to launch Java programs directly as source code.
 
-With Java~23, this feature was enhanced/got more handy by the implementation of JEP~477\autocite{JEP477}, but the development here is still ongoing.
+With Java~23, this feature was enhanced/got more handy by the implementation of JEP~477 \autocite{JEP477}, but the development here is still ongoing.
 
 Basically, a script is a small program that is started to execute a single task and terminates afterwards; this definition is quite similar to that for a tool\index{product type!tool} \hyperref[sec:Tool]{above}.
 

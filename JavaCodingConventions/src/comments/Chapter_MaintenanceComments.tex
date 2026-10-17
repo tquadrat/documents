@@ -4,7 +4,7 @@ Even after first released, it is very likely that source code is modified more t
 Often those changes got commented in the source; these comments are  are usually referred to as \bdq{Maintenance Comments}.
 
 Some organisations even defined rules on how these maintenance comments have to look like, as in the sample below:
-\keeplisting{23}
+\keeplisting{20}
 \begin{lstlisting}
 …
 //<<BEGIN FSP-0815 – applied by Mirabel Madrigal
@@ -42,69 +42,95 @@ Although it looks good at a first glance, it has proved that this kind commentin
 	
 	\item{Second, this gets even worse when the fix needs a fix. Just think about overlapping changes, like \texttt{FSP-4712} changes lines from the new code of \texttt{FSP-4711}, together with lines directly below, or changes that has to be partially reverted, and so on.}
 	
-	\item{And finally, the comments does not help to identify if you are currently running the patched code, or the old one. I will discuss this in more detail \hyperref[sec:CommentVsAnnotations]{below}.}
+	\item{And finally, the comments does not help to identify if you are currently running the patched code, or the old one. I will discuss this in more detail \hyperref[loc:CommentVsAnnotations]{below}.}
 \end{itemize}
 
 Nowadays, change requests of all kinds are tracked within ticket systems like Jira\index{Jira|see {Atlassian Jira}}\index{Atlassian Jira}\footnote{Of course, Jira is more than just a \textit{ticket system}, but it serves quite well as one.} \autocite{AtlassianJira}, where each ticket (= change request) gets an id (like those \texttt{FSP}\index{Field Service Patch} number above), and this id is also used when the code related to the change request is committed to the SCCS\index{SCCS}, as part of the commit label.
 
 All SCCS\index{SCCS} provides a feature to search for the contents of commit labels, and that allows you to identify the changes made for a given change request, much better as any comment could do.
 
-On the other hand, nothing can be said against adding a comment to code that refers to the change request by its ticket id. So when you added a method or field, you can use the Javadoc\index{javadoc} tag \bdq{\nameref{sec:TagSince}}\index{since@"@since} with the ticket id instead or in addition of the version number. It can be even used when the method was only modified.
+On the other hand, nothing can be said against adding a comment to code that refers to the change request by its ticket id. So when you added a method or field, you can use the Javadoc\index{javadoc} tag \bdq{\nameref{sec:TagSince}}\index{since@"@since} with the ticket id instead or in addition of the version number. It can be even used when the method was only modified, as shown on page \pageref{sec:TagSince}.
 
-Usually, functionality will not be removed immediately, especially not when exposed through the API.
+Usually, functionality will not be removed immediately, especially not when exposed through the API. Before that, it is marked as \bdq{deprecated} for several consecutive versions. This is done using both the \bdq{\nameref{sec:TagDeprecated}}\index{deprecated@"@deprecated} Javadoc\index{javadoc} tag and the \lstinline|@Deprecated| annotation\index{annotation!deprecated@"@deprecated}.
 
+In both cases, the maintenance comments for the change are also documentation comments that are externalised. This may be wanted or not, although for API changes, it is mandatory.
 
+Alternatively, you just add the ticket id as a real comment to the location(s) for the changes. This clearly indicates that changes have taken place; for the details, one can then consult the SCCS. 
+ 
+Above I said that it is a drawback of maintenance comments that they do not allow to identify whether the running code does contain a specific change\pslabel{loc:CommentVsAnnotations}. This is primarily of interest for long-running programs, such as various types of servers\index{server}, as well as for server-based applications\index{product type!server-based application} (refer to \tqref{sec:ServerbasedApplication}).
 
-deprecated
+If this is a requirement for your product, you should consider to use dedicated annotations\index{annotation} instead of maintenance comments.\footnote{This is discussed more generally in \tqfullvref{sec:CommentVsAnnotations}.} I provide an example of such an annotation\index{annotation} in chapter \tqfullvref{sec:PatchIdentification}; it can be used to mark program elements that were affected by a change request of some kind.
 
+Such an annotation\index{annotation} can provide the the ticket id of the change request, together with a description of the issue that was addressed. This annotation\index{annotation} replaces a comment about the applied patches, with the advantage that it can easily be retrieved from the code, even at runtime.
 
-
-
-
-
-
-There is a practice that all the changes made in the code will be commented in the code. These comments
-
-This may look like this:
-
-
-
-
-Therefore I recommend to introduce an annotation that can be used to mark elements that are affected by a fix.
-
-Such an annotation can provide the BUG number of the fix, together with a short description of the issue. This annotation replaces a comment about the applied patches, with the advantage that it can be retrieved also from the compiled classes, even at runtime.
-
-Chapter \tqfullvref{sec:PatchIdentification} provides an example of such an annotation.
-
-Old code will be removed and not commented out, or just replaced by the new code. One or the other short comment with a hint is not mandatory, but does not harm either.
-
-When using the suggested annotation from chapter \tqref{sec:PatchIdentification}, this could look like this:
+%\keeplisting{35}
+When using the annotation\index{annotation!CR@"@CR} suggested in \tqref{sec:PatchIdentification}, this could look like this:
 \begin{lstlisting}
-…
-@BUG( id = "BUG-0815", comment = "Superseded by BUG-4711" )
-@BUG( id = "BUG-4711", comment = "No end criterion for loop" )
-@BUG( id = "BUG-4712", comment = "Exception was swallowed" )
-public final void myMethod()
+/**
+ *  <p>{@summary The main data processor class.}
+ *
+ *  @since 0.0.1
+ */
+@CR( type = ENH, id = "ENH-1704", comment = """
+processProvisioningData() was introduced to process the incoming data
+from the provisioning subsystem
+""" )
+public final class MainDataProcessor
 {
-    ForeverLoop: while( true )
+        /*--------------*\
+    ====** Constructors **===========================================
+        \*--------------*/
+    /**
+     *  Creates a new instance of {@code MainDataProcessor}.
+     */
+    @CR( id = "CR-2334", comment = """
+````Added the default constructor for completeness
+````""" )
+    public MainDataProcessor() { /* Just exists */ }
+    
+        /*---------*\
+    ====** Methods **================================================
+        \*---------*/
+    /**
+     *  <p>{@summary Processes the data from the provisioning
+     *  subsystem.}</p>
+     *
+     *  @since ENH-1704
+     */
+    @CR( type = BUG, id = "BUG-0815", comment = """
+````End criterion for loop was missing
+````Superseded by BUG-4711
+````""" )
+    @CR( type = BUG, id = "BUG-4711", comment = """
+````Wrong end criterion for loop
+````""" )
+    @CR( type = BUG, id = "BUG-4712", comment = """
+````Exception was swallowed
+````""" )
+    public final void myMethod()
     {
-        try
+        ForeverLoop: while( true )
         {
-            …
+            try
+            {
+                …
             
-            if( !hasMore() ) break ForeverLoop; // BUG-4711
-        }
-        catch( final IllegalStateException e )
-        {
-            log( e );
-            break ForeverLoop; // BUG-4712: Added exception handling
-        }
-    }   //  ForeverLoop:
-}   //  myMethod()
-…
+                if( !hasMore() ) break ForeverLoop; // BUG-4711
+            }
+            catch( final IllegalStateException e )
+            {
+                log( e );
+                break ForeverLoop; // BUG-4712: Added exception handling
+            }
+        }   //  ForeverLoop:
+    }   //  myMethod()
+}
+//  class MainDataProcessor
 \end{lstlisting}
 
-The relevant details about the fix/change/enhancement can now be found in the SCCS and/or in your Bug Tracking system, referenced through the id of the annotation.
+The relevant details about the fix/change/enhancement can now be found in the SCCS\index{SCCS} and/or in your ticket system, referenced through the id provided with the annotation\index{annotation}.
+
+When annotations\index{annotation} are used to track and document changes to the source code, the actual maintenance \textit{comments} are reduced to simple references to the ticket IDs cited within those annotations – as shown in lines~50 and 55 in the example above. The \bdq{\nameref{sec:TagSince}}\index{since@"@since} in line~30 can be seen here as a maintenance comment, too.
 
 %==============================================================================
 % End of file!!

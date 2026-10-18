@@ -1,0 +1,41 @@
+\chapter{Commenting out Code}
+Sometimes you want to \bsq{comment out} code that should (no longer) be compiled and/or executed, instead of removing it completely.
+
+First, your production code should not contain any code that is commented out. Nevertheless, during development it is sometimes helpful that you have this option.
+
+Use the \bdq{\lstinline|//|} delimiter to comment out a complete line, only a partial line, or a whole bunch of consecutive lines of code.
+
+Example:
+\begin{lstlisting}
+if( foo > 1 )
+{
+    //---* Do a double-flip *----------------------------------------
+    …
+}
+else
+{
+    return false;  // Explain why here.
+}
+//if( bar > 1 )
+//{
+//    //---* Do a triple-flip *--------------------------------------
+//    …
+//}
+//else
+//{
+//    return false;
+//}
+\end{lstlisting}
+
+It is not a good idea to use a block comment (\bdq{\lstinline|/*…*/|}) for commenting out sections of code, because you cannot have a block comment inside a block comment.
+
+The easiest way to comment out a selected code block this way in the Eclipse IDE\index{Eclipse!IDE} is to use \bdq{\texttt{Source|\allowbreak Toggle Comment}} from the menu or the short key \bdq{\texttt{CTRL+/}}\footnote{On a German keyboard, it is \bdq{7} instead of \bdq{/}.}.
+
+In IntelliJ~IDEA\index{IntelliJ IDEA}, it is the menu command \bdq{\texttt{Code|\allowbreak Comment with Line Comment}} or the short key \bdq{\texttt{CTRL+/}}\footnote{On a German keyboard, it is \bdq{÷} on the numeric keypad instead of \bdq{/}.}.
+
+IntelliJ~IDEA\index{IntelliJ IDEA} has a configuration setting (\bdq{\texttt{File|\allowbreak Settings…|\allowbreak Editor>\allowbreak Inspections>\allowbreak Code Maturity>\allowbreak Commented out code}}) that produces a warning or an error for code that was commented out.
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

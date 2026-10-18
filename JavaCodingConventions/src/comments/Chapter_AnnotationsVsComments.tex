@@ -1,0 +1,47 @@
+\chapter{Annotations vs. Comments}\label{sec:CommentVsAnnotations}
+Sometimes an implementation comment or a maintenance comment\footnote{We discussed that already in chapter \tqfullvref{sec:MaintenanceComments}.} can be replaced or enhanced by an annotation\index{annotation}. Obvious examples are the
+\lstinline|@Override|\index{annotation!Override@"@Override} \autocite{ORACLE_DOC_OVERRIDE_ANNOTATION} and the \lstinline|@Deprecated|\index{annotation!Deprecated@"@Deprecated} \autocite{ORACLE_DOC_DEPRECATED_ANNOTATION} annotations, and to some extent, also the \lstinline|@FunctionalInterface|\index{annotation!FunctionalInterface@"@FunctionalInterface} \autocite{ORACLE_DOC_FUNCTIONALINTERFACE_ANNOTATION} annotation.
+
+Other annotations from the Java Runtime library that could (and should) be used this way are (the list is not exhaustive):
+\begin{itemize}[nosep]
+	\item{\lstinline|@BeanProperty|\index{annotation!BeanProperty@"@BeanProperty} \autocite{ORACLE_DOC_BEANPROPERTY_ANNOTATION}}
+	
+	\item{\lstinline|@Generated|\index{annotation!Generated@"@Generated} \autocite{ORACLE_DOC_GENERATED_ANNOTATION}}
+	
+	\item{\lstinline|@Native|\index{annotation!Native@"@Native} \autocite{ORACLE_DOC_NATIVE_ANNOTATION}}
+	
+	\item{\lstinline|@SafeVarargs|\index{annotation!SafeVarargs@"@SafeVarargs} \autocite{ORACLE_DOC_SAFEVARARGS_ANNOTATION}}
+	
+	\item{\lstinline|@Serial|\index{annotation!Serial@"@Serial} \autocite{ORACLE_DOC_SERIAL_ANNOTATION}}
+	
+	\item{\lstinline|@Transient|\index{annotation!Transient@"@Transient} \autocite{ORACLE_DOC_TRANSIENT_ANNOTATION}}
+\end{itemize}
+
+The \lstinline|@API|\index{annotation!API@"@API} \autocite{APIGUARDIAN:API} annotation can be seen as a comment replacement, too. Refer to chapter \tqfullvref{sec:APIAnnotation} to learn more about this annotation\index{annotation} and its usage.
+
+My Foundation library will have some more samples:
+\begin{itemize}[nosep]
+	\item{\lstinline|@BUG| \autocite{TQUADRAT_ORG_FOUNDATION_BUG}}
+	
+	\item{\lstinline|@ClassVersion| \autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
+	
+	\item{\lstinline|@MountPoint| \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}}
+	
+	\item{\lstinline|@PlaygroundClass| \autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
+	
+	\item{\lstinline|@ProgramClass| \autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
+	
+	\item{\lstinline|@UtilityClass|  \autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
+\end{itemize}
+
+Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper| or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
+
+To some extent is even the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a “replacement” for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that ‘wrong’ piece of code.
+
+Of course using an annotation instead of a comment can help to spare typing, but the greatest advantage of annotations over comments is that you can easily write tools that helps you with checking the source code in accordance with the annotations. Or someone else has already created those tools.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

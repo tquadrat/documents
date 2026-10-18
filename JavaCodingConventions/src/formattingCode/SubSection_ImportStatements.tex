@@ -26,9 +26,9 @@ import java.util.*;
 \end{lstlisting}
 are not allowed and should not even be used for throwaway code. 
 
-Eclipse users can use the function \texttt{Source|Organize Imports} from the menu, or the short-key \texttt{Shift+Ctrl+O}. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this is properly configured in the \texttt{preferences} at \texttt{Java|Code Style|Organize Imports}.
+Users of the Eclipse IDE\index{Eclipse!IDE} can use the function \texttt{Source|Organize Imports} from the menu, or the short-key \texttt{Shift+Ctrl+O}. This will reorder the import statements, explode the wildcards and remove unused imports; it will even add currently missing imports – given that this is properly configured in the \texttt{preferences} at \texttt{Java|Code Style|Organize Imports}.
 
-At IntelliJ~IDEA, the function \texttt{Code|Optimize Imports} from the menu does something similar; the short key would be \texttt{Ctrl+Alt+O}.
+At IntelliJ~IDEA\index{IntelliJ IDEA}, the function \texttt{Code|Optimize Imports} from the menu does something similar; the short key would be \texttt{Ctrl+Alt+O}.
 
 \keeplisting{6}
 Java~25 introduced a new feature, called \textit{Module Import Declarations} \autocite{JEP511}. It allows to import all public classes and interfaces of a module with a single statement:
@@ -41,11 +41,15 @@ As it can cause ambiguities, module imports should be avoided.
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{Place \lstinline|static| imports before non-static ones.}
-\item{Sort the \lstinline|import| statements alphabetically.}
-\item{Do never use wildcard imports.}
-\item{Don't use module imports.}
-\item{Remove unused imports. If an import is only required because of a Javadoc reference, change the Javadoc reference to use the fully qualified class name and remove the import.}
+	\item{Place \lstinline|static| imports before non-static ones.}
+	
+	\item{Sort the \lstinline|import| statements alphabetically.}
+	
+	\item{Do never use wildcard imports.}
+	
+	\item{Don't use module imports.}
+	
+	\item{Remove unused imports. If an import is only required because of a Javadoc reference, change the Javadoc reference to use the fully qualified class name and remove the import.}
 \end{enumerate}
 
 

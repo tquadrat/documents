@@ -14,6 +14,7 @@
 \input{formattingCode/Part}
 \input{naming/Part}
 \input{comments/Part}
+\input{coding/Part}
 
 %------------------------------------------------------------------------------
 
@@ -21,24 +22,6 @@
 
 %------------------------------------------------------------------------------
 
-\part{Coding Guidelines}\label{sec:CodingGuidelines}
-These coding guidelines are a collection of coding standards and best practices. Obeying them should make your code better readable and less error prone. Some of them will even help to increase the program's overall performance. So perhaps you should see them not as optional, but more as obligatory rules.
-
-But as myself, you may have issues to accept something as a “best practice” just because some guru told so. That's a good approach! First because what's a “best practice” today can be an “anti-pattern” tomorrow, and not just because some fashion trends have changed, but also because some new technology was introduced, or – happens all too often! – someone unmasked a false guru.
-
-Another reason is that too often the explanations are missing why the “best practice” is better the alternatives. I have tried to give that explanations when I describe a best practice, but sometimes I just quote one of the gurus of our business and their explanations.
-
-Coding standards are something different; a standard means to do the same thing always in the same way, and that is definitely an \textit{undoubted best practice}. Nevertheless there could be better ways to do that thing – in that case, change the standard\footnote{And I would appreciate if you update me accordingly so that I can modify this document.}
-
-But as always there may be good reasons to do it different from what is recommended or even requested by the guidelines\footnote{You remember the bullet points~\ref{lst:ZoP:SpecialCases} and \ref{lst:ZoP:Practicality} from the \ngref? If not, here are they again: “\ref{lst:ZoP:SpecialCases}~Special cases aren't special enough to break the rules~…” and “\ref{lst:ZoP:Practicality}~…~although practicality beats purity”.}. In such case a comment is required that describes that reason.\footnote{Omitting this comment is also a deviance from the rule, requiring a comment to explain it. Also known as the Catch~22\autocite{WIKIPEDIA:Catch22}.}
-
-One basic recommendation is that you should not write the same code over and over again. This is also known as the “DRY Principle” (“Don't Repeat Yourself”) and we will discuss this later again.
-
-And please keep in mind that not always the shortest, most compact source code is the best. Also avoid what is known as “Premature Optimization”\footnote{Donald E. Knuth made the following statement on optimisation: “We should forget about small efficiencies, say about 97\% of the time: premature optimization is the root of all evil.”\autocite{Knuth:PrematureOptimization}}. Modern optimising compilers and run-time optimisers do a very good job to create compact object code, so in most cases the programmer can concentrate fully on writing readable and comprehensible code. In this context I would like to remind you on the quotation from Martin Fowler's book that I put in front of this document, and again to the \ngref, here the points “\ref{lst:ZoP:SimpleVsComplex}.~Simple is better than complex” and “\ref{lst:ZoP:ComplexVsComplicated}.~Complex is better than complicated”.
-
-But although optimisation still may have some limits, comments will have never any impact on the runtime performance of a program. So please refer to chapter \tqfullvref{sec:CommentsWhen} (if not done already) and see the recommendations on when to apply comments to your code.
-
-%------------------------------------------------------------------------------
 \chapter{Inline vs. Methods}\label{sec:InlineVsMethods}
 Discuss whether it is better to move code to a (private) instead of keeping it inline.
 

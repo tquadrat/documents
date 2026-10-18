@@ -21,25 +21,26 @@ The \lstinline|@API|\index{annotation!API@"@API} \autocite{APIGUARDIAN:API} anno
 
 My Foundation library will have some more samples:
 \begin{itemize}[nosep]
-	\item{\lstinline|@BUG| \autocite{TQUADRAT_ORG_FOUNDATION_BUG}}
+	\item{\lstinline|@ClassVersion|\index{annotation!ClassVersion@"@ClassVersion} \autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
 	
-	\item{\lstinline|@ClassVersion| \autocite{TQUADRAT_ORG_FOUNDATION_CLASSVERSION}}
+	\item{\lstinline|@CR|\index{annotation!CR@"@CR} \autocite{TQUADRAT_ORG_FOUNDATION_CR}\footnote{Described in chapter \tqfullvref{sec:PatchIdentification}.}}
 	
-	\item{\lstinline|@MountPoint| \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}}
+	\item{\lstinline|@MountPoint|\index{annotation!MountPoint@"@MountPoint} \autocite{TQUADRAT_ORG_FOUNDATION_MOUNTPOINT}\footnote{Described in chapter \tqfullvref{sec:MountPoint}.}}
 	
-	\item{\lstinline|@PlaygroundClass| \autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
+	\item{\lstinline|@PlaygroundClass|\index{annotation!PlaygroundClass@"@PlaygroundClass} \autocite{TQUADRAT_ORG_FOUNDATION_PLAYGROUNDCLASS}}
 	
-	\item{\lstinline|@ProgramClass| \autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
+	\item{\lstinline|@ProgramClass|\index{annotation!ProgramClass@"@ProgramClass} \autocite{TQUADRAT_ORG_FOUNDATION_PROGRAMCLASS}}
 	
-	\item{\lstinline|@UtilityClass|  \autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
+	\item{\lstinline|@UtilityClass|\index{annotation!UtilityClass@"@UtilityClass} \autocite{TQUADRAT_ORG_FOUNDATION_UTILITYCLASS}}
 \end{itemize}
 
-Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper| or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
+Similar annotations can be found in other libraries (search for the annotation \lstinline|javax.annotation.OverridingMethodsMustInvokeSuper|\index{annotation!OverridingMethodsMustInvokeSuper@"@OverridingMethodsMustInvokeSuper} or for the annotation \lstinline|org.jetbrains.annotations.MustBeInvokedByOverriders|\index{annotation!MustBeInvokedByOverriders@"@MustBeInvokedByOverriders}), and when you found yourself in the situation that you have to write the same comment to methods or classes over and over again, think about creating your own annotation that can replace that comment – or you look whether there is a library that comes with that annotation already.
 
-To some extent is even the \lstinline|@SuppressWarnings|\autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a “replacement” for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that ‘wrong’ piece of code.
+To some extent is even the \lstinline|@SuppressWarnings|\index{annotation!SuppressWarnings@"@SuppressWarnings} \autocite{ORACLE_DOC_SUPPRESSWARNINGS_ANNOTATION} annotation a \bdq{replacement} for a comment: it tells the compiler to suppress a warning or an error, but it also tells the readers of your source code that you had been aware of what you were doing when implementing that \bsq{wrong} piece of code.
 
-Of course using an annotation instead of a comment can help to spare typing, but the greatest advantage of annotations over comments is that you can easily write tools that helps you with checking the source code in accordance with the annotations. Or someone else has already created those tools.
+Of course using an annotation\index{annotation} instead of a comment can help to spare typing, but the greatest advantage of annotations\index{annotation} over comments is that you can easily write tools that help you with checking the source code in accordance with the annotations\index{annotation}. Or someone else had already created those tools. Depending on the definition of the annotation\index{annotation} they are even available at runtime.
 
+Not to mention that annotations\index{annotations} will be validated during the compilation of the source code.
 
 %==============================================================================
 % End of file!!

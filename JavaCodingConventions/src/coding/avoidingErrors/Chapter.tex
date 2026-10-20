@@ -1,3 +1,24 @@
+\chapter{Error Prevention}\label{sec:ErrorPrevention}
+In the \hyperref[sec:ErrorHandling]{previous chapter} we discussed how to deal with errors (failures) when they occur. Some errors are caused by the environment (missing files, dead networks, unavailable external systems), others are caused by inappropriate handling of the software (illegal input values, wrong configurations, missing credentials). These problems are mostly unavoidable, at least from the view as a programmer. Of course you can design the UI of your product that it guides the users as much as possible to prevent them from doing things wrong, but at the very end, they are still humans (hopefully~…).
+
+There are three other types of errors that can affect a software system:
+\begin{enumerate}[nosep]
+	\item{Syntax Errors}
+	
+	\item{Implementation or Logical Errors}
+	
+	\item{Design Error}
+\end{enumerate}
+
+For a programming language like \Java that requires a compilation step before a program can be executed, errors can be generally sorted into two categories: into compile time errors and in errors that surface during execution (usually referred to as \bdq{runtime errors}). Syntax errors clearly belong to the first category, and usually, they very easy to detect and in most cases easy to fix. In fact, you have to fix them, otherwise your code will never reaches production level.
+
+Basically, this whole book is discussing techniques that should help you avoiding errors. Those described here are explicitly targeted to this goal, while the others are more implicit. Unfortunately is it difficult to provide recipes for design errors, as they often surface only after a long time (and often the design was originally right at the time it was made, but other design decisions made it wrong later).
+
+Consequently, we are focussing to implementation and logical errors for the remainder of this chapter.
+
+%------------------------------------------------------------------------------
+
+\input{coding/avoidingErrors/Section_LogicErrorsVsCompilerErrors}
 
 %==============================================================================
 % End of file!!

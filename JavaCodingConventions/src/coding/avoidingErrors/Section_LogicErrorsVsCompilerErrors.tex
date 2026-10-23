@@ -10,6 +10,16 @@ Logic errors, on the other hand, are the bane of all programmers. They hide and 
 Robert Simmons Jr.: \textit{Hardcore Java} \autocite{Simmons:HARDCORE_JAVA}
 \end{quote}
 
+A quite simple example for swapping a potential logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side. Originally, this recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code. 
+
+When you follow this recommendation, and you forgot the second equal sign for a comparison on equal, the compiler will complain immediately\footnote{Modern IDEs\index{IDE} will also issue warnings about assignment in \lstinline|if| clauses, even when they are syntactically correct.}
+\begin{lstlisting}[language=C]
+if( length() == len ) …
+if( 5 == len ) …
+\end{lstlisting}
+
+Another sample for this is the recommendation to name fields with the \bdq{\lstinline|m\_|} prefix (refer to chapter \tqfullvref{sec:AttributeNames}) instead of using the \bdq{\lstinline|this.|} prefix. The compiler will never complain if you omit that prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field – but it will scream loudly about a non-existing reference if you forget the \bdq{\lstinline|m\_|} prefix when accessing a field named along the rules defined here. Of course you can configure both the Eclipse IDE\index{Eclipse!IDE} and IntelliJ IDEA\index{IntelliJ IDEA} to raise an error or a warning if you access a field without \bdq{\lstinline|this.|}, or if you shadow a field through a local variable with the same name, but this is not mandatory, and therefore not completely reliable. Nevertheless, I prefer the \bdq{\lstinline|m\_|} prefix for fields because it is also easier to read.
+
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
 \item{Utilise the capabilities of your development tools to detect bugs as soon as possible.
@@ -25,13 +35,6 @@ The \verb#javac# in its standard configuration emits already several warnings, b
 Casting an object to another type is a sample for this, invoking methods through Reflection\index{reflection} is another.\footnote{Thanks to the creators of Java that you cannot invoke a method through a pointer, as it is non uncommon in C and C++~…}}
 \end{enumerate}
 
-A quite simple example for swapping a potential logic error for a compiler error is the recommendation to write comparisons always with the unchangeable value on the left side\footnote{This recommendation originates from C/C++ programming where \lstinline|if| conditions are checking values of type integer – and in C, nearly everything can be an integer, or at least be interpreted like one. Java forces that the type of the expression in the \lstinline|if| condition has to be \lstinline|boolean|, therefore this approach is less useful for Java code.}. So if you forget the second equal sign for a comparison on equal, the compiler will complain immediately:
-\begin{lstlisting}
-if( length() == len ) …
-if( 5 == len ) …
-\end{lstlisting}
-
-Another sample for this is the recommendation to name fields with the “\verb#m_#” prefix (refer to chapter \tqfullvref{sec:AttributeNames}) instead of using the \lstinline|this.| prefix. The compiler will never complain if you omit that prefix when accessing a field, and it will not complain if you name a local variable in the same way as a field – but it will scream loudly about a non-existing reference if you forget the “\verb#m_#” prefix when accessing a field named along the rules defined here. Although you can configure both Eclipse and IntelliJ Idea to raise an error or a warning if you access a field without \lstinline|this.|, or if you shadow a field through a local variable with the same name. Nevertheless, I prefer the “\verb#m_#” prefix for fields because it is also easier to read.
 
 Also defining and using value types and domain value types instead of simple types can prevent logic errors from remaining undetected: providing an article number to a method that expects a customer id will not work, when you defined the domain value types \lstinline|ArticleId| and \lstinline|CustomerId| and declared the respective method to take an argument of type \lstinline|CustomerId| instead of a simple \lstinline|String| or \lstinline|int|. Refer to the chapter \tqfullvref{sec:ValueTypes} for more details about this topic.
 

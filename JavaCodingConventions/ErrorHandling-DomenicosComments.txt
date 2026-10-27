@@ -1,0 +1,24 @@
+I love it.
+
+I’ve made it to page 9 so far, and it’s really good. One piece of feedback, if I’m remembering this correctly:
+
+“Simply throwing/catching exceptions through code that was already compiled with the handler correctly baked in from the start does not cause deoptimization – unwinding through compiled frames runs through generated runtime stubs, GC-safe via OopMaps, without falling back to the interpreter.
+
+In short: deoptimization doesn't happen because of the throw itself, but when the exception activates an execution path the compiler had classified as ‘cold’ at compile time.”
+
+That is correct although a few points could be clarified a little further:
+
+DeOptimization does not occur merely because an exception is thrown. If the compiled code already contains the necessary exception-handling path, execution can remain entirely in compiled code. However, optimizations such as inlining, escape analysis, scalar replacement, and uncommon traps may influence how the exception path is represented internally.
+
+When C2 inlines both the throwing and catching code, the exception path may be represented directly in the compiler's IR and compiled into native code. From the program's perspective, the throw/catch path then behaves as a compiled control-flow path rather than necessarily forcing a transition back to the interpreter.
+
+Compiled code can also propagate exceptions across compiled frames and transfer control to a matching handler without immediate deoptimization. Nevertheless, exception handling remains substantially more expensive than a normal return because it requires exception dispatch, stack unwinding, metadata lookups, and state reconstruction work that is absent from a simple return path.
+
+As you said, the main performance concern arises when an exception reaches a path that the JIT treated as uncommon. In that case, HotSpot may trigger an uncommon trap and deoptimize the affected frame, reconstruct interpreter state, and continue execution in the interpreter until sufficient profiling data justifies recompilation. Thus, the cost is not the throw itself, but the combination of:
+
+•	Capturing the stack trace via fillInStackTrace(), whose cost increases with stack depth. The deeper the call stack, the more work is required to record the backtrace.
+•	Activation of a path that the optimizer considered sufficiently rare that it was not fully optimized into the generated code.
+
+Cheers,
+Domenico
+

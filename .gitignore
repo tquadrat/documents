@@ -1,5 +1,6 @@
 /src
 *.tks
+.~lock.*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

@@ -1,0 +1,48 @@
+digraph {
+  size="6,12"
+  rankdir="TB"
+
+  node [shape="box"]
+  
+  start [label="textToNumber( String input )", shape="oval"]
+  cond1 [label="input [0] == '-'?", shape="diamond"]
+  cond2 [label="input [0] == '+'?", shape="diamond"]
+  cond3 [label="more characters\navailable?", shape="diamond"]
+  cond4 [label="index > 2?", shape="diamond"]
+  cond5 [label="is chars[index]\na valid digit?", shape="diamond"]
+  cond6 [label="index < chars.length()?", shape="diamond"]
+  cond7 [label="isNegative?", shape="diamond"]
+
+  block1 [label="isNegative = false\nresult = 0\nindex = 0"]
+  block2 [label="isNegative = true"]
+  block3 [label="skip first character"]
+  block4 [label="set reverted\ncharacters to chars"]
+
+  block5 [label="get numeric value\nof chars[index]\nmultiply that by 10^index\nand add it to result"]
+  block6 [label="increment index"]
+  block7 [label="result = -result"]
+  end   [label="return result",  shape="oval"]
+  abort [label="abort", shape="oval"]
+
+  start -> block1
+  block1 -> cond1
+  cond1 -> block2 [label="Yes"]
+  cond1 -> cond2 [label="No"] 
+  block2 -> block3 -> cond3
+  cond2 -> block3 [label="Yes"]
+  cond2 -> cond3 [label="No"]
+  cond3 -> abort [label="No"]
+  cond3 -> block4 [label="Yes"]
+  block4 -> cond4
+  cond4 -> abort [label="Yes"]
+  cond4 -> cond5 [label="No"]
+  cond5 -> abort [label="No"]
+  cond5 -> block5 [label="Yes"] 
+  block5 -> block6 -> cond6
+  cond6 -> cond4 [label="Yes"]
+  cond6 -> cond7 [label="No"]
+  cond7 -> block7 [label="Yes"]
+  block7 -> end
+  cond7 -> end [label="no"]
+  {end,abort}
+}

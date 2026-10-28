@@ -100,13 +100,18 @@ if( result.isEmpty() )
 \end{lstlisting}
 
 \keeplisting{6}
-For scenario~2, it would be more or less the same, only the message written to the console may differ. But when there is a default value that can be used in case of a missing or invalid configuration value, the call can look like this:
+For scenario~2, it would be more or less the same than for scenario~1, only the message written to the console may differ. But when there is a default value that can be used in case of a missing or invalid configuration value, the call can look like this:
 \index{java.util!OptionalInt!orElse()}
 \begin{lstlisting}
 final var configValue = textToNumber( input ).orElse( 42 );
 \end{lstlisting}
 
-For scenario 3, our program calls doGet() for the incoming HTTP request, and that parses the request parameters:1
+For scenario~3, our program implemented \lstinline|HttpServlet::doGet|\index{jakarta.servlet.http!HttpServlet!goGet()} \autocite{JAKARTA_EE_HTTPSERVLET_CLASS,JAKARTA_EE_HTTPSERVLET::doGet} that processes the incoming HTTP\index{HTTP} requests. It parses the request parameters and aborts in case of a failure:\footnote{For the sake of the argument, we ignore that there is a method named \lstinline|HttpServletRequest::getIntHeader|\index{jakarta.servlet.http!HttpServletRequest!getIntHeader()} \autocite{JAKARTA_EE_HTTPSERVLETREQUEST_CLASS,JAKARTA_EE_HTTPSERVLETREQUEST::getHeader,JAKARTA_EE_HTTPSERVLETREQUEST::getIntHeader} that returns the integer value of the request header directly.}
+\index{jakarta.servlet.http!HttpServletRequest!getHeader()}
+\index{jakarta.servlet.http!HttpServletRequest}
+\index{jakarta.servlet.http!HttpServletResponse!sendError()}
+\index{jakarta.servlet.http!HttpServletResponse}
+\begin{lstlisting}
 protected final void doGet( final HttpServletRequest request, final HttpServletResponse response )
 {
     final var input = request.getHeader( "INPUT" );
@@ -122,10 +127,13 @@ protected final void doGet( final HttpServletRequest request, final HttpServletR
         return;
     }
 }   //  doGet()
-We must check whether input is not null before calling textToNumber() because that method would throw an IllegalArgumentException if called with null as the argument. Of course we could have implemented textToNumber() to return OptionalInt.empty() in case of input == null, but then we could not distinguish the root causes for the failure.
-Scenario 4 will look similar, just the classes and methods are different.
+\end{lstlisting}
+We must check whether \lstinline|input| is not \lstinline|null| before calling \lstinline|textToNumber()| because the method would throw an \lstinline|IllegalArgumentException|\index{java.lang!IllegalArgumentException} \autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS} if called with \lstinline|null| as the argument. Of course we could have implemented \lstinline|textToNumber()| to return \lstinline|OptionalInt.empty()|\index{java.util!OptionalInt!empty()} \autocite{ORACLE_DOC_OPTIONALINT:empty} in case of \lstinline|input == null|, but then we could not distinguish the root cause for the failure.
 
-For scenario 5, we have a loop of some kind:
+The code for scenario~4 will look similar, just the classes and methods are different; we also have a method that handles the incoming data (here a REST\index{REST} message), and that needs to abort in case the conversion from text to number fails.
+
+\keeplisting{16}
+For scenario~5, we have a loop of some kind; it repeats asking the user for a valid number until it gets one. A real UI would allow the user to terminate the current screen alternatively.
 \begin{lstlisting}
 var repeat = true; 
 OptionalInt result;
@@ -145,7 +153,8 @@ while( repeat )
 }
 \end{lstlisting}
 
-The loop for scenario 6 looks a little different:
+\keeplisting{20}
+The loop for scenario~6 is a little different. Each cycle reads a record and tries to translate the text to a number. If this fails, that record will be discarded, otherwise it is further processed.
 \begin{lstlisting}
 while( records.hasMore() )
 {
@@ -169,31 +178,45 @@ while( records.hasMore() )
 }
 \end{lstlisting}
 
-We see that it is possible to avoid exceptions with our implementation of textToNumber() in those cases where failures are not errors. We have seen also that we use exceptions only when the failure is not anticipated (meaning where the failure is really exceptional).
-Our textToNumber() method was used only to illustrate how to report failure to the caller; in a real program, you would use Integer::parseInt for the same purpose. The JavaDoc documentation for that method says:
+We see that it is possible to avoid exceptions\index{exception} with our implementation of \lstinline|textToNumber()| in those cases where failures are not errors. We have seen also that we use exceptions\index{exception} only when the failure is not anticipated (meaning where the failure is really exceptional).
 
-Obviously, it always throws an exception when it cannot parse the given string to a valid integer. This is quite problematic when erroneous input data occurs very frequently, for the reasons described in the chapter regarding the cost of exceptions.
-One solution would be to create your own parser, but the better one is to remember a best practice from the past: validate the input data before you call the method.
+Our \lstinline|textToNumber()| method was used only to illustrate how to report failure to the caller; in a real program, you would use \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} \autocite{ORACLE_DOC_INTEGER:parseInt} for the same purpose. The Javadoc documentation for that method says:
+\begin{center}
+	\includegraphics[scale=0.55]{coding/errorHandling/Javadoc_Integer_parseInt}
+\end{center}
+
+Obviously, \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} always throws an exception\index{exception} when it cannot parse the given string to a valid integer. This is quite problematic when erroneous input data occurs very frequently, for the reasons described in \tqfullref{sec:ExceptionCosts}.
+
+One solution would be to create your own parser, but the better one is to remember a best practice from the past: validate the input data before you call something with that data as an argument.
+
+\keeplisting{6}
+This may look like this:
 \begin{lstlisting}
 var isValid = nonNull( input ) && !input.isBlank();
 if( isValid )
 {
     var pos = 0;
     final var len = input.length();
-    if( !Character.isDigit( input.charAt( 0 ) ) )
+    if( !Character.isDigit( input.charAt( pos ) ) )
     {
         ++pos;
         isValid = input.startsWith( "-" ) || input.startsWith( "+" );
-    }
+    }(|\clearpage|)    
     while( isValid && pos < len )
     {
         isValid = Character.isDigit( input.charAt( pos++ ) );
     }
 }
-final OptionalInt result = isValid ? OptionalInt.of( Integer.parseInt( input ) ) : OptionalInt.empty();
+final OptionalInt result = isValid
+    ? OptionalInt.of( Integer.parseInt( input ) )
+    : OptionalInt.empty();
 \end{lstlisting}
 
-This pattern can be applied to other situations as well. Just assume you want to read some arbitrary files from the filesystem; obviously this fails if the given file name denotes a directory instead of a plain file, or if the necessary permissions to read that file are missing, or if there is no file with the given name. The plain simple implementation would be like this:
+This can be applied to other situations as well. Just assume you want to read some arbitrary files from the filesystem; obviously this fails if the given file name denotes a directory instead of a plain file, or if the necessary permissions to read that file are missing, or if there is no file with the given name. 
+
+The plain simple implementation would be like this:
+\keeplisting{6}
+\begin{lstlisting}
 try
 {
     final var contents = Files.readAllLines( Path.of( fileName ) );
@@ -202,8 +225,13 @@ catch( final InvalidPathException | IOException e )
 {
     reportFailure( "Cannot read file %s".formatted( fileName ), e );
 }
-Just try it and let it throw an exception in case the file cannot be read. Quite acceptable when it works nearly all the time. If not, you have too many exceptions.
-So it is better to validate the input data:
+\end{lstlisting}
+
+Just try it and let it throw an exception\index{exception} in case the file cannot be read. This approach is quite acceptable when it works nearly all the time. If not, you have too many exceptions.
+
+\keeplisting{16}
+So better validate the input data before using it:
+\begin{lstlisting}
 if( isNull( fileName ) ) reportFailure( "filename is null" );
 try
 {
@@ -219,7 +247,7 @@ try
     else if( !Files.isReadable( path ) )
     {
         reportFailure( "Cannot read file %s".formatted( fileName ) );
-    }
+    }(|\clearpage|)
     else
     {
         final var contents = Files.readAllLines( path );
@@ -233,11 +261,20 @@ catch( final IOException e )
 {
     reportFailure( "Unexpected failure reading file %s".formatted( fileName ), e );
 }
-We still have to keep the catch clauses because reading a file can still fail one or the other way, even after we pre-checked and eliminated most of the possible root causes upfront.
+\end{lstlisting}
+
+We still have to keep the \lstinline|catch|\index{try!catch} clauses for the \lstinline|IOException|\index{java.io!IOException} and the \lstinline|InvalidPathException|\index{java.nio.file!InvalidPathException} because reading a file can still fail one or the other way, even after we pre-checked and eliminated most of the possible root causes upfront.
+
 Another example for this approach is one that everybody who starts learning programming is taught with one of the first lessons: it is to check whether a numerical value that should be used as a divisor is not zero, before executing the division.
+
 We have seen now that it is possible to avoid exceptions in case of failures that are not necessarily also errors.
+
 But when is a failure an error?
-Based on what said above, I suggest the following definition: An Error is a Failure that requires to abort the current operation. It should be obvious that already for technical reasons throwing an Exception does always indicate an Error at the level of the current operation. Consequently, catching an Exception means that the current (“calling”) operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.2 
+
+Based on what said above, I suggest the following definition: \bdq{\textit{An Error is a Failure that requires to abort the current operation}}.
+
+It should be obvious that already for technical reasons throwing an Exception\index{exception} does always indicate an Error at the level of the current operation. Consequently, catching an Exception\index{exception} means that the current (the \bdq{calling}) operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.\footnote{But we will see later that it makes sense to catch an Exception\index{exception} even when the error condition cannot be fixed.}
+
 %==============================================================================
 % End of file!!
 %==============================================================================

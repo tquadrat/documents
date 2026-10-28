@@ -64,7 +64,7 @@ public final int textToNumber( final String input )
     return result;
 }   //  textToNumber()
 \end{lstlisting}
-Our translation of \bdq{abort} into a call to \lstinline|System.exit()| makes the function mostly unusable: it is not really feasible to terminate the current program just because of an invalid input to a data conversion function.
+Our translation of \bdq{abort} into a call to \lstinline|System.exit()|\index{java.lang!System!exit()} makes the function mostly unusable: it is not really feasible to terminate the current program just because of an invalid input to a data conversion function.
 
 In a language like C\index{C}, we could solve the issue like this:\footnote{Obviously, this is not valid C\index{C} code, but the signature fits the problem.}
 \keeplisting{25}

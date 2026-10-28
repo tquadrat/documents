@@ -45,7 +45,7 @@ It should be equally obvious that throughput collapses when the JVM must discard
 		\item{Local variables become eligible for the garbage collection}
 		\item{The search continues recursively in the caller frame}
 	\end{itemize}
-	If no matching handler exists anywhere on the stack, \lstinline|Thread::dispatchUncaughtException|\index{java.lang!Thread!dispatchUncaughtException()} will call the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} that is either set to the \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS} object itself or to the associated \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS}. If none is set, the parent thread is searched for an \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler}.}
+	If no matching handler exists anywhere on the stack, the internal method \lstinline|Thread::dispatchUncaughtException|\index{java.lang!Thread!dispatchUncaughtException()} will call the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} that is either set to the \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS} object itself or to the associated \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS}. If none is set, the parent thread is searched for an \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler}.}
 \end{enumerate}
 
 %------------------------------------------------------------------------------

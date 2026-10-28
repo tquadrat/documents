@@ -1,0 +1,244 @@
+\section{Not every Failure is an Error}\label{sec:FailureVsError}
+As said above: using Exceptions\index{exception} for real errors does not harm, but for mere failures, they are far from being the silver bullet.
+
+But when is a failure an error?
+
+Let’s go back to the \lstinline|textToNumber()| method which we have already cited above. The need to convert a string consisting solely of digits into the numerical value it represents may arise at various points in a program; below some sample scenarios:
+\begin{enumerate}[label=Scenario \arabic*:,leftmargin=8em]
+	\item{Parsing the command line arguments during program startup}
+	\item{Reading a configuration parameter from a configuration file, again during startup}
+	\item{Parsing the arguments of an HTTP request}
+	\item{Interpreting the incoming data on a REST response}
+	\item{Handling the user input from a UI}
+	\item{Reading data that was previously stored by the same program}
+\end{enumerate}
+
+Obviously, our response on a failure of \lstinline|textToNumber()| should be different depending on the use case.
+
+In the first and perhaps even the second scenario, the program would need to abort if the conversion from text to a number fails. Here that failure is clearly an error. For these cases, one could even use the very first version of the \lstinline|textToNumber()| method (that one calling \lstinline|System.exit()|\index{java.lang!System!exit()} upon failure). The second scenario may define a default value that is used in case the conversion of the configuration value failed, avoiding the program abort.
+
+Perhaps aborting the program would be even the proper behaviour in scenario~6, although it is more likely that you would abandon the current record, report the failure to to the user and proceed with the next record.
+
+But for scenarios~3, 4 and 5, our program gets invalid data from an external source. So, it should reflect that to that source (by sending a \texttt{\mbox{5xx}} status code or returning an error code to the requestor in case of 3 and 4, or by displaying a window with an error message in scenario~5). These cases are not errors, at least not from our point of view.
+
+Of course, we want to have only one implementation of \lstinline|textToNumber()| that fits all scenarios. That eliminates obviously the very first implementation attempt. But based on what we know from the \hyperlink[sec:ExceptionCosts]{previous} chapter, it is not acceptable to use Exceptions\index{exception} for the flow control, due to their costs. That means that we cannot use the last version of our function, too, at least not for the scenarios~3, 4, and 5.
+
+The cost for the exceptions\index{exception} does not matter for the scenarios~1 and 2, because the program aborts afterwards, and it can be ignored for scenario~6, because \lstinline|textToNumber()| normally does not fail in this case.
+
+But for the remaining three scenarios, we may have to face a lot of failures and should therefore avoid the use of exceptions. Luckily, this requirement is not new, and the problem with the special values for reporting a failure is well known. The answer for that is coming with the classes
+\begin{itemize}[nosep]
+	\item{\lstinline|java.util.Optional<T>|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS}}
+	\item{\lstinline|java.util.OptionalDouble|\index{java.util!OptionalDouble} \autocite{ORACLE_DOC_OPTIONALDOUBLE_CLASS}}
+	\item{\lstinline|java.util.OptionalInt|\index{java.util!OptionalInt} \autocite{ORACLE_DOC_OPTIONALINT_CLASS}}
+	\item{\lstinline|java.util.OptionalLong|\index{java.util!OptionaLong} \autocite{ORACLE_DOC_OPTIONALLONG_CLASS}}
+\end{itemize}
+
+For our use case, \lstinline|OptionalInt|\index{java.util!OptionalInt} is the proper tool.
+
+\keeplisting{35}
+Here the implementation of \lstinline|textToNumber()| that uses \lstinline|OptionalInt|\index{java.util!OptionalInt} as the return value: 
+\begin{lstlisting}
+public final OptionalInt textToNumber( final String input )
+{
+    if( isNull( input ) ) throw new IllegalArgumentException( "input is null" );
+    OptionalInt retValue = OptionalInt.empty();
+    var pos = 0;
+    var isNegative = false;
+    if( input.charAt( pos ) == '-' )
+    {
+        isNegative = true;
+        ++pos;
+    }
+    else
+    {
+        if( input.charAt( pos ) == '+' ) ++pos;
+    }
+    if( pos < input.length() )
+    {
+        final var s = reversed( input.substring( pos ).toCharArray() );
+
+        var result = 0;
+        var index = 0;
+        SumLoop: while( index < s.length )
+        {
+            if( index > 2 || s [index] < '0' || s [index] > '9' )
+            {
+                index = -1;
+                break SumLoop;
+            }
+            result += (s [index] - '0') * Math.powExact( 10, index );
+            ++index;
+        }   //  SumLoop:
+        if( index > 0 )
+        {
+            if( isNegative ) result *= -1;
+            retValue = OptionalInt.of( result );
+        }
+    }
+
+    return retValue;
+}   //  textToNumber()
+\end{lstlisting}
+
+\keeplisting{2}
+Generally, \lstinline|textToNumber()| can be called like this now:
+\index{java.util!OptionalInt!ifPresentOrElse()}
+\begin{lstlisting}
+textToNumber( input ).ifPresentOrElse( IO::println, () -> println( "Invalid Input" );
+\end{lstlisting}
+
+\keeplisting{6}
+For scenario~1, the call may look like this:
+\index{java.util!OptionalInt!isEmpty()}
+\begin{lstlisting}
+final var result = textToNumber( input );
+if( result.isEmpty() )
+{
+    err.printf( "Invalid Number on command line: %s%nProgram aborted!%n", input );
+    System.exit( -1 );
+}
+\end{lstlisting}
+
+\keeplisting{6}
+For scenario~2, it would be more or less the same, only the message written to the console may differ. But when there is a default value that can be used in case of a missing or invalid configuration value, the call can look like this:
+\index{java.util!OptionalInt!orElse()}
+\begin{lstlisting}
+final var configValue = textToNumber( input ).orElse( 42 );
+\end{lstlisting}
+
+For scenario 3, our program calls doGet() for the incoming HTTP request, and that parses the request parameters:1
+protected final void doGet( final HttpServletRequest request, final HttpServletResponse response )
+{
+    final var input = request.getHeader( "INPUT" );
+    if( isNull( input ) )
+    {
+        response.sendError( 555, "No value for INPUT provided" );
+        return;
+    }
+    final var result = textToNumber( input );
+    if( result.isEmpty() ) 
+    {
+        response.sendError( 555, "Value for INPUT is invalid: %s".formatted( input ) );
+        return;
+    }
+}   //  doGet()
+We must check whether input is not null before calling textToNumber() because that method would throw an IllegalArgumentException if called with null as the argument. Of course we could have implemented textToNumber() to return OptionalInt.empty() in case of input == null, but then we could not distinguish the root causes for the failure.
+Scenario 4 will look similar, just the classes and methods are different.
+
+For scenario 5, we have a loop of some kind:
+\begin{lstlisting}
+var repeat = true; 
+OptionalInt result;
+while( repeat )
+{
+    final var inputData = ui.retrieveInputData();
+    final var input = inputData.get( "input" ); // Will never return null!!
+    result = textToNumber( input );
+    if( result.isPresent() ) 
+    {
+        repeat = false;
+    }
+    else
+    { 
+        ui.displayMessage( "input", "%s is not a valid number".formatted( input ) );
+    }
+}
+\end{lstlisting}
+
+The loop for scenario 6 looks a little different:
+\begin{lstlisting}
+while( records.hasMore() )
+{
+    final var dataRecord = records.next();
+    final int number;
+    try
+    {
+        number = textToNumber( dataRecord.getInput() ).orElseThrow(); 
+    }
+    catch( final NoSuchElementException _ )
+    {
+        reportError( dataRecord, "input", "Not a number" );
+        continue;
+    }
+    catch( final IllegalArgumentException _ )
+    {
+        reportError( dataRecord, "input", "No value" );
+        continue;
+    }
+    process();
+}
+\end{lstlisting}
+
+We see that it is possible to avoid exceptions with our implementation of textToNumber() in those cases where failures are not errors. We have seen also that we use exceptions only when the failure is not anticipated (meaning where the failure is really exceptional).
+Our textToNumber() method was used only to illustrate how to report failure to the caller; in a real program, you would use Integer::parseInt for the same purpose. The JavaDoc documentation for that method says:
+
+Obviously, it always throws an exception when it cannot parse the given string to a valid integer. This is quite problematic when erroneous input data occurs very frequently, for the reasons described in the chapter regarding the cost of exceptions.
+One solution would be to create your own parser, but the better one is to remember a best practice from the past: validate the input data before you call the method.
+\begin{lstlisting}
+var isValid = nonNull( input ) && !input.isBlank();
+if( isValid )
+{
+    var pos = 0;
+    final var len = input.length();
+    if( !Character.isDigit( input.charAt( 0 ) ) )
+    {
+        ++pos;
+        isValid = input.startsWith( "-" ) || input.startsWith( "+" );
+    }
+    while( isValid && pos < len )
+    {
+        isValid = Character.isDigit( input.charAt( pos++ ) );
+    }
+}
+final OptionalInt result = isValid ? OptionalInt.of( Integer.parseInt( input ) ) : OptionalInt.empty();
+\end{lstlisting}
+
+This pattern can be applied to other situations as well. Just assume you want to read some arbitrary files from the filesystem; obviously this fails if the given file name denotes a directory instead of a plain file, or if the necessary permissions to read that file are missing, or if there is no file with the given name. The plain simple implementation would be like this:
+try
+{
+    final var contents = Files.readAllLines( Path.of( fileName ) );
+}
+catch( final InvalidPathException | IOException e )
+{
+    reportFailure( "Cannot read file %s".formatted( fileName ), e );
+}
+Just try it and let it throw an exception in case the file cannot be read. Quite acceptable when it works nearly all the time. If not, you have too many exceptions.
+So it is better to validate the input data:
+if( isNull( fileName ) ) reportFailure( "filename is null" );
+try
+{
+    final var path = Path.of( fileName );
+    if( !Files.exists( path ) )
+    {
+        reportFailure( "File %s does not exist".formatted( fileName ) );
+    }
+    else if( !Files.isRegularFile( path ) )
+    {
+        reportFailure( "File %s is not a regular file".formatted( fileName ) );
+    }
+    else if( !Files.isReadable( path ) )
+    {
+        reportFailure( "Cannot read file %s".formatted( fileName ) );
+    }
+    else
+    {
+        final var contents = Files.readAllLines( path );
+    }
+}
+catch( final InvalidPathException e )
+{
+    reportFailure( "Invalid Path: %s".formatted( fileName ), e );
+}
+catch( final IOException e )
+{
+    reportFailure( "Unexpected failure reading file %s".formatted( fileName ), e );
+}
+We still have to keep the catch clauses because reading a file can still fail one or the other way, even after we pre-checked and eliminated most of the possible root causes upfront.
+Another example for this approach is one that everybody who starts learning programming is taught with one of the first lessons: it is to check whether a numerical value that should be used as a divisor is not zero, before executing the division.
+We have seen now that it is possible to avoid exceptions in case of failures that are not necessarily also errors.
+But when is a failure an error?
+Based on what said above, I suggest the following definition: An Error is a Failure that requires to abort the current operation. It should be obvious that already for technical reasons throwing an Exception does always indicate an Error at the level of the current operation. Consequently, catching an Exception means that the current (“calling”) operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.2 
+%==============================================================================
+% End of file!!
+%==============================================================================
+

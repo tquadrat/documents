@@ -1,0 +1,63 @@
+\section{Reporting Failures and Errors}\label{sec:ReportFailure}
+An Error may not remain unnoticed, and to some extent, even Failures should be brought to the attention of the users or administrators of our program.
+
+Usually the reporting of an Error is delegated by the aborted operation to its parent operation (in case of a method\index{method} call, the aborted method\index{method} relayed it to the method\index{method} that called it). But at some level, there isn’t a parent operation anymore – so how to report at this level?
+
+\subsection{Ways to Report}
+Basically, these are ways an operation (a method\index{method}) has to externalise an error condition (to bring it to the attention of the users or administrators):
+
+\paragraph{Return a status as the return value of the method\index{method} call} – We discussed this already \hyperref[sec:FailureVsError]{above}. It requires that the calling method\index{method} checks the return value to detect the failure, but it does not externalises the error condition. This remains the task of the caller. 
+
+\paragraph{Set a global status flag} – This approach can cause issues in multithreaded environments, because it may be difficult to synchronize concurrent updates to the global field that represents the status flag.
+
+It also requires the calling method\index{method} to check that flag after each call, and it also leaves the externalisation of the error condition to the caller.
+
+You should always prefer a return value for the status over a global status flag, and if that is not feasible, throwing an Exception\index{exception} still might be the better option.
+
+\paragraph{Write a message to the console} – This immediately externalises the error condition, but in the most volatile way. Nevertheless, depending on the context, this may be sufficient.
+
+\paragraph{Open a message window} – Obviously this make sense only for an application with some kind of UI. Usually, such a message window (or \bdq{Message Box}) provides options on how to proceed.
+
+This is similarly volatile as writing the message to the console, but as in most cases the message window requires a user interaction before the program continues, it gets more attention.
+
+\paragraph{Write a message to a file} – This is a simple form of logging, sometimes referred to as \bdq{The Poor Man's Logging}; often this uses the same mechanics as writing a message to a console, just with a different target. It externalises the error condition in a non-volatile way.
+
+\paragraph{Send a message (as email or through a Messaging Service)} – This externalises the error condition in the most consequent manner possible: it sends it into the world. Whether it is volatile or not depends on the receiving entity.
+
+\paragraph{Log a message through a log service} – Logging externalises the error condition by persisting it in some way. How this is done is highly configurable, details about this are discussed in chapter \tqfullvref{sec:Logging}.
+
+\paragraph{Throw an exception\index{exception}} – Signalling an error condition by throwing an exception\index{exception} delegates the whole responsibility to the caller. This will be discussed further in chapter \tqfullvref{sec:ThrowingExceptions}. Depending on the context, it could be useful to define a hierarchy of domain-specific exceptions\index{exception} (refer to chapter \tqfullvref{sec:DomainSpecificExceptions}).
+
+Throwing an exception will not externalise the error condition and it is volatile.
+
+\bigskip
+
+Usually only one way should be used, although it is sometimes a good idea to persist an otherwise volatile status.
+
+The appropriate way to report Failures and Errors depends on the type of product\footnote{as defined in chapter \tqfullvref{sec:TypesOfProducts}} that you work on.
+
+\subsubsection{\nameref{sec:FunctionLibrary}}
+A function library\index{product type!function library} should report failures through return values and errors through exceptions\index{exception}. If a library consists of a relatively loose collection of utility functions and classes, a hierarchy of domain-specific exceptions\index{exception} (refer to \tqfullvref{sec:DomainSpecificExceptions}) does not make sense.
+
+Furthermore, the library's methods should not perform any logging; instead, they should delegate this task to the calling methods within the consuming application.
+
+\subsubsection{\nameref{sec:FeatureLibrary}}
+A feature library\index{product type!feature library} usually defines a \bdq{domain} and should therefore come a with a hierarchy of domain-specific exceptions\index{exception} that are used to report error conditions to the host application. Other than a function library\index{product type!function library}, the methods\index{method} of a feature library\index{product type!feature library} should never emit standard exceptions to a calling method outside the library.
+
+A feature library\index{product type!feature library} may also log failures and errors through a log services, but it should use a facade for the log service, like SLF4J\index{SLF4J} \autocite{SLF4J}, instead of referring the log service directly.
+
+\subsubsection{\nameref{sec:Tool}\index{product type!tool}}
+\subsubsection{\nameref{sec:StandaloneApplication}\index{product type!standalone application}}
+\subsubsection{\nameref{sec:ServerbasedApplication}\index{product type!server-based application}}
+
+\subsubsection{\nameref{sec:Extension}}
+Extensions\index{product type!extension} are executed in the context of another application that defines how failures and errors must be reported. Usually such an application will provide an API for messaging and/or logging. For the details you have to refer to the documentation of the respective application.
+
+\subsubsection{\nameref{sec:ScriptInJava}}
+A script\index{product type!script} should write messages about failures and errors directly to the console.
+
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+

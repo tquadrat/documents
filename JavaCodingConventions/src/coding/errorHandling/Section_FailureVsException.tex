@@ -17,11 +17,11 @@ Obviously, our response on a failure of \lstinline|textToNumber()| should be dif
 
 In the first and perhaps even the second scenario, the program would need to abort if the conversion from text to a number fails. Here that failure is clearly an error. For these cases, one could even use the very first version of the \lstinline|textToNumber()| method (that one calling \lstinline|System.exit()|\index{java.lang!System!exit()} upon failure). The second scenario may define a default value that is used in case the conversion of the configuration value failed, avoiding the program abort.
 
-Perhaps aborting the program would be even the proper behaviour in scenario~6, although it is more likely that you would abandon the current record, report the failure to to the user and proceed with the next record.
+Perhaps aborting the program would be even the proper behaviour in scenario~6, although it is more likely that you would abandon the current record, somehow report the failure to the user and proceed with the next record.
 
 But for scenarios~3, 4 and 5, our program gets invalid data from an external source. So, it should reflect that to that source (by sending a \texttt{\mbox{5xx}} status code or returning an error code to the requestor in case of 3 and 4, or by displaying a window with an error message in scenario~5). These cases are not errors, at least not from our point of view.
 
-Of course, we want to have only one implementation of \lstinline|textToNumber()| that fits all scenarios. That eliminates obviously the very first implementation attempt. But based on what we know from the \hyperlink[sec:ExceptionCosts]{previous} chapter, it is not acceptable to use Exceptions\index{exception} for the flow control, due to their costs. That means that we cannot use the last version of our function, too, at least not for the scenarios~3, 4, and 5.
+Of course, we want to have only one implementation of \lstinline|textToNumber()| that fits all scenarios. That eliminates obviously the very first implementation attempt. But based on what we know from the \hyperref[sec:ExceptionCosts]{previous} chapter, it is not acceptable to use Exceptions\index{exception} for the flow control, due to their potential costs. That means that we cannot use the last version of our function, too, at least not for the scenarios~3, 4, and 5.
 
 The cost for the exceptions\index{exception} does not matter for the scenarios~1 and 2, because the program aborts afterwards, and it can be ignored for scenario~6, because \lstinline|textToNumber()| normally does not fail in this case.
 
@@ -36,7 +36,7 @@ But for the remaining three scenarios, we may have to face a lot of failures and
 For our use case, \lstinline|OptionalInt|\index{java.util!OptionalInt} is the proper tool.
 
 \keeplisting{35}
-Here the implementation of \lstinline|textToNumber()| that uses \lstinline|OptionalInt|\index{java.util!OptionalInt} as the return value: 
+Here is an implementation of \lstinline|textToNumber()| that uses \lstinline|OptionalInt|\index{java.util!OptionalInt} as the return value: 
 \begin{lstlisting}
 public final OptionalInt textToNumber( final String input )
 {
@@ -178,7 +178,7 @@ while( records.hasMore() )
 }
 \end{lstlisting}
 
-We see that it is possible to avoid exceptions\index{exception} with our implementation of \lstinline|textToNumber()| in those cases where failures are not errors. We have seen also that we use exceptions\index{exception} only when the failure is not anticipated (meaning where the failure is really exceptional).
+We see that it is possible to avoid exceptions\index{exception} with this last implementation of \lstinline|textToNumber()| in those cases where failures are not errors. We have seen also that we use exceptions\index{exception} only when the failure is not anticipated (meaning where the failure is really exceptional).
 
 Our \lstinline|textToNumber()| method was used only to illustrate how to report failure to the caller; in a real program, you would use \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} \autocite{ORACLE_DOC_INTEGER:parseInt} for the same purpose. The Javadoc documentation for that method says:
 \begin{center}
@@ -263,7 +263,7 @@ catch( final IOException e )
 }
 \end{lstlisting}
 
-We still have to keep the \lstinline|catch|\index{try!catch} clauses for the \lstinline|IOException|\index{java.io!IOException} and the \lstinline|InvalidPathException|\index{java.nio.file!InvalidPathException} because reading a file can still fail one or the other way, even after we pre-checked and eliminated most of the possible root causes upfront.
+We must keep the \lstinline|catch|\index{try!catch} clauses for the \lstinline|IOException|\index{java.io!IOException} and the \lstinline|InvalidPathException|\index{java.nio.file!InvalidPathException} because reading a file can still fail one or the other way, even after we pre-checked and eliminated most of the possible root causes upfront.
 
 Another example for this approach is one that everybody who starts learning programming is taught with one of the first lessons: it is to check whether a numerical value that should be used as a divisor is not zero, before executing the division.
 
@@ -273,7 +273,7 @@ But when is a failure an error?
 
 Based on what said above, I suggest the following definition: \bdq{\textit{An Error is a Failure that requires to abort the current operation}}.
 
-It should be obvious that already for technical reasons throwing an Exception\index{exception} does always indicate an Error at the level of the current operation. Consequently, catching an Exception\index{exception} means that the current (the \bdq{calling}) operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.\footnote{But we will see later that it makes sense to catch an Exception\index{exception} even when the error condition cannot be fixed.}
+It should be obvious that already for technical reasons throwing an Exception\index{exception} does always indicate an Error at the level of the current operation. Consequently, catching an Exception\index{exception} means that the calling operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.\footnote{But we will see later that it makes sense to catch an Exception\index{exception} even when the error condition cannot be fixed.}
 
 %==============================================================================
 % End of file!!

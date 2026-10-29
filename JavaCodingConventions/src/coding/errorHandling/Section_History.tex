@@ -14,7 +14,7 @@ The program flowchart for that function is shown on the next page.
 \clearpage
 
 \keeplisting{16}
-The pseudo code for it function would look like this:
+The pseudo code for the function would look like this:
 \begin{enumerate}[nosep]
 	\item{Get the \textit{input} value.}
 	\item{If the first character of \textit{input} is \bsq{-}, set the flag \textit{isNegative} to \lstinline|true|, otherwise it is \lstinline|false|.}
@@ -103,7 +103,7 @@ bool textToNumber( const char* input, int& result )
 You call this method like this:
 \begin{lstlisting}[language=C]
 int result;
-if( !textToNumber( input, &result ) )
+if( !textToNumber( input, result ) )
 {
     // Handle the failure;
 }

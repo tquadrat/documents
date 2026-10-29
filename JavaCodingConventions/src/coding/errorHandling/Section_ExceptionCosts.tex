@@ -1,7 +1,7 @@
 \section{The Costs of Throwing an Exception}\label{sec:ExceptionCosts}
 To understand this section, some background knowledge regarding the interaction between the Java compiler \texttt{javac}\index{javac}, the \Java Virtual Machine (JVM), and the integrated JIT\index{JIT} compiler (HotSpot\index{HotSpot} for Oracle's JVM) is helpful.
 
-The Java compiler \texttt{javac}\index{javac} translates Java source code into Java bytecode ­– a form of \bdq{machine language}” executed interpretively within a virtual machine (the JVM) ­– entailing the performance issues inherent to interpreters.
+The Java compiler \texttt{javac}\index{javac} translates Java source code into Java bytecode ­– a form of \bdq{machine language} executed interpretively within a virtual machine (the JVM) ­– entailing the performance issues inherent to interpreters.
 
 As mentioned, the JIT\index{JIT} (just-in-time) compiler is a component of the JVM; it translates Java bytecode into native machine code at runtime, while the program is executed. However, only code that is executed repeatedly is translated; furthermore, the generated machine code may be discarded and replaced with newly generated code as part of further optimizations.
 
@@ -15,7 +15,7 @@ It should be equally obvious that throughput collapses when the JVM must discard
 \begin{enumerate}
 	\item{Object Creation and Stack Trace Capture
 	 
-	When \lstinline|throw new FooException()| is executed, normal object allocation happens, then the constructor\index{constructor} of \lstinline|java.lang.Throwable|\index{java.lang!Throwable} \autocite{ORACLE_DOC_THROWABLE_CLASS} calls the native method \lstinline|fillInStackTrace()|\index{java.lang!Throwable!fillInStackTrace()} \autocite{ORACLE_DOC_THROWABLE:fillInStackTrace}. This runs synchronously in the throwing thread itself (no safepoint is needed, since it is inspecting its own stack) and builds a compact internal backtrace structure – not yet the finished \lstinline|StackTraceElement[]|\index{java.lang!StackTraceElement} array \autocite{ORACLE_DOC_STACKTRACEELEMENT_CLASS}. That array only materializes lazily when \lstinline|Throwable::getStackTrace|\index{java.lang!Throwable!getStackTrace()} \autocite{ORACLE_DOC_THROWABLE:getStackTrace} or \lstinline|Throwable::printStackTrace|\index{java.lang!Throwable!printStackTrace()} \autocite{ORACLE_DOC_THROWABLE:printStackTrace} is called.
+	When \bdq{\lstinline|throw new FooException()|} is executed, normal object allocation happens, then the constructor\index{constructor} of \lstinline|java.lang.Throwable|\index{java.lang!Throwable} \autocite{ORACLE_DOC_THROWABLE_CLASS} calls the native method \lstinline|fillInStackTrace()|\index{java.lang!Throwable!fillInStackTrace()} \autocite{ORACLE_DOC_THROWABLE:fillInStackTrace}. This runs synchronously in the throwing thread itself (no safepoint is needed, since it is inspecting its own stack) and builds a compact internal backtrace structure – not yet the finished \lstinline|StackTraceElement[]|\index{java.lang!StackTraceElement} array \autocite{ORACLE_DOC_STACKTRACEELEMENT_CLASS}. That array only materializes lazily when \lstinline|Throwable::getStackTrace|\index{java.lang!Throwable!getStackTrace()} \autocite{ORACLE_DOC_THROWABLE:getStackTrace} or \lstinline|Throwable::printStackTrace|\index{java.lang!Throwable!printStackTrace()} \autocite{ORACLE_DOC_THROWABLE:printStackTrace} is called.
 	
 	For the JVM-internal exceptions
 	\begin{itemize}[nosep]
@@ -45,7 +45,7 @@ It should be equally obvious that throughput collapses when the JVM must discard
 		\item{Local variables become eligible for the garbage collection}
 		\item{The search continues recursively in the caller frame}
 	\end{itemize}
-	If no matching handler exists anywhere on the stack, the internal method \lstinline|Thread::dispatchUncaughtException|\index{java.lang!Thread!dispatchUncaughtException()} will call the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} that is either set to the \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS} object itself or to the associated \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS}. If none is set, the parent thread is searched for an \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler}.}
+	If no matching handler exists anywhere on the stack, the internal method \lstinline|Thread::dispatchUncaughtException|\index{java.lang!Thread!dispatchUncaughtException()} will call the implementation of the interface \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} that is either set to the \lstinline|Thread|\index{java.lang!Thread} \autocite{ORACLE_DOC_THREAD_CLASS} object itself or to the associated \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS}. If none is set, the parent thread is searched for an \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler}.}
 \end{enumerate}
 
 %------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ It should be equally obvious that throughput collapses when the JVM must discard
 \subsection{JIT Deoptimization}\label{sec:JITDeopt}
 This is where the real cost lies if things go wrong.
  
-The JIT\index{JIT} compiler profiles exception paths. If a \lstinline|catch|\index{try!catch} branch is rarely or never taken during profiling, the compiler often doesn't compile it in fully – it places an uncommon trap there instead. If that path is then actually hit at runtime, it triggers a deoptimization of that specific method\index{method} execution falls back to the interpreter for that frame and continues interpreted from there.
+The JIT\index{JIT} compiler profiles exception paths. If a \lstinline|catch|\index{try!catch} branch is rarely or never taken during profiling, the compiler often doesn't compile it in fully – it places an \textit{uncommon} trap there instead. If that path is then actually hit at runtime, it triggers a \textit{deoptimization of that specific method}\index{method}: execution falls back to the interpreter for that frame and continues interpreted from there.
 
 \bdq{Deoptimization} means the compiler's optimistic assumption was proven wrong, so execution switches from compiled code back to the interpreter by reconstructing interpreter state, and the compiled code may either be discarded or recompiled.
 

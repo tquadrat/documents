@@ -37,25 +37,39 @@ Usually only one way should be used, although it is sometimes a good idea to per
 The appropriate way to report Failures and Errors depends on the type of product\footnote{as defined in chapter \tqfullvref{sec:TypesOfProducts}} that you work on.
 
 \subsubsection{\nameref{sec:FunctionLibrary}}
-A function library\index{product type!function library} should report failures through return values and errors through exceptions\index{exception}. If a library consists of a relatively loose collection of utility functions and classes, a hierarchy of domain-specific exceptions\index{exception} (refer to \tqfullvref{sec:DomainSpecificExceptions}) does not make sense.
+A function library\index{product type!function library} should report failures through return values and errors through exceptions\index{exception}. If a library consists of a relatively loose collection of utility functions and classes and in most cases the Exceptions\index{exception} thrown by called methods\index{method} are delegated, a hierarchy of domain-specific exceptions\index{exception} (refer to \tqfullvref{sec:DomainSpecificExceptions}) is not really necessary.
 
 Furthermore, the library's methods should not perform any logging; instead, they should delegate this task to the calling methods within the consuming application.
 
 \subsubsection{\nameref{sec:FeatureLibrary}}
 A feature library\index{product type!feature library} usually defines a \bdq{domain} and should therefore come a with a hierarchy of domain-specific exceptions\index{exception} that are used to report error conditions to the host application. Other than a function library\index{product type!function library}, the methods\index{method} of a feature library\index{product type!feature library} should never emit standard exceptions to a calling method outside the library.
 
-A feature library\index{product type!feature library} may also log failures and errors through a log services, but it should use a facade for the log service, like SLF4J\index{SLF4J} \autocite{SLF4J}, instead of referring the log service directly.
+A feature library\index{product type!feature library} may also log failures and errors through a log service, but it should use a facade for the log service, like SLF4J\index{SLF4J} \autocite{SLF4J}, instead of referring the log service directly.
 
-\subsubsection{\nameref{sec:Tool}\index{product type!tool}}
-\subsubsection{\nameref{sec:StandaloneApplication}\index{product type!standalone application}}
-\subsubsection{\nameref{sec:ServerbasedApplication}\index{product type!server-based application}}
+\subsubsection{\nameref{sec:Tool}}
+Usually, a tool\index{product type!tool} aborts immediately when an error occurs; therefore writing messages about failures and errors directly to the console is sufficient in most cases.
+
+Some tools require that the messages about error conditions need to be persisted. In that case, writing them to a file should do the job. But logging through a log service is also an option, especially if reporting  must be configurable.
+
+\subsubsection{\nameref{sec:StandaloneApplication}}
+If a standalone application\index{product type!standalone application} has a UI, either text-based\index{TUI} or graphical, as message box for externalising the error condition is the best option. In addition, a log service should be used, too.
+
+For headless application, the log service is the only feasible choice.
+
+Each application should also define its own hierarchy of domain-specific exceptions\index{exception} (refer to \tqfullvref{sec:DomainSpecificExceptions}). As a larger application usually consists of multiple different modules, it may define even more than one of these hierarchies, one per modules. The Exceptions\index{exception} will not leave the realm of the application, but they are logged, and already having descriptive names for the Exception class\index{class!exception class} will help to debug the problem that caused the exception\index{exception}.
+ 
+\subsubsection{\nameref{sec:ServerbasedApplication}}
+Several application servers provide APIs for the reporting of failures and error that can be used by a server-based application\index{product type!server-based application}.
+
+But most server-based applications\index{product type!server-based application} – in particular web applications and JEE applications – use a log service for this purpose, because the server-provided APIs are proprietary. 
+
+What is said about domain-specific exceptions\index{exception} for standalone application\index{product type!standalone application} is also true for most server-based applications\index{product type!server-based application}.
 
 \subsubsection{\nameref{sec:Extension}}
 Extensions\index{product type!extension} are executed in the context of another application that defines how failures and errors must be reported. Usually such an application will provide an API for messaging and/or logging. For the details you have to refer to the documentation of the respective application.
 
 \subsubsection{\nameref{sec:ScriptInJava}}
-A script\index{product type!script} should write messages about failures and errors directly to the console.
-
+A script\index{product type!script} should write messages about failures and errors directly to the console, because, similar to a tool\index{product type!tool}, a script\index{product type!script} usually aborts at the first error.
 
 %==============================================================================
 % End of file!!

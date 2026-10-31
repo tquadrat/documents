@@ -12,7 +12,7 @@ Basically, these are ways an operation (a method\index{method}) has to externali
 
 It also requires the calling method\index{method} to check that flag after each call, and it also leaves the externalisation of the error condition to the caller.
 
-You should always prefer a return value for the status over a global status flag, and if that is not feasible, throwing an Exception\index{exception} still might be the better option.
+You should always prefer a return value for the status over a global status flag, and if that is not feasible, throwing an exception\index{exception} still might be the better option.
 
 \paragraph{Write a message to the console} – This immediately externalises the error condition, but in the most volatile way. Nevertheless, depending on the context, this may be sufficient.
 

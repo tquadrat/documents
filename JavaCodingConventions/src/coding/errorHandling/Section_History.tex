@@ -164,7 +164,7 @@ C\index{C} allows us to use \lstinline|goto|, and in go\index{go}, even the stan
 Not to mention that for both C\index{C} and go\index{go}, the \lstinline|goto| allows us to jump only to a label inside the current function, but not to a global error handler.
 
 \keeplisting{28}
-To avoid this problem, Java uses Exceptions\index{exception} to report failures.\footnote{Java is not the only language that uses Exceptions\index{exception}, and it was not the first. But is seen as the first that introduced \lstinline|finally|.} A more sensible Java version of our function would therefore look like this:
+To avoid this problem, Java uses exceptions\index{exception} to report failures.\footnote{Java is not the only language that uses exceptions\index{exception}, and it was not the first. But is seen as the first that introduced \lstinline|finally|.} A more sensible Java version of our function would therefore look like this:
 \begin{lstlisting}
 public final int textToNumber( final String input )
 {

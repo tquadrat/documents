@@ -1,5 +1,5 @@
 \section{Not every Failure is an Error}\label{sec:FailureVsError}
-As said above: using Exceptions\index{exception} for real errors does not harm, but for mere failures, they are far from being the silver bullet.
+As said above: using exceptions\index{exception} for real errors does not harm, but for mere failures, they are far from being the silver bullet.
 
 But when is a failure an error?
 
@@ -21,7 +21,7 @@ Perhaps aborting the program would be even the proper behaviour in scenario~6, a
 
 But for scenarios~3, 4 and 5, our program gets invalid data from an external source. So, it should reflect that to that source (by sending a \texttt{\mbox{5xx}} status code or returning an error code to the requestor in case of 3 and 4, or by displaying a window with an error message in scenario~5). These cases are not errors, at least not from our point of view.
 
-Of course, we want to have only one implementation of \lstinline|textToNumber()| that fits all scenarios. That eliminates obviously the very first implementation attempt. But based on what we know from the \hyperref[sec:ExceptionCosts]{previous} chapter, it is not acceptable to use Exceptions\index{exception} for the flow control, due to their potential costs. That means that we cannot use the last version of our function, too, at least not for the scenarios~3, 4, and 5.
+Of course, we want to have only one implementation of \lstinline|textToNumber()| that fits all scenarios. That eliminates obviously the very first implementation attempt. But based on what we know from the \hyperref[sec:ExceptionCosts]{previous} chapter, it is not acceptable to use exceptions\index{exception} for the flow control, due to their potential costs. That means that we cannot use the last version of our function, too, at least not for the scenarios~3, 4, and 5.
 
 The cost for the exceptions\index{exception} does not matter for the scenarios~1 and 2, because the program aborts afterwards, and it can be ignored for scenario~6, because \lstinline|textToNumber()| normally does not fail in this case.
 
@@ -273,7 +273,7 @@ But when is a failure an error?
 
 Based on what said above, I suggest the following definition: \bdq{\textit{An Error is a Failure that requires to abort the current operation}}.
 
-It should be obvious that already for technical reasons throwing an Exception\index{exception} does always indicate an Error at the level of the current operation. Consequently, catching an Exception\index{exception} means that the calling operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.\footnote{But we will see later that it makes sense to catch an Exception\index{exception} even when the error condition cannot be fixed.}
+It should be obvious that already for technical reasons throwing an exception\index{exception} does always indicate an Error at the level of the current operation. Consequently, catching an exception\index{exception} means that the calling operation will try to fix the error that caused the aborted operation to fail – degrading the Error to a mere Failure.\footnote{But we will see later that it makes sense to catch an exception\index{exception} even when the error condition cannot be fixed.}
 
 %==============================================================================
 % End of file!!

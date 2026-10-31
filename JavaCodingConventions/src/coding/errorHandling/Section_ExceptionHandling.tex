@@ -4,10 +4,11 @@ Although error handling is more than exception\index{exception} handling, as sta
 This topic has various dimensions:
 \begin{itemize}
 	\item{The selection of the exception\index{exception} type to throw to report an error condition}
-	\item{The definition of custom exceptions\index{exception}}
-	\item{Generating and throwing exceptions\index{exception}}
 	\item{Catching exceptions\index{exception}}
+	\item{Generating and throwing exceptions\index{exception}}
 \end{itemize}
+
+%------------------------------------------------------------------------------
 
 \subsection{Which Exception to throw?}
 When your code needs to issue an exception\index{exception} to signal an Error or a Failure, you must choose the respective exception\index{exception} class\index{class!exception class}. That selection gives already some basic information about the kind and origin of the problem, through the name of the exception\index{exception} class\index{class!exception class}, but also through the package that class belongs to. This means that the classes
@@ -21,7 +22,7 @@ When your code needs to issue an exception\index{exception} to signal an Error o
 
 are forbidden, because they are too generic (and they are causing issues when catching\index{try!catch} exceptions\index{exception} what we will discuss later).
 
-When scanning the Javadoc for the Java Runtime Library \autocite{ORACLE_DOC_OVERVIEW}, you may find several exceptions\index{exception} with names that may fit for your purpose, but when you look after their package, they belong to an area that is by no means related to your method\index{method}.
+When scanning the Javadoc for the \Java Runtime Library \autocite{ORACLE_DOC_OVERVIEW}, you may find several exceptions\index{exception} with names that may fit for your purpose, but when you look after their package, they belong to an area that is by no means related to your method\index{method}.
 
 Currently, our \lstinline|textToNumber()| method\index{method} from above throws the forbidden exception\index{exception} \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}. We want to fix that and we search the documentation for already existing exceptions\index{exception} that fits. Among others, we find the class \lstinline|javax.xml.crypto.dsig.TransformException|\index{javax.xml.crypto.dsig!TransformException} \autocite{ORACLE_DOC_TRANSFORMEXCEPTION_CLASS}; while the name \bdq{\texttt{TransformException}} sounds good, but our code is in no way related to XML processing or even some cryptology stuff so we should not use that exception to signal the failure of our \lstinline|textToNumber()| method. The exception of choice would be \lstinline|java.lang.NumberFormatException|\index{java.lang!NumberFormatException} \autocite{ORACLE_DOC_NUMBERFORMATEXCEPTION_CLASS} that is also thrown by the \lstinline|Integer::parseInt| method.
 
@@ -41,6 +42,8 @@ As a rule of thumb, a failed check of a method's argument should throw a validat
 For all other error conditions, it is recommended to create your own, domain-specific exceptions\index{exception} instead of re-using already existing exception classes\index{class!exception class}, as described in chapter \tqfullvref{sec:DomainSpecificExceptions}.
 
 Obviously the name of the thrown exception\index{exception} should somehow correlate with the error condition it reports.
+
+%------------------------------------------------------------------------------
 
 \subsection{Catching Exceptions}
 First, your production code may never contain a \lstinline|catch| clause\index{try!catch} for 
@@ -66,31 +69,215 @@ catch( final ABCException | DEFException | XYZException e ) { … }
 
 There are only four reasons why your code contains a \lstinline|catch|\index{try!catch} block for a particular exception\index{exception}:
 \begin{enumerate}
-	\item{The \lstinline|catch|\index{try!catch} block can \bsq{heal} the error condition somehow. This can be done by using a default value instead of the result of the failed operation, or by retrying the operation.}
+	\item{The \lstinline|catch|\index{try!catch} block can \bsq{heal} the error condition somehow. This can be done by using a default value instead of the result of the failed operation, or by retrying the operation. See chapter \tqfullvref{sec:GeneralExceptionHandling} for more details.}
 	
 	\item{The \lstinline|catch|\index{try!catch} block will externalise the error condition indicated by the caught exception\index{exception}; chapter \tqfullvref{sec:ReportFailure} will provide the details. Usually the current operation must be aborted afterwards.}
 	
-	\item{The caught exception\index{exception} must be enhanced and/or wrapped; this will discussed in more detail in chapter \tqfullref{sec:ThrowingExceptions}, \hyperref[sec:ThrowingExceptions]{below}.}
+	\item{The caught exception\index{exception} must be enhanced and/or wrapped; this will discussed in more detail in chapter \tqfullref{sec:ThrowingExceptions}, \hyperref[sec:ThrowingExceptions]{below}. As a rule of thumb, each method that has parameters should catch all exceptions and enhance them with the arguments it was called with.}
 	
 	\item{The Java syntax rules require a \lstinline|catch|\index{try!catch} block (or a \lstinline|throws| declaration) despite it is impossible that the respective exception\index{exception} is ever thrown. Chapter \tqfullvref{sec:ImpossibleExceptions} will cover this topic.}
 \end{enumerate}
 
-In any other case, you let an exception\index{exception} \bsq{\textit{bubble up}} – meaning you delegate the handling of the exception\index{exception} to the caller.
+In any other case, you let an exception\index{exception} \bsq{\textit{bubble up}} – meaning your code does not have a \lstinline|catch|\index{try!catch} clause at all and delegates the handling of the exception\index{exception} to the caller. In case of checked exceptions\index{exception!checked exception}, your method must declare each exception\index{exception} in a \lstinline|throws| clause. 
  
-As a rule of thumb, each method that has parameters should catch all exceptions and enhance them with the arguments it was called with, as shown above. Usually, you will do this by wrapping the caught exception, but you can also consider a design for your domain specific exception that allows you to store additional information to the existing exception instance.2
-Wrapping looks like this:
+%------------------------------------------------------------------------------
+
+\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
+We discussed already \hyperref[sec:ExceptionCosts]{above} that throwing an exception\index{exception} should be done with some care, because it will have its price.
+
+
+
+
+
+
+
+
+
+
+Your code will emit an exception\index{exception} when it encounters an error condition of some kind. Exceptions are discussed in detail in \jls\autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Exceptions}; I just repeat the basics here.
+
+For the Java programming language, an exception is an instance of a class that is derived from \lstinline|java.lang.Throwable|\autocite{ORACLE_DOC_THROWABLE_CLASS}\index{java.lang!Throwable}, or – more precise – from one of the child classes of \lstinline|Throwable|:
+\begin{itemize}[nosep]
+\item{\lstinline|java.lang.Exception|\autocite{ORACLE_DOC_EXCEPTION_CLASS}\index{java.lang!Exception}\index{exception!checked exception}}
+\item{\lstinline|java.lang.RuntimeException|\autocite{ORACLE_DOC_RUNTIMEEXCEPTION_CLASS}\index{java.lang!RuntimeException}\index{exception!unchecked exception}}
+\item{\lstinline|java.lang.Error|\autocite{ORACLE_DOC_ERROR_CLASS}\index{java.lang!Error}\index{exception!error}}
+\end{itemize}
+
+\begin{center}
+% Generated by "dot -Tjpg -y exception.gv > exception.jpg"
+	\includegraphics[scale=1.0]{exception}
+\end{center}
+
+The different kinds of exceptions are discussed in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:KindsOfExceptions}.
+
+Exception classes that extend \lstinline|java.lang.Exception|\index{java.lang!Exception} are so-called \textit{checked} exceptions\index{exception!checked exception}\index{checked exception|see{exception}}; if a method wants to throw one of these, it has to declare that with the \lstinline|throws| clause. The class \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException} is a direct subclass of \lstinline|java.lang.Exception|\index{java.lang!Exception} and the superclass of all \textit{runtime}\index{runtime exception|see{exception}} or \textit{unchecked}\index{exception!unchecked exception}\index{unchecked exception|see{exception}} exceptions – declaring these is not mandatory.
+
+While an ordinary program can \textit{potentially} recover from an error condition signalled by an \lstinline|Exception|\index{java.lang!Exception}\index{exception} instance, it is assumed that instances of the class \lstinline|java.lang.Error|\index{java.lang!Error}\index{exception!error} and its subclasses will indicate unrecoverable error conditions, causing the program to abort.
+
+The class of the thrown exception should be chosen appropriate to the error condition it indicates. So throwing just an instance  \lstinline|java.lang.Exception|\index{java.lang!Exception} or \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException} is usually not a good idea – same if throwing a \lstinline|java.lang.NullPointerException|\autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS}\index{java.lang!NullPointerException} in case a divisor is 0 (zero)\footnote{The proper exception class would be \lstinline|java.lang.ArithmeticException|\autocite{ORACLE_DOC_ARITHMETICEXCEPTION_CLASS}\index{java.lang!ArithmeticException}.}.
+
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException|\index{javax.naming!OperationNotSupportedException} in a code segment that does nothing with the \bdq{Java Naming and Directory Interface} at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException}, or \lstinline|Error|\index{java.lang!Error}, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable|\index{java.lang!Throwable} directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.
+
+When implementing an extension or a server-based application (or when using a particular framework), you have to implement quite often methods that declare only one, sometimes two exceptions. Nevertheless, it may happen that a method call in your code throws an exception that cannot be handled by the current code, but it cannot be delegated also, because the interface for the method does not declare that particular exception. In such a case, you have to catch the exception and to wrap it into an instance of the declared exception that will be thrown afterwards. For a servlet implementation\autocite{JAKARTA_EE_HTTPSERVLET_CLASS}, this may look like this:
+\begin{lstlisting}
+protected final void doGet( HttpServletRequest request, HttpServletResponse response )
+    throws ServletException, IOException
+{
+    …
+    try
+    {
+        …
+    }
+    catch( final TimeOutException e )
+    {
+        throw new ServletException( e );
+    }
+
+    …
+}  //  doGet()
+\end{lstlisting}
+
+When instantiating an exception instance, you should always provide a textual message that describes the error condition and/or provides additional information, like the name of the file that cannot be found, or the SQL statement with the invalid syntax.\footnote{In this regard, the sample above is bad, because it does not provide such an explanation.} These text have to be in English language, for the same reason why the names and the comments are in English.
+
+Of course, messages that will be presented to the end user in a UI have to be localised, but the UI should not display the raw exception message anyway at all.
+
+Some exception classes do not have a constructor that allows to provide a cause, or they have constructors that allow either a message or a cause, but not both. A sample for that is \lstinline|java.lang.ExceptionInInitializerError|\autocite{ORACLE_DOC_EXCEPTIONININITIALIZERERROR_CLASS}.
+
+Some of these exception classes will allow a workaround that allows you to still provide both, cause and message, with them, like below:\footnote{Unfortunately, \lstinline|ExceptionInInitializerError| does not belong to this group of exception classes.}: 
+\begin{lstlisting}
+static
+{
+    try
+    {
+        …    
+    }
+    catch( final Exception e )
+    {
+        throw new DumpException( "Message" )
+            .initCause( e );    
+    }
+}
+\end{lstlisting}
+
+For the method \lstinline|initCause()| refer to \autocite{ORACLE_DOC_THROWABLE:initCause}.
+
+Unfortunately, you have to test whether the exception that you have to deal with allows this workaround. And you should add this test to the unit tests\index{unit test} for your code, to protect you from changes coming with new versions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Invalid arguments for a method\index{method} must be signalled by throwing a validation exception\index{validation exception} as described in chapter \tqfullvref{sec:ValidationExceptions}. The message for these exceptions contains the name of the parameter, the invalid argument, and the reason why that is invalid. The latter is often already indicated by the type of the thrown exception: when \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} throws a \lstinline|NumberFormatException|\index{java.lang!NumberFormatException}, it is obvious that the given argument cannot be parsed to a number because it contains invalid characters.
+
+When execution failures should be reported through an exception\index{exception}, this exception\index{exception} is necessarily thrown explicitly by the current code – it could be be easily originate from a method\index{method} that was called by the current method and is just delegated. Whether this is sufficient depends from the context and the type of product you work on.
+
+But for \hyperref[sec:FeatureLibrary]{feature libraries}\index{product type!feature library} as well as for \hyperref[sec:StandaloneApplication]{standalone applications}\index{product type!standalone application} and \hyperref[sec:ServerbasedApplication]{server-based applications}\index{product type!server-based application} with multiple modules, you must ensure that a method\index{method} at the domain (or module) boundaries will emit only domain-specific exceptions\index{domain-specific exception} for execution failures (it is not mandatory that validation exceptions\index{validation exception} are domain-specific).
+
+That means that a method that is part of the public API of a module must catch all exceptions and wrap them into a domain-specific exception\index{domain-specific exception}, enhanced by a proper exception message that provides the  context for the error condition. This consists of a short description of what was attempted with the failed operation, together with the relevant arguments of the current method. If the failed operation itself signalled the error condition through an exception\index{exception}, this exception must be part of the wrapper exception, too, as the \bdq{cause}. Otherwise, the arguments of the failed call should be part of the exception message, too. Same if the caught exception does not contain these arguments.
+
+But also within a module it could be necessary to catch an exception\index{exception} and to wrap it, in order to keep the context of the call. As a rule of thumb, each method\index{method} that has parameters should catch all exceptions\index{exception} and enhance them with the arguments it was called with.
+
+\keeplisting{10}
+For a method with the signature \bdq{\lstinline|aMethod( final String recipientId, final String dataSource )|} wrapping looks like this:
+\begin{lstlisting}
 try
 {
     …
 }
-catch( final DomainException e ) 
+catch( final AnException e ) 
 {
     throw new DomainException( """
-       Printing Operation failed
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource ), e;
+```````Printing Operation failed
+```````Recipient Id: %s
+```````Origin: %s
+```````""".formatted( recipientID, dataSource ), e;
 }
+\end{lstlisting}
+
+The name of the method (here \lstinline|aMethod|) must not be part of the exception\index{exception} message as it is already provided through the stack trace stored with the exception\index{exception} object.
+
+
+
+
+
+
+
+
+
+%------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Each exception that is thrown by 
+
+Basically, a method\
+A method\index{method} signals an error by emitting an exception, but 
+
+ 
+Exceptions\index{exception} are thrown 
+
+Although not explicitly said in the chapter above, it should be obvious that the
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 If the domain specific exception would allow to add information to it, that could look like this:
 try
 {
@@ -165,12 +352,10 @@ Consequently, all the housekeeping chores should be done at the very beginning o
 
 
 
-\subsection{Throwing Exceptions}\label{sec:ThrowingExceptions}
-We discussed already \hyperref[sec:ExceptionCosts]{above} that throwing an exception\index{exception} should be done with some care, because it will have its price.
 
-Although not explicitly said in the chapter above, it should be obvious that the context for the error condition must be provided in the exception message. This should contain a short description of what was attempted with the failed operation, together with the relevant arguments of the current method. If the failure was signalled by an exception\index{exception}, this must be part of the thrown exception, too, as the \bdq{cause}.
 
-Otherwise, the arguments of the call should be part of the exception message, too. Same if the caught exception does not contain these arguments.
+
+
 
 
 

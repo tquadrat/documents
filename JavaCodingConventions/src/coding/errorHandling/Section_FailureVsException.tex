@@ -189,8 +189,9 @@ Obviously, \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} alw
 
 One solution would be to create your own parser, but the better one is to remember a best practice from the past: validate the input data before you call something with that data as an argument.
 
-\keeplisting{6}
-This may look like this:
+How this may look like is shown on the next page.
+\clearpage
+\keeplisting{15}
 \begin{lstlisting}
 var isValid = nonNull( input ) && !input.isBlank();
 if( isValid )
@@ -201,7 +202,7 @@ if( isValid )
     {
         ++pos;
         isValid = input.startsWith( "-" ) || input.startsWith( "+" );
-    }(|\clearpage|)    
+    }    
     while( isValid && pos < len )
     {
         isValid = Character.isDigit( input.charAt( pos++ ) );
@@ -214,8 +215,8 @@ final OptionalInt result = isValid
 
 This can be applied to other situations as well. Just assume you want to read some arbitrary files from the filesystem; obviously this fails if the given file name denotes a directory instead of a plain file, or if the necessary permissions to read that file are missing, or if there is no file with the given name. 
 
-The plain simple implementation would be like this:
 \keeplisting{6}
+The plain simple implementation would be like this:
 \begin{lstlisting}
 try
 {
@@ -229,7 +230,7 @@ catch( final InvalidPathException | IOException e )
 
 Just try it and let it throw an exception\index{exception} in case the file cannot be read. This approach is quite acceptable when it works nearly all the time. If not, you have too many exceptions.
 
-\keeplisting{16}
+\keeplisting{25}
 So better validate the input data before using it:
 \begin{lstlisting}
 if( isNull( fileName ) ) reportFailure( "filename is null" );
@@ -247,7 +248,7 @@ try
     else if( !Files.isReadable( path ) )
     {
         reportFailure( "Cannot read file %s".formatted( fileName ) );
-    }(|\clearpage|)
+    }
     else
     {
         final var contents = Files.readAllLines( path );

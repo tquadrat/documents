@@ -109,7 +109,36 @@ In any other case, you let an exception\index{exception} \bsq{\textit{bubble up}
 
 Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it \bdq{\textit{bubbles up}}) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
 
-\bdq{Restoring the program state to normal} or \bdq{healing the error condition}
+\bdq{Restoring the program state to normal} or \bdq{healing the error condition} can be achieved in various ways, also depending on the context. For the examples below it would be often possible to avoid the exception\index{exception} completely by coding it differrently (e.g. by checking the conditions upfront, as shown on page \pageref{lbl:ValidateInput}). I used exceptions\index{exception} to illustrate the topic.
+
+\paragraph{Example~1} The method below should create an instance of \lstinline|java.io.Writer|\index{java.io!Writer} for an already existing file; we assume that the argument was checked to be not \lstinline|null| before the call to \lstinline|openOutputFile|.
+
+A \lstinline|FileNotFoundException|\index{java.io!FileNotFoundException} is thrown in line~7 when the specified file or the path for that file does not exist, but instead of delegating that back to the caller, we catch that exception\index{exception} in line~9, create the directory for the file and the file itself, before we initialise it by writing the file header to the \lstinline|Writer|\index{java.io!Writer} instance. 
+
+Other variants of \lstinline|java.io.IOException|\index{java.io!IOException} are still delegated to the caller; they could be thrown in lines~7, 11, 12 and 13.
+
+\keeplisting{15}
+\index{java.io!Writer}\index{java.nio.file.Path}\index{java.io!IOException}\index{java.nio.file!Files}\index{java.nio.file!Files!newBufferedWriter()}\index{java.io!FileNotFoundException}\index{java.nio.file!Files!createDirectories()}\index{java.nio.charset!StandardCharsets!UTF\_8}\index{java.nio.file!StandardOpenOption!APPEND}\index{java.nio.file!StandardOpenOption!CREATE\_NEW}\index{java.nio.file!StandardOpenOption!WRITE}
+\begin{lstlisting}
+private final Writer openOutputFile( final Path existingFile ) throws IOException
+{
+    Writer retValue;
+    try
+    {
+        writer = Files.newBufferedWriter( existingFile, UTF_8, WRITE, APPEND );
+    }
+    catch( final FileNotFoundException _ )
+    {
+        Files.createDirectories( file.getParent() );
+        writer = Files.newBufferedWriter( existingFile, UTF_8, WRITE, CREATE_NEW );
+        writeHeader( writer );
+    }
+
+    //---* Done *----------------------------------------------------------
+    return retValue;
+}   //  openOutputFile()
+\end{lstlisting}
+
 
 
 

@@ -231,7 +231,7 @@ catch( final InvalidPathException | IOException e )
 Just try it and let it throw an exception\index{exception} in case the file cannot be read. This approach is quite acceptable when it works nearly all the time. If not, you have too many exceptions.
 
 \keeplisting{25}
-So better validate the input data before using it:
+\pslabel{lbl:ValidateInput}So better validate the input data before using it:
 \begin{lstlisting}
 if( isNull( fileName ) ) reportFailure( "filename is null" );
 try

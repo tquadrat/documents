@@ -27,6 +27,32 @@ Discuss whether it is better to move code to a (private) instead of keeping it i
 
 %------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Only the method’s name is not needed as this is part of the stack trace stored with the exception itself.
+Not all exceptions that are emitted by a method are explicitly thrown by it! A RuntimeException (an unchecked exception) thrown by a method called by the current method may bubble up to the caller if that current method, same as a checked exception that is declared to be thrown by the current method.
+To allow a specific handling of the emitted exceptions, each method must declare all of them (including the unchecked ones!), in a detailed list; a mere “throws Exception” is wrong!
+Your method should fail fast, if at all. This means that all checks should be placed to the beginning of a method, and that an operation is aborted immediately after an unrecoverable error condition is identified.
+This also means that each method (in Pega, this includes the Rules) must check immediately its arguments whether they are valid, and that it must throw a “validation exception” (an exception that is derived from IllegalArgumentException) in case that check fails.
+
 %------------------------------------------------------------------------------
 
 

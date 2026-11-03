@@ -125,13 +125,13 @@ private final Writer openOutputFile( final Path existingFile ) throws IOExceptio
     Writer retValue;
     try
     {
-        writer = Files.newBufferedWriter( existingFile, UTF_8, WRITE, APPEND );
+        retValue = Files.newBufferedWriter( existingFile, UTF_8, WRITE, APPEND );
     }
     catch( final FileNotFoundException _ )
     {
-        Files.createDirectories( file.getParent() );
-        writer = Files.newBufferedWriter( existingFile, UTF_8, WRITE, CREATE_NEW );
-        writeHeader( writer );
+        Files.createDirectories( existingFile.getParent() );
+        retValue = Files.newBufferedWriter( existingFile, UTF_8, WRITE, CREATE_NEW );
+        writeHeader( retValue );
     }
 
     //---* Done *----------------------------------------------------------
@@ -139,11 +139,46 @@ private final Writer openOutputFile( final Path existingFile ) throws IOExceptio
 }   //  openOutputFile()
 \end{lstlisting}
 
+\paragraph{Example 2} This method should establish a connection to an external system. After checking the arguments in lines~3 and 4, an attempt is made to instantiate a new \lstinline|Socket|\index{java.net!Socket} object in a loop. If that attempt is successful, the loop will be left (line~13), the \lstinline|Socket|\index{java.net!Socket} instance is wrapped in an instance of \lstinline|Optional|\index{java.util!Optional} (line~23) that is returned afterwards.
 
+If the instantiation of the new \lstinline|Socket|\index{java.net!Socket} fails with an \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or a \lstinline|ConnectException|\index{java.net!ConnectException}, the method waits for 30~seconds (line~17), increments the \lstinline|retryCounter| and continues the loop until the \lstinline|retryCounter| is greater than \lstinline|maxRetries|, another exception than \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or \lstinline|ConnectException|\index{java.net!ConnectException} is thrown, or an attempt to instantiate the socket instance was successful.
 
+\lstinline|Thread::sleep| may throw an \lstinline|InterruptedException|\index{java.lang!InterruptedException} that will also abort the method.
+ 
+\keeplisting{25}
+\begin{lstlisting}
+public final Optional<Socket> connect( final InetAddress address, final int port, final int maxRetries ) throws InterruptedException, IOException
+{
+    if( isNull( address ) ) throw new IllegalArgumentException( "address is null" );
+    if( (port < 0) || (port > 0xFFFF) ) throw new IllegalArgumentException( "port is invalid: %d".formatted( port ) ); 
+    
+    Socket socket = null;
+    var retryCounter = 0;
+    ConnectLoop: while( retryCounter < max( 1, maxRetries ) )
+    {
+        try
+        {
+            socket = new Socket( address, port );
+            break ConnectLoop;
+        }
+        catch( final UnknownHostException | ConnectException _ )
+        {
+            sleep( ofSeconds( 30 ) );
+            socket = null;
+            ++retryCounter;
+        }
+    }   //  ConnectLoop:
 
+    final Optional<Socket> retValue = Optional.ofNullable( socket );
 
+    //---* Done *----------------------------------------------------------
+    return retValue;
+}   //  connect()
+\end{lstlisting}
 
+This method is clearly using the exceptions\index{exception} to control the execution flow – something that usually should be avoided. Unfortunately, the \Java Runtime Library does not provide an API to check the availability of an external system that does not rely on exceptions\index{exception}.
+
+\paragraph{Example 3}
 
 
 

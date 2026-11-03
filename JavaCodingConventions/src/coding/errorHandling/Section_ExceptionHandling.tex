@@ -178,11 +178,85 @@ public final Optional<Socket> connect( final InetAddress address, final int port
 
 This method is clearly using the exceptions\index{exception} to control the execution flow – something that usually should be avoided. Unfortunately, the \Java Runtime Library does not provide an API to check the availability of an external system that does not rely on exceptions\index{exception}.
 
-\paragraph{Example 3}
+\paragraph{Example 3} The method below is again using an exception\index{exception} to control the execution flow, but it represents an often used pattern when updating a database table.
 
+The database table is \bdq{challenged} with an \texttt{INSERT}, and if that fails – indicated by the \lstinline|SQLIntegrityConstraintViolationException|\index{java.sql!SQLIntegrityConstraintViolationException} \autocite{ORACLE_DOC_SQLINTEGRITYCONSTRAINTVIOLATIONEXCEPTION_CLASS} with the \texttt{SQLState} 23505 – an \texttt{UPDATE} is attempted.
 
+The idea is to spare a database roundtrip in case the \texttt{INSERT} is successful, but also to protect from concurrent modifications without a transaction: the \bsq{correct} flow of operations would be to check whether there is already a record this the given \lstinline|key| and then decide whether \texttt{INSERT} or \texttt{UPDATE} is the appropriate operation.
 
+\keeplisting{30}
+\begin{lstlisting}
+public final void writeRecord( final Connection connection, final String key, final SQLXML data ) throws SQLException
+{
+    if( isNull( connection ) ) throw new IllegalArgumentException( "connection is null" );
+    if( connection.isClosed() ) throw new IllegalArgumentException( "connection is closed" );
+    if( connection.isReadOnly() ) throw new IllegalArgumentException( "connection is read-only" );
 
+    if( nonNull( key) && !key.isBlank() && nonNull( data ) )
+    {
+        var statement = connection.prepareStatement( """
+````````````INSERT INTO the_table (key, data)
+````````````    (?, ?);
+````````````""" );
+        statement.setString( 1, key );
+        statement.setSQLXML( 2, data );
+
+        try
+        {
+            statement.executeUpdate();
+        }
+        catch( final SQLIntegrityConstraintViolationException e )
+        {
+            if( !e.getSQLState().equals( "23505" ) ) throw e;
+            var statement = connection.prepareStatement( """
+````````````````UPDATE the_table
+````````````````    data = ?
+````````````````    WHERE key = ?;
+````````````````""" );
+            statement.setString( 2, key );
+            statement.setSQLXML( 1, data );
+            
+            statement.executeUpdate();
+        }
+    }
+}   //  writeRecord()
+\end{lstlisting}
+
+In cases where an update of data is required more often than the insertion of a new record, the \texttt{UPDATE} is attempted first; this can be implemented even without an exception.
+
+In both cases, the solution is efficient when the first operation fails only occasionally (the failure is an exception~…).
+
+But modern RDMBS provide a better solution with the \texttt{MERGE} statement that handles both case with a single database roundtrip and without exceptions\index{exception}:
+\keeplisting{20}
+\begin{lstlisting}
+public final void writeRecord( final Connection connection, final String key, final SQLXML data ) throws SQLException
+{
+    if( isNull( connection ) ) throw new IllegalArgumentException( "connection is null" );
+    if( connection.isClosed() ) throw new IllegalArgumentException( "connection is closed" );
+    if( connection.isReadOnly() ) throw new IllegalArgumentException( "connection is read-only" );
+
+    if( nonNull( key) && !key.isBlank() && nonNull( data ) )
+    {
+        var statement = connection.prepareStatement( """
+````````````MERGE INTO the_table AS target
+````````````    USING (VALUES (?, ?)) AS source (key, data)
+````````````    ON target.key = source.key
+````````````    WHEN MATCHED THEN
+````````````        UPDATE SET data = source.data
+````````````    WHEN NOT MATCHED THEN 
+````````````        INSERT (key, data) 
+````````````            VALUES (source.key, source.date);
+````````````""" );
+        statement.setString( 1, key );
+        statement.setSQLXML( 2, data );
+        statement.executeUpdate();
+    }
+}   //  writeRecord()
+\end{lstlisting}
+
+The code for both versions of \lstinline|writeRecord()| requires a JDBC\index{JDBC} driver that fully implements JDBC~4.0, and that the RDBMS sets the \texttt{SQLState} correctly to 23505; I tried it with H2\index{H2} \autocite{H2_DATABASE}.
+
+\paragraph{Example 4} \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} \autocite{ORACLE_DOC_INTEGER:parseInt}
 
 
 

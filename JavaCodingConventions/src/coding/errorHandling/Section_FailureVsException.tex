@@ -162,12 +162,13 @@ while( records.hasMore() )
     final int number;
     try
     {
-        number = textToNumber( dataRecord.getInput() ).orElseThrow(); 
-    }
-    catch( final NoSuchElementException _ )
-    {
-        reportError( dataRecord, "input", "Not a number" );
-        continue;
+    	final var optional = textToNumber( dataRecord.getInput() );
+    	if( optional.isEmpty() )
+        {
+            reportError( dataRecord, "input", "Not a number" );
+            continue;
+        }
+        number = optional.getAsInt(); 
     }
     catch( final IllegalArgumentException _ )
     {

@@ -38,7 +38,7 @@ public final class MyClass
 %------------------------------------------------------------------------------
 
 \subsection{Names for Lambda Parameters}\label{sec:NamesForLambdaParameters}
-A lambda\index{lambda} expression is a compact way to represent an instance of a functional interface\index{functional interface} (an interface with exactly one abstract method) as an anonymous, inline block of code. They will be discussed in detail in \tqfullvref{sec:Lambdas} and \tqfullvref{sec:FunctionalInterfaces}.
+A lambda\index{lambda} expression is a compact way to represent an instance of a functional interface\index{interface!functional interface} (an interface with exactly one abstract method) as an anonymous, inline block of code. They will be discussed in detail in \tqfullvref{sec:Lambdas} and \tqfullvref{sec:FunctionalInterfaces}.
 
 Among others, one reason for the introduction of lambdas\index{lambda} was to reduce the verbosity of anonymous inner classes\index{class!anonymous class}\index{class!inner class}, especially for simple callbacks. A lambda\index{lambda} expression can replace boilerplate anonymous classes\index{class!anonymous class} with a few characters.
 
@@ -50,7 +50,7 @@ Predicate<String> filter = s -> !s.contains( "invalid" );
 \end{lstlisting}
 In this case, \lstinline|s| is the parameter of that lambda, and that these parameters have just single letter names is common practice, to keep the expression short. 
 
-The meaning of the parameters is well explained through the documentation of the functional interface\index{functional interface} that is implemented by the lambda\index{lambda}, although the respective meaning of the parameters can usually also be easily inferred from the context.
+The meaning of the parameters is well explained through the documentation of the functional interface\index{interface!functional interface} that is implemented by the lambda\index{lambda}, although the respective meaning of the parameters can usually also be easily inferred from the context.
 
 But if in doubt, you can of course use longer, more meaningful names for the parameters of a lambda\index{lambda}. The only constraint is that it should be clear what the parameter is, and what is injected to the lambda from the context.
 

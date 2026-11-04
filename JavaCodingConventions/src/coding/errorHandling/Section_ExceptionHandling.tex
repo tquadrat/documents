@@ -192,7 +192,7 @@ This method is clearly using the exceptions\index{exception} to control the exec
 
 \paragraph{Example 3} The method below is again using an exception\index{exception} to control the execution flow, but it represents an often used pattern when updating a database table.
 
-\keeplisting{30}
+\keeplisting{25}
 \index{java.sql!Connection}\index{java.sql!Connection!isClosed()}\index{java.sql!Connection!isReadOnly()}\index{java.sql!Connection!prepareStatement()}\index{java.sql!SQLXML}\index{java.sql!SQLException}\index{java.sql!SQLException!getSQLState()}\index{java.util!Objects!isNull()}\index{java.util!Objects!nonNull()}\index{java.lang!IllegalArgumentException}\index{java.lang!String!isBlank()}\index{java.sql!PreparedStatement}\index{java.sql!PreparedStatement!setString()}\index{java.sql!PreparedStatement!setSQLXML()}\index{java.sql!PreparedStatement!executeUpdate()}\index{java.sql!SQLIntegrityConstraintViolationException}
 \begin{lstlisting}
 public final void writeRecord( final Connection connection, final String key, final SQLXML data ) throws SQLException
@@ -209,7 +209,6 @@ public final void writeRecord( final Connection connection, final String key, fi
 ````````````""" );
         statement.setString( 1, key );
         statement.setSQLXML( 2, data );
-
         try
         {
             statement.executeUpdate();
@@ -224,16 +223,15 @@ public final void writeRecord( final Connection connection, final String key, fi
 ````````````````""" );
             statement.setString( 2, key );
             statement.setSQLXML( 1, data );
-            
             statement.executeUpdate();
         }
     }
 }   //  writeRecord()
 \end{lstlisting}
 
-The database table is \bdq{challenged} with an \texttt{INSERT}, and if that fails, an \texttt{UPDATE} is attempted. The failure is indicated by the \lstinline|SQLIntegrityConstraintViolationException|\index{java.sql!SQLIntegrityConstraintViolationException} \autocite{ORACLE_DOC_SQLINTEGRITYCONSTRAINTVIOLATIONEXCEPTION_CLASS} with the \texttt{SQLState} 23505.
+The database is \bdq{challenged} with an \texttt{INSERT}, and if that fails, an \texttt{UPDATE} is attempted. The \lstinline|SQLIntegrityConstraintViolationException|\index{java.sql!SQLIntegrityConstraintViolationException} \autocite{ORACLE_DOC_SQLINTEGRITYCONSTRAINTVIOLATIONEXCEPTION_CLASS} with the \texttt{SQLState}~23505 indicates that failure. Other problems cause other exceptions\index{exception}, with other values for \texttt{SQLState}.
 
-The idea is to spare a database roundtrip in case the \texttt{INSERT} is successful, but also to get protection from concurrent modifications without a requiring a transaction\index{transaction}: the \bsq{correct} flow of operations would be to check first whether there is already a record this the given \lstinline|key|, using a \texttt{SELECT},  and then decide based on the result whether \texttt{INSERT} or \texttt{UPDATE} is the appropriate operation.
+The idea is to spare a database roundtrip in case the \texttt{INSERT} is successful, but also to get protection from concurrent modifications without a requiring a transaction\index{transaction}: the \bsq{correct} flow of operations would be to lock the database first, next to check whether there is already a record with the given \lstinline|key|, using a \texttt{SELECT},  and then decide based on the result whether \texttt{INSERT} or \texttt{UPDATE} is the appropriate operation.
 
 In cases where an update of data is required more often than the insertion of a new record, the \texttt{UPDATE} is attempted first; this can be implemented often without an exception.
 
@@ -394,14 +392,18 @@ The specification \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:TryCatchFinally} s
 
 Consequently, all housekeeping chores – like release the locks – should be done at the very beginning of the \lstinline|finally|\index{try!finally} block, with those calls first that cannot fail with an exception.
 
-Otherwise it may happen that you may end up with locks that were held by already terminated threads, because code before the call to \lstinline|Lock::unlock|\index{java.util.concurrent.lock!Lock!unlock()} that threw an exception\index{exception} so that the \lstinline|finally|\index{try!finally} block was left before \lstinline|unlock()|\index{java.util.concurrent.lock!Lock!unlock()} was called at all. Debugging this kind of problem is real fun!
+Otherwise it may happen that you may end up with locks that were held by already terminated threads, because code before the call to \lstinline|Lock::unlock|\index{java.util.concurrent.lock!Lock!unlock()} threw an exception\index{exception} so that the \lstinline|finally|\index{try!finally} block was left before \lstinline|unlock()|\index{java.util.concurrent.lock!Lock!unlock()} was called at all. Debugging this kind of problem is real fun!
 
 I will come back to \lstinline|finally|\index{try!finally} in chapter \tqref{sec:TryWithResources} on page \pageref{sec:TryWithResources} that discusses \texttt{try-with-resources}\index{try-with-resources}.
 
 %------------------------------------------------------------------------------
 
 \subsection{Exception Handling in Threads}
-The most often heard excuse for a catch phrase for java.lang.RuntimeException, java.lang.Exception or even java.lang.Throwable is that exceptions thrown while executing a thread that is not the main thread may not go unnoticed. So you see code like this:
+The most often heard excuse regarding a \lstinline|catch|\index{try!catch} clause for \lstinline|java.lang.Exception|\index{java.lang!Exception}, \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, or even \lstinline|java.lang.Throwable|\index{java.lang!Throwable} is, that exceptions thrown while executing a thread that is not the main thread may not go unnoticed. This is in fact a requirement from the \ngref, bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed}.
+
+\keeplisting{7}
+So you find code similar to that below:
+\begin{lstlisting}
 public final void run()
 {
     try
@@ -410,11 +412,118 @@ public final void run()
     }
     catch( final Exception e )
     {
-        oLog.error( "No matter what went wrong, but I will log the exception", e );
+        m_Logger.error( "No matter what went wrong, but I will log the exception", e );
     }
 } 
-Unfortunately, this absolves the programmer of the duty to properly handle any exceptions thrown within the try block; the catch block at the end will take care of it.
-The best practice is to set the UncaughtExceptionHandler for the thread, either through the ThreadFactory, through the ThreadGroup or individually. If your thread requires a special handling for an uncaught exception, this looks like below; the sample assumes that the thread comes from a pool and is reused:
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+Unfortunately, this absolves the programmer of the duty to properly handle any exceptions\index{exception} thrown within the \lstinline|try|\index{try} block – including the checked\index{exception!checked exception} ones; the \lstinline|catch|\index{try!catch} block at the end will take care of it.
+
+The best practice here is to set the \bdq{Uncaught Exception Handler}\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} for the thread, either through the \lstinline|ThreadFactory|\index{java.util.concurrent!ThreadFactory} \autocite{ORACLE_DOC_THREADFACTORY_INTERFACE}, through the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS} or individually. 
+
+\keeplisting{1}
+\lstinline|java.lang.Thread.UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} is a functional interface\index{interface!functional interface} that can be easily implemented as a method\index{method} like this:
+\begin{lstlisting}[caption=UncaughtExceptionHandler as Method]
+private final void uncaughtExceptionHandler( final Thread t, final Throwable e )
+{
+    final var throwableType = e instanceof Error ? "error" : "exception";
+    m_Logger.atFatal()
+        .withThrowable( e )
+        .log( () -> """
+````````````Thread "%s" was aborted with an %s!\
+````````````""".formatted( t.getName(), throwableType ) );    
+}   //  uncaughtExceptionHandler()
+\end{lstlisting}
+
+\keeplisting{24}
+Of course it can be implemented as a class as well:
+\begin{lstlisting}[caption=UncaughtExceptionHandler as Class]
+/**
+ *  <p>{@summary An implementation for
+ *  {@link UncaughtExceptionHandler}.}</p>
+ */
+public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHandler
+{
+        /*------------------------*\
+    ====** Static Initialisations **======================================
+        \*------------------------*/
+    /**
+     *  <p>{@summary The instance of this class.}</p>
+     */
+    public static final UncaughtExceptionHandler INSTANCE;
+
+    /**
+     *  <p>{@summary The logger that is used to log the exceptions.}</p>
+     */
+    private static final Logger m_Logger;
+
+    static
+    {
+        m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
+        INSTANCE = new UncaughtExceptionHandlerImpl();
+    }
+(|\clearpage|)
+
+        /*--------------*\
+    ====** Constructors **================================================
+        \*--------------*/
+    /**
+     *  <p>{@summary Creates a new instance of 
+     *  {@code UncaughtExceptionHandlerImpl}.}</p>
+     */
+    public UncaughtExceptionHandlerImpl() { /* Just exists */ }
+
+        /*---------*\
+    ====** Methods **=====================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final void uncaughtException( final Thread t, final Throwable e )
+    {
+    final var throwableType = e instanceof Error ? "error" : "exception";
+    m_Logger.atFatal()
+        .withThrowable( e )
+        .log( () -> """
+````````````Thread "%s" was aborted with an %s!\
+````````````""".formatted( t.getName(), throwableType ) );    
+
+    }   //  uncaughtException()
+}
+//  class UncaughtExceptionHandlerImpl
+\end{lstlisting}
+
+\keeplisting{3}
+Setting the uncaught exception handler for an individual thread looks like this:
+\begin{lstlisting}
+Thread.ofPlatform()
+    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
+    .start( () -> {} );
+\end{lstlisting}
+
+\keeplisting{3}
+For a thread pool, the code would be similar to this:
+\begin{lstlisting}
+final var factory = Thread.ofPlatform()
+    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
+    .factory();
+final var threadPool = Executors.newCachedThreadPool( factory );
+\end{lstlisting}
+
+The \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} implementation provided by the \Java Runtime Library does not allow to set a custom uncaught exception handler. In chapter \tqref{sec:ThreadGroup} on page \pageref{sec:ThreadGroup} I show an implementation of \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} that got that feature added.
+
+\keeplisting{3}
+If your thread requires a special handling for an uncaught exception, this looks like below; the example assumes that the thread comes from a pool and is reused:
+\begin{lstlisting}
 public final void run()
 {
     final var currentThread = Thread.currentThread();
@@ -425,10 +534,12 @@ public final void run()
          * The special exception treatment goes here …
          *
 
-        // Finally log the exception
-        oLog.fatal( """
-            Thread "%s" was aborted with an exception!\
-            """.formatted( t.getName() ), e );
+        //---* Finally log the exception *--------------------------------
+        m_Logger.atFatal()
+            .withThrowable( e )
+            .log( () -> """
+````````````````Thread "%s" was aborted with an exception!\
+````````````````""".formatted( t.getName() ) );
     } );
  
     try
@@ -440,9 +551,13 @@ public final void run()
         currentThread.setUncaughtExceptionHandler( uncaughtExceptionHandler );
     }
 }
-But usually a thread should use the UncaughtExceptionHandler that is assigned through the factory or group, as already said, or you even define a default handler. All this needs to be regulated by a proper guide to exception Handling that needs to be defined.
+\end{lstlisting}
 
+But usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} that is assigned through the factory or group, as already said, or you even define a default handler.
 
+%------------------------------------------------------------------------------
+
+\chapter*{Road Work ahead!}
 
 
 

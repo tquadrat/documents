@@ -78,15 +78,73 @@ First, your production code may never contain a \lstinline|catch| clause\index{t
 
 In this context, you should refer to the chapter \tqfullvref{sec:ExceptionHandlingInThreads} that explains why do you never need \lstinline|catch| clauses\index{try!catch} for \lstinline|Throwable|\index{java.lang!Throwable}, \lstinline|RuntimeException|\index{java.lang!RuntimeException} or \lstinline|Error|\index{java.lang!Error}.
 
-There must be a dedicated \lstinline|catch|\index{try!catch} block for each exception\index{exception} that you want to handle; if code int the \lstinline|catch|\index{try!catch} block is the same for multiple exceptions, you list the exceptions\index{exception} in the \lstinline|catch|\index{try!catch} clause:
-\keeplisting{3}
+You should absolutely avoid to catch \lstinline|java.lang.Error|\index{java.lang!Error} and all of its subclasses; there are only very few use cases where your code can do something useful with an \lstinline|Error|\index{java.lang!Error} instance.
+
+\keeplisting{18}
+There must be a dedicated \lstinline|catch|\index{try!catch} block for each exception\index{exception} that you want to handle:
+\index{java.io!FileNotFoundException}\index{java.io!IOException}\index{java.lang!NumberFormatException}\index{java.util.regex!PatternSyntaxException}
+\begin{lstlisting}
+try
+{
+     …
+}
+catch( final FileNotFoundException e )
+{
+    throw new ApplicationError( "Cannot find file", e );
+}
+catch( final IOException e )
+{
+    throw new ApplicationError( "An error occurred on processing the input file", e );
+}
+catch( final NumberFormatException e )
+{
+    throw new ApplicationError( "Input Data is corrupted", e );
+}
+catch( final PatternSyntaxException e )
+{
+    throw new ApplicationError( "Pattern invalid", e );
+}
+\end{lstlisting}
+
+\keeplisting{17}
+Something like the code below may look quite sophistaced and it may even spare some lines of code, but it causes more issues than it solves. One of these problems is that it requires the method containing this code to declare to throw \lstinline|java.lang.Exception|\index{java.lang!Exception}:
+\index{java.io!FileNotFoundException}\index{java.io!IOException}\index{java.lang!NumberFormatException}\index{java.util.regex!PatternSyntaxException}
+\begin{lstlisting}
+// STRONGLY DISCOURAGED!!
+try
+{
+    …
+}
+catch( final Exception e ) // DON'T DO THIS!!
+{
+    switch( e )
+    {
+        case FileNotFoundException fne -> throw new ApplicationError( "Cannot find file", fne );
+        case IOException ioe -> throw new ApplicationError( "An error occurred on processing the input file", ioe );
+        case NumberFormatException nfe -> throw new ApplicationError( "Input Data is corrupted", nfe );
+        case PatternSyntaxException pse -> throw new ApplicationError( "Pattern invalid", pse );
+        default -> throw e;
+    }
+}
+\end{lstlisting}
+
+\keeplisting{10}
+If the \lstinline|catch|\index{try!catch} blocks for some exceptions contain the same code (in our case, the message for the \lstinline|ApplicationError| would be same), you can list all exceptions\index{exception} in a single \lstinline|catch|\index{try!catch} clause:
+\index{java.io!IOException}\index{java.lang!NumberFormatException}\index{java.util.regex!PatternSyntaxException}
 \begin{lstlisting}
 try
 {
     …
 }
-catch( final ABCException | DEFException | XYZException e ) { … }
+catch( final IOException | NumberFormatException | PatternSyntaxException e )
+{
+    throw new ApplicationError( "Processing failed", e );
+}
 \end{lstlisting}
+
+\lstinline|java.io.FileNotFoundException|\index{java.io!FileNotFoundException} is missing in that list, because it is covered by its parent exception, \lstinline|java.io.IOException|\index{java.io!IOException}.
+
+\bigskip
 
 There are only four reasons why your code contains a \lstinline|catch|\index{try!catch} block for a particular exception\index{exception}:
 \begin{enumerate}
@@ -121,9 +179,13 @@ Nonetheless, it is possible that an empty \lstinline|catch|\index{try!catch} blo
 
 Delegation can be done either by ignoring the exception – in this case it will be propagated to the caller automatically (it \bdq{\textit{bubbles up}}) – or by catching and wrapping it, as described in chapter \tqfullref{sec:ThrowingExceptions}.
 
-\bdq{Restoring the program state to normal} or \bdq{healing the error condition} can be achieved in various ways, also depending on the context. For the examples below it would be often possible to avoid the exception\index{exception} completely by coding it differrently (e.g. by checking the conditions upfront, as shown on page \pageref{lbl:ValidateInput}). I used exceptions\index{exception} to illustrate the topic.
+\bdq{Restoring the program state to normal} or \bdq{healing the error condition} can be achieved in various ways, also depending on the context. The code in the examples below uses exceptions\index{exception} to illustrate the topic, but it would be often possible to avoid the exception\index{exception} completely by coding it differrently (e.g. by checking the conditions upfront, as shown on page \pageref{lbl:ValidateInput}).
 
 \paragraph{Example~1} The method below should create an instance of \lstinline|java.io.Writer|\index{java.io!Writer} for an already existing file; we assume that the argument was checked to be not \lstinline|null| before the call to \lstinline|openOutputFile|.
+
+A \lstinline|FileNotFoundException|\index{java.io!FileNotFoundException} is thrown in line~7 when the specified file or the path for that file does not exist, but instead of delegating that back to the caller, we catch that exception\index{exception} in line~9, create the directory for the file and the file itself, before we initialise it by writing the file header to the \lstinline|Writer|\index{java.io!Writer} instance. 
+
+Other variants of \lstinline|java.io.IOException|\index{java.io!IOException} are still delegated to the caller; they could be thrown in lines~7, 11, 12 and 13.
 
 \keeplisting{15}
 \index{java.io!Writer}\index{java.nio.file.Path}\index{java.io!IOException}\index{java.nio.file!Files}\index{java.nio.file!Files!newBufferedWriter()}\index{java.io!FileNotFoundException}\index{java.nio.file!Files!createDirectories()}\index{java.nio.charset!StandardCharsets!UTF\_8}\index{java.nio.file!StandardOpenOption!APPEND}\index{java.nio.file!StandardOpenOption!CREATE\_NEW}\index{java.nio.file!StandardOpenOption!WRITE}
@@ -147,11 +209,13 @@ private final Writer openOutputFile( final Path existingFile ) throws IOExceptio
 }   //  openOutputFile()
 \end{lstlisting}
 
-A \lstinline|FileNotFoundException|\index{java.io!FileNotFoundException} is thrown in line~7 when the specified file or the path for that file does not exist, but instead of delegating that back to the caller, we catch that exception\index{exception} in line~9, create the directory for the file and the file itself, before we initialise it by writing the file header to the \lstinline|Writer|\index{java.io!Writer} instance. 
-
-Other variants of \lstinline|java.io.IOException|\index{java.io!IOException} are still delegated to the caller; they could be thrown in lines~7, 11, 12 and 13.
-
 \paragraph{Example 2} This method should establish a connection to an external system. After checking the arguments in lines~3 and 4, an attempt is made to instantiate a new \lstinline|Socket|\index{java.net!Socket} object in a loop. If that attempt is successful, the loop will be left (line~13), the \lstinline|Socket|\index{java.net!Socket} instance is wrapped in an instance of \lstinline|Optional|\index{java.util!Optional} (line~23) that is returned afterwards.
+
+If the instantiation of the new \lstinline|Socket|\index{java.net!Socket} fails with an \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or a \lstinline|ConnectException|\index{java.net!ConnectException}, the method waits for 30~seconds (line~17), increments the \lstinline|retryCounter| and continues the loop until the \lstinline|retryCounter| is greater than \lstinline|maxRetries|, another exception than \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or \lstinline|ConnectException|\index{java.net!ConnectException} is thrown, or an attempt to instantiate the socket instance was successful.
+
+\lstinline|Thread::sleep| may throw an \lstinline|InterruptedException|\index{java.lang!InterruptedException} that will also abort the method.
+ 
+This method is clearly using the exceptions\index{exception} to control the execution flow – something that usually should be avoided. Unfortunately, the \Java Runtime Library does not provide an API to check the availability of an external system that does not rely on exceptions\index{exception}.
 
 \keeplisting{25}
 \begin{lstlisting}
@@ -184,13 +248,11 @@ public final Optional<Socket> connect( final InetAddress address, final int port
 }   //  connect()
 \end{lstlisting}
 
-If the instantiation of the new \lstinline|Socket|\index{java.net!Socket} fails with an \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or a \lstinline|ConnectException|\index{java.net!ConnectException}, the method waits for 30~seconds (line~17), increments the \lstinline|retryCounter| and continues the loop until the \lstinline|retryCounter| is greater than \lstinline|maxRetries|, another exception than \lstinline|UnknownHostException|\index{java.net!UnknownHostException} or \lstinline|ConnectException|\index{java.net!ConnectException} is thrown, or an attempt to instantiate the socket instance was successful.
-
-\lstinline|Thread::sleep| may throw an \lstinline|InterruptedException|\index{java.lang!InterruptedException} that will also abort the method.
- 
-This method is clearly using the exceptions\index{exception} to control the execution flow – something that usually should be avoided. Unfortunately, the \Java Runtime Library does not provide an API to check the availability of an external system that does not rely on exceptions\index{exception}.
-
 \paragraph{Example 3} The method below is again using an exception\index{exception} to control the execution flow, but it represents an often used pattern when updating a database table.
+
+The database is \bdq{challenged} with an \texttt{INSERT}, and if that fails, an \texttt{UPDATE} is attempted. The \lstinline|SQLIntegrityConstraintViolationException|\index{java.sql!SQLIntegrityConstraintViolationException} \autocite{ORACLE_DOC_SQLINTEGRITYCONSTRAINTVIOLATIONEXCEPTION_CLASS} with the \texttt{SQLState}~23505 indicates that failure. Other problems cause other exceptions\index{exception}, with other values for \texttt{SQLState}.
+
+The idea is to spare a database roundtrip in case the \texttt{INSERT} is successful, but also to get protection from concurrent modifications without a requiring a transaction\index{transaction}: the \bsq{correct} flow of operations would be to lock the database first, next to check whether there is already a record with the given \lstinline|key|, using a \texttt{SELECT},  and then decide based on the result whether \texttt{INSERT} or \texttt{UPDATE} is the appropriate operation.
 
 \keeplisting{25}
 \index{java.sql!Connection}\index{java.sql!Connection!isClosed()}\index{java.sql!Connection!isReadOnly()}\index{java.sql!Connection!prepareStatement()}\index{java.sql!SQLXML}\index{java.sql!SQLException}\index{java.sql!SQLException!getSQLState()}\index{java.util!Objects!isNull()}\index{java.util!Objects!nonNull()}\index{java.lang!IllegalArgumentException}\index{java.lang!String!isBlank()}\index{java.sql!PreparedStatement}\index{java.sql!PreparedStatement!setString()}\index{java.sql!PreparedStatement!setSQLXML()}\index{java.sql!PreparedStatement!executeUpdate()}\index{java.sql!SQLIntegrityConstraintViolationException}
@@ -229,10 +291,6 @@ public final void writeRecord( final Connection connection, final String key, fi
 }   //  writeRecord()
 \end{lstlisting}
 
-The database is \bdq{challenged} with an \texttt{INSERT}, and if that fails, an \texttt{UPDATE} is attempted. The \lstinline|SQLIntegrityConstraintViolationException|\index{java.sql!SQLIntegrityConstraintViolationException} \autocite{ORACLE_DOC_SQLINTEGRITYCONSTRAINTVIOLATIONEXCEPTION_CLASS} with the \texttt{SQLState}~23505 indicates that failure. Other problems cause other exceptions\index{exception}, with other values for \texttt{SQLState}.
-
-The idea is to spare a database roundtrip in case the \texttt{INSERT} is successful, but also to get protection from concurrent modifications without a requiring a transaction\index{transaction}: the \bsq{correct} flow of operations would be to lock the database first, next to check whether there is already a record with the given \lstinline|key|, using a \texttt{SELECT},  and then decide based on the result whether \texttt{INSERT} or \texttt{UPDATE} is the appropriate operation.
-
 In cases where an update of data is required more often than the insertion of a new record, the \texttt{UPDATE} is attempted first; this can be implemented often without an exception.
 
 In both cases, the solution is efficient when the first operation fails only occasionally (the failure is an exception~…).
@@ -270,9 +328,7 @@ The code for both versions of \lstinline|writeRecord()| requires a JDBC\index{JD
 
 \paragraph{Example 4} We have seen \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} \autocite{ORACLE_DOC_INTEGER:parseInt} already above, as the real life alternative to our \lstinline|textToNumber()| implementation.
 
-We use it here to show that doing nothing can be also the proper response to an exception\index{exception}. Although in fact the response was already given (at least prepared) in line~1, by setting \lstinline|result| to 0.
-
-\keeplisting{10}
+\keeplisting{5}
 \index{java.lang!Integer!parseInt()}\index{java.lang!NumberFormatException}
 \begin{lstlisting}
 int result = 0; // The default value if input is invalid.
@@ -288,6 +344,8 @@ catch( final NumberFormatException _ )
      */
 }
 \end{lstlisting}
+
+We use it here to show that doing nothing can be also the proper response to an exception\index{exception}. Although in fact the response was already given (at least prepared) in line~1, by setting \lstinline|result| to 0.
 
 
 \bigskip
@@ -399,10 +457,12 @@ I will come back to \lstinline|finally|\index{try!finally} in chapter \tqref{sec
 %------------------------------------------------------------------------------
 
 \subsection{Exception Handling in Threads}
-The most often heard excuse regarding a \lstinline|catch|\index{try!catch} clause for \lstinline|java.lang.Exception|\index{java.lang!Exception}, \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, or even \lstinline|java.lang.Throwable|\index{java.lang!Throwable} is, that exceptions thrown while executing a thread that is not the main thread may not go unnoticed. This is in fact a requirement from the \ngref, bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed}.
+The payload of a thread\index{thread} is an implementation of the method \lstinline|run()|\index{java.lang!Runnable!run()} \autocite{ORACLE_DOC_RUNNABLE:run} from the interface \lstinline|java.lang.Runnable|\index{java.lang!Runnable} \autocite{ORACLE_DOC_RUNNABLE_INTERFACE}. 
+
+Because no error may go unnoticed, as required in the \ngref, bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed}, you find quite often code in such implementations that follows the pattern shown below. Sometimes a \lstinline|catch|\index{try!catch} clauses for \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, or even \lstinline|java.lang.Throwable|\index{java.lang!Throwable} are used, instead of one for \lstinline|java.lang.Exception|\index{java.lang!Exception}.
 
 \keeplisting{7}
-So you find code similar to that below:
+\index{java.lang!Exception}
 \begin{lstlisting}
 public final void run()
 {
@@ -417,17 +477,11 @@ public final void run()
 } 
 \end{lstlisting}
 
+This is a very bad excuse for a \lstinline|catch|\index{try!catch} clause for \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException} or \lstinline|Throwable|\index{java.lang!Throwable}!
 
+Unfortunately, this code pattern absolves the programmer of the duty to properly handle any exceptions\index{exception} thrown within the \lstinline|try|\index{try} block individually – with a \lstinline|catch|\index{try!catch} clause for \lstinline|java.lang.Exception|\index{java.lang!Exception} even including the checked\index{exception!checked exception} ones – because the \lstinline|catch|\index{try!catch} block at the end will take care of all exceptions.
 
-
-
-
-
-
-
-Unfortunately, this absolves the programmer of the duty to properly handle any exceptions\index{exception} thrown within the \lstinline|try|\index{try} block – including the checked\index{exception!checked exception} ones; the \lstinline|catch|\index{try!catch} block at the end will take care of it.
-
-The best practice here is to set the \bdq{Uncaught Exception Handler}\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} for the thread, either through the \lstinline|ThreadFactory|\index{java.util.concurrent!ThreadFactory} \autocite{ORACLE_DOC_THREADFACTORY_INTERFACE}, through the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS} or individually. 
+The best practice here is to set the \bdq{Uncaught Exception Handler}\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} for the thread\index{thread}, either through the \lstinline|ThreadFactory|\index{java.util.concurrent!ThreadFactory} \autocite{ORACLE_DOC_THREADFACTORY_INTERFACE}, through the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS} or individually. 
 
 \keeplisting{1}
 \lstinline|java.lang.Thread.UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} is a functional interface\index{interface!functional interface} that can be easily implemented as a method\index{method} like this:
@@ -443,7 +497,6 @@ private final void uncaughtExceptionHandler( final Thread t, final Throwable e )
 }   //  uncaughtExceptionHandler()
 \end{lstlisting}
 
-\keeplisting{24}
 Of course it can be implemented as a class as well:
 \begin{lstlisting}[caption=UncaughtExceptionHandler as Class]
 /**
@@ -470,7 +523,6 @@ public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHand
         m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
         INSTANCE = new UncaughtExceptionHandlerImpl();
     }
-(|\clearpage|)
 
         /*--------------*\
     ====** Constructors **================================================
@@ -479,7 +531,7 @@ public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHand
      *  <p>{@summary Creates a new instance of 
      *  {@code UncaughtExceptionHandlerImpl}.}</p>
      */
-    public UncaughtExceptionHandlerImpl() { /* Just exists */ }
+    public UncaughtExceptionHandlerImpl() { /* Just exists */ }(|\clearpage|)
 
         /*---------*\
     ====** Methods **=====================================================
@@ -503,26 +555,34 @@ public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHand
 \end{lstlisting}
 
 \keeplisting{3}
-Setting the uncaught exception handler for an individual thread looks like this:
+Setting the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} for an individual thread\index{thread} looks like this:
 \begin{lstlisting}
 Thread.ofPlatform()
+    .group( threadGroup )
     .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
     .start( () -> {} );
 \end{lstlisting}
 
 \keeplisting{3}
-For a thread pool, the code would be similar to this:
+For a thread pool\index{thread pool}, the code would be similar to this:
 \begin{lstlisting}
 final var factory = Thread.ofPlatform()
+    .group( threadGroup )
     .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
     .factory();
 final var threadPool = Executors.newCachedThreadPool( factory );
 \end{lstlisting}
 
-The \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} implementation provided by the \Java Runtime Library does not allow to set a custom uncaught exception handler. In chapter \tqref{sec:ThreadGroup} on page \pageref{sec:ThreadGroup} I show an implementation of \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} that got that feature added.
+If the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} is provided by the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} instance, the call to \lstinline|Builder::uncaughtExceptionHandler|\index{java.lang!Thread.Builder!uncaughtExceptionHandler()} should be omitted; otherwise it overwrites the setting from the group.
 
-\keeplisting{3}
-If your thread requires a special handling for an uncaught exception, this looks like below; the example assumes that the thread comes from a pool and is reused:
+A thread group is supported only by platform threads\index{thread!platform thread}, not by virtual threads\index{thread!virtual thread}. Additionally, the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} implementation provided by the \Java Runtime Library does not allow to set a custom uncaught exception handler. In chapter \tqref{sec:ThreadGroup} on page \pageref{sec:ThreadGroup} I show an implementation of \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} that got that feature added.
+
+Usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} that is assigned through the factory or group, as already said, or you even use the static method \lstinline|Thread::setDefaultUncaughtExceptionHandler|\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()} \autocite{ORACLE_DOC_THREAD:setDefaultUncaughtExceptionHandler} to define a default handler that is used by all threads that does not specify an individual one.
+
+If your method\index{method} requires a special treatment for an uncaught exception when executed within a thread from a thread pool, it can set an individual uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} as shown in the code sample below.
+
+\keeplisting{27}
+\index{java.lang!Runnable!run()}\index{java.lang!Thread!currentThread()}\index{java.lang!Thread!getDefaultUncaughtExceptionHandler()}\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()}\index{java.lang!Thread.UncaughtExceptionHandler}
 \begin{lstlisting}
 public final void run()
 {
@@ -544,16 +604,21 @@ public final void run()
  
     try
     {
-        // Do whatever this thread must do …
+        /*
+         * Do whatever this thread must do …
+         */
     }
     finally
     {
+        //---* Reset the uncaught exception handler *-------------------------
         currentThread.setUncaughtExceptionHandler( uncaughtExceptionHandler );
     }
-}
+}   //  run()
 \end{lstlisting}
 
-But usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} that is assigned through the factory or group, as already said, or you even define a default handler.
+That \bdq{special treatment} could be an individual message, but also that you want to log the issue in a different manner or to another location.
+
+If your code changes the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} of the thread that executes it, it must restore the handler when it terminates, because threads from a thread pool are reused with different payloads (during their lifetime, they execute the \lstinline|run()|\index{java.lang!Runnable!run()} method from different instances of \lstinline|Runnable|\index{java.lang!Runnable} implementations). Although virtual threads\index{thread!virtual thread} are not reused\footnote{At least not if you follow the recommendations given in JEP~444 \autocite{JEP444:Pooling}.}, you should restore the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} even when \lstinline|Thread::isVirtual|\index{java.lang!Thread!isVirtual()} \autocite{ORACLE_DOC_THREAD:isVirtual} returns \lstinline|true| for the current thread\index{thread}.
 
 %------------------------------------------------------------------------------
 
@@ -597,51 +662,13 @@ public final void run()
 }   // run()
 \end{lstlisting}
 
-You should absolutely avoid to catch \lstinline|java.lang.Error| and all of its subclasses, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|\index{java.lang!Throwable}!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
+, \lstinline|java.lang.RuntimeException|, and of course, you should not never ever catch \lstinline|java.lang.Throwable|\index{java.lang!Throwable}!\footnote{But no rule without an exception: refer to chapter \tqvref{sec:ExceptionHandlingInThreads}.}
 
 Provide a \lstinline|catch| block for each and every exception that you want to handle:
-\begin{lstlisting}
-public final void run()
-{
-    try
-    {
-        …
-    }
-    catch( final FileNotFoundException e )
-    {
-        throw new ApplicationError( "Cannot find file", e );
-    }
-    catch( final IOException e )
-    {
-        throw new ApplicationError( "An error occurred on processing the input file", e );
-    }
-    catch( final NumberFormatException e )
-    {
-        throw new ApplicationError( "Input Data is corrupted", e );
-    }
-    catch( final PatternSyntaxException e )
-    {
-        throw new ApplicationError( "Pattern invalid", e );
-    }
-}   // run()
-\end{lstlisting}
 
 Sometimes when a large number of exceptions has to be handled with all the same code, you may be tempted to just catch \lstinline|java.lang.Exception|. As already said: don't do it! This approach will definitely cause problems as it may handle runtime exceptions in the same \lstinline|catch|-block as the checked exceptions, and usually this is not intended.
 
 A simplificatin for the sample above could look like this:
-\begin{lstlisting}
-public final void run()
-{
-    try
-    {
-        …
-    }
-    catch( final IOException | NumberFormatException | PatternSyntaxException e )
-    {
-        throw new ApplicationError( "Processing failed", e );
-    }
-}   // run()
-\end{lstlisting}
 Still only the declared exceptions will be handled in the \lstinline|catch|-block, but unexpected exceptions will now bubble up\footnote{The exception class \lstinline|java.io.FileNotFoundException| is not listed because its superclass \lstinline|java.io.IOException| is already on the list.}.
 
 Sometimes an exception indicates a regular program state (although this would indicate poor design in most cases)\footnote{Nevertheless, you can find this even in the Java Runtime Library~… but no one has ever said that the authors of the JDK had never made doubtful decisions.}. Usually you will avoid this situation by e.g. checking the operands before an operation, but a very popular example where this is not practicable is the conversion of a string into a numerical value:

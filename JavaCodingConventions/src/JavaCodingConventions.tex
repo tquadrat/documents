@@ -67,6 +67,33 @@ This also means that each method (in Pega, this includes the Rules) must check i
 
 
 
+When selecting the exception class, your first look should be to the already existing exception implementations if there is already one that fits your needs.\footnote{Although sometimes the name of an exception looks good, you should also consider which package it lives in; throwing an exception from a JNDI related package like \lstinline|javax.naming.OperationNotSupportedException|\index{javax.naming!OperationNotSupportedException} in a code segment that does nothing with the \bdq{Java Naming and Directory Interface} at all will cause more confusion than it helps. Not to mention that it may require an additional module.} If none of the existing ones fit, implement your one exception class by extending one of \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException}, or \lstinline|Error|\index{java.lang!Error}, depending on your needs\footnote{You can create your own exception class that extends \lstinline|Throwable|\index{java.lang!Throwable} directly, but so far I have not found a use case for that.}. This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.
+
+
+If the domain specific exception would allow to add information to it, that could look like this:
+try
+{
+    …
+}
+catch( final DomainException e ) 
+{
+    e.addInfo( "Message", "Printing Operation failed" );
+    e.addInfo( "Recipient Id", recipientID );
+    e.addInfo( "Origin", dataSource ); 
+    throw e;
+}
+“Handling an Exception” usually means that the error condition that caused the exception is removed or healed. Whether or not the exception is logged depends on the circumstances, but it must be obvious that it will never be logged with ERROR or FATAL when the error condition has gone!
+\begin{lstlisting}
+catch( final AnException _ ) { /* Deliberately ignored */ }
+\end{lstlisting}
+Or, better, with an explanation: 
+\begin{lstlisting}
+catch( final AnException _ ) { /* Default value is used in case of failure */ }
+\end{lstlisting}
+In the second case, you should consider throwing a dedicated exception:
+catch( final AnException e ) { throw new ImpossibleExceptionError( e ); }
+This protects the code a little bit from changes to the implementation of the method that previously could not throw the exception. At least the Exception will not go unnoticed when thrown.
+Another recommendation regarding Error handling is that it must not obscure the essentials. When you write the code that checks for an error condition or handles an error condition, come to the point fast, otherwise the readability of the code suffers.
 
 
 

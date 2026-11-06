@@ -11,11 +11,12 @@ These exceptions are:
 		\item{\lstinline|java.lang.StringIndexOutOfBoundException|\index{java.lang!StringIndexOutOfBoundException} \autocite{ORACLE_DOC_STRINGINDEXOUTOFBOUNDSEXCEPTION_CLASS}}
 	\end{itemize}}
 	\item{\lstinline|java.lang.ArithmethicException|\index{java.lang!ArithmethicException} \autocite{ORACLE_DOC_ARITHMETICEXCEPTION_CLASS}}
+	\item{\lstinline|java.util.NoSuchElementException|\index{java.util!NoSuchElementException} \autocite{ORACLE_DOC_NOSUCHELEMENTEXCEPTION_CLASS}}
 %	\item{\lstinline||\index{} \autocite{}}
 %	\item{\lstinline||\index{} \autocite{}}
 \end{itemize}
 
-Unfortunately the \Java Runtime Library uses these exceptions\index{exception} a lot, mostly to signal invalid arguments.\footnote{However, no one has ever claimed that the authors of the JDK never made questionable decisions.} 
+Unfortunately the \Java Runtime Library uses the exceptions \lstinline|NullPointerException|\index{java.lang!NullPointerException} and \lstinline|IndexOutOfBoundsException|\index{java.lang!IndexOutOfBoundsException} a lot, mostly to signal invalid arguments.\footnote{However, no one has ever claimed that the authors of the JDK never made questionable decisions.} 
 
 This means you must check the arguments for each call to a method\index{method} that declares to throw one of the listed exceptions. In case of the \lstinline|NullPointerException|\index{java.lang!NullPointerException}, it means also that you need to check each reference before you use it.
 
@@ -23,7 +24,7 @@ Unfortunately, it means also that you cannot use some of the validation methods 
 \begin{itemize}
 	\item{All variants of \lstinline|Objects::requireNonNull|\index{java.util!Objects!requireNonNull()} \autocite{ORACLE_DOC_OBJECTS:requireNonNull} throw a \lstinline|NullPointerException|\index{java.lang!NullPointerException} in case the value that is checked is \lstinline|null| – but this is what we want to avoid by checking the value.}
 	
-	\item{The methods \lstinline|Object::checkIndex|\index{java.util!Objects!checkIndex} \autocite{ORACLE_DOC_OBJECTS:checkIndex}, \lstinline|Object::checkFromToIndex|\index{java.util!Objects!checkFromToIndex()} \autocite{ORACLE_DOC_OBJECTS:checkFromToIndex}, and \lstinline|Object::checkFromIndexSize|\index{java.util!Objects!checkFromIndexSize()} \autocite{ORACLE_DOC_OBJECTS:checkFromIndexSize} throw an \lstinline|IndexOutOfBoundsException|\index{java.lang!IndexOutOfBoundsException} in all their variants  when the value check fails.}
+	\item{The methods \lstinline|Objects::checkIndex|\index{java.util!Objects!checkIndex} \autocite{ORACLE_DOC_OBJECTS:checkIndex}, \lstinline|Objects::checkFromToIndex|\index{java.util!Objects!checkFromToIndex()} \autocite{ORACLE_DOC_OBJECTS:checkFromToIndex}, and \lstinline|Objects::checkFromIndexSize|\index{java.util!Objects!checkFromIndexSize()} \autocite{ORACLE_DOC_OBJECTS:checkFromIndexSize} throw an \lstinline|IndexOutOfBoundsException|\index{java.lang!IndexOutOfBoundsException} in all their variants  when the value check fails.}
 	
 %	\item{\lstinline||\index{} \autocite{}}
 
@@ -33,6 +34,14 @@ Unfortunately, it means also that you cannot use some of the validation methods 
 You should think about reimplementing these methods to throw a validation exception\index{validation exception} instead. Refer to \autocite{TQUADRAT_ORG_FOUNDATION_OBJECTS}.
 
 And \bdq{Laziness Indicators} because when these exceptions\index{exception} evade to the surface, they will indicate that the programmer was too lazy to implement argument checks for each method\index{method} and each argument.
+
+In most cases a \lstinline|ArithmethicException|\index{java.lang!ArithmethicException} is thrown, the programmer forgot to verify that a divisor is not 0.
+
+The \lstinline|NoSuchElementException|\index{java.util!NoSuchElementException} is thrown when a call to \lstinline|Optional::get|\index{java.util!Optional!get()} \autocite{ORACLE_DOC_OPTIONAL:get} fails because the \lstinline|Optional|\index{java.util!Optional} \autocite{ORACLE_DOC_OPTIONAL_CLASS} object is empty. To avoid this, \lstinline|Optional.isEmpty()|\index{java.util!Optional!isEmpty()} \autocite{ORACLE_DOC_OPTIONAL:isEmpty} or \lstinline|Optional.isPresent()|\index{java.util!Optional!isPresent()} \autocite{ORACLE_DOC_OPTIONAL:isPresent} should have been called before, to check the status of the \lstinline|Optional|\index{java.util!Optional} instance.
+
+The same exception is thrown also by \lstinline|Iterator.next()|\index{java.util!Iterator!next()} \autocite{ORACLE_DOC_ITERATOR:next} is called when the \lstinline|Iterator|\index{java.util!Iterator} \autocite{ORACLE_DOC_ITERATOR_INTERFACE} does not have more elements. This could have been prevented by a call to \lstinline|Iterator.hasNext()|\index{java.util!Iterator!hasNext()} \autocite{ORACLE_DOC_ITERATOR:hasNext}.
+
+This is similarly true for \lstinline|java.util.Enumeration|\index{java.util!Enumeration} \autocite{ORACLE_DOC_ENUMERATION_INTERFACE}.
  
 %==============================================================================
 % End of file!!

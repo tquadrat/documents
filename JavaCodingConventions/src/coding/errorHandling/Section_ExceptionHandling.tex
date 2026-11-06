@@ -278,7 +278,7 @@ public final void writeRecord( final Connection connection, final String key, fi
         catch( final SQLIntegrityConstraintViolationException e )
         {
             if( !e.getSQLState().equals( "23505" ) ) throw e;
-            var statement = connection.prepareStatement( """
+            statement = connection.prepareStatement( """
 ````````````````UPDATE the_table
 ````````````````    data = ?
 ````````````````    WHERE key = ?;

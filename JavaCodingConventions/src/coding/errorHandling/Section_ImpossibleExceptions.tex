@@ -1,8 +1,127 @@
 \section{Unexpected and Impossible Exceptions}\label{sec:ImpossibleExceptions}
+The interface \lstinline|java.lang.Appendable|\index{java.lang!Appendable} \autocite{ORACLE_DOC_APPENDABLE_INTERFACE} is implemented by several classes, including
+\begin{itemize}[nosep]
+	\item{\lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder} \autocite{ORACLE_DOC_STRINGBUILDER_CLASS}}
+	\item{\lstinline|java.io.StringWriter|\index{java.io!StringWriter} \autocite{ORACLE_DOC_STRINGWRITER_CLASS}}
+	\item{\lstinline|java.io.PrintWriter|\index{java.io!PrintWriter} \autocite{ORACLE_DOC_PRINTWRITER_CLASS}}
+	\item{\lstinline|java.io.PrintStream|\index{java.io!PrintStream} \autocite{ORACLE_DOC_PRINTSTREAM_CLASS}}
+\end{itemize} 
+
+The documentation for \lstinline|Appendable::append|\index{java.lang!Appendable!append()} looks like this \autocite{ORACLE_DOC_APPENDABLE:append}:
+\begin{center}
+	\includegraphics[scale=0.55]{coding/errorHandling/Appendable_append}
+\end{center}
+
+You see that the method \lstinline|appendable()|\index{java.lang!Appendable!append()} declares to throw an \lstinline|IOException|\index{java.io!IOException} in case of an error.
+
+This exception in not declared for the implementation of \lstinline|appendable()|\index{java.lang!Appendable!append()} by neither \lstinline|java.lang.StringBuilder|\index{java.lang!StringBuilder} nor \lstinline|java.io.PrintStream|\index{java.io!PrintStream}.
+
+\keeplisting{3}
+Consequently, the code snippets
+\begin{lstlisting}
+public final void toStringBuilder()
+{
+    final StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append( "Text" );
+}   //  toStringBuilder()
+\end{lstlisting}
+and
+\keeplisting{3}
+\begin{lstlisting}
+public final void toPrintStream()
+{
+    final PrintStream printStream = new PrintStream( out );
+    printStream.append( "Text" );
+}   //  toPrintStream()
+\end{lstlisting}
+will compile without a problem.
+
+\keeplisting{5}
+And now this code snippet:
+\begin{lstlisting}
+final StringBuilder stringBuilder = new StringBuilder();
+final PrintStream printStream = new PrintStream( out );
+
+final Appendable appendable = toConsole ? printStream : stringBuilder;
+try
+{
+    appendable.append( "Text" );
+}
+catch( final IOException e )
+{
+    // What's up here?
+}
+\end{lstlisting}
+
+Despite neither \lstinline|PrintStream::append|\index{java.io!PrintStream!append()} nor \lstinline|StringBuilder::append|\index{java.lang!StringBuilder!append()} may throw an exception\index{exception}, the Java syntax requires the \lstinline|catch|\index{throw!catch} block starting in line~50.
+
+What should we do in this \lstinline|catch|\index{throw!catch} block?
+
+Of course, we can place a comment here and leave it otherwise empty. Or we just print or log the \lstinline|IOException|\index{java.io!IOException}.
+
+\keeplisting{4}
+My recommendation is to throw an error in line~11, either
+\begin{lstlisting}[firstnumber=9]
+catch( final IOException e )
+{
+    throw new AssertionError( "Impossible Exception encountered", e );
+}
+\end{lstlisting}
+
+or you create an \lstinline|ImpossibleExceptionError| for this purpose and throw that. Refer to chapter \tqfullvref{sec:UsefulCustomExceptions}. This approach protects you from API changes in later versions of the \Java Runtime Library, as the related error will not remain unnoticed.
+
+\keeplisting{10}
+Another example from this category is this one:
+\begin{lstlisting}
+final String s;
+try
+{
+    s = new String( byteArray, "UTF-8" );
+}
+catch( final UnsupportedEncodingException e )
+{
+    throw new ImpossibleExceptionError( "UTF-8 must exist!", e );
+}
+\end{lstlisting}
+
+The documentation for \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} contains a list of standard charsets \autocite{ORACLE_DOC_CHARSET:StandardCharsets} that must be supported by each JDK/JVM implementation. According to that list, the UTF-8\index{UTF-8} \autocite{WIKIPEDIA:UTF8} encoding is mandatory and will be availabe always, and consequently, the code sequence above will \textit{never} throw an \lstinline|UnsupportedEncodingException|. 
+
+Nevertheless, exceptions\index{exception} should never be swallowed. Instead we throw an error in the \lstinline|catch|\index{throw!catch} block, indicating the error condition. In the improbable case that UTF-8\index{UTF-8} is no longer supported by an upcoming \Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason. It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset|\index{java.nio.charset!Charset} will cause noise.
+
+Of course, the problem could be solved differently, by using an instance of \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} \autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String|\index{java.lang!String} constructor, instead of the \textit{name} of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|\index{java.nio.charset!UnsupportedEncodingException}.
+ 
+\keeplisting{1}
+That would look like this:
+\begin{lstlisting}
+final String s = new String( byteArray, StandardCharsets.UTF_8 );
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
 \chapter*{Road Work ahead!}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
+
+
+
+
 
 
 
@@ -45,25 +164,6 @@ if( file.exists() )
 \end{lstlisting}
 
 A sample for the class \lstinline|UnexpectedExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_UNEXPECTEDEXCEPTIONERROR}.
-
-Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
-\begin{lstlisting}
-…
-final String s;
-try
-{
-    s = new String( byteArray, "UTF-8" );
-}
-catch( final UnsupportedEncodingException e )
-{
-    throw new ImpossibleExceptionError( "UTF-8 must exist!", e );
-}
-…
-\end{lstlisting}
-
-According to \autocite{ORACLE_DOC_CHARSET:StandardCharsets}, the UTF-8 encoding is mandatory for each JDK/JVM implementation, therefore the code sequence above will \textit{never} throw an \lstinline|UnsupportedEncodingException|. Nevertheless, it is not allowed to swallow the exception; instead an error should be thrown in the \lstinline|catch| clause, indicating the error condition. In the improbable case UTF-8 is not supported by the current Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason.\footnote{If, of course, there is no catch for \lstinline|Throwable| somewhere on the path.} It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset| will cause noise.
-
-Of course, the problem could be solved differently, by using an instance of \lstinline|java.nio.charset.Charset|\autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String| constructor, instead of the name of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|. 
 
 Another example is the interface \lstinline|java.lang.Appendable|\autocite{ORACLE_DOC_APPENDABLE_INTERFACE}: it is implemented by \lstinline|java.io.Writer| and \lstinline|java.io.PrintStream|, but also by \lstinline|java.lang.StringBuilder| (and a few more). The method \lstinline|java.lang.Appendable::append| declares to throw an \lstinline|IOException|, but the implementation of that method for \lstinline|StringBuilder| will never throw it and does not even declare it.
 \begin{lstlisting}

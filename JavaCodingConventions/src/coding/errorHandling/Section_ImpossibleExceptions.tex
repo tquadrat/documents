@@ -18,6 +18,7 @@ This exception in not declared for the implementation of \lstinline|appendable()
 
 \keeplisting{3}
 Consequently, the code snippets
+\index{java.lang!StringBuilder}\index{java.lang!StringBuilder!append()}
 \begin{lstlisting}
 public final void toStringBuilder()
 {
@@ -27,6 +28,7 @@ public final void toStringBuilder()
 \end{lstlisting}
 and
 \keeplisting{3}
+\index{java.io!PrintStream}\index{java.io!PrintStream!append()}
 \begin{lstlisting}
 public final void toPrintStream()
 {
@@ -38,6 +40,7 @@ will compile without a problem.
 
 \keeplisting{5}
 And now this code snippet:
+\index{java.lang!StringBuilder}\index{java.lang!StringBuilder!append()}\index{java.io!PrintStream}\index{java.io!PrintStream!append()}\index{java.lang!Appendable}\index{java.lang!Appendable!append()}\index{java.io!IOException}
 \begin{lstlisting}
 final StringBuilder stringBuilder = new StringBuilder();
 final PrintStream printStream = new PrintStream( out );
@@ -61,6 +64,7 @@ Of course, we can place a comment here and leave it otherwise empty. Or we just 
 
 \keeplisting{4}
 My recommendation is to throw an error in line~11, either
+\index{java.io!IOException}\index{java.lang!AssertionError}
 \begin{lstlisting}[firstnumber=9]
 catch( final IOException e )
 {
@@ -68,10 +72,11 @@ catch( final IOException e )
 }
 \end{lstlisting}
 
-or you create an \lstinline|ImpossibleExceptionError| for this purpose and throw that. Refer to chapter \tqfullvref{sec:UsefulCustomExceptions}. This approach protects you from API changes in later versions of the \Java Runtime Library, as the related error will not remain unnoticed.
+or you create an \lstinline|ImpossibleExceptionError| for this purpose and throw that, as discussed in chapter \tqfullvref{sec:UsefulCustomExceptions}. This approach protects you from API changes in later versions of the \Java Runtime Library, as the related error will not remain unnoticed.
 
 \keeplisting{10}
 Another example from this category is this one:
+\index{java.lang!String}\index{java.nio.charset!UnsupportedEncodingException}
 \begin{lstlisting}
 final String s;
 try
@@ -88,13 +93,49 @@ The documentation for \lstinline|java.nio.charset.Charset|\index{java.nio.charse
 
 Nevertheless, exceptions\index{exception} should never be swallowed. Instead we throw an error in the \lstinline|catch|\index{throw!catch} block, indicating the error condition. In the improbable case that UTF-8\index{UTF-8} is no longer supported by an upcoming \Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason. It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset|\index{java.nio.charset!Charset} will cause noise.
 
-Of course, the problem could be solved differently, by using an instance of \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} \autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String|\index{java.lang!String} constructor, instead of the \textit{name} of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|\index{java.nio.charset!UnsupportedEncodingException}.
+Of course, here the issue could be address differently, by using an instance of \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} \autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String|\index{java.lang!String} constructor, instead of the \textit{name} of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|\index{java.nio.charset!UnsupportedEncodingException}.
  
 \keeplisting{1}
 That would look like this:
+\index{java.lang!String}\index{java.nio.charset!StandardCharsets}
 \begin{lstlisting}
 final String s = new String( byteArray, StandardCharsets.UTF_8 );
 \end{lstlisting}
+
+Now already the compiler will complain when UTF-8\index{UTF-8} is no longer supported or the name was changed.\footnote{See also chapter \tqfullvref{sec:ErrorPrevention}.}
+
+\bigskip
+
+It is also possible that you checked a preconditions, but you still have to deal with some checked exceptions, as shown in the sample on the next page.
+\clearpage
+
+\keeplisting{15}
+\index{java.io.File}\index{java.io.File!exists()}\index{java.io.File!getAbsolutePath()}\index{java.io.FileInputStream}\index{java.io.FileNotFoundException}\index{java.io.IOException}
+\begin{lstlisting}
+final var file = new File( … );
+if( file.exists() )
+{
+    try( final var input = new FileInputStream( file ) )
+    {
+        …
+    }
+    catch( final FileNotFoundException e )
+    {
+        throw new AssertionError( """
+````````````Unexpected Exception!
+````````````File "%s" was there when checked!
+````````````Now it is gone!".formatted( file.getAbsolutePath() ), e );
+    }
+    catch( final IOException e )
+    {
+        // Handle the IOException
+    }
+}
+\end{lstlisting}
+
+The constructor\index{constructor} of \lstinline|FileInputStream|\index{java.io!FileInputStream} declares to throw \lstinline|IOException|\index{java.io!IOException}, so the \lstinline|catch|\index{throw!catch} block for that exception is mandatory anyway. And because \lstinline|IOException|\index{java.io!IOException} is the parent class of \lstinline|FileNotFoundException|\index{java.io.FileNotFoundException}, we could have omitted the \lstinline|catch|\index{throw!catch} block for this exception\index{exception} completely.
+
+But because it is very unlikely that a file will vanish in the few milliseconds that elapsed after we checked the presence of the file in line~2 and before we open it in line~4, we want to crash very loudly in this case and we throw an error. But in case, the exception\index{exception} is not \textit{impossible} as in the examples above, it is just \textit{unlikely}.
 
 %------------------------------------------------------------------------------
 
@@ -104,11 +145,48 @@ final String s = new String( byteArray, StandardCharsets.UTF_8 );
 
 
 
+    @SuppressWarnings( {"NestedTryStatement", "unchecked"} )
+    private static final Collection<Class<?>> retrieveSubjectClasses( final StringConverter<?> converter )
+    {
+        final var converterClass = requireNonNullArgument( converter, "converter" ).getClass();
+        Collection<Class<?>> retValue;
+        try
+        {
+            try
+            {
+                final var getSubjectClassMethod = converterClass.getMethod( METHOD_NAME_GetSubjectClass );
+                retValue = (Collection<Class<?>>) getSubjectClassMethod.invoke( converter );
+            }
+            catch( final NoSuchMethodException ignored )
+            {
+                final var fromStringMethod = converterClass.getMethod( "fromString", CharSequence.class );
+                retValue = List.of( fromStringMethod.getReturnType() );
+            }
+        }
+        catch( final NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e )
+        {
+            throw new UnlikelyExceptionError( e );
+        }
 
 
 
 
 
+    static
+    {
+        try
+        {
+            m_VariablePattern = compile( VARIABLE_PATTERN );
+        }
+        catch( final PatternSyntaxException e )
+        {
+            throw new UnlikelyExceptionError( """
+                The provided pattern "%s" is a constant and should be properly tested. 
+                Therefore, a PatternSyntaxException is unlikely.\
+                """.formatted( VARIABLE_PATTERN ), e );
+        }
+    }
+[A 
 
 
 

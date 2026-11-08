@@ -135,7 +135,41 @@ if( file.exists() )
 
 The constructor\index{constructor} of \lstinline|FileInputStream|\index{java.io!FileInputStream} declares to throw \lstinline|IOException|\index{java.io!IOException}, so the \lstinline|catch|\index{throw!catch} block for that exception is mandatory anyway. And because \lstinline|IOException|\index{java.io!IOException} is the parent class of \lstinline|FileNotFoundException|\index{java.io.FileNotFoundException}, we could have omitted the \lstinline|catch|\index{throw!catch} block for this exception\index{exception} completely.
 
-But because it is very unlikely that a file will vanish in the few milliseconds that elapsed after we checked the presence of the file in line~2 and before we open it in line~4, we want to crash very loudly in this case and we throw an error. But in case, the exception\index{exception} is not \textit{impossible} as in the examples above, it is just \textit{unlikely}.
+But because it is very unlikely that a file will vanish in the few milliseconds that elapsed after we checked the presence of the file in line~2 and before we open it in line~4, we want to crash very loudly in this case and we throw an error. But in case, the exception\index{exception} is not \textit{impossible} as in the examples above, it is just \textit{unlikely}. I recommend to create an \lstinline|UnlikelyExceptionError| for this purpose.
+
+\keeplisting{9}
+A similar situation may arise when reflection is used:
+\begin{lstlisting}
+final Method fromStringMethod;
+try
+{
+    fromStringMethod = converterClass.getMethod( "fromString", CharSequence.class );
+}    
+catch( final NoSuchMethodException e )
+{
+    throw new UnlikelyExceptionError( """
+````````Method "fromString" must exist!\
+````````""", e );
+}
+\end{lstlisting}
+
+In this case, there should have been proper unit tests\index{unit test} that verify the presence of the method \lstinline|fromString( CharSequence )|, making it very unlikely that this method is not available in production.
+
+\keeplisting{9}
+Another example is this one:
+\begin{lstlisting}
+try
+{
+    m_VariablePattern = compile( VARIABLE_PATTERN );
+}
+catch( final PatternSyntaxException e )
+{
+    throw new UnlikelyExceptionError( """
+````````The provided pattern "%s" is a constant and should be properly tested. 
+````````Therefore, a PatternSyntaxException is unlikely.\
+````````""".formatted( VARIABLE_PATTERN ), e );
+}
+\end{lstlisting}
 
 %------------------------------------------------------------------------------
 
@@ -145,48 +179,7 @@ But because it is very unlikely that a file will vanish in the few milliseconds 
 
 
 
-    @SuppressWarnings( {"NestedTryStatement", "unchecked"} )
-    private static final Collection<Class<?>> retrieveSubjectClasses( final StringConverter<?> converter )
-    {
-        final var converterClass = requireNonNullArgument( converter, "converter" ).getClass();
-        Collection<Class<?>> retValue;
-        try
-        {
-            try
-            {
-                final var getSubjectClassMethod = converterClass.getMethod( METHOD_NAME_GetSubjectClass );
-                retValue = (Collection<Class<?>>) getSubjectClassMethod.invoke( converter );
-            }
-            catch( final NoSuchMethodException ignored )
-            {
-                final var fromStringMethod = converterClass.getMethod( "fromString", CharSequence.class );
-                retValue = List.of( fromStringMethod.getReturnType() );
-            }
-        }
-        catch( final NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e )
-        {
-            throw new UnlikelyExceptionError( e );
-        }
 
-
-
-
-
-    static
-    {
-        try
-        {
-            m_VariablePattern = compile( VARIABLE_PATTERN );
-        }
-        catch( final PatternSyntaxException e )
-        {
-            throw new UnlikelyExceptionError( """
-                The provided pattern "%s" is a constant and should be properly tested. 
-                Therefore, a PatternSyntaxException is unlikely.\
-                """.formatted( VARIABLE_PATTERN ), e );
-        }
-    }
-[A 
 
 
 

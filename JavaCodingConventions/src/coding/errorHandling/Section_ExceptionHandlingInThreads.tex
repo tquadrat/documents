@@ -53,27 +53,20 @@ public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHand
     /**
      *  <p>{@summary The instance of this class.}</p>
      */
-    public static final UncaughtExceptionHandler INSTANCE;
+    public static final UncaughtExceptionHandler INSTANCE = new UncaughtExceptionHandlerImpl();
 
     /**
      *  <p>{@summary The logger that is used to log the exceptions.}</p>
      */
-    private static final Logger m_Logger;
-
-    static
-    {
-        m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
-        INSTANCE = new UncaughtExceptionHandlerImpl();
-    }
+    private static final Logger m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
 
         /*--------------*\
     ====** Constructors **================================================
         \*--------------*/
     /**
-     *  <p>{@summary Creates a new instance of 
-     *  {@code UncaughtExceptionHandlerImpl}.}</p>
+     *  <p>{@constructor}}</p>
      */
-    public UncaughtExceptionHandlerImpl() { /* Just exists */ }(|\clearpage|)
+    public UncaughtExceptionHandlerImpl() { /* Just exists */ }
 
         /*---------*\
     ====** Methods **=====================================================
@@ -123,7 +116,6 @@ Usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.
 
 If your method\index{method} requires a special treatment for an uncaught exception when executed within a thread from a thread pool, it can set an individual uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} as shown in the code sample below.
 
-\keeplisting{27}
 \index{java.lang!Runnable!run()}\index{java.lang!Thread!currentThread()}\index{java.lang!Thread!getDefaultUncaughtExceptionHandler()}\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()}\index{java.lang!Thread.UncaughtExceptionHandler}
 \begin{lstlisting}
 public final void run()
@@ -137,12 +129,10 @@ public final void run()
          *
 
         //---* Finally log the exception *--------------------------------
-        m_Logger.atFatal()
-            .withThrowable( e )
-            .log( () -> """
+        m_Logger.fatal( () -> """
 ````````````````Thread "%s" was aborted with an exception!\
-````````````````""".formatted( t.getName() ) );
-    } );
+````````````````""".formatted( t.getName() ), e );
+    } );(|\clearpage|)
  
     try
     {

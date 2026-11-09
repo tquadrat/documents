@@ -347,6 +347,28 @@ catch( final NumberFormatException _ )
 
 We use it here to show that doing nothing can be also the proper response to an exception\index{exception}. Although in fact the response was already given (at least prepared) in line~1, by setting \lstinline|result| to 0.
 
+\keeplisting{17}
+\paragraph{Example 5} In some very rare cases it is necessary to act upon an error condition without really handling the exception. In this case, your code catches the exception, does whatever necessary, then throw it again unchanged, like in the code below:
+\begin{lstlisting}
+public final void transmit() throws IOException
+{
+    final Predicate<String> isNetworkError = m_NetworkErrorPattern.asMatchPredicate();
+    …
+    try
+    {
+        …
+    }
+    catch( final IOException e )
+    {
+        final var message = e.getMessage();
+        if( nonNull( message ) && isNetworkError.test( message ) ) ++m_NetworkErrors;
+        throw e;
+    }
+    …
+}   // transmit()
+\end{lstlisting}
+
+The idea here is to count those instances of \lstinline|IOException|\index{java.io!IOException} whose message matches a specific pattern.
 
 \bigskip
 
@@ -414,8 +436,8 @@ Of course, messages that will be presented to the end user in a UI must be local
 
 %------------------------------------------------------------------------------
 
-\subsection{The finally Block}\label{sec:FinallyBlock}
 \keeplisting{9}
+\subsection{The finally Block}\label{sec:FinallyBlock}
 The complete syntax for the exception handling is \texttt{try-catch-finally}\index{try-catch-finally}:
 \begin{lstlisting}
 try

@@ -106,8 +106,7 @@ Now already the compiler will complain when UTF-8\index{UTF-8} is no longer supp
 
 \bigskip
 
-It is also possible that you checked a preconditions, but you still have to deal with some checked exceptions, as shown in the sample on the next page.
-\clearpage
+It is also possible that you checked a preconditions, but you still have to deal with some checked exceptions, as shown in the sample below:
 
 \keeplisting{15}
 \index{java.io.File}\index{java.io.File!exists()}\index{java.io.File!getAbsolutePath()}\index{java.io.FileInputStream}\index{java.io.FileNotFoundException}\index{java.io.IOException}
@@ -135,7 +134,7 @@ if( file.exists() )
 
 The constructor\index{constructor} of \lstinline|FileInputStream|\index{java.io!FileInputStream} declares to throw \lstinline|IOException|\index{java.io!IOException}, so the \lstinline|catch|\index{throw!catch} block for that exception is mandatory anyway. And because \lstinline|IOException|\index{java.io!IOException} is the parent class of \lstinline|FileNotFoundException|\index{java.io.FileNotFoundException}, we could have omitted the \lstinline|catch|\index{throw!catch} block for this exception\index{exception} completely.
 
-But because it is very unlikely that a file will vanish in the few milliseconds that elapsed after we checked the presence of the file in line~2 and before we open it in line~4, we want to crash very loudly in this case and we throw an error. But in case, the exception\index{exception} is not \textit{impossible} as in the examples above, it is just \textit{unlikely}. I recommend to create an \lstinline|UnlikelyExceptionError| for this purpose.
+But because it is very unlikely that a file will vanish in the few milliseconds that elapsed after we checked the presence of that file in line~2 and before we open it in line~4, we want to crash very loudly in this case and we throw an error. But in case, the exception\index{exception} is not \textit{impossible} as in the examples above, it is just \textit{unlikely}. I recommend to create an \lstinline|UnlikelyExceptionError| for this purpose.
 
 \keeplisting{9}
 A similar situation may arise when reflection is used:
@@ -171,114 +170,7 @@ catch( final PatternSyntaxException e )
 }
 \end{lstlisting}
 
-%------------------------------------------------------------------------------
-
-\chapter*{Road Work ahead!}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Some APIs in the JDK declares a checked exception, but that will never be thrown for the given arguments by any means. Most famous for this are the conversions from byte arrays to Strings and back:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-It is also possible that you checked the preconditions, but you still have to deal with some checked exceptions:
-\begin{lstlisting}
-…
-final var file = new File( … );
-if( file.exists() )
-{
-    try( final var input = new FileInputStream( file ) )
-    {
-        …
-    }
-    catch( final FileNotFoundException e )
-    {
-        throw new UnexpectedExceptionError( "File was there when checked!", e );
-    }
-}
-…
-\end{lstlisting}
-
-A sample for the class \lstinline|UnexpectedExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_UNEXPECTEDEXCEPTIONERROR}.
-
-Another example is the interface \lstinline|java.lang.Appendable|\autocite{ORACLE_DOC_APPENDABLE_INTERFACE}: it is implemented by \lstinline|java.io.Writer| and \lstinline|java.io.PrintStream|, but also by \lstinline|java.lang.StringBuilder| (and a few more). The method \lstinline|java.lang.Appendable::append| declares to throw an \lstinline|IOException|, but the implementation of that method for \lstinline|StringBuilder| will never throw it and does not even declare it.
-\begin{lstlisting}
-…
-final Appendable appendable = new StringBuilder();
-try
-{
-    appendable.append( "Some Text" );
-}
-catch( final IOException e )
-{
-    throw new ImpossibleExceptionError( "Append to StringBuilder", e );
-}
-…
-\end{lstlisting}
-
-Again, a sample for \lstinline|ImpossibleExceptionError| can be found in \autocite{TQUADRAT_ORG_FOUNDATION_IMPOSSIBLEEXCEPTIONERROR}.
-
-Sometimes a method wants to act upon an error condition without handling the exception. In this case, it may catch the exception, does whatever necessary, then throw it again. An example:
-\begin{lstlisting}
-public final void myMethod() throw IOException
-{
-    final Predicate<String> isNetworkError = m_NetworkErrorPattern.asMatchPredicate();
-    …
-    try
-    {
-        …
-    }
-    catch( final IOException e )
-    {
-        final var message = e.getMessage();
-        if( nonNull( message ) && isNetworkError.test( message ) ) ++networkErrors;
-        throw e;
-    }
-    …
-}   // myMethod()
-\end{lstlisting}
-
-It is usually not a good idea to log an exception and to rethrow or to wrap it afterwards, because this might cause the exception to be logged twice (or even more often). More details about logging can be found in chapter \tqvref{sec:Logging}.
-
-Finally, you handle the exception somehow, by assigning a default value\footnote{see the sample about the conversion from string to number, above.}, or by performing an alternative action. In any case, you need to provide a comment in the \lstinline|catch| why you do not further delegate the handling of the exception.
-
-If an exception was not caught in your code, it ”bubbles up” until it reaches the main method for the current thread (that is \lstinline|main()| for the main or program thread, and \lstinline|run()|\autocite{ORACLE_DOC_RUNNABLE:run} for any other thread). If this method will not handle the exception, the thread will be aborted. If this thread is the last non-deamon thread, the JVM will be terminated, too.
-
+Here already basic testing should have revealed when the pattern syntax for the regular expression in \lstinline|VARIABLE_PATTERN| would be invalid.
 
 %==============================================================================
 % End of file!!

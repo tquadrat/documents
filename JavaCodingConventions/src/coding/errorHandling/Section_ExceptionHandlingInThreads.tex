@@ -3,7 +3,7 @@ When we execute the Java program below, the \lstinline|Error|\index{java.lang!Er
 \lstinputlisting{coding/errorHandling/TestAbortMain.java}
 
 \begin{center}
-\includegraphics[scale=0.6]{coding/errorHandling/TestAbortMain}
+\includegraphics[scale=0.5]{coding/errorHandling/TestAbortMain}
 \end{center}
 
 %\begin{verbatim}
@@ -16,174 +16,24 @@ When we execute the Java program below, the \lstinline|Error|\index{java.lang!Er
 
 
 
-The payload of a thread\index{thread} is an implementation of the method \lstinline|run()|\index{java.lang!Runnable!run()} \autocite{ORACLE_DOC_RUNNABLE:run} from the interface \lstinline|java.lang.Runnable|\index{java.lang!Runnable} \autocite{ORACLE_DOC_RUNNABLE_INTERFACE}. 
 
-Because no error may go unnoticed, as required in the \ngref, bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed}, you find quite often code in such implementations that follows the pattern shown below. Sometimes a \lstinline|catch|\index{try!catch} clauses for \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, or even \lstinline|java.lang.Throwable|\index{java.lang!Throwable} are used, instead of one for \lstinline|java.lang.Exception|\index{java.lang!Exception}.
 
-\keeplisting{7}
-\index{java.lang!Exception}
-\begin{lstlisting}
-public final void run()
-{
-    try
-    {
-        // Do whatever this thread must do …
-    }
-    catch( final Exception e )
-    {
-        m_Logger.error( "No matter what went wrong, but I will log the exception", e );
-    }
-} 
-\end{lstlisting}
-
-This is a very bad excuse for a \lstinline|catch|\index{try!catch} clause for \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException} or \lstinline|Throwable|\index{java.lang!Throwable}!
-
-Unfortunately, this code pattern absolves the programmer of the duty to properly handle any exceptions\index{exception} thrown within the \lstinline|try|\index{try} block individually – with a \lstinline|catch|\index{try!catch} clause for \lstinline|java.lang.Exception|\index{java.lang!Exception} even including the checked\index{exception!checked exception} ones – because the \lstinline|catch|\index{try!catch} block at the end will take care of all exceptions.
-
-The best practice here is to set the \bdq{Uncaught Exception Handler}\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} for the thread\index{thread}, either through the \lstinline|ThreadFactory|\index{java.util.concurrent!ThreadFactory} \autocite{ORACLE_DOC_THREADFACTORY_INTERFACE}, through the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS} or individually. 
-
-\keeplisting{1}
-\lstinline|java.lang.Thread.UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} is a functional interface\index{interface!functional interface} that can be easily implemented as a method\index{method} like this:
-\begin{lstlisting}[caption=UncaughtExceptionHandler as Method]
-private final void uncaughtExceptionHandler( final Thread t, final Throwable e )
-{
-    final var throwableType = e instanceof Error ? "error" : "exception";
-    m_Logger.atFatal()
-        .withThrowable( e )
-        .log( () -> """
-````````````Thread "%s" was aborted with an %s!\
-````````````""".formatted( t.getName(), throwableType ) );    
-}   //  uncaughtExceptionHandler()
-\end{lstlisting}
-
-Of course it can be implemented as a class as well:
-\begin{lstlisting}[caption=UncaughtExceptionHandler as Class]
-/**
- *  <p>{@summary An implementation for
- *  {@link UncaughtExceptionHandler}.}</p>
- */
-public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHandler
-{
-        /*------------------------*\
-    ====** Static Initialisations **======================================
-        \*------------------------*/
-    /**
-     *  <p>{@summary The instance of this class.}</p>
-     */
-    public static final UncaughtExceptionHandler INSTANCE = new UncaughtExceptionHandlerImpl();
-
-    /**
-     *  <p>{@summary The logger that is used to log the exceptions.}</p>
-     */
-    private static final Logger m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
-
-        /*--------------*\
-    ====** Constructors **================================================
-        \*--------------*/
-    /**
-     *  <p>{@constructor}}</p>
-     */
-    public UncaughtExceptionHandlerImpl() { /* Just exists */ }
-
-        /*---------*\
-    ====** Methods **=====================================================
-        \*---------*/
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final void uncaughtException( final Thread t, final Throwable e )
-    {
-    final var throwableType = e instanceof Error ? "error" : "exception";
-    m_Logger.atFatal()
-        .withThrowable( e )
-        .log( () -> """
-````````````Thread "%s" was aborted with an %s!\
-````````````""".formatted( t.getName(), throwableType ) );    
-
-    }   //  uncaughtException()
-}
-//  class UncaughtExceptionHandlerImpl
-\end{lstlisting}
-
-\keeplisting{3}
-Setting the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} for an individual thread\index{thread} looks like this:
-\begin{lstlisting}
-Thread.ofPlatform()
-    .group( threadGroup )
-    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
-    .start( () -> {} );
-\end{lstlisting}
-
-\keeplisting{3}
-For a thread pool\index{thread pool}, the code would be similar to this:
-\begin{lstlisting}
-final var factory = Thread.ofPlatform()
-    .group( threadGroup )
-    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
-    .factory();
-final var threadPool = Executors.newCachedThreadPool( factory );
-\end{lstlisting}
-
-If the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} is provided by the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} instance, the call to \lstinline|Builder::uncaughtExceptionHandler|\index{java.lang!Thread.Builder!uncaughtExceptionHandler()} should be omitted; otherwise it overwrites the setting from the group.
-
-A thread group is supported only by platform threads\index{thread!platform thread}, not by virtual threads\index{thread!virtual thread}. Additionally, the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} implementation provided by the \Java Runtime Library does not allow to set a custom uncaught exception handler. In chapter \tqref{sec:ThreadGroup} on page \pageref{sec:ThreadGroup} I show an implementation of \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} that got that feature added.
-
-Usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} that is assigned through the factory or group, as already said, or you even use the static method \lstinline|Thread::setDefaultUncaughtExceptionHandler|\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()} \autocite{ORACLE_DOC_THREAD:setDefaultUncaughtExceptionHandler} to define a default handler that is used by all threads that does not specify an individual one.
-
-If your method\index{method} requires a special treatment for an uncaught exception when executed within a thread from a thread pool, it can set an individual uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} as shown in the code sample below.
-
-\index{java.lang!Runnable!run()}\index{java.lang!Thread!currentThread()}\index{java.lang!Thread!getDefaultUncaughtExceptionHandler()}\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()}\index{java.lang!Thread.UncaughtExceptionHandler}
-\begin{lstlisting}
-public final void run()
-{
-    final var currentThread = Thread.currentThread();
-    final var uncaughtExceptionHandler = currentThread.getUncaughtExceptionHandler();
-    currentThread.setUncaughtExceptionHandler( (t,e) ->
-    {
-        /*
-         * The special exception treatment goes here …
-         *
-
-        //---* Finally log the exception *--------------------------------
-        m_Logger.fatal( () -> """
-````````````````Thread "%s" was aborted with an exception!\
-````````````````""".formatted( t.getName() ), e );
-    } );(|\clearpage|)
- 
-    try
-    {
-        /*
-         * Do whatever this thread must do …
-         */
-    }
-    finally
-    {
-        //---* Reset the uncaught exception handler *-------------------------
-        currentThread.setUncaughtExceptionHandler( uncaughtExceptionHandler );
-    }
-}   //  run()
-\end{lstlisting}
-
-That \bdq{special treatment} could be an individual message, but also that you want to log the issue in a different manner or to another location.
-
-If your code changes the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} of the thread that executes that code, it must restore the handler before it terminates, because threads from a thread pool are reused with different payloads (during their lifetime, they execute the \lstinline|run()|\index{java.lang!Runnable!run()} method from different instances of \lstinline|Runnable|\index{java.lang!Runnable} implementations). Although virtual threads\index{thread!virtual thread} are not reused\footnote{At least not if you follow the recommendations given in JEP~444 \autocite{JEP444:Pooling}.}, you should restore the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} even when \lstinline|Thread::isVirtual|\index{java.lang!Thread!isVirtual()} \autocite{ORACLE_DOC_THREAD:isVirtual} returns \lstinline|true| for the current thread\index{thread}.
-
-%==============================================================================
-% End of file!!
-%==============================================================================
 
 \chapter*{Road Work ahead!}
 
-\subsection{Exceptions in Threads}
+
+
+
+
+
 
 In the sample below, we abort a secondary thread:
-\lstinputlisting[numbers=left,caption={Test Abort run()}]{TestAbortRun.java}
+\lstinputlisting{coding/errorHandling/TestAbortRun.java}
 
 The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown at all.}:
 
 \begin{center}
-\includegraphics[scale=0.5]{TestAbortRun}
+\includegraphics[scale=0.5]{coding/errorHandling/TestAbortRun}
 \end{center}
 
 %\begin{verbatim}
@@ -411,6 +261,174 @@ public final class MyClass
 The last option can be used only from standalone applications and from tools. The environments for server-based applications and extensions do quite often restrict the creation of additional threads. A feature library should accept an uncaught exception handler and/or a thread group as a configuration value.
 
 If a function library creates new threads, the respective methods must accept at least an uncaught exception handler and optionally a thread group. Alternatively, a thread factory\autocite{ORACLE_DOC_THREADFACTORY_INTERFACE} can be injected.
- 
-%------------------------------------------------------------------------------
 
+
+
+
+
+\chapter*{Road Work done!}
+
+
+
+
+
+
+
+
+
+The payload of a thread\index{thread} is an implementation of the method \lstinline|run()|\index{java.lang!Runnable!run()} \autocite{ORACLE_DOC_RUNNABLE:run} from the interface \lstinline|java.lang.Runnable|\index{java.lang!Runnable} \autocite{ORACLE_DOC_RUNNABLE_INTERFACE}. 
+
+Because no error may go unnoticed, as required in the \ngref, bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed}, you find quite often code in such implementations that follows the pattern shown below. Sometimes a \lstinline|catch|\index{try!catch} clauses for \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}, or even \lstinline|java.lang.Throwable|\index{java.lang!Throwable} are used, instead of one for \lstinline|java.lang.Exception|\index{java.lang!Exception}.
+
+\keeplisting{7}
+\index{java.lang!Exception}
+\begin{lstlisting}
+public final void run()
+{
+    try
+    {
+        // Do whatever this thread must do …
+    }
+    catch( final Exception e )
+    {
+        m_Logger.error( "No matter what went wrong, but I will log the exception", e );
+    }
+} 
+\end{lstlisting}
+
+This is a very bad excuse for a \lstinline|catch|\index{try!catch} clause for \lstinline|Exception|\index{java.lang!Exception}, \lstinline|RuntimeException|\index{java.lang!RuntimeException} or \lstinline|Throwable|\index{java.lang!Throwable}!
+
+Unfortunately, this code pattern absolves the programmer of the duty to properly handle any exceptions\index{exception} thrown within the \lstinline|try|\index{try} block individually – with a \lstinline|catch|\index{try!catch} clause for \lstinline|java.lang.Exception|\index{java.lang!Exception} even including the checked\index{exception!checked exception} ones – because the \lstinline|catch|\index{try!catch} block at the end will take care of all exceptions.
+
+The best practice here is to set the \bdq{Uncaught Exception Handler}\index{java.lang!Thread.UncaughtExceptionHandler} \autocite{ORACLE_DOC_UNCAUGHTEXCEPTIONHANDLER_INTERFACE} for the thread\index{thread}, either through the \lstinline|ThreadFactory|\index{java.util.concurrent!ThreadFactory} \autocite{ORACLE_DOC_THREADFACTORY_INTERFACE}, through the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} \autocite{ORACLE_DOC_THREADGROUP_CLASS} or individually. 
+
+\keeplisting{1}
+\lstinline|java.lang.Thread.UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} is a functional interface\index{interface!functional interface} that can be easily implemented as a method\index{method} like this:
+\begin{lstlisting}[caption=UncaughtExceptionHandler as Method]
+private final void uncaughtExceptionHandler( final Thread t, final Throwable e )
+{
+    final var throwableType = e instanceof Error ? "error" : "exception";
+    m_Logger.atFatal()
+        .withThrowable( e )
+        .log( () -> """
+````````````Thread "%s" was aborted with an %s!\
+````````````""".formatted( t.getName(), throwableType ) );    
+}   //  uncaughtExceptionHandler()
+\end{lstlisting}
+
+Of course it can be implemented as a class as well:
+\begin{lstlisting}[caption=UncaughtExceptionHandler as Class]
+/**
+ *  <p>{@summary An implementation for
+ *  {@link UncaughtExceptionHandler}.}</p>
+ */
+public final class UncaughtExceptionHandlerImpl implements UncaughtExceptionHandler
+{
+        /*------------------------*\
+    ====** Static Initialisations **======================================
+        \*------------------------*/
+    /**
+     *  <p>{@summary The instance of this class.}</p>
+     */
+    public static final UncaughtExceptionHandler INSTANCE = new UncaughtExceptionHandlerImpl();
+
+    /**
+     *  <p>{@summary The logger that is used to log the exceptions.}</p>
+     */
+    private static final Logger m_Logger = getLogger( UncaughtExceptionHandler.class.getName() );
+
+        /*--------------*\
+    ====** Constructors **================================================
+        \*--------------*/
+    /**
+     *  <p>{@constructor}}</p>
+     */
+    public UncaughtExceptionHandlerImpl() { /* Just exists */ }
+
+        /*---------*\
+    ====** Methods **=====================================================
+        \*---------*/
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final void uncaughtException( final Thread t, final Throwable e )
+    {
+    final var throwableType = e instanceof Error ? "error" : "exception";
+    m_Logger.atFatal()
+        .withThrowable( e )
+        .log( () -> """
+````````````Thread "%s" was aborted with an %s!\
+````````````""".formatted( t.getName(), throwableType ) );    
+
+    }   //  uncaughtException()
+}
+//  class UncaughtExceptionHandlerImpl
+\end{lstlisting}
+
+\keeplisting{3}
+Setting the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} for an individual thread\index{thread} looks like this:
+\begin{lstlisting}
+Thread.ofPlatform()
+    .group( threadGroup )
+    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
+    .start( () -> {} );
+\end{lstlisting}
+
+\keeplisting{3}
+For a thread pool\index{thread pool}, the code would be similar to this:
+\begin{lstlisting}
+final var factory = Thread.ofPlatform()
+    .group( threadGroup )
+    .uncaughtExceptionHandler( this::uncaughtExceptionHandler )
+    .factory();
+final var threadPool = Executors.newCachedThreadPool( factory );
+\end{lstlisting}
+
+If the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} is provided by the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} instance, the call to \lstinline|Builder::uncaughtExceptionHandler|\index{java.lang!Thread.Builder!uncaughtExceptionHandler()} should be omitted; otherwise it overwrites the setting from the group.
+
+A thread group is supported only by platform threads\index{thread!platform thread}, not by virtual threads\index{thread!virtual thread}. Additionally, the \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} implementation provided by the \Java Runtime Library does not allow to set a custom uncaught exception handler. In chapter \tqref{sec:ThreadGroup} on page \pageref{sec:ThreadGroup} I show an implementation of \lstinline|ThreadGroup|\index{java.lang!ThreadGroup} that got that feature added.
+
+Usually a thread should use the \lstinline|UncaughtExceptionHandler|\index{java.lang!Thread.UncaughtExceptionHandler} that is assigned through the factory or group, as already said, or you even use the static method \lstinline|Thread::setDefaultUncaughtExceptionHandler|\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()} \autocite{ORACLE_DOC_THREAD:setDefaultUncaughtExceptionHandler} to define a default handler that is used by all threads that does not specify an individual one.
+
+If your method\index{method} requires a special treatment for an uncaught exception when executed within a thread from a thread pool, it can set an individual uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} as shown in the code sample below.
+
+\index{java.lang!Runnable!run()}\index{java.lang!Thread!currentThread()}\index{java.lang!Thread!getDefaultUncaughtExceptionHandler()}\index{java.lang!Thread!setDefaultUncaughtExceptionHandler()}\index{java.lang!Thread.UncaughtExceptionHandler}
+\begin{lstlisting}
+public final void run()
+{
+    final var currentThread = Thread.currentThread();
+    final var uncaughtExceptionHandler = currentThread.getUncaughtExceptionHandler();
+    currentThread.setUncaughtExceptionHandler( (t,e) ->
+    {
+        /*
+         * The special exception treatment goes here …
+         *
+
+        //---* Finally log the exception *--------------------------------
+        m_Logger.fatal( () -> """
+````````````````Thread "%s" was aborted with an exception!\
+````````````````""".formatted( t.getName() ), e );
+    } );(|\clearpage|)
+ 
+    try
+    {
+        /*
+         * Do whatever this thread must do …
+         */
+    }
+    finally
+    {
+        //---* Reset the uncaught exception handler *-------------------------
+        currentThread.setUncaughtExceptionHandler( uncaughtExceptionHandler );
+    }
+}   //  run()
+\end{lstlisting}
+
+That \bdq{special treatment} could be an individual message, but also that you want to log the issue in a different manner or to another location.
+
+If your code changes the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} of the thread that executes that code, it must restore the handler before it terminates, because threads from a thread pool are reused with different payloads (during their lifetime, they execute the \lstinline|run()|\index{java.lang!Runnable!run()} method from different instances of \lstinline|Runnable|\index{java.lang!Runnable} implementations). Although virtual threads\index{thread!virtual thread} are not reused\footnote{At least not if you follow the recommendations given in JEP~444 \autocite{JEP444:Pooling}.}, you should restore the uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} even when \lstinline|Thread::isVirtual|\index{java.lang!Thread!isVirtual()} \autocite{ORACLE_DOC_THREAD:isVirtual} returns \lstinline|true| for the current thread\index{thread}.
+
+%==============================================================================
+% End of file!!
+%==============================================================================

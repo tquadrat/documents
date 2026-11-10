@@ -129,7 +129,7 @@ catch( final Exception e ) // DON'T DO THIS!!
 \end{lstlisting}
 
 \keeplisting{10}
-If the \lstinline|catch|\index{try!catch} blocks for some exceptions contain the same code (in our case, the message for the \lstinline|ApplicationError| would be same), you can list all exceptions\index{exception} in a single \lstinline|catch|\index{try!catch} clause:
+If the \lstinline|catch|\index{try!catch} blocks for some exceptions contain the same code (in our case, the message for the \lstinline|ApplicationError| would be same), you can list all exceptions\index{exception} in a multi-\lstinline|catch|\index{try!multi-catch} clause \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:Try}:
 \index{java.io!IOException}\index{java.lang!NumberFormatException}\index{java.util.regex!PatternSyntaxException}
 \begin{lstlisting}
 try
@@ -146,7 +146,7 @@ catch( final IOException | NumberFormatException | PatternSyntaxException e )
 
 \bigskip
 
-There are only four reasons why your code contains a \lstinline|catch|\index{try!catch} block for a particular exception\index{exception}:
+Basically, there are only four reasons why your code contains a \lstinline|catch|\index{try!catch} block for a particular exception\index{exception}:
 \begin{enumerate}
 	\item{The \lstinline|catch|\index{try!catch} block can \bsq{heal} the error condition somehow. This can be done by using a default value instead of the result of the failed operation, or by retrying the operation. See chapter \tqfullvref{sec:GeneralExceptionHandling} for more details.}
 	
@@ -154,7 +154,7 @@ There are only four reasons why your code contains a \lstinline|catch|\index{try
 	
 	\item{The caught exception\index{exception} must be enhanced and/or wrapped; this will discussed in more detail in chapter \tqfullref{sec:ThrowingExceptions}, \hyperref[sec:ThrowingExceptions]{below}. As a rule of thumb, each method that has parameters should catch all exceptions and enhance them with the arguments it was called with.}
 	
-	\item{The Java syntax rules require a \lstinline|catch|\index{try!catch} block (or a \lstinline|throws| declaration) despite it is impossible that the respective exception\index{exception} is ever thrown. Chapter \tqfullvref{sec:ImpossibleExceptions} will cover this topic.}
+	\item{The \Java syntax rules require a \lstinline|catch|\index{try!catch} block (or a \lstinline|throws| declaration) despite it is impossible that the respective exception\index{exception} is ever thrown. Chapter \tqfullvref{sec:ImpossibleExceptions} will cover this topic.}
 \end{enumerate}
 
 In any other case, you let an exception\index{exception} \bsq{\textit{bubble up}} – meaning your code does not have a \lstinline|catch|\index{try!catch} clause at all and delegates the handling of the exception\index{exception} to the caller. In case of checked exceptions\index{exception!checked exception}, your method must declare each exception\index{exception} in a \lstinline|throws| clause. 

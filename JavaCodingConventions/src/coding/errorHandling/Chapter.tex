@@ -20,18 +20,95 @@ A proper error handling is crucial for any code, no matter in which type of prog
 
 %------------------------------------------------------------------------------
 
-\chapter*{Road Work ahead!}
-
 \section{Summary}
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-\item{one}
-\item{two}
-\item{three}
+	\item{Not every failure is an error.
+	
+	We define an Error as a Failure that requires to abort the current operation.}
+	
+	\item{Because exceptions\index{exception} are very expensive throwing them should be prevented.
+	
+	An exception should really only be thrown in genuinely exceptional situations. To indicate recurring failures, the use of \lstinline|java.util.Optional|\index{java.util!Optional} or of error codes should be considered.}
+	
+	\item{If a method\index{method} is called with invalid arguments, it must throw a validation exception\index{validation exception} as soon as possible.
+	
+	This means that input data (not only method arguments) must be validated early, but at least before it is first used.
+	
+	Validation exceptions are covered in chapter \tqfullvref{sec:ValidationExceptions}.}
+	
+	\item{Arguments should be validated before calling a method\index{method}, to avoid that an exception is thrown.
+	
+	This is particularly relevant for the methods\index{method} in the \Java runtime library, as these generally do not throw validation exceptions\index{validation exception}, but instead throw \lstinline|java.util.NullPointerException|\index{java.util!NullPointerException} and alike. Refer to chapter \tqfullvref{sec:LazinessIndicators} for details.}
+	
+	\item{\textit{Errors should never pass silently and Exceptions may never be swallowed~…} (\ngref, bullet point \ref{lst:ZoP:ErrorsMayNeverBeSwallowed}).
+	
+	This means that error conditions must be externalised; how this is done best depends on the kind of product to deliver. One option is logging, covered in chapter \tqfullvref{sec:Logging}.}
+	
+	\item{A method\index{method} should declare each exception\index{exception} that it throws, implicitly or excplicitly.
+	
+	Usually, it is not necessary to declare a validation exception\index{validation exception}, because every method\index{method} that has parameters may throw them.
+	
+	Declaring (and documenting) the exceptions\index{exception} allows the caller of a method\index{method} to respond specifically to individual exceptions\index{exception}.}
+	
+	\item{Creating your own exception types is often better than reusing already existing ones.
+	
+	Custom and domain specific exceptions are discussed in chapter \tqfullvref{sec:CustomExceptions}.}
+	
+	\item{Production code may never contain a \lstinline|catch| clause\index{try!catch} for 
+		\begin{itemize}[nosep]
+			\item{\lstinline|java.lang.Throwable|\index{java.lang!Throwable}}
+			\item{\lstinline|java.lang.Exception|\index{java.lang!Exception}}
+			\item{\lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}}
+			\item{\lstinline|java.lang.Error|\index{java.lang!Error} and any of its subclasses}
+			\item{\lstinline|java.lang.NullPointerException|\index{java.lang!NullPointerException}}
+		\end{itemize}
+		You should absolutely avoid to catch \lstinline|java.lang.Error|\index{java.lang!Error} and all of its subclasses; there are only very few use cases where your code can do something useful with an \lstinline|Error|\index{java.lang!Error} instance.}
+		
+	\item{Define an uncaught exception handler\index{java.lang!Thread.UncaughtExceptionHandler} for threads.
+	
+	See chapter \tqfullvref{sec:ExceptionHandlingInThreads}	for the details.}
+	
+	\item{There must be a dedicated \lstinline|catch|\index{throw!catch} block for each exception to catch.
+	
+	If the same code can be used to handle multiple exceptions\index{exception}, use a multi-\lstinline|catch|\index{throw!multi-catch} clause.}
+	
+	\item{\lstinline|catch|\index{throw!catch} blocks must~…
+		\begin{itemize}
+			\item{…~heal the error condition indicated by the caught exception: chapter \tqfullvref{sec:GeneralExceptionHandling}.}
+			\item{…~externalise the error condition indicated by the caught exception: chapter \tqfullvref{sec:ReportFailure}.}
+			\item{…~somehow enhance the caught exception: chapter \tqfullvref{sec:ThrowingExceptions}.}
+			\item{…~exist according to the \Java syntax rules: chapter \tqfullvref{sec:ImpossibleExceptions}.}
+		\end{itemize}
+		
+	If in doubt, let the exception \bsq{\textit{bubble up"}}.}
+	
+	\item{In a \lstinline|finally|\index{throw!finally} block, place the most important code to the beginning, with that code first that is most unlikely to throw an exception\index{exception}.}
+	
+	\item{The uncaught exception handler\index{java.util!Thread.UncaughtExceptionHandler} must be restored if it was changed within and for the current thread.}
+	
+	\item{Consider to throw an error\index{java.lang!Error} from \lstinline|catch|\index{throw!catch} blocks for unlikely or impossible error conditions instead of swallowing the respective exceptions.}
+	
+	\item{Ensure that the exceptions
+	\begin{itemize}[nosep]
+		\item{\lstinline|java.lang.NullPointerException|\index{java.lang!NullPointerException} \autocite{ORACLE_DOC_NULLPOINTEREXCEPTION_CLASS}}
+		\item{\lstinline|java.lang.IndexOutOfBoundsException|\index{java.lang!IndexOutOfBoundsException} \autocite{ORACLE_DOC_INDEXOUTOFBOUNDSEXCEPTION_CLASS}
+	with the subclasses
+		\begin{itemize}[nosep]
+			\item{\lstinline|java.lang.ArrayIndexOutOfBoundException|\index{java.lang!ArrayIndexOutOfBoundException} \autocite{ORACLE_DOC_ARRAYINDEXOUTOFBOUNDSEXCEPTION_CLASS}}
+			\item{\lstinline|java.lang.StringIndexOutOfBoundException|\index{java.lang!StringIndexOutOfBoundException} \autocite{ORACLE_DOC_STRINGINDEXOUTOFBOUNDSEXCEPTION_CLASS}}
+		\end{itemize}}
+		\item{\lstinline|java.lang.ArithmethicException|\index{java.lang!ArithmethicException} \autocite{ORACLE_DOC_ARITHMETICEXCEPTION_CLASS}}
+		\item{\lstinline|java.util.NoSuchElementException|\index{java.util!NoSuchElementException} \autocite{ORACLE_DOC_NOSUCHELEMENTEXCEPTION_CLASS}}
+%		\item{\lstinline||\index{} \autocite{}}
+%		\item{\lstinline||\index{} \autocite{}}
+	\end{itemize}
+	are never thrown; at least they may never evade from your code to an external caller.} 
+	
+	\item{Ever keep in mind that in Java Error handling is still more than just Exception handling.} 
 \end{enumerate}
 
 %==============================================================================
 % End of file!!
 %==============================================================================
-

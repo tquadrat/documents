@@ -153,7 +153,7 @@ while( repeat )
 }
 \end{lstlisting}
 
-\keeplisting{20}
+\keeplisting{18}
 The loop for scenario~6 is a little different. Each cycle reads a record and tries to translate the text to a number. If this fails, that record will be discarded, otherwise it is further processed.
 \begin{lstlisting}
 while( records.hasMore() )
@@ -162,8 +162,8 @@ while( records.hasMore() )
     final int number;
     try
     {
-    	final var optional = textToNumber( dataRecord.getInput() );
-    	if( optional.isEmpty() )
+        final var optional = textToNumber( dataRecord.getInput() );
+        if( optional.isEmpty() )
         {
             reportError( dataRecord, "input", "Not a number" );
             continue;

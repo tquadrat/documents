@@ -3,7 +3,7 @@ When we execute the Java program below, the \lstinline|Error|\index{java.lang!Er
 \lstinputlisting{coding/errorHandling/TestAbortMain.java}
 
 \begin{center}
-\includegraphics[scale=0.5]{coding/errorHandling/TestAbortMain}
+\includegraphics[scale=0.6]{coding/errorHandling/TestAbortMain}
 \end{center}
 
 %\begin{verbatim}
@@ -13,6 +13,10 @@ When we execute the Java program below, the \lstinline|Error|\index{java.lang!Er
 %$ 
 %\end{verbatim}
 
+In the sample below, we abort a secondary thread:
+\lstinputlisting{coding/errorHandling/TestAbortThread.java}
+
+When executed with contemporary versions of Java, the output will look like the screenshot below; for older versions of Java, there is no output from the thread be shown at all:
 
 
 
@@ -27,23 +31,19 @@ When we execute the Java program below, the \lstinline|Error|\index{java.lang!Er
 
 
 
-In the sample below, we abort a secondary thread:
-\lstinputlisting{coding/errorHandling/TestAbortRun.java}
-
-The output looks like this\footnote{When using an older version of Java, no output from the thread would be shown at all.}:
 
 \begin{center}
 \includegraphics[scale=0.5]{coding/errorHandling/TestAbortRun}
 \end{center}
 
 %\begin{verbatim}
-%$ java TestAbortRun.java
-%Exception in thread "Thread-0" java.lang.Error: run() aborted!
-%    at TestAbortRun.run(TestAbortRun.java:5)
-%    at java.base/java.lang.Thread.run(Thread.java:833)
+%$ java TestAbortThread.java
+%Exception in thread "Thread-0" java.lang.Error: Thread aborted!
+%	at TestAbortThread.lambda$main$0(TestAbortThread.java:9)
+%	at java.base/java.lang.Thread.run(Thread.java:1474)
 %Exception in thread "main" java.lang.Error: main() aborted!
-%    at TestAbortRun.main(TestAbortRun.java:20)
-%$ 
+%	at TestAbortThread.main(TestAbortThread.java:18)
+%$
 %\end{verbatim}
 
 This behaviour is sufficient for a tool in most cases, but not for a standalone application and not for a feature library. A function library usually relies on the a caller, while serverbase applications and extensions use the facilities provided by the host applications.

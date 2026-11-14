@@ -1,0 +1,7 @@
+$ java TestAbortRun.java                                                       |
+Exception in thread "Thread-0" java.lang.Error: run() aborted!                 |
+	at TestAbortRun.run(TestAbortRun.java:5)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Exception in thread "main" java.lang.Error: main() aborted!                    |
+	at TestAbortRun.main(TestAbortRun.java:20)
+$                                                                              |

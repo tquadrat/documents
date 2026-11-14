@@ -1,0 +1,4 @@
+$ java TestAbortMain.java                                                      |
+Exception in thread "main" java.lang.Error: Aborted                            |
+	at TestAbortMain.main(TestAbortMain.java:5)
+$                                                                              | 

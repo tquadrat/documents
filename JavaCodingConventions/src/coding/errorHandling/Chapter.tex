@@ -74,15 +74,15 @@ A proper error handling is crucial for any code, no matter in which type of prog
 	
 	If the same code can be used to handle multiple exceptions\index{exception}, use a multi-\lstinline|catch|\index{throw!multi-catch} clause.}
 	
-	\item{\lstinline|catch|\index{throw!catch} blocks must~…
+	\item{\lstinline|catch|\index{throw!catch} blocks must either~…
 		\begin{itemize}
 			\item{…~heal the error condition indicated by the caught exception: chapter \tqfullvref{sec:GeneralExceptionHandling}.}
 			\item{…~externalise the error condition indicated by the caught exception: chapter \tqfullvref{sec:ReportFailure}.}
 			\item{…~somehow enhance the caught exception: chapter \tqfullvref{sec:ThrowingExceptions}.}
-			\item{…~exist according to the \Java syntax rules: chapter \tqfullvref{sec:ImpossibleExceptions}.}
+			\item{…~or just exist according to the \Java syntax rules: chapter \tqfullvref{sec:ImpossibleExceptions}.}
 		\end{itemize}
 		
-	If in doubt, let the exception \bsq{\textit{bubble up"}}.}
+	If in doubt, let the exception \bsq{\textit{bubble up}}.}
 	
 	\item{In a \lstinline|finally|\index{throw!finally} block, place the most important code to the beginning, with that code first that is most unlikely to throw an exception\index{exception}.}
 	

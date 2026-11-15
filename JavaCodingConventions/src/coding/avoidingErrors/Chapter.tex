@@ -26,3 +26,34 @@ Consequently, we are focussing to implementation and logical errors for the rema
 % End of file!!
 %==============================================================================
 
+\chapter*{Roadwork ahead!}
+
+\keeplisting{10}
+Another example from this category is this one:
+\index{java.lang!String}\index{java.nio.charset!UnsupportedEncodingException}
+\begin{lstlisting}
+final String s;
+try
+{
+    s = new String( byteArray, "UTF-8" );
+}
+catch( final UnsupportedEncodingException e )
+{
+    throw new ImpossibleExceptionError( "UTF-8 must exist!", e );
+}
+\end{lstlisting}
+
+The documentation for \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} contains a list of standard charsets \autocite{ORACLE_DOC_CHARSET:StandardCharsets} that must be supported by each JDK/JVM implementation. According to that list, the UTF-8\index{UTF-8} \autocite{WIKIPEDIA:UTF8} encoding is mandatory and will be availabe always, and consequently, the code sequence above will \textit{never} throw an \lstinline|UnsupportedEncodingException|. 
+
+Nevertheless, exceptions\index{exception} should never be swallowed. Instead we throw an error in the \lstinline|catch|\index{throw!catch} block, indicating the error condition. In the improbable case that UTF-8\index{UTF-8} is no longer supported by an upcoming \Java runtime environment, the problem will surface, and the program will not die silently without any hint about the reason. It also protects you from malicious changes to the name of the character encoding: a none existing \lstinline|Charset|\index{java.nio.charset!Charset} will cause noise.
+
+Of course, here the issue could be addressed differently, by using an instance of \lstinline|java.nio.charset.Charset|\index{java.nio.charset!Charset} \autocite{ORACLE_DOC_CHARSET_CLASS} as the argument to the \lstinline|String|\index{java.lang!String} constructor, instead of the \textit{name} of the character encoding. For this case, the constructor does not declare an \lstinline|UnsupportedEncodingException|\index{java.nio.charset!UnsupportedEncodingException}.
+ 
+\keeplisting{1}
+That would look like this:
+\index{java.lang!String}\index{java.nio.charset!StandardCharsets}
+\begin{lstlisting}
+final String s = new String( byteArray, StandardCharsets.UTF_8 );
+\end{lstlisting}
+
+Now already the compiler will complain when UTF-8\index{UTF-8} is no longer supported or the name was changed.\footnote{See also chapter \tqfullvref{sec:ErrorPrevention}.}

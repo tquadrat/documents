@@ -1,0 +1,31 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  
+  node          [shape=box,style=filled,fillcolor="white"]
+  
+  subgraph {
+    cluster=true
+    bgcolor="lightyellow"
+    labelloc=t # must be "t" for "top" because of the rankdir setting "BT"
+    labeljust=r
+    label="Validation Exceptions"
+    fontcolor="darkblue"
+    
+    illegalargumentexception [label="java.lang.IllegalArgumentException"]
+    validationexceptions1    [label="…"]
+    validationexceptions2    [label="…"]
+    validationexceptions3    [label="…"]
+
+    validationexceptions1,validationexceptions2,validationexceptions3 -> illegalargumentexception
+  }
+
+  throwable        [label="java.lang.Throwable"]
+  error            [label="java.lang.Error"]
+  exception        [label="java.lang.Exception"]
+  runtimeexception [label="java.lang.RuntimeException"]
+  
+  {error,exception} -> throwable
+  runtimeexception -> exception
+  illegalargumentexception -> runtimeexception
+} 

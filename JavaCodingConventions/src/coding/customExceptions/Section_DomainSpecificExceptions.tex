@@ -19,17 +19,8 @@ To keep it simple, our \bdq{domain root exception} \lstinline|com.jcc.PrintingEx
 	\includegraphics[scale=0.45]{coding/customExceptions/printingException}
 \end{center}
 
-
-
-\chapter*{Road Work ahead!}
-
-
-
-
-
- 
-
-This “domain root exception” PrintingException allows all consumers of the respective component to catch all exceptions from that component with a single catch:
+The \bsq{domain root exception} \lstinline|PrintingException| allows all consumers of the \bdq{Print Support} component to catch all exceptions\index{exception} from that component with a single \lstinline|catch|\index{throw!catch} clause:
+\begin{lstlisting}
 try
 {
     usePrinting();
@@ -37,131 +28,268 @@ try
 catch( final PrintingException e )
 {
     final var message = """
-       printLetter(): Printing Operation failed!
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    oLog.error( message, e );
+````````printLetter(): Printing Operation failed!
+````````Recipient Id: %s
+````````Origin: %s
+````````""".formatted( recipientID, dataSource );
+    m_Loger.error( message, e );
     terminate();
 }
-Alternatively, you wrap message and Exception into the appropriate domain specific Exception of this consumer and throw that:
-try
-{
-    usePrinting();
-}
+\end{lstlisting}
+
+\keeplisting{9}
+Of course, instead of terminating (line~13, above) you can wrap message and exception into the appropriate domain specific exception of the consumer and throw that:
+\begin{lstlisting}[firstnumber=4]
+…
 catch( final PrintingException e )
 {
     final var message = """
-       Printing Operation failed!
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
+````````Printing Operation failed!
+````````Recipient Id: %s
+````````Origin: %s
+````````""".formatted( recipientID, dataSource );
     throw new <MyDomainSpecificException>( message, e );
 }
-In this sample, recipientID and dataSource enhance the information that is already provided with the PrintingException object; probably the “Printing” component was called with the data itself (not with the dataSource), and the recipient is not part of the generated document.
-The “Printing” domain now defines problem specific exceptions derived from PrintingException.
+\end{lstlisting}
 
-This allows the consumers to respond to specific problems in a specific manner: if the “Printing” component throws a PrintingDeviceException, the consumer knows that there is a problem with the output device and can send an email to the support staff to inform them that the printer needs maintenance. A PrintingDataException tells the consumer that the data it provided was faulty, and a PrintingTooMuchDataException (derived from PrintingDataException) signals that too much data should be printed. An InvalidPrintingFormatException would indicate that the output description is not valid, and a NoOutputDeviceException tells that there is no printer with the given name.
-When the consumer wants to respond to all these exceptions differently (and it should do so! At least it should provide different data to the logging), the code snippet above needs to be changed to look like that below. Of course, we could always provide all information to an instance of PrintingException and leave it to the support engineer to identify what is relevant. But that would also mean that any kind of self-healing would get unnecessary complex.
+In this sample, \bdq{\lstinline|recipientID|} and \bdq{\lstinline|dataSource|} enhance the information that is already provided with the \lstinline|PrintingException| object; probably the \bdq{Print Support} component was called with the data itself (not with the \bdq{\lstinline|dataSource|}), and the recipient is not part of the generated document.
 
+The \bdq{Print Support} domain now defines problem specific exceptions derived from \lstinline|PrintingException|.
+
+This allows the consumers of this component to respond to specific problems in an appropriate manner: if the \bdq{Print Support} component throws a \lstinline|PrintingDeviceException|, the consumer knows that there is a problem with the output device and can send an email to the support staff to inform them that the printer needs maintenance. A \lstinline|PrintingDataException| tells the consumer that the data they provided was faulty, and a \lstinline|PrintingTooMuchDataException| (derived from \lstinline|PrintingDataException|) signals that too much data was sent for printing. An \lstinline|InvalidPrintingFormatException| would indicate that the output description is not valid, and a \lstinline|NoOutputDeviceException| tells that there is no printer with the given name.
+
+When the consumer wants to respond to all these exceptions differently\footnote{…~and they should do so! At least they should provide different data to the logging!}, the code snippet above needs to be changed to look like that below. Of course, we could always provide all information to the message when creating an instance of \lstinline|PrintingException| and leave it to the support engineer to identify what is relevant. But that would also mean that any kind of self-healing would get unnecessary complex.
+\pslabel{listing:printingexceptions}
+\begin{lstlisting}
 try
 {
     usePrinting();
 }
 catch( final NoOutputDeviceException e ) // Self-Healing
 {
-    final var message = """
-       printLetter(): Printing Operation failed because device does not exist
-       Attempting again with alternative device
-       Recipient Id: %s
-       Origin: %s
-       Missing Device: %s
-       Alternative Device: %s
-       """.formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
-    oLog.warn( message, e );
+    final var logMessage = """
+````````printLetter(): Printing Operation failed because device does not exist
+````````Attempting again with alternative device
+````````Recipient Id: %s
+````````Origin: %s
+````````Missing Device: %s
+````````Alternative Device: %s
+````````""".formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
+    m_Logger.warn( logMessage, e );
     retryPrinting();
-}
+}(|\clearpage|)
 catch( final InvalidPrintingFormatException e )
 {
-    final var message = """
-       Printing Operation failed due to an invalid format specification
-       Specification: %s
-       """.formatted( format );
-    throw new IllegalArgumentException( message, e );
+    final var exceptionMessage = """
+````````Printing Operation failed due to an invalid format specification
+````````Specification: %s
+````````""".formatted( format );
+    throw new IllegalArgumentException( exceptionMessage, e );
 }
 catch( final PrintingTooMuchDataException e )
 {
-    final var message = """
-       Printing Operation failed because of too much data
-       Recipient Id: %s
-       Origin: %s
-       Data Size: %d records
-       """.formatted( recipientID, dataSource, dataSize );
-    throw new <MyDomainSpecificException>( message, e );
+    final var exceptionMessage = """
+````````Printing Operation failed because a too large data set was sent for printing
+````````Recipient Id: %s
+````````Origin: %s
+````````Data Size: %d records
+````````""".formatted( recipientID, dataSource, dataSize );
+    throw new <MyDomainSpecificException>( exceptionMessage, e );
 }
 catch( final PrintingDataException e )
 {
-    final var message = """
-       Printing Operation failed because of invalid data
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    throw new <MyDomainSpecificOutputProblemException>( message, e );
+    final var exceptionMessage = """
+````````Printing Operation failed because the provided data set is invalid
+````````Recipient Id: %s
+````````Origin: %s
+````````""".formatted( recipientID, dataSource );
+    throw new <MyDomainSpecificOutputProblemException>( exceptionMessage, e );
 }
 catch( final PrintingException e )
 {
-    final var message = """
-       Printing Operation failed with an unspecified Exception
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    oLog.error( message, e );
+    final var logMessage = """
+````````printLetter(): Printing Operation failed with an unspecified error
+````````Recipient Id: %s
+````````Origin: %s
+````````""".formatted( recipientID, dataSource );
+    m_Logger.error( logMessage, e );
     abort();
 }
-The “Printing” component signals that it cannot proceed by throwing a PrintingException or one of the exceptions derived from it. What happens as response to that exception is on the consumer for “Printing”: it could terminate itself, too, it could attempt to print again, it can choose an alternative mean to get the documents out, or it could even ignore the problem … or it delegates the whole thing to its own consumers, by just wrapping the caught PrintingException into its own domain specific exception:
-This decision (“Either Log (and Terminate) or (Wrap and) Throw”) must be made for each and every call.
-Using an unchecked hierarchy (based on java.lang.RuntimeException) means that the consumer can completely ignore the exception handling for the PrintingException (and leave it to its own consumers). It also means that the API methods for the PrintingComponent do not need to have a throws clause, to declare the thrown Exceptions. A sample for this approach can be found with the java.util.regex package (the regular expression handling in Java). The other approach, to use checked exceptions (java.lang.Exception), can be found in java.io that defines IOException as the “domain specific exception” and derives exceptions like FileNotFoundException from that. Checked exceptions enforce that each call is somehow wrapped in a try-catch block, otherwise the code does not compile. This forces attention for the error handling on each caller but can bloat the code. One can say bloated code is much better than code without proper error handling, but when it is too bloated, the code is difficult to read and prone to get broken when amended.
-The parameter lists of the constructors for the domain specific Exceptions are not limited to the regular Throwable parameter for the cause and the String parameter for the message. If there is parameter that is required by each API method of the domain, this could be also a mandatory parameter for the domain specific Exception. For the “Printing” domain/component this could be the id for the output device. In that case, that id is no longer required to be part of the Exception message.
-Some words regarding the calls to terminate() vs. abort()in the sample code above: assume we use the code snippet in a loop, where each cycle uses different data to be printed. A PrintingDataException means that the current data is somehow corrupted, but we can proceed with the loop (terminate the current process and load the next dataset), but an InvalidPrintingFormatException or a PrintingDeviceException means that no printing is possible at all and we abort the loop by throwing the wrapper exception, and for the unspecific PrintingException, the consumer aborts.
-There are libraries that use “Error” (domain specific implementations of java.lang.Error) to signal the abort condition, while “Exception” means, “you can try again with different (valid) input data”. It is a widely accepted best practice not to catch Error, so we should not adopt this approach.
+\end{lstlisting}
+
+The \bdq{Print Support} component signals that it cannot proceed by throwing a \lstinline|PrintingException| or one of the exceptions derived from it. What happens as response to that exception is on the consumer for that component: they could terminate the program, too, they could attempt to print again, they can choose an alternative mean to get the documents out, or they could even ignore the problem~… or they delegate the whole thing to its own consumers, by just wrapping the caught \lstinline|PrintingException| into its own domain specific exception – but this decision (\bdq{\textit{Either Log (and Terminate) or (Wrap and) Throw}}) must be made for each and every call.
+
+Using an unchecked hierarchy\index{exception!unchecked exception} (the domain specific exceptions are extending \lstinline|java.lang.RuntimeException|\index{java.lang!RuntimeException}) means that the consumer can completely ignore the exception handling for the \lstinline|PrintingException|, leaving it to its own consumers.\footnote{It also means that the Java syntax does not require that the API methods for the \bdq{Print Support} component have a \lstinline|throws|\index{throw} clause, to declare the thrown exceptions – but this coding guideline demand that clause independent from the syntactical requirements.} The Bouncy Castle Crypto libraries\index{Bouncy Castle} \autocite{BouncyCastle,BouncyCastle:RuntimeCryptoException_CLASS} are an example for this approach\footnote{In fact, the Bouncy Castle libraries use both, unchecked and checked hierarchies.}.
+
+The other approach, to use checked exceptions\index{exception!checked exception} (the domain exceptions extend \lstinline|java.lang.Exception|\index{java.lang!Exception}), can be found in the \lstinline|java.io|\index{java.io} \autocite{ORACLE_DOC_IO_PACKAGE} and \lstinline|java.nio|\index{java.nio} \autocite{ORACLE_DOC_NIO_PACKAGE} packages that define \lstinline|java.io.IOException|\index{java.io!IOException} \autocite{ORACLE_DOC_IOEXCEPTION_CLASS} as the \bdq{domain specific root exception} and derives exceptions like \lstinline|java.io.FileNotFoundException|\index{java.io!FileNotFoundException} \autocite{ORACLE_DOC_FILENOTFOUNDEXCEPTION_CLASS} from that.
+
+Checked exceptions\index{exception!checked exception} enforce that each call to one of the component's method is somehow wrapped in a \texttt{try-catch}\index{try-catch-finally} block, otherwise the code does not compile. This forces attention for the error handling on each caller but it can also bloat the code. One can say, bloated code is much better than code without proper error handling, but when the code is too bloated with error handling stuff, it is difficult to read, and also prone to get broken when amended.
+
+The parameter lists of the constructors\index{constructor} for the domain specific exceptions are not limited to the regular \lstinline|Throwable|\index{java.lang!Throwable} parameter for the \texttt{cause} and the \lstinline|String| parameter for the \texttt{message}. If there is a parameter that is required by each API method of the domain, this could be also a mandatory parameter for the domain specific Exception. For the \bdq{Print Support} component this could be the \texttt{id} for the output device. In that case, that \texttt{id} is no longer required to be part of the exception message.
+
+If you add additional attributes to the domain specific exceptions, you should consider to add also getters\index{method!getter method} for these attributes, and you should override the method \lstinline|Throwable::getMessage|\index{java.lang!Throwable!getMessage()} \autocite{ORACLE_DOC_THROWABLE:getMessage} so that the additional attributes are part of the output when the exception object is printed somehow. Do not override the \lstinline|toString()|\index{java.lang!Object!toString()}\index{java.lang!Throwable!toString()} method in your new exception! When you have to do it (you must have very good reasons to do so!), make sure that the output format for the exception remains generally intact.
+
+An example implementation of \lstinline|PrintingException| is shown on the following pages.
+\clearpage
+\begin{lstlisting}
+package jcc.printing.exception;
+
+import java.io.Serial;
+
+import jcc.printing.DeviceId;
+import jcc.printing.ErrorCode;
+
+/**
+ *  <p>{@summary The domain specific root exception for the Print Support
+ *  component.}</p>
+ */
+public sealed class PrintingException extends RuntimeException
+    permits InvalidPrintingFormatException, PrintingDataException, PrintingDeviceException
+{
+        /*------------*\
+    ====** Attributes **==================================================
+        \*------------*/
+    /**
+     *  <p>{@summary The id of the printing device that caused this
+     *  exception.}</p>
+     */
+    private final DeviceId m_DeviceId;
+
+    /**
+     *  <p>{@summary The internal error code.}</p>
+     */
+    private final ErrorCode m_ErrorCode;
+
+        /*------------------------*\
+    ====** Static Initialisations **======================================
+        \*------------------------*/
+    /**
+     *  The serial version UID for objects of this class: {@value}.
+     *
+     *  @hidden
+     */
+    @Serial
+    private static final long serialVersionUID = 1174360235354917591L;
+
+        /*--------------*\
+    ====** Constructors **================================================
+        \*--------------*/
+    /**
+     *  <p>{@summary Constructs a new {@code PrintingException} with 
+     *  {@code null} as its detail message.} The 
+     *  {@linkplain #getCause() cause} 
+     *  is not initialised, and may subsequently be initialised by a call
+     *  to 
+     *  {@link #initCause}.</p>
+     *  
+     *  @param  errorCode   The internal error code.
+     *  @param  deviceId    The printing device that caused this exception.
+     */
+    public PrintingException( final ErrorCode errorCode, final DeviceId deviceId )
+    {
+        super();
+        m_DeviceId = requireNonNullArgument( deviceId, "deviceId" );
+        m_ErrorCode = requireNonNullArgument( errorCode, "errorCode" );
+    }   //  PrintingException()
+
+    /**
+     *  <p>{@summary Constructs a new {@code PrintingException} with the 
+     *  specified detail message.} The 
+     *  {@linkplain #getCause() cause} 
+     *  is not initialised, and may subsequently be initialised by a call
+     *  to 
+     *  {@link #initCause}.</p>
+     *
+     *  @param  errorCode   The internal error code.
+     *  @param  deviceId    The printing device that caused this exception.
+     *  @param  message     The detail message. It is saved for later
+     *      retrieval by the 
+     *      {@link #getMessage()} 
+     *      method.
+     */
+    public PrintingException( final ErrorCode errorCode, final DeviceId deviceId, final String message )
+    {
+        super( message );
+        m_DeviceId = requireNonNullArgument( deviceId, "deviceId" );
+        m_ErrorCode = requireNonNullArgument( errorCode, "errorCode" );
+    }   //  PrintingException()
+
+    /**
+     *  <p>{@summary Constructs a new runtime exception with the specified 
+     *  detail message and 
+     *  {@linkplain #getCause() cause}.}</p>  
+     *  <p>Note that the detail message associated with {@code cause} is 
+     *  <i>not</i> automatically incorporated in this exception's detail 
+     *  message.</p>
+     *
+     *  @param  errorCode   The internal error code.
+     *  @param  deviceId    The printing device that caused this exception.
+     *  @param message  The detail message (which is saved for later
+     *      retrieval by the 
+     *      {@link #getMessage()} 
+     *      method).
+     *  @param  cause   The cause (which is saved for later retrieval by
+     *      the 
+     *      {@link #getCause()}
+     *      method). A {@code null} value is permitted,  and indicates
+     *      that the cause is nonexistent or unknown.
+     */
+    public PrintingException( final ErrorCode errorCode, final DeviceId deviceId, final String message, final Throwable cause )
+    {
+        super( message, cause );
+        m_DeviceId = requireNonNullArgument( deviceId, "deviceId" );
+        m_ErrorCode = requireNonNullArgument( errorCode, "errorCode" );
+    }   //  PrintingException()
+
+        /*---------*\
+    ====** Methods **=====================================================
+        \*---------*/
+    /**
+     *  <p>{@summary Returns the id of the printing device that caused this
+     *  exception.}</p>
+     *
+     *  @return The device id.
+     */
+    public final DeviceId getDeviceId() { return m_DeviceId; }
+
+    /**
+     *  <p>{@summary Returns the internal error code.}</p>
+     *
+     *  @return The error code.
+     */
+    public final ErrorCode getErrorCode() {return m_ErrorCode;}
+
+    /**
+     *  {@inheritDoc}
+     */
+    @Override
+    public final String getMessage()
+    {
+        final var retValue = "%1$s - Error %2$s: %3$s".formatted( getDeviceId().getName(), getErrorCode().name(), mapFromNull( super.getMessage(), "<No Message>" ) );
+
+        //---* Done *-----------------------------------------------------
+        return retValue;
+    }   //  getMessage()
+}
+//  class PrintingException
+\end{lstlisting}
+
+\bigskip
+
+Some words regarding the calls to \lstinline|terminate()| vs. \lstinline|abort()| in the sample code on page \pageref{listing:printingexceptions}, \hyperref[listing:printingexceptions]{above}: assume we use the code snippet in a loop, where each cycle uses a different data set to be printed. A \lstinline|PrintingDataException| means that the current data set is somehow corrupted, but we can proceed with the loop (\textit{terminate} the current process and load the next data set), but an \lstinline|InvalidPrintingFormatException| or a \lstinline|PrintingDeviceException| means that no printing is possible at all and we \textit{abort} the loop by throwing the wrapper exception, and for the unspecific \lstinline|PrintingException|, even the consumer \textit{aborts}.
+
+There are libraries that use \bdq{\lstinline|Error|} (domain specific implementations of \lstinline|java.lang.Error|\index{java.lang!Error}) to signal the abort condition, while \bdq{\lstinline|Exception|} means, \bdq{\textit{you can try again with different (valid) input data}}. It is a widely accepted best practice not to catch \lstinline|java.lang.Error|\index{java.lang!Error}, so we should not adopt this approach.
+
+Nevertheless, you can of course define your \bdq{domain specific errors} and use them to signal really desastrous conditions that require to abort the program.
+
+\bigskip
+
+As already mentioned in chapter \tqfullref{sec:ValidationExceptions}, it is 
+\chapter*{Road Work ahead!}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ A sample for this approach can be found with the \lstinline|java.util.regex|\index{java.util.regex} \autocite{ORACLE_DOC_REGEX_PACKAGE} package (the regular expression handling in Java).
 
 
 This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.

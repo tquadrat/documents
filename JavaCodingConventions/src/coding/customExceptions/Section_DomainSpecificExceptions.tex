@@ -284,12 +284,48 @@ Nevertheless, you can of course define your \bdq{domain specific errors} and use
 
 \bigskip
 
-As already mentioned in chapter \tqfullref{sec:ValidationExceptions}, it is 
+As already mentioned in , it is also possible to define specific validation exceptions for a domain, either in addition to a hierarchy of regular exceptions, or exclusively
+
+As already mentioned in chapter \tqfullref{sec:ValidationExceptions}, it is also possible to define specific validation exceptions\index{validation exception} for a domain, in addition to a hierarchy of regular exceptions.
+
+The package \lstinline|java.util.regex|\index{java.util.regex} \autocite{ORACLE_DOC_REGEX_PACKAGE} (the regular expression handling in Java) is a sample for a domain that that manages with nothing but a domain-specific validation exception.
+
+\bigskip
+
+In large applications, either standalone\index{product type!standalone application} or server-based\index{product type!server-based application}, it is often observed that exceptions need to be caught on each level of the call chain, then wrapped into another exception, together with additional information. This could even mean that an exception is wrapped to another instance of the same class, just to add additional information.
+\keeplisting{7}
+\begin{lstlisting}
+try
+{
+    …
+}
+catch( final PrintingException e )
+{
+    final var exceptionMessage = """
+````````DataProcessor = %s\
+````````""".formatted( dataProcessor.getName() );
+    throw new PrintingException( exceptionMessage, e );
+}
+\end{lstlisting}
+
+As we have seen in chapter \tqvref{sec:ExceptionCosts}, the creating of a new exception\index{exception} is not cheap. If it would be possible to add some information to the caught exception before it is re-thrown, these creation costs could be spared:
+\keeplisting{4}
+\begin{lstlisting}[firstnumber=5]
+catch( final PrintingException e )
+{
+    e.addInfo( "DataProcessor", dataProcessor.getName() );
+    throw e;
+}
+\end{lstlisting}
+
+A wrapper exception as base class for domain specific exceptions could look like the implementation below:
+
+\lstinputlisting[caption="WrapperException.java"]{coding/customExceptions/WrapperException.java}
+
 \chapter*{Road Work ahead!}
 
 
 
- A sample for this approach can be found with the \lstinline|java.util.regex|\index{java.util.regex} \autocite{ORACLE_DOC_REGEX_PACKAGE} package (the regular expression handling in Java).
 
 
 This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.

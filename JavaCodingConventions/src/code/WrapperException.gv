@@ -1,0 +1,17 @@
+digraph {
+  size="10,11"
+  rankdir="BT"
+  node [shape=box,style=filled,fillcolor="white"]
+  
+  throwable        [label="java.lang.Throwable"]
+  error            [label="java.lang.Error"]
+  exception        [label="java.lang.Exception"]
+  runtimeexception [label="java.lang.RuntimeException"]
+  wrapperexception [label="WrapperException",fillcolor="lightgrey"]
+  domainexception1 [label="…",fillcolor="lightyellow"]
+  domainexception2 [label="…",fillcolor="lightyellow"]
+  domainexception3 [label="…",fillcolor="lightyellow"]
+  
+  {error,exception} -> throwable
+  {domainexception1,domainexception2,domainexception3} -> wrapperexception -> runtimeexception -> exception
+}

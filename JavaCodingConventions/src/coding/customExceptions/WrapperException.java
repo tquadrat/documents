@@ -12,10 +12,24 @@ import java.util.StringJoiner;
 /**
  *  <p>{@summary A wrapper exception that can be used as base class for a
  *  domain specific root exception.}</p>
- *  <p>The derived exception classes can be used exclusively as a wrapper 
- *  for other exceptions. It does not populate the stack trace.</p>
- *  <p>When wrapping other instances of {@code WrapperException}, their
- *  {@code cause} is stored as the cause of the new instance.</p>
+ *  <p>The derived exception classes must provide the usual constructors
+ *  that set the detailed message and the cause; these will call
+ *  {@link #WrapperException(String,Throwable,boolean)}.</p>
+ *  <p>A derived class can be used exclusively as a wrapper or container
+ *  for other exceptions when it will create its instances with
+ *  {@code retrieveStack} set to {@code false}, meaning that it does not
+ *  populate the stack trace. Such a container requires that {@code cause}
+ *  is not {@code null} and when wrapping other instances of 
+ *  {@code WrapperException}, their {@code cause} is stored as the cause
+ *  of the new instance.</p>
+ *  <p>If a derived class should be extended by other exception classes
+ *  with different behaviour, it is mandatory to expose the constructor
+ *  {@link #WrapperException(String,Throwable,boolean)},
+ *  too.</p>
+ *
+ *  @note Each hierarchy of domain specific exceptions should have only
+ *      one wrapper or container exception (an exception class that sets
+ *      {@code retrieveStack} to {@code false}).
  */
 public abstract class WrapperException extends RuntimeException
 {
@@ -42,37 +56,76 @@ public abstract class WrapperException extends RuntimeException
     ====** Constructors **================================================
         \*--------------*/
     /**
-     *  <p>{@summary Constructs a new instance of this
-     *  {@code WrapperException} with the specified detail message and
-     *  cause.}</p>
+     *  <p>{@summary Constructs a new instance of {@class} with the
+     *  specified detail message, cause, and whether the stack trace
+     *  should be retrieved.}</p>
+     *  <p>If {@code retrieveStacktrace} is {@code false}, the instance is
+     *  a pure wrapper or container for other exceptions; consequently
+     *  {@code cause} cannot be {@code null} if {@code retrieveStacktrace}
+     *  is {@code false}. In that case, if {@code cause} is an instance of
+     *  {@code WrapperException}, it will be replaced by
+     *  {@linkplain Throwable#getCause() its cause}
+     *  if that is not {@code null}. In that case, the additional
+     *  information is merged, too.</p>
+     *  <p>If {@code message} is {@code null} and {@code cause} is an
+     *  instance of {@code WrappedException}, the internal message of
+     *  {@code cause} is used instead.</p>
+     *  <p>If {@code message} is {@code null} and {@code cause} is another
+     *  exception type, the result of
+     *  {@link Throwable#toString() cause::toString}
+     *  is used as the detailed message for the new instance.</p>
      *
      *  @param  message The detail message that is saved for later
      *      retrieval by the
      *      {@link #getMessage()}
-     *      method.
+     *      method. It can be {@null}.
      *  @param  cause   The cause that is saved for later retrieval by the
      *     {@link #getCause()}
      *     method.
+     * @param retrieveStacktrace {@code true} if the stack trace will be
+     *     retrieved and is writable and the instance should behave like
+     *     a <i>regular</i> exception, {@code false} if the instance
+     *     should be a pure container.
      */
-    protected WrapperException( final String message, final Throwable cause )
+    protected WrapperException( final String message, final Throwable cause, final boolean retrieveStacktrace )
     {
-        final Throwable effectiveCause;
         final String effectiveMessage;
-        if( requireNonNullArgument( cause, "cause" ) instanceof WrapperException wrapper )
+        final Throwable effectiveCause;
+        boolean mergeAdditionalInfo = false;
+        if( retrieveStacktrace )
         {
-            effectiveCause = wrapper.getCause();
-            effectiveMessage = mapFromNull( message, cause::getMessage );
+            //---* Basically the normal exception behaviour *-------------
+            effectiveCause = cause;
+            effectiveMessage = nonNull( cause )
+                ? mapFromNull( message, cause instanceof WrapperException wrapper
+                    ? wrapper.getInternalMessage()
+                    : cause.toString() )
+                : message;
         }
         else
         {
-            effectiveCause = cause;
-            effectiveMessage = mapFromNull( message, cause::toString );
+            //---* The instance just wraps other exceptions *-------------
+            if( requireNonNullArgument( cause, "cause" ) instanceof WrapperException wrapper )
+            {
+                mergeAdditionalInfo = true;
+                effectiveCause = wrapper.getCause();
+                effectiveMessage = mapFromNull( message, wrapper.getInternalMessage() );
+            }
+            else
+            {
+                effectiveCause = cause;
+                effectiveMessage = mapFromNull( message, cause::toString );
+            }
         }
-        super( effectiveMessage, effectiveCause );
 
-        if( cause instanceof WrapperException wrapper )
+        //---* Create the instance *--------------------------------------
+        super( effectiveMessage, effectiveCause, true, retrieveStacktrace );
+
+        //---* Replicate the additional info *----------------------------
+        if( mergeAdditionalInfo )
         {
-            if( !Objects.equals( message, wrapper.getInternalMessage() ) )
+            final var wrapper = (WrapperException) cause;
+            if( !Objects.equals( effectiveMessage, wrapper.getInternalMessage() ) )
             {
                 addInfo( "Additional Message", "%1$s: %2$s".formatted( wrapper.getClass().getName(), wrapper.getInternalMessage() ) );
             }
@@ -82,23 +135,6 @@ public abstract class WrapperException extends RuntimeException
                 data.addAll( 0, entry.getValue() );
             }
         }
-    }   //  WrapperException()
-
-    /**
-     *  <p>{@summary Constructs a new instance of this
-     *  {@code WrapperException} that wraps the specified cause.}</p>
-     *
-     *  @param  cause   The cause that is saved for later retrieval by the
-     *     {@link #getCause()}
-     *     method.
-     */
-    protected WrapperException( final Throwable cause )
-    {
-        requireNonNullArgument( cause, "cause" );
-        final var message = cause instanceof WrapperException wrapper
-            ? wrapper.getInternalMessage()
-            : cause.toString();
-        this( message, cause );
     }   //  WrapperException()
 
         /*---------*\
@@ -115,17 +151,6 @@ public abstract class WrapperException extends RuntimeException
         final var data = m_AdditionalInfo.computeIfAbsent( mapFromNull( key, "[null]"), _ -> new ArrayList<>() );
         data.addFirst( ( isNull( message) || message.isBlank() ) ? "<No Message>" : message );
     }   //  addInfo()
-
-    /**
-     *  <p>{@summary This method does nothing.} Consequently, the
-     *  stacktrace for this exception instance does not get populated.</p>
-     *
-     *  @return A reference to this {@code Throwable} instance.
-     *
-     *  @see Throwable#printStackTrace()
-     */
-    @Override
-    public final synchronized Throwable fillInStackTrace() { return this; }
 
     /**
      *  <p>{@summary Return the additional infos.}</p>
@@ -153,8 +178,17 @@ public abstract class WrapperException extends RuntimeException
     @Override
     public final String getMessage()
     {
-        final var buffer = new StringJoiner( lineSeparator(), super.getMessage().concat( lineSeparator() ), EMPTY_STRING );
-        buffer.setEmptyValue( super.getMessage() );
+        final var message = super.getMessage();
+        final StringJoiner buffer;
+        if( nonNull( message ) )
+        {
+            buffer = new StringJoiner( lineSeparator(), message.concat( lineSeparator() ), EMPTY_STRING );
+            buffer.setEmptyValue( message );
+        }
+        else
+        {
+            buffer = new StringJoiner( lineSeparator() );
+        }
         for( final var info : m_AdditionalInfo.entrySet() )
         {
             buffer.add(
@@ -164,7 +198,7 @@ public abstract class WrapperException extends RuntimeException
             );
         }
 
-        final var retValue = buffer.toString();
+        final var retValue = m_AdditionalInfo.isEmpty() ? message : buffer.toString();
 
         //---* Done *-----------------------------------------------------
         return retValue;

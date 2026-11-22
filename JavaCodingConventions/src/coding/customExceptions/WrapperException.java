@@ -78,14 +78,13 @@ public abstract class WrapperException extends RuntimeException
      *  @param  message The detail message that is saved for later
      *      retrieval by the
      *      {@link #getMessage()}
-     *      method. It can be {@null}.
+     *      method. It can be {@code null}.
      *  @param  cause   The cause that is saved for later retrieval by the
      *     {@link #getCause()}
-     *     method.
-     * @param retrieveStacktrace {@code true} if the stack trace will be
-     *     retrieved and is writable and the instance should behave like
-     *     a <i>regular</i> exception, {@code false} if the instance
-     *     should be a pure container.
+     *     method. It can be {@code null\.
+     *  @param retrieveStacktrace   {@code true} if the stack trace will
+     *      be retrieved and is writable, {@code false} if the instance
+     *      should behave like a <i>regular</i> exception.
      */
     protected WrapperException( final String message, final Throwable cause, final boolean retrieveStacktrace )
     {

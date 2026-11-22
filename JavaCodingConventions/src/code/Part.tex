@@ -100,7 +100,7 @@ The other exceptions of that hierarchy would be similar like that one below:
 \begin{lstlisting}
 /**
  * <p>{@summary The exception that is thrown by methods from this
- * domain in case a processing problem surfaced.} Itis an implementation
+ * domain in case a processing problem surfaced.} It is an implementation
  * of
  * {@link WrapperException},
  * derived from
@@ -176,7 +176,7 @@ public class ProcessingException extends DomainException
  */
 \end{lstlisting}
 
-
+When the exception class is final, the protected constructor\index{constructor} in line~67 is obsolete and should be omitted.
 
 %------------------------------------------------------------------------------
 

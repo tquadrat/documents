@@ -3,15 +3,26 @@ digraph {
   rankdir="BT"
   node [shape=box,style=filled,fillcolor="white"]
   
+  subgraph {
+    cluster=true
+    bgcolor="white"
+    labelloc=t # must be "t" for "top" because of the rankdir setting "BT"
+    labeljust=r
+    label="Domain Specific Exceptions"
+    fontcolor="darkblue"
+    
+  domainrootexception [label="DomainException",fillcolor="lightyellow"]
+  domainexception1    [label="…",fillcolor="lightyellow"]
+  domainexception2    [label="…",fillcolor="lightyellow"]
+  domainexception3    [label="…",fillcolor="lightyellow"]
+  }
+
   throwable        [label="java.lang.Throwable"]
   error            [label="java.lang.Error"]
   exception        [label="java.lang.Exception"]
   runtimeexception [label="java.lang.RuntimeException"]
   wrapperexception [label="WrapperException",fillcolor="lightgrey"]
-  domainexception1 [label="…",fillcolor="lightyellow"]
-  domainexception2 [label="…",fillcolor="lightyellow"]
-  domainexception3 [label="…",fillcolor="lightyellow"]
   
   {error,exception} -> throwable
-  {domainexception1,domainexception2,domainexception3} -> wrapperexception -> runtimeexception -> exception
+  {domainexception1,domainexception2,domainexception3} -> domainrootexception -> wrapperexception -> runtimeexception -> exception
 }

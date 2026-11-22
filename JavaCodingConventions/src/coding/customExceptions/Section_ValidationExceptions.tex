@@ -34,7 +34,7 @@ if( isNull( arg ) ) throw new NullArgumentException( "arg" );
 \end{lstlisting}
 
 In chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, I show how the code could be simplified further:
-\keeplisting{7}
+\keeplisting{5}
 \begin{lstlisting}
 public final void aMethod( final String arg )
 {
@@ -45,7 +45,7 @@ public final void aMethod( final String arg )
 }   //  aMethod()
 \end{lstlisting}
 
-Validation exceptions\index{validation exception} are usually not specific for a particular domain. But that shouldn't stop you from creating your own validation exceptions for your domain, if it seems appropriate.
+Validation exceptions\index{validation exception} are usually not specific for a particular domain. But that shouldn't stop you from creating your own validation exceptions for your domain, if it seems appropriate. Chapter \tqfullvref{code:ValidationExceptions} gives implementations for the above suggested exceptions.
 
 %==============================================================================
 % End of file!!

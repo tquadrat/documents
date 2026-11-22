@@ -188,23 +188,6 @@ This class is a sample implementation of the idea described in chapter \tqfullvr
 
 %------------------------------------------------------------------------------
 
-\subsection{Illegal Argument Exceptions}\label{sec:IllegalArgumentExceptions}
-As said in chapter \tqfullvref{sec:CheckingMethodParametersAndReturnValues}, a \lstinline|NullPointerException| that is thrown from your code has to be seen as a coding bug: a value was not properly checked before it was used. Nevertheless, values can be \lstinline|null|, for various reasons, and this still can be an error that needs to be signalled.
-
-For that, I suggested a bunch of custom exceptions that are shown here; they are also part of my Foundation Library: for \lstinline|ValidationException| see \autocite{TQUADRAT_ORG_FOUNDATION_VALIDATIONEXCEPTION}, the \lstinline|NullArgumentException| can be found at \autocite{TQUADRAT_ORG_FOUNDATION_NULLARGUMENTEXCEPTION}, the \lstinline|EmptyArgumentException| is documented at \autocite{TQUADRAT_ORG_FOUNDATION_EMPTYARGUMENTEXCEPTION}, and finally the documentation for \lstinline|BlankArgumentException| is at \autocite{TQUADRAT_ORG_FOUNDATION_BLANKARGUMENTEXCEPTION}.
-
-%------------------------------------------------------------------------------
-
-\paragraph{The Code}\
-\lstinputlisting[numbers=left,caption={ValidationException.java}]{ValidationException.java}
-
-\lstinputlisting[numbers=left,caption={NullArgumentException.java}]{NullArgumentException.java}
-
-\lstinputlisting[numbers=left,caption={EmptyArgumentException.java}]{EmptyArgumentException.java}
-
-\lstinputlisting[numbers=left,caption={BlankArgumentException.java}]{BlankArgumentException.java}
-
-%------------------------------------------------------------------------------
 
 \subsection{Lazy}\label{sec:Lazy}
 The interface \lstinline|Lazy| and the associated implementation \lstinline|LazyImpl| provide a holder for a lazy initialised object instance. The initialisation happens on the first call to the method \lstinline|Lazy::get| through a call to the \lstinline|Supplier| instance the \lstinline|Lazy| instance was created with.

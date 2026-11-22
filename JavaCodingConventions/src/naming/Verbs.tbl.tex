@@ -605,6 +605,12 @@ Refer to \hyperref[verb:draw]{\bsq{draw}}. \\
 
 %------------------------------------------------------------------------------
 
+\makecell{\lstinline|parse( <arg> )| \\ \lstinline|parse…( <arg> )| \\ \lstinline|parse()|\pslabel{verb:parse}} & 
+A \bsq{parse} method interprets data and converts it into a different format. Examples of this include: \lstinline|Integer::parseInt|\index{java.lang!Integer!parseInt()} \autocite{ORACLE_DOC_INTEGER:parseInt} or \lstinline|Instant::parse|\index{java.time!Instant!parse()} \autocite{ORACLE_DOC_INSTANT:parse}. \\
+\hline
+
+%------------------------------------------------------------------------------
+
 \makecell{\lstinline|peek()|\pslabel{verb:peek}} & 
 A method with this name is meant to spy into a data structure without modifying the state of the owning object. The method \lstinline|java.util.Queue::peek|\index{java.util!Queue!peek()} \autocite{ORACLE_DOC_QUEUE:peek} is a sample for this.
 
@@ -752,8 +758,8 @@ The method may or may not change the state of the owning object. \\
 
 %------------------------------------------------------------------------------
 
-\makecell{\lstinline|save…( <arg> )|\pslabel{verb:save_arg}} & 
-A \bsq{save} method provides the converse operation to that of a \hyperref[verb:load_arg]{\bsq{load}} method: it persists the object that is identified by the given argument to an external destination.
+\makecell{\lstinline|save…( <arg> )|\pslabel{verb:save_name}} & 
+A \bsq{save} method provides the converse operation to that of a \hyperref[verb:load_name]{\bsq{load}} method: it persists the object that is identified by the given argument to an external destination.
 
 If the method has a return type other than \lstinline|void|, this will be the status of the save operation.
 

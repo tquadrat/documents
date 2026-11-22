@@ -1121,7 +1121,7 @@ At least methods that are part of a public API (methods that are \lstinline|publ
 \end{enumerate}
 
 Consequently, you need to check the arguments for each and every method and constructor. 
-In case an argument value is invalid, your should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS} or another exception derived from that; chapter \tqvref{sec:IllegalArgumentExceptions} provides some sample implementations for exceptions that can be used to signal an invalid argument.
+In case an argument value is invalid, your should throw an \lstinline|java.lang.IllegalArgumentException|\autocite{ORACLE_DOC_ILLEGALARGUMENTEXCEPTION_CLASS} or another exception derived from that; chapter \tqvref{sec:ValidationExceptions} provides some sample implementations for exceptions that can be used to signal an invalid argument.
 
 Beside the arguments to a method or constructor, you also have to check the values that are returned by a method call, at least that they are not \lstinline|null|. But don't be paranoid: if the specification of the called method clearly declares that the method will not return \lstinline|null|, you should trust it\footnote{Although you can still add an \lstinline|assert| statement to ensure that – see chapter \tqfullvref{sec:Assertions}.}.
 
@@ -6452,7 +6452,7 @@ public final Map<K,V> clone()
 }
 \end{lstlisting}
 
-As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingOrEndOfLineComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
+As there is no rule without exception, here is one: I recommend to use labels to mark long code blocks (refer to the chapters \tqfullref{sec:LabelsAndBreakStatements}, \tqfullref{sec:TrailingComments}, and \tqfullref{sec:CommentsWhen}), but if those code blocks do not reference these labels, they may cause an “Unused Label” warning in your IDE. The recommendation is here to deactivate that warning – globally.
 
 %------------------------------------------------------------------------------
 
@@ -6488,14 +6488,14 @@ var list = new ArrayList<String>();
 \autocite{Cymerman:SmarterJavaDevelopment}
 \autocite{Fejer:ProgramToInterfaces}
 \autocite{Pavlutin:ProgrammingToInterface}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\autocite{}
-\lipsum[5]
+%\autocite{}
+%\autocite{}
+%\autocite{}
+%\autocite{}
+%\autocite{}
+%\autocite{}
+%\autocite{}
+%\lipsum[5]
 
 \begin{lstlisting}
 \end{lstlisting}
@@ -6512,7 +6512,7 @@ var list = new ArrayList<String>();
 \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS}
 
 
-\autocite{}
+%\autocite{}
 
 \lipsum[1]
 
@@ -6794,7 +6794,7 @@ Obviously the result type of each branch has to be compatible to those of the ot
 \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpression, ORACLE_DOC_LANGUAGE_SPECIFICATION:SwitchExpressionBlock, ORACLE_DOC_SWITCHEXPRESSIONS}
 
 
-\autocite{}
+%\autocite{}
 
 \lipsum[1]
 
@@ -6828,7 +6828,7 @@ Obviously the result type of each branch has to be compatible to those of the ot
 
 
 
-\autocite{}
+%\autocite{}
 
 \lipsum[1]
 

@@ -23,7 +23,7 @@ The \bsq{domain root exception} \lstinline|PrintingException| allows all consume
 \begin{lstlisting}
 try
 {
-    usePrinting();
+    usePrinting( deviceId, … );
 }
 catch( final PrintingException e )
 {
@@ -63,7 +63,7 @@ When the consumer wants to respond to all these exceptions differently\footnote{
 \begin{lstlisting}
 try
 {
-    usePrinting();
+    usePrinting( deviceId, … );
 }
 catch( final NoOutputDeviceException e ) // Self-Healing
 {
@@ -125,7 +125,7 @@ The other approach, to use checked exceptions\index{exception!checked exception}
 
 Checked exceptions\index{exception!checked exception} enforce that each call to one of the component's method is somehow wrapped in a \texttt{try-catch}\index{try-catch-finally} block, otherwise the code does not compile. This forces attention for the error handling on each caller but it can also bloat the code. One can say, bloated code is much better than code without proper error handling, but when the code is too bloated with error handling stuff, it is difficult to read, and also prone to get broken when amended.
 
-The parameter lists of the constructors\index{constructor} for the domain specific exceptions are not limited to the regular \lstinline|Throwable|\index{java.lang!Throwable} parameter for the \texttt{cause} and the \lstinline|String| parameter for the \texttt{message}. If there is a parameter that is required by each API method of the domain, this could be also a mandatory parameter for the domain specific Exception. For the \bdq{Print Support} component this could be the \texttt{id} for the output device. In that case, that \texttt{id} is no longer required to be part of the exception message.
+The parameter lists of the constructors\index{constructor} for the domain specific exceptions are not limited to the regular \lstinline|Throwable|\index{java.lang!Throwable} parameter for the \texttt{cause} and the \lstinline|String| parameter for the \texttt{message}. If there is a parameter that is required by each API method of the domain, this could be also a mandatory parameter for the domain specific Exception. For the \bdq{Print Support} component this could be the \texttt{id} for the output device. In that case, that \texttt{id} is no longer required to be part of the exception message argument for the constructor\index{constructor}.
 
 If you add additional attributes to the domain specific exceptions, you should consider to add also getters\index{method!getter method} for these attributes, and you should override the method \lstinline|Throwable::getMessage|\index{java.lang!Throwable!getMessage()} \autocite{ORACLE_DOC_THROWABLE:getMessage} so that the additional attributes are part of the output when the exception object is printed somehow. Do not override the \lstinline|toString()|\index{java.lang!Object!toString()}\index{java.lang!Throwable!toString()} method in your new exception! When you have to do it (you must have very good reasons to do so!), make sure that the output format for the exception remains generally intact.
 
@@ -284,8 +284,6 @@ Nevertheless, you can of course define your \bdq{domain specific errors} and use
 
 \bigskip
 
-As already mentioned in , it is also possible to define specific validation exceptions for a domain, either in addition to a hierarchy of regular exceptions, or exclusively
-
 As already mentioned in chapter \tqfullref{sec:ValidationExceptions}, it is also possible to define specific validation exceptions\index{validation exception} for a domain, in addition to a hierarchy of regular exceptions.
 
 The package \lstinline|java.util.regex|\index{java.util.regex} \autocite{ORACLE_DOC_REGEX_PACKAGE} (the regular expression handling in Java) is a sample for a domain that that manages with nothing but a domain-specific validation exception.
@@ -304,7 +302,7 @@ catch( final PrintingException e )
     final var exceptionMessage = """
 ````````DataProcessor = %s\
 ````````""".formatted( dataProcessor.getName() );
-    throw new PrintingException( exceptionMessage, e );
+    throw new PrintingException( e.getDeviceId(), e,getErrorCode(), exceptionMessage, e );
 }
 \end{lstlisting}
 
@@ -320,205 +318,6 @@ catch( final PrintingException e )
 
 The source code for a wrapper exception as base class for domain specific exceptions is given in chapter \tqfullvref{code:WrapperException}.
 
-\chapter*{Road Work ahead!}
-
-
-
-
-
-This is always useful in the case of a feature library to simplify its API\footnote{All methods will only throw one exception especially created for that library, or exceptions derived from that. Samples for this pattern are the Servlet API (throwing only instances of \lstinline|IOException|\index{java.io!IOException} and \lstinline|ServletException|\index{javax.servlet!ServletException}) or JDBC (throwing only \lstinline|SQLException|\index{java.sql!SQLException} instances).}, and it can be also helpful for an application.
-
-
-If the domain specific exception would allow to add information to it, that could look like this:
-try
-{
-    …
-}
-catch( final DomainException e ) 
-{
-    e.addInfo( "Message", "Printing Operation failed" );
-    e.addInfo( "Recipient Id", recipientID );
-    e.addInfo( "Origin", dataSource ); 
-    throw e;
-}
-“Handling an Exception” usually means that the error condition that caused the exception is removed or healed. Whether or not the exception is logged depends on the circumstances, but it must be obvious that it will never be logged with ERROR or FATAL when the error condition has gone!
-\begin{lstlisting}
-catch( final AnException _ ) { /* Deliberately ignored */ }
-\end{lstlisting}
-Or, better, with an explanation: 
-\begin{lstlisting}
-catch( final AnException _ ) { /* Default value is used in case of failure */ }
-\end{lstlisting}
-In the second case, you should consider throwing a dedicated exception:
-catch( final AnException e ) { throw new ImpossibleExceptionError( e ); }
-This protects the code a little bit from changes to the implementation of the method that previously could not throw the exception. At least the Exception will not go unnoticed when thrown.
-Another recommendation regarding Error handling is that it must not obscure the essentials. When you write the code that checks for an error condition or handles an error condition, come to the point fast, otherwise the readability of the code suffers.
-
-
-
-
-
-
-An IllegalArgumentException (and exceptions that are derived from it) is usually thrown when an argument check fails (argument is null when it is not allowed to be null, a divisor is zero, an age is negative, …), and it makes sense to always use it – although a domain may derive its own version from IllegalArgumentException.
-
-
-
-
-
-
-Each domain (component, module, area of operation, name it …) should have its \bdq{Domain specific Exception} – or, more precisely, its own, specific hierarchy of unchecked or checked Exceptions. For internal purposes, it could have also another hierarchy of checked Exceptions, but these should not get much visible outside that domain.
- 
-Except InvalidArgumentException and exceptions derived from that (\bdq{validation exceptions}), a domain or component may never emit an exception that is not defined by itself (except NPE, but this may not occur anyway). All other exceptions (exceptions, not errors!) must be caught and handled or wrapped. InvalidArgumentExceptions are thrown only by the API methods of the component as response of an invalid argument to that method. IAE thrown by other component used by this component must be wrapped and delegated or handled internally.
- 
-To illustrate that, we assume that we defined the component \bdq{Printing} that is responsible for the generation of documents for paper-like output and their distribution. It defines the exception class \bdq{PrintingException} (or \bdq{PrintingRuntimeException}, if you like that better), derived from java.lang.RuntimeException. If will directly extend RuntimeException, or  if Printing has a parent component, it will extend that component’s domain specific exception. Perhaps you have defined an application exception (like our PRRuntimeException), so the domain specific exceptions will extend that.
- 
-This \bdq{domain root exception} allows all consumers of the respective component to catch all specific exceptions from that component with a single catch:
- 
-\begin{lstlisting}
-try
-{
-    usePrinting();
-}
-catch( final PrintingException e )
-{
-    final var message = """
-       Printing Operation failed with an Exception
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    oLog.error( message, e );
-    terminate();
-    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
-}
-\end{lstlisting}
- 
-In this sample, \bdq{recipientID} and \bdq{dataSource} will enhance the information that is already provided with the PrintingException object; probably the Printing component was called with the data itself (not with the dataSource), and the recipient is not part of the generated document.
- 
-Printing now defines problem specific exceptions derived from PrintingException; this allows the consumers to respond to specific problems in a specific manner: if the Printing component throws a PrintingDeviceException, the consumer knows that there is a problem with the output device and can send an email to the support staff to inform them that the printer needs maintenance. A PrintingBadDataException tells the consumer that the data it provided was faulty, and a PrintingTooMuchDataException (probably derived from PrintingBadDataException) signals that too much data should be printed. An InvalidPrintingFormatException would indicate that the output description is not valid, and a NoOutputDeviceException tells that there is no printer with the given name.
- 
-When the consumer wants to respond to all these exceptions differently (and it should do so! At least it should provide different data to the logging), the code snippet above would look like that below. Of course, we could always provide all information and leave it to the support engineer to identify what is relevant. But that would also mean that any kind of self-healing would get unnecessary complex.
-
-\begin{lstlisting}
-try
-{
-    usePrinting();
-}
-catch( final NoOutputDeviceException ) // Self-Healing
-{
-    final var message = """
-       Printing Operation failed because provided device does not exist
-       Attempting again with alternative device
-       Recipient Id: %s
-       Origin: %s
-       Missing Device: %s
-       Alternative Device: %s
-       """.formatted( recipientID, dataSource, missingDevice, getAlternativeDevice() );
-    oLog.warn( message, e );
-    retryPrinting();
-}
-catch( final InvalidPrintingFormatException )
-{
-    final var message = """
-       Printing Operation failed due to an invalid format specification
-       Specification: %s
-       """.formatted( format );
-    oLog.error( message, e );
-    abort();
-    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
-}
-catch( final PrintingTooMuchDataException )
-{
-    final var message = """
-       Printing Operation failed because of too much data
-       Recipient Id: %s
-       Origin: %s
-       Data Size: %d records
-       """.formatted( recipientID, dataSource, dataSize );
-    oLog.error( message, e );
-    terminate();
-    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
-}
-catch( final PrintingBadDataException e )
-{
-    final var message = """
-       Printing Operation failed with an Exception
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    oLog.error( message, e );
-    terminate();
-    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
-}
-catch( final PrintingException e )
-{
-    final var message = """
-       Printing Operation failed with an Exception
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    oLog.error( message, e );
-    abort();
-    // Alternatively, you wrap message and exception into the appropriate domain specific exception of this consumer and throw that.
-}
-\end{lstlisting}
- 
-Printing signals that it cannot proceed by throwing a PrintingException or one of the exceptions derived from it. What happens as response to that exception is on the consumer for Printing: it could terminate itself, too, it could attempt to print again, it can choose an alternative mean to get the documents out, or it could even ignore the problem … or it delegates the whole thing to its own consumers, by just wrapping the caught PrintingException into its own domain specific exception:
-
-\begin{lstlisting}
-…
-catch( final PrintingException e )
-{
-    final var message = """
-       Printing Operation failed with an Exception
-       Recipient Id: %s
-       Origin: %s
-       """.formatted( recipientID, dataSource );
-    throw new MyDomainSpecificOutputProblemException( message, e );
-}
-\end{lstlisting}
- 
-This decision (\bdq{either wrap and throw or log and terminate}) has to be taken for each and every call.
- 
-Using an unchecked hierarchy means that the consumer can completely ignore the exception handling for the PrintingException (and leave it to its own consumers). It also means that the API methods for the PrintingComponent do not need to have a throws clause, to declare the thrown exceptions. A sample for this approach can be found with the java.util.regex package (the regular expression handling in Java). The other approach, to use checked exceptions, can be found in java.io that defines IOException as the \bdq{domain specific exception} and derives exceptions like FileNotFoundException from that. Checked exceptions enforce that each call is somehow wrapped in a try-catch block, otherwise the code does not compile. This forces the attention for the error handling on each caller but can bloat the code. One can say bloated code is much better that code without proper error handling, but when it is too bloated, the code is difficult to read and prone to get broken when amended.
- 
-Some words regarding the calls to terminate() vs. abort(): assume we use the code snippet in a loop, where each cycle uses different data to be printed. A PrintingBadDataException means that the current data is somehow corrupted, but we can proceed with the loop (terminate the current process and load the next dataset), but an InvalidPrintingFormatException or a PrintingDeviceException means that no printing is possible at all and we abort the loop.
- 
-There are libraries that use \bdq{Error} (domain specific implementations of java.lang.Error) to signal the abort condition, while \bdq{Exception} means: \bdq{you can try again with different (valid) input data}. I don’t like this approach as it is a widely accepted best practice not to catch Error.
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{Errors should never pass silently and Exceptions may never be swallowed.
-
-You may have read this already right at the beginning of this document; it is bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} of the \ngref.
-
-The first part implies that you need to check for error conditions, the second part means that you may not throw away error notifications (in Java, these are mainly the Exception).}
-
-\item{Error handling must not obscure the essentials.
-
-When you write the code that checks for an error condition or handles an error condition, come to the point fast, otherwise the readability of the code suffers.}
-
-\item{Fail fast.
-
-Place all your error checks to the beginning of a method, and do not hesitate to abort a function when an error condition is detected.}
-
-\item{Ensure that errors will be reported in an understandable manner.
-
-The error message “An error occurred, the program was aborted” is not really helpful when investigating the root cause of a problem with your program. Confessed, showing a pop-up window with the error message “\verb#Exception java.lang.ArithmeticException: / by zero#”\index{java.lang!ArithmeticException}, followed by a stack trace, is in a similar way not very useful for the average end user (and may even cause a security risk), but that's where logging was invented for.}
-\end{enumerate}
-
-%------------------------------------------------------------------------------
-
 %==============================================================================
 % End of file!!
 %==============================================================================
-

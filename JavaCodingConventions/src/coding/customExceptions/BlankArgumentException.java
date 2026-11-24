@@ -1,48 +1,31 @@
-package org.tquadrat.foundation.exception;
-
-import java.io.Serial;
-
 /**
- *  This is a specialized implementation for the
+ *  <p>{@summary This is a specialised implementation for the
  *  {@link IllegalArgumentException}
- *  that should be used instead of the latter in cases where a blank 
- *  String is provided as an illegal argument value.
- *
- *  @author Thomas Thrien - thomas.thrien@tquadrat.org
+ *  that should be used instead of the latter in cases where a blank
+ *  String is provided as an illegal argument value.}</p>
  */
-public final class BlankArgumentException extends NullArgumentException
+public final class BlankArgumentException extends IllegalArgumentException
 {
-        /*------------------------*\
-    ====** Static Initialisations **=================================
-        \*------------------------*/
-    /**
-     *  The serial version UID for objects of this class: {@value}.
-     *
-     *  @hidden
-     */
-    @Serial
-    private static final long serialVersionUID = 1174360235354917591L;
-
         /*--------------*\
-    ====** Constructors **===========================================
+    ====** Constructors **================================================
         \*--------------*/
     /**
-     *  Creates a new instance of {@code BlankArgumentException}.
+     *  <p>{@summary {@constructor}}</p>
      */
-    public BlankArgumentException() { this( null ); }
+    public BlankArgumentException() { super( "Argument must not be blank" ); }
 
     /**
-     *  Creates a new instance of {@code BlankArgumentException}.
+     *  <p>{@summary {@constructor}}</p>
      *
-     *  @param  argName The name of the argument whose value was
-     *      provided as blank; if {@code null} or the empty String, 
-     *      a default message is used that does not use the name of 
-     *      the argument.
+     *  @param  argName The name of the parameter whose value was provided as
+     *      blank; if {@null} or the empty String, a default is used as the
+     *      name of the parameter.
      */
     public BlankArgumentException( final String argName )
     {
-        super( argName, "Argument '%1$s' must not be blank", "Argument must not be blank" );
+        super( """
+````````````Argument "%1$s" must not be blank\
+````````````""".formatted( mapFromEmpty( argName, UNKNOWN_PARAM_NAME ) ) );
     }   //  BlankArgumentException()
 }
 //  class BlankArgumentException
-

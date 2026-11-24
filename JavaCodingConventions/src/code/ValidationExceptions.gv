@@ -1,0 +1,14 @@
+digraph {
+  size="6,11"
+  rankdir="BT"
+  
+  node [shape=box,style=filled,fillcolor="white"]
+  
+  runtimeexception         [label="java.lang.RuntimeException"]
+  illegalargumentexception [label="java.lang.IllegalArgumentException"]
+  nullargumentexception    [label="NullArgumentException",fillcolor="lightgrey"]
+  emptyargumentexception   [label="EmptyArgumentException",fillcolor="lightgrey"]
+  blankargumentexception   [label="BlankArgumentException",fillcolor="lightgrey"]
+
+  {nullargumentexception,emptyargumentexception,blankargumentexception} -> illegalargumentexception -> runtimeexception
+} 

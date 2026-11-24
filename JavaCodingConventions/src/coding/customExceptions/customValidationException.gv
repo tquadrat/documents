@@ -7,14 +7,11 @@ digraph {
   runtimeexception [label="java.lang.RuntimeException"]
   illegalargumentexception [label="java.lang.IllegalArgumentException"]
   otherexception  [label="…"]
-  invalidargumentvalueexception [label="InvalidArgumentValueException",fillcolor="lightgrey"]
   nullargumentexception  [label="NullArgumentException",fillcolor="lightgrey"]
   emptyargumentexception  [label="EmptyArgumentException",fillcolor="lightgrey"]
   blankargumentexception  [label="BlankArgumentException",fillcolor="lightgrey"]
   otherexception1  [label="…",fillcolor="lightgrey"]
-  otherexception2  [label="…",fillcolor="lightgrey"]
 
-  illegalargumentexception -> runtimeexception
-  {otherexception,invalidargumentvalueexception,otherexception1} -> illegalargumentexception
-  {nullargumentexception,emptyargumentexception,blankargumentexception,otherexception2} -> invalidargumentvalueexception
+  {nullargumentexception,emptyargumentexception,blankargumentexception,otherexception1} -> illegalargumentexception
+  {otherexception,illegalargumentexception} -> runtimeexception
 } 

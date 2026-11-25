@@ -1,7 +1,38 @@
 \section{Other useful Custom Exceptions}\label{sec:UsefulCustomExceptions}
 Although the headline of this chapter is talking about \bdq{Custom Exceptions}, it deals more with custom implementations of \lstinline|java.lang.Error|\index{java.lang!Error} than those of \lstinline|java.lang.Exception|\index{java.lang!Exception}.
 
-In chapter \tqfullvref{sec:ImpossibleExceptions} I mentioned the error classes\index{java.lang!Error} \lstinline|UnlikelyExceptionError| and \lstinline|ImpossibleExceptionError|.
+The error classes\index{java.lang!Error} \lstinline|UnlikelyExceptionError| and \lstinline|ImpossibleExceptionError| are mentioned in chapter \tqfullvref{sec:ImpossibleExceptions} where I stated that an \lstinline|UnlikelyExceptionError| should be thrown if an exception is caught that is theoretically possible at that particular point, but highly unlikely.
+
+An \lstinline|ImpossibleExceptionError| should be thrown when an exception is caught that, in the given context, should not actually be able to occur.
+
+Implementations for these exceptions are given in chapters \tqvref{code:ImpossibleExceptionError} and \tqvref{code:UnlikelyExceptionError}.
+
+\bigskip
+
+Chapter \tqfullvref{sec:TheSwitchStatement} stipulates that every \lstinline|switch|\index{switch} statement\index{switch!statement} (and, in principle, every \lstinline|switch|\index{switch} expression\index{switch!expression} as well) should include a \lstinline|default|\index{switch!default} branch, even if all possible cases are already covered by corresponding \lstinline|case|\index{switch!case} branches.
+
+But what to put into that \lstinline|default|\index{switch!default} branch?
+
+In case the \lstinline|switch|\index{switch} uses an \lstinline|enum| value as the selector, the recommendation is to throw an exception (more specific, an error) in the \lstinline|default|\index{switch!default} branch:
+\keeplisting{1}
+\begin{lstlisting}
+switch( direction )
+{
+    case null -> throw new NullArgumentException( "direction" );
+    case NORTH -> goUp();
+    case SOUTH -> goDown();
+    case WEST -> goLeft();
+    case EAST -> goRight();
+    default -> throw new UnsupportedEnumError( direction );
+}
+\end{lstlisting}
+
+This protects your code from changes to the enum if that is not part of your project\footnote{Otherwise the compiler would complain: \bdq{\textit{'switch' expression does not cover all possible input values}}.}. Admittedly, it is rather unlikely that a fifth cardinal direction will ever be added; in that sense, the example is perhaps poorly chosen.
+
+In chapter \tqfullvref{code:UnsupportedEnumError} you find an implementation of that error.
+ 
+
+ 
 
 \chapter*{Road Work ahead!}
 

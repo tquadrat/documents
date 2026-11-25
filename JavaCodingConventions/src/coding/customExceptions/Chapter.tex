@@ -30,7 +30,29 @@ Names of classes extending \lstinline|java.lang.Exception|\index{java.lang!Excep
 \input{coding/customExceptions/Section_DomainSpecificExceptions}
 \input{coding/customExceptions/Section_UsefulCustomExceptions}
 
+%------------------------------------------------------------------------------
+
 \chapter*{Road Work ahead!}
+
+\section{Implementation Considerations}
+Default constructor without parameters: no!
+
+\section{Summary}
+
+\subsubsection{Principles}
+\begin{enumerate}[label=P\arabic*.]
+	\item{}
+
+	\item{}
+
+	\item{}
+
+	\item{}
+\end{enumerate}
+
+\chapter*{Road Work ahead!}
+
+%------------------------------------------------------------------------------
 
 
 
@@ -307,37 +329,6 @@ Using an unchecked hierarchy means that the consumer can completely ignore the e
 Some words regarding the calls to terminate() vs. abort(): assume we use the code snippet in a loop, where each cycle uses different data to be printed. A PrintingBadDataException means that the current data is somehow corrupted, but we can proceed with the loop (terminate the current process and load the next dataset), but an InvalidPrintingFormatException or a PrintingDeviceException means that no printing is possible at all and we abort the loop.
  
 There are libraries that use \bdq{Error} (domain specific implementations of java.lang.Error) to signal the abort condition, while \bdq{Exception} means: \bdq{you can try again with different (valid) input data}. I don’t like this approach as it is a widely accepted best practice not to catch Error.
-
-
-
-
-
-
-
-
-
-
-
-\subsubsection{Principles}
-\begin{enumerate}[label=P\arabic*.]
-\item{Errors should never pass silently and Exceptions may never be swallowed.
-
-You may have read this already right at the beginning of this document; it is bullet point~\ref{lst:ZoP:ErrorsMayNeverBeSwallowed} of the \ngref.
-
-The first part implies that you need to check for error conditions, the second part means that you may not throw away error notifications (in Java, these are mainly the Exception).}
-
-\item{Error handling must not obscure the essentials.
-
-When you write the code that checks for an error condition or handles an error condition, come to the point fast, otherwise the readability of the code suffers.}
-
-\item{Fail fast.
-
-Place all your error checks to the beginning of a method, and do not hesitate to abort a function when an error condition is detected.}
-
-\item{Ensure that errors will be reported in an understandable manner.
-
-The error message “An error occurred, the program was aborted” is not really helpful when investigating the root cause of a problem with your program. Confessed, showing a pop-up window with the error message “\verb#Exception java.lang.ArithmeticException: / by zero#”\index{java.lang!ArithmeticException}, followed by a stack trace, is in a similar way not very useful for the average end user (and may even cause a security risk), but that's where logging was invented for.}
-\end{enumerate}
 
 %------------------------------------------------------------------------------
  

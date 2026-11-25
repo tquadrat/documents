@@ -26,9 +26,9 @@ private MyUtilityClass()
 }   // MyUtilityClass()
 \end{lstlisting}
 
-The parameters of a constructor\index{constructor} must be documented in the same way as that for a method\index{method}, with the \bdq{\nameref{sec:TagParam}}\index{param@"@param}. If the constructor\index{constructor} modifies one of its arguments, this is a serious side effect and needs to be documented – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
+The parameters of a constructor\index{constructor} must be documented in the same way as that for a method\index{method}, with the \bdq{\nameref{sec:TagParam}}\index{param@"@param} tag. If the constructor\index{constructor} modifies one of its arguments, this is a serious side effect and needs to be documented – refer to chapter \tqfullvref{sec:MutableTypesForArguments} for more details.
 
-Although constructors\ should not throw (checked) exceptions, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag and a description of the conditions for the particular exception. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
+Although constructors\index{constructor} should not throw (checked) exceptions\index{exception!checked exception}, sometimes it could not be avoided without overcomplicating the API of a class. In such case, all exceptions has to be listed with the \bdq{\nameref{sec:TagThrows}}\index{throws@"@throws} tag and a description of the conditions for the particular exception. Refer also to chapter \tqfullvref{sec:GeneralExceptionHandling} for some more details on exception handling.
 
 %==============================================================================
 % End of file!!

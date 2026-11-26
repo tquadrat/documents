@@ -52,16 +52,31 @@ Classes derived from \lstinline|java.lang.Throwable|\index{java.lang!Throwable} 
 
 \subsubsection{Principles}
 \begin{enumerate}[label=P\arabic*.]
-	\item{}
+	\item{Don't hesitate to create your own exception classes\index{class!exception class} when none of the existing ones fits perfectly with the requirements of your product.}
 
-	\item{}
+	\item{Create your own hierarchy of domain specific exceptions for a larger product\index{product type}.
+	
+	You should definitely consider domain specific exceptions for a \hyperref[sec:FeatureLibrary]{Feature Library}\index{product type!feature library} and a \hyperref[sec:StandaloneApplication]{Standalone Application}\index{product type!standalone application}; it makes also sense for larger \hyperref[sec:ServerbasedApplication]{Server-based Applications}\index{product type!server-based application}.}
 
-	\item{}
+	\item{Create your own validation exceptions to signal the specific reason for the failed validation.}
+	
+	\item{Use a dedicated wrapper exception as envelope for other exceptions, especially when you just need to enhance that other exceptions.}
 
-	\item{}
+	\item{Don't extend \lstinline|java.lang.Throwable|\index{java.lang!Throwable} directly!
+	
+	For your custom exceptions, extend an appropriate child class of \lstinline|Throwable|.
+	
+	\lstinline|java.lang.IllegalArgumentException|\index{java.lang!IllegalArgumentException} is the base class for all validation exceptions\index{validation exception}.}
+	
+	\item{Provide a default constructor for your custom exception only when you have a good reason for it.
+	
+	If provided, the default constructor should be the only constructor.}
+	
+	\item{Validate all arguments for the constructors of your custom exception, although the underlying implementations do not require that.}
+	
+	\item{Do not override \lstinline|toString()|\index{java.lang!Throwable!toString()} without a very good reason.}
 \end{enumerate}
- 
+
 %==============================================================================
 % End of file!!
 %==============================================================================
-

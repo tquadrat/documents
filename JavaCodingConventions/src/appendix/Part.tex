@@ -442,61 +442,6 @@ Below you find an implementation of \lstinline|ThreadGroup| that fixes that. A s
 \paragraph{The Code} \
 \lstinputlisting[numbers=left,caption={ThreadGroupExt.java}]{ThreadGroupExt.java}
 
-%------------------------------------------------------------------------------
-
-\subsection{UnsupportedEnumError}\label{sec:UnsupportedEnumError}
-This implemenation of \lstinline|java.lang.Error| is meant to be used in the \lstinline|default| branch of a \lstinline|switch| statement (refer to \tqfullvref{sec:SwitchStatements}), in cases where the selector is an enum.
-
-It will be used like this:
-\begin{lstlisting}[numbers=left]
-enum Color
-{
-    RED, BLUE, GREEN, YELLOW
-}
-
-Color color = …    
-
-// Traditional switch statement
-switch( color )
-{
-    case RED: …; break;
-    case BLUE: …; break;
-    case GREEN: …; break;
-    case YELLOW: …; break;
-
-    default: throw new UnsupportedEnumError( color );
-}
-
-// New switch statement
-switch( color )
-{
-    case RED -> …;
-    case BLUE -> …;
-    case GREEN -> …;
-    case YELLOW -> …;
-
-    default: throw new UnsupportedEnumError( color );
-}
-
-// switch expression
-var result = switch( color )
-{
-    case RED -> "Rot";
-    case BLUE ->"Blau";
-    case GREEN -> "Grün";
-    case YELLOW -> "Gelb";
-
-    default: throw new UnsupportedEnumError( color );
-}
-\end{lstlisting}
-
-Also refer to \autocite{TQUADRAT_ORG_FOUNDATION_UNSUPPORTEDENUMERROR}.
-
-%------------------------------------------------------------------------------
-
-\paragraph{The Code} \
-\lstinputlisting[numbers=left,caption={UnsupportedEnumError.java}]{UnsupportedEnumError.java}
-
 %==============================================================================
 % End of file!!
 %==============================================================================

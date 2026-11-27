@@ -12,11 +12,11 @@ There are three other types of errors that can affect a software system:
 	\item{Design Faults}
 \end{enumerate}
 
-For a programming language like \Java that requires a compilation step before a program can be executed, errors can be generally sorted into two categories: into compile time errors and in errors that surface during execution (usually referred to as \bdq{runtime errors}). The latter can be then put into two sub-categories: those errors that surface during testing the application, and the most nasty one, the errors that first show up in production.
+For a programming language like \Java that requires a compilation step before a program can be executed, errors can be generally sorted into two categories: into compile time errors and in errors that surface during execution (usually referred to as \bdq{runtime errors}). The latter can be then put into two sub-categories: those errors that surface during testing the application, and the most nasty ones, the errors that first show up in production.
 
-Syntax errors clearly belong to the first category, and usually, they are very easy to detect and in most cases easy to fix. In fact, you \textit{must} fix them, otherwise your code will never reaches production level.
+Syntax errors clearly belong to the first category, and usually, they are very easy to detect and in most cases easy to fix. In fact, you \textit{must} fix them, otherwise your code will never go into production.
 
-Basically, this whole book is discussing techniques that should help you avoiding errors. Those described in this chapter are explicitly targeted to this goal, while the others are more implicit. Unfortunately is it difficult to provide recipes for design errors, as they often surface only after a long time (and often the design was originally right at the time it was made, but other design decisions made it wrong later).
+As said this whole book is discussing techniques that should help you avoiding errors. Those described in this chapter are \textit{explicitly} targeted to this goal, while the others are more implicit. Unfortunately is it difficult to provide recipes for design errors, as they often surface only after a long time (and often the design was originally right at the time it was made, but other design decisions made it wrong later).
 
 Consequently, we are focussing to implementation and logical errors for the remainder of this chapter.
 

@@ -1,0 +1,19 @@
+\section{Change Request Markers}\label{code:CR}
+The annotation\index{annotation} \lstinline|@CR| is described in chapter \tqfullvref{sec:CommentVsAnnotations}; basically, it is meant as a marker for code that was modified as a result of some kind of change request.
+
+That the same annotation\index{annotation} can be applied multiple times to the same element requires a \bdq{container annotation}\index{annotation!container annotation} for that annotation, as described in \autocite{ORACLE_DOC_LANGUAGE_SPECIFICATION:RepeatableAnnotationInterfaces}, but the use of this annotation is implicit. \lstinline|@ChangeRequestList| is that container annotation for \lstinline|@CR|.
+
+Real life implementation for the annotations \lstinline|@CR| and \lstinline|@ChangeRequestList| can be found here: \autocite{TQUADRAT_ORG_FOUNDATION_BASE, TQUADRAT_ORG_FOUNDATION_BUG, TQUADRAT_ORG_FOUNDATION_FIXLIST}.
+
+%------------------------------------------------------------------------------
+
+\paragraph{The Code}\
+
+\lstinputlisting[caption={ChangeRequestList.java}]{code/ChangeRequestList.java}
+
+\lstinputlisting[caption={CR.java}]{code/CR.java}
+
+%==============================================================================
+% End of file!!
+%==============================================================================
+
